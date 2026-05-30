@@ -47,6 +47,15 @@ export const CATEGORIES: Record<CategoryId, BookDef[]> = {
     { id: "Zohar", es: "Zohar", fa: "زوهر", he: "זֹהַר", type: "chapters", units: 3 },
     { id: "Sefer Yetzirah", es: "Séfer Yetzirá", fa: "سفر یتسیرا", he: "סֵפֶר יְצִירָה", type: "chapters", units: 6 },
     { id: "Pardes Rimonim", es: "Pardés Rimonim", fa: "پردس ریمونیم", he: "פַּרְדֵּס רִמּוֹנִים", type: "chapters", units: 32 },
+    // Arizal (Lurianic) — Sha'ar HaKavanot, escrito por Chaim Vital.
+    { id: "Shaar HaKavanot, Introduction", es: "Sha'ar HaKavanot — Introducción", fa: "شَعَر هَکَوانوت — مقدمه", he: "שַׁעַר הַכַּוָּנוֹת — הַקְדָּמָה", type: "chapters", units: 4 },
+    { id: "Shaar HaKavanot, Sermons on Tzitzit", es: "Sha'ar HaKavanot — Tzitzit", fa: "شَعَر هَکَوانوت — تسیتسیت", he: "שַׁעַר הַכַּוָּנוֹת — דְּרוּשֵׁי הַצִּיצִית", type: "chapters", units: 2 },
+    { id: "Shaar HaKavanot, Sermons on Tefillin", es: "Sha'ar HaKavanot — Tefilín", fa: "شَعَر هَکَوانوت — تفیلین", he: "שַׁעַר הַכַּוָּנוֹת — דְּרוּשֵׁי הַתְּפִילִּין", type: "chapters", units: 6 },
+    { id: "Shaar HaKavanot, Sermons on Intentions of the Shema Recitation", es: "Sha'ar HaKavanot — Kriat Shemá", fa: "شَعَر هَکَوانوت — کریات شمع", he: "שַׁעַר הַכַּוָּנוֹת — דְּרוּשֵׁי קְרִיאַת שְׁמַע", type: "chapters", units: 19 },
+    { id: "Shaar HaKavanot, Sermons on the Standing Prayer", es: "Sha'ar HaKavanot — Amidá", fa: "شَعَر هَکَوانوت — عمیدا", he: "שַׁעַר הַכַּוָּנוֹת — דְּרוּשֵׁי הָעֲמִידָה", type: "chapters", units: 2 },
+    { id: "Shaar HaKavanot, Sermons on Morning Prayers", es: "Sha'ar HaKavanot — Tefilat HaShajar", fa: "شَعَر هَکَوانوت — نماز صبح", he: "שַׁעַר הַכַּוָּנוֹת — דְּרוּשֵׁי תְּפִילַּת הַשַּׁחַר", type: "chapters", units: 15 },
+    { id: "Shaar HaKavanot, Sermons on Kaddish", es: "Sha'ar HaKavanot — Kadish", fa: "شَعَر هَکَوانوت — قدیش", he: "שַׁעַר הַכַּוָּנוֹת — דְּרוּשֵׁי הַקַּדִּישׁ", type: "chapters", units: 3 },
+    { id: "Shaar HaKavanot, Sermons on Vaya'avor", es: "Sha'ar HaKavanot — Vayaavor", fa: "شَعَر هَکَوانوت — ویعَوور", he: "שַׁעַר הַכַּוָּנוֹת — דְּרוּשֵׁי וַיַּעֲבֹר", type: "chapters", units: 8 },
   ],
   Chasidut: [
     { id: "Tanya", es: "Tania", fa: "تانیا", he: "תַּנְיָא", type: "chapters", units: 53 },
