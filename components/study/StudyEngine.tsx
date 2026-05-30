@@ -6,6 +6,7 @@ import CategoryNav from "@/components/sefaria/CategoryNav";
 import BookBrowser from "@/components/sefaria/BookBrowser";
 import TextViewer from "@/components/sefaria/TextViewer";
 import StudyResult from "./StudyResult";
+import AliyatNitzotzot from "./AliyatNitzotzot";
 import type { BookDef, CategoryId } from "@/lib/categories";
 import { buildRef, getText, type SefariaTextResult } from "@/lib/sefaria";
 import { requestStudy, StudyError } from "@/lib/studyClient";
@@ -167,7 +168,12 @@ export default function StudyEngine() {
         </h2>
 
         {studyLoading && (
-          <p className="mt-6 animate-pulse text-muted">{t("generating")}</p>
+          <div className="mt-6">
+            <AliyatNitzotzot />
+            <p className="mt-4 animate-pulse text-center text-sm text-muted">
+              {t("generating")}
+            </p>
+          </div>
         )}
         {studyError && <p className="mt-6 text-sm text-red-400/80">{studyError}</p>}
         {!studyLoading && !studyError && !study && (
