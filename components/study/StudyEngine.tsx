@@ -7,6 +7,7 @@ import BookBrowser from "@/components/sefaria/BookBrowser";
 import TextViewer from "@/components/sefaria/TextViewer";
 import StudyResult from "./StudyResult";
 import AliyatNitzotzot from "./AliyatNitzotzot";
+import BeitMidrash from "./BeitMidrash";
 import type { BookDef, CategoryId } from "@/lib/categories";
 import { buildRef, getText, type SefariaTextResult } from "@/lib/sefaria";
 import { requestStudy, StudyError } from "@/lib/studyClient";
@@ -29,6 +30,8 @@ export default function StudyEngine() {
   const [studyError, setStudyError] = useState<string | null>(null);
   // índice del versículo en curso, o -1 para pasaje completo, o null si inactivo.
   const [studyingIndex, setStudyingIndex] = useState<number | null>(null);
+  // identificador del estudio mostrado, para asociar las reflexiones del Beit Midrash.
+  const [studyRef, setStudyRef] = useState<string | null>(null);
 
   function selectCategory(c: CategoryId) {
     setCategory(c);
@@ -46,6 +49,7 @@ export default function StudyEngine() {
     setSourceError(false);
     setSourceResult(null);
     setStudy(null);
+    setStudyRef(null);
     setStudyError(null);
     try {
       const result = await getText(ref);
@@ -74,6 +78,7 @@ export default function StudyEngine() {
     setStudyLoading(true);
     setStudyError(null);
     setStudy(null);
+    setStudyRef(null);
 
     const isPassage = index < 0;
     const hebrewText = isPassage
@@ -91,6 +96,7 @@ export default function StudyEngine() {
         hebrewText,
       });
       setStudy(text);
+      setStudyRef(ref);
     } catch (err) {
       const code = err instanceof StudyError ? err.code : "study_failed";
       setStudyError(code === "rate_limited" ? t("rateLimited") : t("errorStudy"));
@@ -105,10 +111,12 @@ export default function StudyEngine() {
     setStudyLoading(true);
     setStudyError(null);
     setStudy(null);
+    setStudyRef(null);
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
     try {
       const text = await requestStudy({ mode: "concept", locale, term });
       setStudy(text);
+      setStudyRef(`concept:${term}`);
     } catch (err) {
       const code = err instanceof StudyError ? err.code : "study_failed";
       setStudyError(code === "rate_limited" ? t("rateLimited") : t("errorStudy"));
@@ -182,6 +190,7 @@ export default function StudyEngine() {
         {study && !studyLoading && (
           <div className="mt-6">
             <StudyResult text={study} onConcept={studyConcept} />
+            {studyRef && <BeitMidrash studyRef={studyRef} />}
           </div>
         )}
       </section>

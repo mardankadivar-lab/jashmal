@@ -52,6 +52,23 @@
     "studying": "Estudiando la letra...",
     "back": "Volver al estudio"
   },
+  "beitMidrash": {
+    "title": "בֵּית מִדְרָשׁ — Casa de estudio",
+    "subtitle": "Comparte lo que este texto te reveló. El conocimiento solo se completa cuando desciende al mundo de la acción.",
+    "placeholder": "¿Qué te reveló este texto? Tu comprensión, tu pregunta, tu experiencia...",
+    "share": "Compartir tu comprensión",
+    "sharing": "Elevando tu reflexión...",
+    "empty": "Sé el primero en compartir tu comprensión de este texto.",
+    "anonNote": "Tus reflexiones son públicas y anónimas. Este es un espacio de estudio respetuoso.",
+    "rejected": "Esta reflexión no encaja en un espacio de estudio respetuoso. Reescríbela e inténtalo de nuevo.",
+    "tooShort": "Escribe un poco más para compartir.",
+    "rateLimited": "Has compartido varias reflexiones. Vuelve en un rato.",
+    "error": "No se pudo compartir. Inténtalo de nuevo.",
+    "report": "Reportar",
+    "reported": "Reportado, gracias",
+    "soon": "El Beit Midrash llegará pronto.",
+    "you": "Un estudiante"
+  },
   "footer": {
     "principle": "Primero la autoridad y el estudio honesto."
   }
