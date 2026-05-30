@@ -1,0 +1,26 @@
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import LanguageSwitcher from "./LanguageSwitcher";
+
+export default function SiteHeader() {
+  const t = useTranslations();
+
+  return (
+    <header className="sticky top-0 z-30 border-b border-gold/15 bg-ink/80 backdrop-blur-md">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3">
+        <Link href="/" className="flex items-baseline gap-2">
+          <span className="font-cinzel text-lg tracking-wide text-gold">
+            {t("site.name")}
+          </span>
+          <span className="hebrew text-sm text-muted">{t("site.hebrew")}</span>
+        </Link>
+        <nav className="flex items-center gap-5 text-sm">
+          <Link href="/estudio" className="text-muted transition-colors hover:text-parchment">
+            {t("nav.study")}
+          </Link>
+          <LanguageSwitcher />
+        </nav>
+      </div>
+    </header>
+  );
+}

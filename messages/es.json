@@ -1,0 +1,58 @@
+{
+  "site": {
+    "name": "Jashmal",
+    "hebrew": "חַשְׁמַל"
+  },
+  "nav": {
+    "home": "Inicio",
+    "study": "Estudio",
+    "letters": "Letras"
+  },
+  "hero": {
+    "kicker": "Cabalá y filosofía judía",
+    "title": "Jashmal",
+    "tagline": "Donde el silencio aprende a hablar",
+    "description": "Una herramienta viva para el estudio de la Torá, el Talmud, el Midrash, la Cabalá y la Jasidut. Eliges un texto; el análisis desciende por los cuatro mundos del PaRDeS.",
+    "etymology": "Del jashmal de Yejezkel 1:4 — jash (silencio) y mal (habla).",
+    "cta": "Comenzar a estudiar"
+  },
+  "study": {
+    "title": "Motor de estudio",
+    "subtitle": "Navega una fuente o búscala directamente. El análisis aparecerá en tu idioma; los textos fuente, en hebreo.",
+    "searchPlaceholder": "Buscar una referencia (ej. Bereshit 1:1, Shabat 2a)...",
+    "searchButton": "Buscar",
+    "chooseCategory": "Elige una categoría",
+    "chooseBook": "Elige un libro",
+    "chooseChapter": "Capítulo",
+    "chooseDaf": "Folio (daf)",
+    "amudA": "a",
+    "amudB": "b",
+    "back": "Volver",
+    "sourceText": "Texto fuente",
+    "loadingText": "Cargando fuente desde Sefaria...",
+    "studyVerse": "Estudiar este versículo",
+    "studyPassage": "Estudiar el pasaje completo",
+    "analysis": "Análisis",
+    "generating": "El jashmal está estudiando...",
+    "errorText": "No se pudo cargar el texto. Revisa la referencia.",
+    "errorStudy": "No se pudo generar el estudio. Inténtalo de nuevo en un momento.",
+    "rateLimited": "Has alcanzado el límite de estudios por hora. Vuelve más tarde.",
+    "emptyState": "Selecciona una categoría para empezar, o busca una referencia."
+  },
+  "categories": {
+    "Torah": "Torá",
+    "Talmud": "Talmud",
+    "Midrash": "Midrash",
+    "Kabbalah": "Cabalá",
+    "Chasidut": "Jasidut"
+  },
+  "letters": {
+    "title": "Las letras hebreas",
+    "subtitle": "Canales de consciencia creativa, según el marco de Rav Yitzchak Ginsburgh.",
+    "studying": "Estudiando la letra...",
+    "back": "Volver al estudio"
+  },
+  "footer": {
+    "principle": "Primero la autoridad y el estudio honesto."
+  }
+}

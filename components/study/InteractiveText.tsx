@@ -1,0 +1,71 @@
+"use client";
+
+import React from "react";
+import { Link } from "@/i18n/navigation";
+import { parseHyperlinks } from "@/lib/hyperlinks";
+
+const HEBREW = /[֐-׿]/;
+
+function withHebrew(text: string, key: string): React.ReactNode {
+  if (HEBREW.test(text)) {
+    return (
+      <span key={key} className="hebrew">
+        {text}
+      </span>
+    );
+  }
+  return <React.Fragment key={key}>{text}</React.Fragment>;
+}
+
+// Resalta **negritas** dentro de un fragmento de texto plano.
+function renderBold(text: string, keyPrefix: string): React.ReactNode[] {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
+  return parts.map((part, i) => {
+    const key = `${keyPrefix}-b${i}`;
+    if (part.startsWith("**") && part.endsWith("**")) {
+      const inner = part.slice(2, -2);
+      return <strong key={key}>{withHebrew(inner, key)}</strong>;
+    }
+    return withHebrew(part, key);
+  });
+}
+
+export interface InlineProps {
+  text: string;
+  onConcept?: (term: string) => void;
+  keyPrefix?: string;
+}
+
+/** Renderiza una línea: convierte {{letter:..}} y {{study:..}} en enlaces dorados. */
+export default function Inline({ text, onConcept, keyPrefix = "i" }: InlineProps) {
+  const tokens = parseHyperlinks(text);
+
+  return (
+    <>
+      {tokens.map((tok, i) => {
+        const key = `${keyPrefix}-${i}`;
+        if (tok.type === "text") {
+          return <React.Fragment key={key}>{renderBold(tok.value, key)}</React.Fragment>;
+        }
+        if (tok.type === "letter") {
+          return (
+            <Link key={key} href={`/letras/${encodeURIComponent(tok.key)}`} className="gold-link">
+              {tok.label}
+            </Link>
+          );
+        }
+        // concepto
+        return (
+          <button
+            key={key}
+            type="button"
+            className="gold-link"
+            onClick={() => onConcept?.(tok.term)}
+          >
+            {tok.label}
+          </button>
+        );
+      })}
+    </>
+  );
+}
