@@ -101,3 +101,36 @@ body {
   background-color: rgb(5 5 10);
   color: rgb(232 228 216);
 }
+
+/* Logotipo electrum: el nombre "JASHMAL" con resplandor ámbar sutil. */
+.electrum {
+  background: linear-gradient(180deg, #f5dca0 0%, #e0a850 48%, #c9842f 78%, #a8691f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 10px rgba(224, 168, 80, 0.28));
+}
+.dark .electrum {
+  filter: drop-shadow(0 0 12px rgba(224, 168, 80, 0.32));
+}
+/* En claro, electrum más profundo (sin glow, legible sobre pergamino). */
+:root:not(.dark) .electrum {
+  background: linear-gradient(180deg, #b9842c 0%, #9a6a1f 60%, #7a5217 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: none;
+}
+/* Hebreo destacado del hero/logo: más brillo propio. */
+.electrum-he {
+  background: linear-gradient(180deg, #ffeec0 0%, #e8b65e 55%, #cf9038 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 14px rgba(232, 182, 94, 0.5)) drop-shadow(0 0 4px rgba(255, 240, 200, 0.6));
+}
+:root:not(.dark) .electrum-he {
+  background: linear-gradient(180deg, #a8721f 0%, #8a5e1c 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: none;
+}

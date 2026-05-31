@@ -24,10 +24,10 @@ export default function HomePage() {
             <p className="animate-fade-up font-cinzel text-xs uppercase tracking-[0.35em] text-gold/70">
               {t("hero.kicker")}
             </p>
-            <h1 className="animate-fade-up mt-6 font-cinzel text-6xl text-parchment sm:text-7xl">
+            <h1 className="electrum animate-fade-up mt-6 font-cinzel text-6xl sm:text-7xl">
               {t("hero.title")}
             </h1>
-            <p className="hebrew animate-fade-up mt-3 text-4xl text-gold">
+            <p className="hebrew electrum-he animate-fade-up mt-4 text-5xl font-bold sm:text-6xl">
               {t("site.hebrew")}
             </p>
             <p className="animate-fade-up mt-8 font-cinzel text-lg italic text-gold-soft">

@@ -1,0 +1,52 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Frank+Ruhl+Libre:wght@400;500;700&family=Cormorant+Garamond:ital@1&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0}
+  .sheet{width:1200px;font-family:'Cinzel',serif}
+  .heb{font-family:'Frank Ruhl Libre',serif}
+  .it{font-family:'Cormorant Garamond',serif;font-style:italic}
+  .panel{width:1200px;height:540px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+  .dark{background:#05050a}
+  .light{background:#f4f0e6}
+  /* JASHMAL: glow más sutil */
+  .wm{font-size:116px;letter-spacing:14px;font-weight:500;
+      background:linear-gradient(180deg,#f5dca0 0%,#e0a850 48%,#c9842f 78%,#a8691f 100%);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+      filter:drop-shadow(0 0 10px rgba(224,168,80,.28));}
+  .wm-light{font-size:116px;letter-spacing:14px;font-weight:500;
+      background:linear-gradient(180deg,#b9842c 0%,#9a6a1f 60%,#7a5217 100%);
+      -webkit-background-clip:text;background-clip:text;color:transparent;}
+  /* HEBREO: más grande, más peso, más brillo para que destaque */
+  .heb-d{font-size:92px;font-weight:700;
+      background:linear-gradient(180deg,#ffeec0 0%,#e8b65e 55%,#cf9038 100%);
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+      filter:drop-shadow(0 0 16px rgba(232,182,94,.55)) drop-shadow(0 0 4px rgba(255,240,200,.7));}
+  .heb-l{font-size:92px;font-weight:700;color:#8a5e1c;}
+  .kick{font-size:16px;letter-spacing:9px}
+  .kick-d{color:#c9a43e;opacity:.7}
+  .kick-l{color:#9a6a1f}
+  .tag-d{color:#b9a98a}
+  .tag-l{color:#6b6456}
+  .tag{font-size:24px}
+</style></head><body>
+<div class="sheet">
+  <div class="panel dark">
+    <div class="kick kick-d">CABALÁ Y FILOSOFÍA JUDÍA</div>
+    <div class="wm">JASHMAL</div>
+    <div class="heb heb-d">חַשְׁמַל</div>
+    <div class="it tag tag-d">La voz del silencio</div>
+  </div>
+  <div class="panel light">
+    <div class="kick kick-l">CABALÁ Y FILOSOFÍA JUDÍA</div>
+    <div class="wm-light">JASHMAL</div>
+    <div class="heb heb-l">חַשְׁמַל</div>
+    <div class="it tag tag-l">La voz del silencio</div>
+  </div>
+  <div class="panel dark" style="height:320px">
+    <div class="wm" style="font-size:70px;letter-spacing:10px">JASHMAL</div>
+    <div class="heb heb-d" style="font-size:54px">חַשְׁמַל</div>
+  </div>
+</div>
+</body></html>
