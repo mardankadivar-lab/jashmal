@@ -42,7 +42,9 @@
     "errorText": "No se pudo cargar el texto. Revisa la referencia.",
     "errorStudy": "No se pudo generar el estudio. Inténtalo de nuevo en un momento.",
     "rateLimited": "Has alcanzado el límite de estudios por hora. Vuelve más tarde.",
-    "emptyState": "Selecciona una categoría para empezar, o busca una referencia."
+    "emptyState": "Selecciona una categoría para empezar, o busca una referencia.",
+    "aboutBook": "Sobre este libro",
+    "loadingSummary": "Cargando contexto..."
   },
   "categories": {
     "Torah": "Torá",

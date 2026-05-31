@@ -9,6 +9,7 @@ import {
   type CatBook,
   type CategoryId,
 } from "@/lib/categories";
+import BookSummary from "./BookSummary";
 
 interface BookBrowserProps {
   category: CategoryId;
@@ -38,6 +39,7 @@ export default function BookBrowser({
     );
     return (
       <div className="mt-4">
+        <BookSummary bookId={selectedBook.id} />
         <p className="mb-2 text-sm text-muted">
           {selectedBook.type === "talmud" ? t("chooseDaf") : t("chooseChapter")} ·{" "}
           <span className="text-parchment/80">{bookLabel(selectedBook, locale)}</span>
