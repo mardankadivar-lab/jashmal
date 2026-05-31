@@ -36,6 +36,9 @@ export default function StudyEngine() {
   const [studyRef, setStudyRef] = useState<string | null>(null);
   // palabra hebrea + posición para el léxico popup (null = cerrado).
   const [lexiconAnchor, setLexiconAnchor] = useState<WordAnchor | null>(null);
+  // unidad (capítulo/daf) actual del libro elegido, para "siguiente capítulo".
+  const [currentUnit, setCurrentUnit] = useState<number | null>(null);
+  const [currentAmud, setCurrentAmud] = useState<"a" | "b" | undefined>(undefined);
   // parashá de la semana (Sefaria), para el acceso directo.
   const [parasha, setParasha] = useState<ParashaInfo | null>(null);
 
@@ -73,7 +76,32 @@ export default function StudyEngine() {
 
   function selectUnit(unit: number, amud?: "a" | "b") {
     if (!book) return;
+    setCurrentUnit(unit);
+    setCurrentAmud(amud);
     loadRef(bookRef(book, unit, amud));
+  }
+
+  // Siguiente capítulo/daf del mismo libro (para no perder el hilo).
+  function nextUnit() {
+    if (!book || currentUnit === null) return;
+    if (book.type === "talmud") {
+      // daf con amud: a → b, luego siguiente daf a.
+      if (currentAmud === "a") return selectUnit(currentUnit, "b");
+      return selectUnit(currentUnit + 1, "a");
+    }
+    const first = 1;
+    const last = book.units + (first - 1);
+    if (currentUnit >= last) return; // último capítulo
+    selectUnit(currentUnit + 1);
+  }
+
+  function hasNext(): boolean {
+    if (!book || currentUnit === null) return false;
+    if (book.type === "talmud") {
+      const lastDaf = (book.firstDaf ?? 2) + book.units - 1;
+      return currentUnit < lastDaf || currentAmud === "a";
+    }
+    return currentUnit < book.units;
   }
 
   function onSearch(e: React.FormEvent) {
@@ -241,6 +269,16 @@ export default function StudyEngine() {
         {study && !studyLoading && (
           <div className="mt-6">
             <StudyResult text={study} onConcept={studyConcept} />
+            {hasNext() && (
+              <div className="mt-8 flex justify-end border-t border-gold/15 pt-4">
+                <button
+                  onClick={nextUnit}
+                  className="rounded-full border border-gold/50 px-5 py-2 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:bg-gold/10"
+                >
+                  {t("nextChapter")} →
+                </button>
+              </div>
+            )}
             {studyRef && <BeitMidrash studyRef={studyRef} />}
           </div>
         )}
