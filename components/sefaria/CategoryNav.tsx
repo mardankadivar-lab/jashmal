@@ -1,7 +1,7 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-import { CATEGORY_ORDER, type CategoryId } from "@/lib/categories";
+import { useLocale } from "next-intl";
+import { CATALOG, type CategoryId } from "@/lib/categories";
 
 interface CategoryNavProps {
   selected: CategoryId | null;
@@ -9,22 +9,26 @@ interface CategoryNavProps {
 }
 
 export default function CategoryNav({ selected, onSelect }: CategoryNavProps) {
-  const t = useTranslations("categories");
+  const locale = useLocale();
 
   return (
     <div className="flex flex-wrap gap-2">
-      {CATEGORY_ORDER.map((c) => (
+      {CATALOG.map((g) => (
         <button
-          key={c}
-          onClick={() => onSelect(c)}
+          key={g.id}
+          onClick={() => onSelect(g.id)}
           className={
             "rounded-full border px-4 py-1.5 font-cinzel text-sm tracking-wide transition-all " +
-            (selected === c
+            (selected === g.id
               ? "border-gold bg-gold/10 text-gold"
               : "border-gold/25 text-muted hover:border-gold/60 hover:text-parchment")
           }
         >
-          {t(c)}
+          {locale === "fa" ? (
+            <span className="hebrew">{g.he}</span>
+          ) : (
+            <span>{g.es}</span>
+          )}
         </button>
       ))}
     </div>

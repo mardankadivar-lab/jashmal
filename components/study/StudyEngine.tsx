@@ -10,7 +10,7 @@ import AliyatNitzotzot from "./AliyatNitzotzot";
 import BeitMidrash from "./BeitMidrash";
 import LexiconPanel from "./LexiconPanel";
 import JashmalMark from "@/components/JashmalMark";
-import type { BookDef, CategoryId } from "@/lib/categories";
+import type { CatBook, CategoryId } from "@/lib/categories";
 import { buildRef, getText, type SefariaTextResult } from "@/lib/sefaria";
 import { requestStudy, StudyError } from "@/lib/studyClient";
 
@@ -19,7 +19,7 @@ export default function StudyEngine() {
   const t = useTranslations("study");
 
   const [category, setCategory] = useState<CategoryId | null>(null);
-  const [book, setBook] = useState<BookDef | null>(null);
+  const [book, setBook] = useState<CatBook | null>(null);
 
   const [sourceResult, setSourceResult] = useState<SefariaTextResult | null>(null);
   const [sourceLoading, setSourceLoading] = useState(false);
@@ -43,7 +43,7 @@ export default function StudyEngine() {
     setSourceResult(null);
   }
 
-  function selectBook(b: BookDef) {
+  function selectBook(b: CatBook) {
     setBook(b);
     setSourceResult(null);
   }
