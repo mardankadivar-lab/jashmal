@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import Nitzotzot from "@/components/Nitzotzot";
 import SiteHeader from "@/components/SiteHeader";
+import MotivationBanner from "@/components/MotivationBanner";
 
 export default function HomePage() {
   const t = useTranslations();
@@ -45,6 +46,9 @@ export default function HomePage() {
             >
               {t("hero.cta")}
             </Link>
+            <div className="animate-fade-up mt-12 border-t border-gold/15 pt-8">
+              <MotivationBanner />
+            </div>
           </div>
         </section>
 
