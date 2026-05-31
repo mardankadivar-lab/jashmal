@@ -44,7 +44,9 @@
     "rateLimited": "Has alcanzado el límite de estudios por hora. Vuelve más tarde.",
     "emptyState": "Selecciona una categoría para empezar, o busca una referencia.",
     "aboutBook": "Sobre este libro",
-    "loadingSummary": "Cargando contexto..."
+    "loadingSummary": "Cargando contexto...",
+    "meditationHe": "דֹּם",
+    "meditation": "Silencia, antes de hablar. Primero escucha el texto; luego deja que hable en ti."
   },
   "categories": {
     "Torah": "Torá",

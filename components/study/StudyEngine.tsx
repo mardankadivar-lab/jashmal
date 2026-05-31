@@ -192,7 +192,14 @@ export default function StudyEngine() {
         )}
         {studyError && <p className="mt-6 text-sm text-red-400/80">{studyError}</p>}
         {!studyLoading && !studyError && !study && (
-          <p className="mt-6 text-sm text-muted">{t("emptyState")}</p>
+          <div className="mt-10 flex flex-col items-center py-6 text-center">
+            <JashmalMark size={92} animated={false} />
+            <p className="hebrew mt-6 text-2xl text-gold/80">{t("meditationHe")}</p>
+            <p className="mt-3 max-w-xs font-cinzel text-sm italic leading-relaxed text-muted">
+              {t("meditation")}
+            </p>
+            <p className="mt-6 text-xs text-muted/70">{t("emptyState")}</p>
+          </div>
         )}
         {study && !studyLoading && (
           <div className="mt-6">
