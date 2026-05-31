@@ -13,9 +13,9 @@ export default {
       },
       fontFamily: {
         cinzel: ["var(--font-cinzel)", "serif"],
-        cormorant: ["var(--font-cormorant)", "serif"],
+        body: ["var(--font-body)", "Georgia", "serif"],
         vazir: ["var(--font-vazir)", "sans-serif"],
-        hebrew: ["var(--font-cormorant)", "Frank Ruhl Libre", "Times New Roman", "serif"],
+        hebrew: ["var(--font-hebrew)", "Frank Ruhl Libre", "David Libre", "serif"],
       },
       keyframes: {
         "fade-up": {

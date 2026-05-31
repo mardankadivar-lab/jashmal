@@ -18,9 +18,9 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Texto hebreo: serif con fallback a fuentes hebreas del sistema. */
+/* Texto hebreo: Frank Ruhl Libre, la serif hebrea clásica de los libros sagrados. */
 .hebrew {
-  font-family: var(--font-cormorant), "Frank Ruhl Libre", "Times New Roman", serif;
+  font-family: var(--font-hebrew), "Frank Ruhl Libre", "David Libre", serif;
   direction: rtl;
   unicode-bidi: isolate;
 }
@@ -39,8 +39,10 @@ body {
 
 /* Render del análisis (texto largo de Claude). */
 .study-prose {
-  line-height: 1.85;
-  font-size: 1.075rem;
+  line-height: 1.8;
+  font-size: 1.125rem;
+  letter-spacing: 0.005em;
+  color: #ddd8cc;
 }
 .study-prose h1,
 .study-prose h2,
