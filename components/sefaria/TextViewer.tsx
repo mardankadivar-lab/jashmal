@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import type { SefariaTextResult } from "@/lib/sefaria";
+import ClickableHebrew from "./ClickableHebrew";
 
 type StudyDepth = "quick" | "deep";
 
@@ -12,6 +13,7 @@ interface TextViewerProps {
   studyingIndex: number | null;
   onStudyVerse: (index: number, depth: StudyDepth) => void;
   onStudyPassage: (depth: StudyDepth) => void;
+  onWord?: (word: string) => void;
 }
 
 export default function TextViewer({
@@ -21,6 +23,7 @@ export default function TextViewer({
   studyingIndex,
   onStudyVerse,
   onStudyPassage,
+  onWord,
 }: TextViewerProps) {
   const t = useTranslations("study");
 
@@ -48,7 +51,15 @@ export default function TextViewer({
             className="group flex items-start gap-3 rounded-md border border-transparent p-2 transition-colors hover:border-gold/15 hover:bg-white/[0.02]"
           >
             <span className="mt-1 select-none text-xs text-gold/50">{i + 1}</span>
-            <p className="hebrew flex-1 text-xl leading-relaxed text-parchment">{seg}</p>
+            {onWord ? (
+              <ClickableHebrew
+                text={seg}
+                onWord={onWord}
+                className="hebrew flex-1 text-xl leading-relaxed text-parchment"
+              />
+            ) : (
+              <p className="hebrew flex-1 text-xl leading-relaxed text-parchment">{seg}</p>
+            )}
             <div className="mt-1 flex shrink-0 gap-1 opacity-0 transition-opacity group-hover:opacity-100">
               <button
                 onClick={() => onStudyVerse(i, "quick")}
@@ -90,6 +101,7 @@ export default function TextViewer({
         </button>
       </div>
       <p className="mt-2 text-xs text-muted/70">{t("depthNote")}</p>
+      {onWord && <p className="mt-1 text-xs text-muted/60">{t("wordHint")}</p>}
     </div>
   );
 }

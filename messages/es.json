@@ -57,6 +57,17 @@
     "studying": "Estudiando la letra...",
     "back": "Volver al estudio"
   },
+  "lexicon": {
+    "title": "Léxico",
+    "close": "Cerrar",
+    "loading": "Abriendo la palabra...",
+    "error": "No se pudo abrir el léxico de esta palabra.",
+    "gematria": "גִּימַטְרִיָּה — Gematría",
+    "classic": "Diccionarios",
+    "mystic": "Sentido interior",
+    "disclaimer": "Diccionarios clásicos vía Sefaria (BDB, Strong, Klein, Jastrow). El sentido interior y las conexiones numéricas son una meditación generada; verifícalas en las fuentes.",
+    "wordHint": "Toca cualquier palabra hebrea para abrir su léxico."
+  },
   "beitMidrash": {
     "title": "בֵּית מִדְרָשׁ — Casa de estudio",
     "subtitle": "Comparte lo que este texto te reveló. El conocimiento solo se completa cuando desciende al mundo de la acción.",
