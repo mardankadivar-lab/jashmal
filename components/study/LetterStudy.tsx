@@ -19,8 +19,8 @@ export default function LetterStudy({ letter }: { letter: string }) {
     setStudy(null);
     setError(null);
     requestStudy({ mode: "letter", locale, letter })
-      .then((text) => {
-        if (!cancelled) setStudy(text);
+      .then((res) => {
+        if (!cancelled) setStudy(res.study);
       })
       .catch((err) => {
         if (cancelled) return;
