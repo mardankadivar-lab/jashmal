@@ -68,6 +68,41 @@ export async function createReflection(
 }
 
 /** Marca una reflexión como reportada; la oculta al superar un umbral. */
+export interface AdminReflection extends Reflection {
+  status: string;
+  reports: number;
+}
+
+/** Admin: todas las reflexiones (incluidas las ocultas), recientes primero. */
+export async function adminListAll(): Promise<AdminReflection[]> {
+  const sql = getSql();
+  if (!sql) return [];
+  await ensureSchema();
+  const rows = await sql`
+    SELECT id, study_ref, locale, body, created_at, status, reports
+    FROM reflections
+    ORDER BY created_at DESC
+    LIMIT 300
+  `;
+  return rows as AdminReflection[];
+}
+
+/** Admin: borra una reflexión definitivamente. */
+export async function deleteReflection(id: number): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  await ensureSchema();
+  await sql`DELETE FROM reflections WHERE id = ${id}`;
+}
+
+/** Admin: restaura una reflexión oculta. */
+export async function restoreReflection(id: number): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  await ensureSchema();
+  await sql`UPDATE reflections SET status = 'visible', reports = 0 WHERE id = ${id}`;
+}
+
 export async function reportReflection(id: number): Promise<void> {
   const sql = getSql();
   if (!sql) return;
