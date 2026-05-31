@@ -9,7 +9,12 @@ export const maxDuration = 60;
 
 const MYSTIC_MODEL = "claude-haiku-4-5-20251001";
 
-const LANG: Record<string, string> = { es: "español", fa: "farsi (persa)" };
+// Descripción enfática del idioma de salida. Para farsi insistimos en persa y
+// NO árabe, porque comparten alfabeto y el modelo a veces se desvía al árabe.
+const LANG: Record<string, string> = {
+  es: "español",
+  fa: "persa (فارسی) — NO árabe. Usa vocabulario y gramática persas (por ejemplo «است», «این», «که», «برای»), nunca palabras o construcciones árabes",
+};
 
 function buildMysticPrompt(
   word: string,
@@ -28,7 +33,7 @@ function buildMysticPrompt(
 
 Sentido clásico de referencia (de los diccionarios): ${classic || "(no disponible)"}
 
-Responde en ${lang}, de forma concisa y bella, con estos tres apartados breves
+Responde SIEMPRE en ${lang}. Sé conciso y bello, con estos tres apartados breves
 y títulos en hebreo:
 
 1. אוֹתִיּוֹת — Letra por letra: el sentido espiritual de cada letra de la palabra

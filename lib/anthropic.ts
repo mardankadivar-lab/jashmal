@@ -14,7 +14,7 @@ const LANG_NAME: Record<string, string> = {
 };
 
 const RTL_NOTE: Record<string, string> = {
-  fa: "\nEl usuario lee en farsi (RTL). Escribe en persa natural y fluido.",
+  fa: "\nEl usuario lee en farsi/persa (RTL). Escribe en persa (فارسی) natural y fluido — NUNCA en árabe, aunque compartan alfabeto. Usa vocabulario y gramática persas.",
   es: "",
 };
 
