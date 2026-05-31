@@ -9,6 +9,7 @@ import StudyResult from "./StudyResult";
 import AliyatNitzotzot from "./AliyatNitzotzot";
 import BeitMidrash from "./BeitMidrash";
 import LexiconPanel from "./LexiconPanel";
+import JashmalMark from "@/components/JashmalMark";
 import type { BookDef, CategoryId } from "@/lib/categories";
 import { buildRef, getText, type SefariaTextResult } from "@/lib/sefaria";
 import { requestStudy, StudyError } from "@/lib/studyClient";
@@ -182,7 +183,13 @@ export default function StudyEngine() {
 
         {studyLoading && (
           <div className="always-dark mt-6 rounded-lg p-4">
-            <AliyatNitzotzot />
+            <div className="relative">
+              <AliyatNitzotzot />
+              {/* La marca pulsa (igulim que emanan) en el corazón de las chispas que ascienden. */}
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <JashmalMark size={130} animated />
+              </div>
+            </div>
             <p className="mt-4 animate-pulse text-center text-sm text-muted">
               {t("generating")}
             </p>
