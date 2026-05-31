@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import type { SefariaTextResult } from "@/lib/sefaria";
-import ClickableHebrew from "./ClickableHebrew";
+import ClickableHebrew, { type WordAnchor } from "./ClickableHebrew";
 
 type StudyDepth = "quick" | "deep";
 
@@ -13,7 +13,7 @@ interface TextViewerProps {
   studyingIndex: number | null;
   onStudyVerse: (index: number, depth: StudyDepth) => void;
   onStudyPassage: (depth: StudyDepth) => void;
-  onWord?: (word: string) => void;
+  onWord?: (anchor: WordAnchor) => void;
 }
 
 export default function TextViewer({

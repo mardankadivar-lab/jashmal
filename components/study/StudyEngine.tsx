@@ -9,6 +9,7 @@ import StudyResult from "./StudyResult";
 import BeitMidrash from "./BeitMidrash";
 import LexiconPanel from "./LexiconPanel";
 import JashmalMark from "@/components/JashmalMark";
+import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, type CatBook, type CategoryId } from "@/lib/categories";
 import { getText, type SefariaTextResult } from "@/lib/sefaria";
 import { requestStudy, StudyError } from "@/lib/studyClient";
@@ -33,8 +34,8 @@ export default function StudyEngine() {
   const [studyingIndex, setStudyingIndex] = useState<number | null>(null);
   // identificador del estudio mostrado, para asociar las reflexiones del Beit Midrash.
   const [studyRef, setStudyRef] = useState<string | null>(null);
-  // palabra hebrea seleccionada para el léxico (null = panel cerrado).
-  const [lexiconWord, setLexiconWord] = useState<string | null>(null);
+  // palabra hebrea + posición para el léxico popup (null = cerrado).
+  const [lexiconAnchor, setLexiconAnchor] = useState<WordAnchor | null>(null);
 
   function selectCategory(c: CategoryId) {
     setCategory(c);
@@ -170,7 +171,7 @@ export default function StudyEngine() {
           studyingIndex={studyingIndex}
           onStudyVerse={(i, depth) => runStudy(i, depth)}
           onStudyPassage={(depth) => runStudy(-1, depth)}
-          onWord={(w) => setLexiconWord(w)}
+          onWord={(a) => setLexiconAnchor(a)}
         />
       </section>
 
@@ -209,7 +210,7 @@ export default function StudyEngine() {
         )}
       </section>
 
-      <LexiconPanel word={lexiconWord} onClose={() => setLexiconWord(null)} />
+      <LexiconPanel anchor={lexiconAnchor} onClose={() => setLexiconAnchor(null)} />
     </div>
   );
 }
