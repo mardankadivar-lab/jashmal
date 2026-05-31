@@ -36,6 +36,8 @@ export default function StudyEngine() {
   const [studyRef, setStudyRef] = useState<string | null>(null);
   // palabra hebrea + posición para el léxico popup (null = cerrado).
   const [lexiconAnchor, setLexiconAnchor] = useState<WordAnchor | null>(null);
+  // concepto/letra abierto en el panel lateral (sin perder el estudio).
+  const [conceptTarget, setConceptTarget] = useState<ConceptTarget | null>(null);
   // unidad (capítulo/daf) actual del libro elegido, para "siguiente capítulo".
   const [currentUnit, setCurrentUnit] = useState<number | null>(null);
   const [currentAmud, setCurrentAmud] = useState<"a" | "b" | undefined>(undefined);
@@ -276,7 +278,7 @@ export default function StudyEngine() {
         )}
         {study && !studyLoading && (
           <div className="mt-6">
-            <StudyResult text={study} onConcept={studyConcept} />
+            <StudyResult text={study} onConcept={openConcept} onLetter={openLetter} />
             {hasNext() && (
               <div className="mt-8 flex justify-end border-t border-gold/15 pt-4">
                 <button
@@ -293,6 +295,11 @@ export default function StudyEngine() {
       </section>
 
       <LexiconPanel anchor={lexiconAnchor} onClose={() => setLexiconAnchor(null)} />
+      <ConceptPanel
+        target={conceptTarget}
+        onClose={() => setConceptTarget(null)}
+        onConcept={openConcept}
+      />
     </div>
   );
 }

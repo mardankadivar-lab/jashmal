@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Link } from "@/i18n/navigation";
 import { parseHyperlinks } from "@/lib/hyperlinks";
 
 const HEBREW = /[֐-׿]/;
@@ -35,11 +34,12 @@ function renderBold(text: string, keyPrefix: string): React.ReactNode[] {
 export interface InlineProps {
   text: string;
   onConcept?: (term: string) => void;
+  onLetter?: (key: string, label: string) => void;
   keyPrefix?: string;
 }
 
 /** Renderiza una línea: convierte {{letter:..}} y {{study:..}} en enlaces dorados. */
-export default function Inline({ text, onConcept, keyPrefix = "i" }: InlineProps) {
+export default function Inline({ text, onConcept, onLetter, keyPrefix = "i" }: InlineProps) {
   const tokens = parseHyperlinks(text);
 
   return (
@@ -50,10 +50,16 @@ export default function Inline({ text, onConcept, keyPrefix = "i" }: InlineProps
           return <React.Fragment key={key}>{renderBold(tok.value, key)}</React.Fragment>;
         }
         if (tok.type === "letter") {
+          // Abre la letra en panel lateral (no navega, no pierde el estudio).
           return (
-            <Link key={key} href={`/letras/${encodeURIComponent(tok.key)}`} className="gold-link">
+            <button
+              key={key}
+              type="button"
+              className="gold-link"
+              onClick={() => onLetter?.(tok.key, tok.label)}
+            >
               {tok.label}
-            </Link>
+            </button>
           );
         }
         // concepto
