@@ -1,6 +1,14 @@
 {
-  "site": { "name": "Jashmal", "hebrew": "חַשְׁמַל" },
-  "nav": { "home": "Home", "study": "Study", "letters": "Letters", "about": "About" },
+  "site": {
+    "name": "Jashmal",
+    "hebrew": "חַשְׁמַל"
+  },
+  "nav": {
+    "home": "Home",
+    "study": "Study",
+    "letters": "Letters",
+    "about": "About"
+  },
   "hero": {
     "kicker": "Kabbalah and Jewish philosophy",
     "title": "Jashmal",
@@ -45,8 +53,11 @@
     "nextChapter": "Next chapter"
   },
   "categories": {
-    "Torah": "Torah", "Talmud": "Talmud", "Midrash": "Midrash",
-    "Kabbalah": "Kabbalah", "Chasidut": "Chasidut"
+    "Torah": "Torah",
+    "Talmud": "Talmud",
+    "Midrash": "Midrash",
+    "Kabbalah": "Kabbalah",
+    "Chasidut": "Chasidut"
   },
   "letters": {
     "title": "The Hebrew letters",
@@ -88,15 +99,31 @@
   "about": {
     "title": "About Jashmal",
     "tagline": "The voice of silence",
-    "s1He": "חַשְׁמַל", "s1Title": "The name",
+    "s1He": "חַשְׁמַל",
+    "s1Title": "The name",
     "s1Body": "Jashmal (חַשְׁמַל) is a word that appears in the vision of the prophet Ezekiel (Ezekiel 1:4): \"and from the midst of the fire, like the gleam of the chashmal.\" It is one of the most enigmatic words of the Torah — the sages describe it as a radiance, an incandescent amber, an electrum glowing from within the fire. It is neither a mere color nor a mere metal: it is living light caught in matter.",
-    "s2He": "חַשׁ + מַל", "s2Title": "Silence and speech",
+    "s2He": "חַשׁ + מַל",
+    "s2Title": "Silence and speech",
     "s2Body": "The Talmud (Chagigah 13b) reads the name as two joined words: \"chash\" (חַשׁ, silence) and \"mal\" (מַל, speech). The angels called chashmalim are sometimes silent and sometimes speak: silent when the divine Word emanates, speaking when they transmit it. That is why Jashmal is \"the voice of silence\": first the text is heard in silence, and only then does one speak. That is the method of this place.",
-    "s3He": "לִמּוּד", "s3Title": "What this place is",
+    "s3He": "לִמּוּד",
+    "s3Title": "What this place is",
     "s3Body": "Jashmal is a living tool of study. You choose a text from the Torah, Talmud, Midrash, Kabbalah or Chasidut, and the analysis descends through the four worlds of PaRDeS: Pshat (literal), Remez (allusion), Drash (interpretation) and Sod (secret). The engine gathers the real sources connected to each passage — the Targumim, the commentators, the Zohar, the Arizal — as a student would who opens many books at once.",
-    "s4He": "מַעֲשֶׂה", "s4Title": "The purpose",
+    "s4He": "מַעֲשֶׂה",
+    "s4Title": "The purpose",
     "s4Body": "Knowledge is only complete when it descends into the world of action. Contemplation alone is not enough: the light of wisdom (Chochmah) must descend to Malchut, to daily life, to an act of kindness. Jashmal seeks that each study bring you closer to God, to yourself and to your neighbor — that silence learn to speak, and that the word become deed.",
     "principle": "First authority and honest study."
   },
-  "footer": { "principle": "First authority and honest study." }
+  "footer": {
+    "principle": "First authority and honest study."
+  },
+  "chat": {
+    "title": "Study Tutor",
+    "close": "Close",
+    "toggle": "Ask the tutor",
+    "hint": "Have a question about a word or concept? Ask here.",
+    "placeholder": "What does... mean?",
+    "send": "Send",
+    "thinking": "The tutor is thinking...",
+    "error": "Couldn't answer. Please try again."
+  }
 }

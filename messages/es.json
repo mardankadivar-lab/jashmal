@@ -115,5 +115,15 @@
     "s4Title": "El propósito",
     "s4Body": "El conocimiento solo se completa cuando desciende al mundo de la acción. No basta con contemplar: la luz de la sabiduría (Jojmá) debe bajar hasta Maljut, hasta la vida cotidiana, hasta un acto de bondad. Jashmal busca que cada estudio te acerque más a Dios, a ti mismo y al prójimo — que el silencio aprenda a hablar, y que la palabra se vuelva acto.",
     "principle": "Primero la autoridad y el estudio honesto."
+  },
+  "chat": {
+    "title": "Tutor de estudio",
+    "close": "Cerrar",
+    "toggle": "Preguntar al tutor",
+    "hint": "¿Tienes una duda sobre una palabra o concepto? Pregunta aquí.",
+    "placeholder": "¿Qué significa...?",
+    "send": "Enviar",
+    "thinking": "El tutor está pensando...",
+    "error": "No pude responder. Intenta de nuevo."
   }
 }

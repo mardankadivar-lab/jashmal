@@ -9,6 +9,7 @@ import StudyResult from "./StudyResult";
 import BeitMidrash from "./BeitMidrash";
 import LexiconPanel from "./LexiconPanel";
 import ConceptPanel, { type ConceptTarget } from "./ConceptPanel";
+import StudyChat from "./StudyChat";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, type CatBook, type CategoryId } from "@/lib/categories";
 import { getText, type SefariaTextResult } from "@/lib/sefaria";
@@ -283,6 +284,7 @@ export default function StudyEngine() {
         )}
       </section>
 
+      <StudyChat studyRef={studyRef} />
       <LexiconPanel anchor={lexiconAnchor} onClose={() => setLexiconAnchor(null)} />
       <ConceptPanel
         target={conceptTarget}
