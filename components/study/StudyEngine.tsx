@@ -8,7 +8,6 @@ import TextViewer from "@/components/sefaria/TextViewer";
 import StudyResult from "./StudyResult";
 import BeitMidrash from "./BeitMidrash";
 import LexiconPanel from "./LexiconPanel";
-import JashmalMark from "@/components/JashmalMark";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, type CatBook, type CategoryId } from "@/lib/categories";
 import { getText, type SefariaTextResult } from "@/lib/sefaria";
@@ -222,9 +221,8 @@ export default function StudyEngine() {
 
         {studyLoading && (
           <div className="mt-10 flex flex-col items-center py-8">
-            {/* La marca pulsa: los עיגולים emanan del centro mientras Claude estudia.
-                La gema de ámbar funciona sobre claro y oscuro (sin caja negra). */}
-            <JashmalMark size={150} animated />
+            {/* Indicador sobrio mientras Claude estudia (sin la gema). */}
+            <span className="h-3 w-3 animate-ping rounded-full bg-gold/70" />
             <p className="mt-6 animate-pulse text-center text-sm text-muted">
               {t("generating")}
             </p>
@@ -233,8 +231,7 @@ export default function StudyEngine() {
         {studyError && <p className="mt-6 text-sm text-red-400/80">{studyError}</p>}
         {!studyLoading && !studyError && !study && (
           <div className="mt-10 flex flex-col items-center py-6 text-center">
-            <JashmalMark size={92} animated={false} />
-            <p className="hebrew mt-6 text-2xl text-gold/80">{t("meditationHe")}</p>
+            <p className="hebrew text-2xl text-gold/80">{t("meditationHe")}</p>
             <p className="mt-3 max-w-xs font-cinzel text-sm italic leading-relaxed text-muted">
               {t("meditation")}
             </p>
