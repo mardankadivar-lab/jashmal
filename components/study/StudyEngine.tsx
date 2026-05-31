@@ -46,6 +46,14 @@ export default function StudyEngine() {
     getParashaHashavua().then((p) => p && setParasha(p));
   }, []);
 
+  // Carga inicial desde ?ref= (enlaces como Kohelet 11:1 del Beit Midrash).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const ref = new URLSearchParams(window.location.search).get("ref");
+    if (ref) loadRef(ref);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function selectCategory(c: CategoryId) {
     setCategory(c);
     setBook(null);

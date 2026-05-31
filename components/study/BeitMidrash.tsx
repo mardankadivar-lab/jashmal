@@ -112,6 +112,16 @@ export default function BeitMidrash({ studyRef }: BeitMidrashProps) {
       <h3 className="font-cinzel text-base text-gold">{t("title")}</h3>
       <p className="mt-2 text-sm text-muted">{t("subtitle")}</p>
 
+      <a
+        href="/estudio?ref=Ecclesiastes%2011%3A1"
+        className="mt-3 block rounded-md border border-gold/15 bg-gold/[0.03] px-3 py-2 font-cinzel text-sm italic leading-relaxed text-gold-soft transition-colors hover:border-gold/40 hover:bg-gold/[0.06]"
+      >
+        “{t("kohelet")}”
+        <span className="mt-1 block text-xs not-italic text-muted">
+          Kohelet 11:1 · {t("koheletCta")}
+        </span>
+      </a>
+
       <div className="mt-4">
         <textarea
           value={text}
