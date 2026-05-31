@@ -10,8 +10,8 @@ import AliyatNitzotzot from "./AliyatNitzotzot";
 import BeitMidrash from "./BeitMidrash";
 import LexiconPanel from "./LexiconPanel";
 import JashmalMark from "@/components/JashmalMark";
-import type { CatBook, CategoryId } from "@/lib/categories";
-import { buildRef, getText, type SefariaTextResult } from "@/lib/sefaria";
+import { bookRef, type CatBook, type CategoryId } from "@/lib/categories";
+import { getText, type SefariaTextResult } from "@/lib/sefaria";
 import { requestStudy, StudyError } from "@/lib/studyClient";
 
 export default function StudyEngine() {
@@ -67,7 +67,7 @@ export default function StudyEngine() {
 
   function selectUnit(unit: number, amud?: "a" | "b") {
     if (!book) return;
-    loadRef(buildRef(book.id, book.type, unit, amud));
+    loadRef(bookRef(book, unit, amud));
   }
 
   function onSearch(e: React.FormEvent) {

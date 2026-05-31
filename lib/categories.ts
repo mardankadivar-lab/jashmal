@@ -1,28 +1,54 @@
 // Capa de catálogo: usa el catálogo COMPLETO autogenerado desde Sefaria
-// (lib/catalog.generated.ts) y le añade nombres localizados ES/FA.
+// (lib/catalog.generated.ts), aplica overrides para obras complejas (Tania, etc.)
+// y añade nombres localizados ES/FA.
 
-import { CATALOG, type CatGroup, type CatBook, type CatSub } from "./catalog.generated";
+import { CATALOG as RAW, type CatSub } from "./catalog.generated";
+import { COMPLEX_OVERRIDES, bookRef, type RichBook } from "./catalogOverrides";
 import { localizedBookLabel, SUB_FA } from "./bookNames";
 
-export type { CatGroup, CatBook, CatSub };
-export { CATALOG };
+export type CatBook = RichBook;
+export { bookRef };
 
 export type CategoryId = string;
 
-// Orden y etiqueta de las categorías de primer nivel.
+export interface RichSub {
+  sub: string | null;
+  subHe: string;
+  books: RichBook[];
+}
+export interface RichGroup {
+  id: string;
+  he: string;
+  es: string;
+  subs: RichSub[];
+}
+
+// Expande cada subcategoría: los libros complejos se sustituyen por sus partes.
+function expandSub(sub: CatSub): RichSub {
+  const books: RichBook[] = [];
+  for (const b of sub.books) {
+    const parts = COMPLEX_OVERRIDES[b.id];
+    if (parts) books.push(...parts);
+    else books.push(b as RichBook);
+  }
+  return { sub: sub.sub, subHe: sub.subHe, books };
+}
+
+export const CATALOG: RichGroup[] = RAW.map((g) => ({
+  id: g.id,
+  he: g.he,
+  es: g.es,
+  subs: g.subs.map(expandSub),
+}));
+
 export const CATEGORY_ORDER: CategoryId[] = CATALOG.map((g) => g.id);
 
-export function getGroup(id: CategoryId): CatGroup | undefined {
+export function getGroup(id: CategoryId): RichGroup | undefined {
   return CATALOG.find((g) => g.id === id);
 }
 
-/** Etiqueta visible de una categoría (ES o FA). */
-export function categoryLabel(g: CatGroup, locale: string): string {
-  return locale === "fa" ? "" : g.es; // en FA mostramos solo el hebreo (g.he)
-}
-
 /** Etiqueta de un libro, localizada. */
-export function bookLabel(b: CatBook, locale: string): string {
+export function bookLabel(b: RichBook, locale: string): string {
   return localizedBookLabel(b.id, b.label, locale);
 }
 
