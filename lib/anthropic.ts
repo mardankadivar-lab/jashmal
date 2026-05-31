@@ -38,6 +38,16 @@ function textStructure(): string {
 4. חֲסִידוּת — Implicaciones jasídicas, en el espíritu del Baal Shem Tov.
 5. הִתְבּוֹנְנוּת — Síntesis contemplativa: el mensaje profundo y sencillo.
 
+Si el pasaje pertenece a la Torá (Jumash), y especialmente si es la parashá de
+la semana, AÑADE al final una breve lectura según la Cabalá luriana del Arí z"l:
+qué Partzufim, sefirot o tikunim se revelan en este pasaje (p. ej. Zeir Anpin,
+Nukva, Aba, Ima, Arij Anpin), y, si la tradición lo desarrolla, la "segulá" o
+energía espiritual particular de esta porción en la semana en que se lee.
+ACLARA SIEMPRE, con humildad, que esto NO es magia ni fórmula, sino una síntesis
+espiritual de la enseñanza — una oportunidad de alinearse con el tikún de este
+tiempo mediante el estudio, la oración y las mitzvot. No fuerces correspondencias;
+solo donde la tradición luriana realmente las elabora.
+
 REGLAS: cita las fuentes con precisión (libro cap:versículo, folio del Talmud
 con daf y amud, pasajes del Zohar y del Midrash). Sé profundo, no breve.`;
 }
