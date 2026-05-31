@@ -6,7 +6,6 @@ import CategoryNav from "@/components/sefaria/CategoryNav";
 import BookBrowser from "@/components/sefaria/BookBrowser";
 import TextViewer from "@/components/sefaria/TextViewer";
 import StudyResult from "./StudyResult";
-import AliyatNitzotzot from "./AliyatNitzotzot";
 import BeitMidrash from "./BeitMidrash";
 import LexiconPanel from "./LexiconPanel";
 import JashmalMark from "@/components/JashmalMark";
@@ -182,15 +181,11 @@ export default function StudyEngine() {
         </h2>
 
         {studyLoading && (
-          <div className="always-dark mt-6 rounded-lg p-4">
-            <div className="relative">
-              <AliyatNitzotzot />
-              {/* La marca pulsa (igulim que emanan) en el corazón de las chispas que ascienden. */}
-              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                <JashmalMark size={130} animated />
-              </div>
-            </div>
-            <p className="mt-4 animate-pulse text-center text-sm text-muted">
+          <div className="mt-10 flex flex-col items-center py-8">
+            {/* La marca pulsa: los עיגולים emanan del centro mientras Claude estudia.
+                La gema de ámbar funciona sobre claro y oscuro (sin caja negra). */}
+            <JashmalMark size={150} animated />
+            <p className="mt-6 animate-pulse text-center text-sm text-muted">
               {t("generating")}
             </p>
           </div>
