@@ -1,7 +1,5 @@
 // Overrides para obras de estructura COMPLEJA (isComplex en Sefaria), cuyo ref
-// no es "Titulo N" sino una ruta anidada. Reemplazamos el libro complejo por sus
-// partes reales, cada una con su plantilla de ref ({n} = capítulo).
-// Refs y conteos verificados contra la API de Sefaria (2026-05-31).
+// no es "Titulo N" sino una ruta anidada. Refs verificados contra la API (2026-05-31).
 
 import type { CatBook } from "./catalog.generated";
 
@@ -9,6 +7,7 @@ export interface RichBook extends CatBook {
   refTemplate?: string; // ej. "Tanya, Part I; Likkutei Amarim {n}"
 }
 
+// Reemplaza un libro complejo por sus partes reales.
 export const COMPLEX_OVERRIDES: Record<string, RichBook[]> = {
   Tanya: [
     { id: "Tanya-LA", label: "Likutéi Amarim", he: "לִקּוּטֵי אֲמָרִים", type: "chapters", units: 53, refTemplate: "Tanya, Part I; Likkutei Amarim {n}" },
@@ -19,16 +18,24 @@ export const COMPLEX_OVERRIDES: Record<string, RichBook[]> = {
   ],
 };
 
-// Libros EXTRA a añadir a una subcategoría existente (no reemplazan nada).
-// Clave = id de la categoría de primer nivel; valor = libros a insertar en su
-// primera (o única) subcategoría. Refs verificados contra la API de Sefaria.
-// Para el Arí seguimos el orden de estudio luriano transmitido por Jaim Vital.
-export const EXTRA_BOOKS: Record<string, RichBook[]> = {
-  Kabbalah: [
-    // Etz Chaim — la exposición sistemática completa del Arí (50 portales).
-    { id: "Sefer Etz Chaim", label: "Etz Jaim (Árbol de la Vida)", he: "עֵץ חַיִּים", type: "chapters", units: 50, refTemplate: "Sefer Etz Chaim, Gate {n}" },
-  ],
+// Libros EXTRA a añadir a una subcategoría (no usado por ahora).
+export const EXTRA_BOOKS: Record<string, RichBook[]> = {};
+
+// Parche de etiqueta/ref para libros que YA están en el catálogo generado.
+// Etz Chaim (Árbol de la Vida) del Arí: la exposición sistemática de la Cabalá
+// luriana, primera en el orden de estudio. Ref por portales (Gate).
+export const REF_OVERRIDES: Record<string, Partial<RichBook>> = {
+  "Sefer Etz Chaim": {
+    label: "Etz Jaim (Árbol de la Vida)",
+    he: "עֵץ חַיִּים",
+    units: 50,
+    refTemplate: "Sefer Etz Chaim, Gate {n}",
+  },
 };
+
+// Libros a OCULTAR del menú (ref roto sin plantilla numérica viable; accesibles
+// por el buscador). Pri Etz Chaim es complejo con secciones de nombre.
+export const HIDDEN_BOOKS = new Set<string>(["Pri Etz Chaim"]);
 
 /** Construye el ref final de un libro, respetando refTemplate si existe. */
 export function bookRef(book: RichBook, unit: number, amud?: "a" | "b"): string {

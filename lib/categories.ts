@@ -3,7 +3,13 @@
 // y añade nombres localizados ES/FA.
 
 import { CATALOG as RAW, type CatSub } from "./catalog.generated";
-import { COMPLEX_OVERRIDES, EXTRA_BOOKS, bookRef, type RichBook } from "./catalogOverrides";
+import {
+  COMPLEX_OVERRIDES,
+  REF_OVERRIDES,
+  HIDDEN_BOOKS,
+  bookRef,
+  type RichBook,
+} from "./catalogOverrides";
 import { localizedBookLabel, SUB_FA } from "./bookNames";
 
 export type CatBook = RichBook;
