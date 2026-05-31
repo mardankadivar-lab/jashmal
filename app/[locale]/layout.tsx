@@ -3,6 +3,7 @@ import { Cinzel, EB_Garamond, Frank_Ruhl_Libre, Vazirmatn } from "next/font/goog
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { Analytics } from "@vercel/analytics/next";
 import { routing, type Locale } from "@/i18n/routing";
 import "../globals.css";
 
@@ -77,6 +78,7 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );
