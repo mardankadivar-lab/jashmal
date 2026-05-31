@@ -29,28 +29,29 @@ export interface RichGroup {
   subs: RichSub[];
 }
 
-// Expande cada subcategoría: los libros complejos se sustituyen por sus partes.
+// Expande cada subcategoría: complejos → sus partes; aplica REF_OVERRIDES
+// (parche de etiqueta/ref del Arí); oculta HIDDEN_BOOKS (refs rotos).
 function expandSub(sub: CatSub): RichSub {
   const books: RichBook[] = [];
   for (const b of sub.books) {
+    if (HIDDEN_BOOKS.has(b.id)) continue;
     const parts = COMPLEX_OVERRIDES[b.id];
-    if (parts) books.push(...parts);
-    else books.push(b as RichBook);
+    if (parts) {
+      books.push(...parts);
+      continue;
+    }
+    const patch = REF_OVERRIDES[b.id];
+    books.push(patch ? { ...(b as RichBook), ...patch } : (b as RichBook));
   }
   return { sub: sub.sub, subHe: sub.subHe, books };
 }
 
-export const CATALOG: RichGroup[] = RAW.map((g) => {
-  const subs = g.subs.map(expandSub);
-  // Inyectar libros extra (ej. Etz Chaim del Arí) en la primera subcategoría.
-  const extra = EXTRA_BOOKS[g.id];
-  if (extra && subs.length > 0) {
-    const present = new Set(subs.flatMap((s) => s.books.map((b) => b.id)));
-    const toAdd = extra.filter((b) => !present.has(b.id));
-    subs[0] = { ...subs[0], books: [...toAdd, ...subs[0].books] };
-  }
-  return { id: g.id, he: g.he, es: g.es, subs };
-});
+export const CATALOG: RichGroup[] = RAW.map((g) => ({
+  id: g.id,
+  he: g.he,
+  es: g.es,
+  subs: g.subs.map(expandSub),
+}));
 
 export const CATEGORY_ORDER: CategoryId[] = CATALOG.map((g) => g.id);
 

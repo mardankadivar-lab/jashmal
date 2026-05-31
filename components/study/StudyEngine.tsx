@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import CategoryNav from "@/components/sefaria/CategoryNav";
 import BookBrowser from "@/components/sefaria/BookBrowser";
@@ -13,6 +13,7 @@ import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, type CatBook, type CategoryId } from "@/lib/categories";
 import { getText, type SefariaTextResult } from "@/lib/sefaria";
 import { requestStudy, StudyError } from "@/lib/studyClient";
+import { getParashaHashavua, type ParashaInfo } from "@/lib/calendar";
 
 export default function StudyEngine() {
   const locale = useLocale();
@@ -36,6 +37,12 @@ export default function StudyEngine() {
   const [studyRef, setStudyRef] = useState<string | null>(null);
   // palabra hebrea + posición para el léxico popup (null = cerrado).
   const [lexiconAnchor, setLexiconAnchor] = useState<WordAnchor | null>(null);
+  // parashá de la semana (Sefaria), para el acceso directo.
+  const [parasha, setParasha] = useState<ParashaInfo | null>(null);
+
+  useEffect(() => {
+    getParashaHashavua().then((p) => p && setParasha(p));
+  }, []);
 
   function selectCategory(c: CategoryId) {
     setCategory(c);
@@ -149,6 +156,19 @@ export default function StudyEngine() {
             {t("searchButton")}
           </button>
         </form>
+
+        {parasha && parasha.ref && (
+          <button
+            onClick={() => loadRef(parasha.ref)}
+            className="mt-3 flex w-full items-center justify-between rounded-md border border-gold/30 bg-gold/[0.04] px-3 py-2 text-start text-sm transition-all hover:border-gold/60 hover:bg-gold/10"
+          >
+            <span className="text-gold/90">
+              {t("parashaButton")}:{" "}
+              <span className="text-parchment/90">{parasha.name}</span>
+            </span>
+            <span className="hebrew text-gold/70">{parasha.he}</span>
+          </button>
+        )}
 
         <div className="mt-6">
           <p className="mb-2 text-sm text-muted">{t("chooseCategory")}</p>
