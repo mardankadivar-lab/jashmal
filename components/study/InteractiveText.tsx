@@ -6,12 +6,14 @@ import { parseHyperlinks } from "@/lib/hyperlinks";
 
 const HEBREW = /[֐-׿]/;
 
+// Aísla cada palabra hebrea con <bdi> para que no desordene el párrafo latino
+// (RTL/LTR mezclados). bdi aísla la dirección sin voltear el texto circundante.
 function withHebrew(text: string, key: string): React.ReactNode {
   if (HEBREW.test(text)) {
     return (
-      <span key={key} className="hebrew">
+      <bdi key={key} className="hebrew-inline">
         {text}
-      </span>
+      </bdi>
     );
   }
   return <React.Fragment key={key}>{text}</React.Fragment>;

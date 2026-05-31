@@ -134,3 +134,9 @@ body {
   background-clip: text;
   filter: none;
 }
+
+/* Palabra hebrea EN LÍNEA dentro de texto latino (análisis): usa <bdi>, que
+   aísla la dirección sin voltear el párrafo. Solo aplica la fuente hebrea. */
+.hebrew-inline {
+  font-family: var(--font-hebrew), "Frank Ruhl Libre", "David Libre", serif;
+}
