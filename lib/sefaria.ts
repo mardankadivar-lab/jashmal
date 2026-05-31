@@ -25,9 +25,21 @@ function stripHtml(s: string): string {
     .trim();
 }
 
+// Aplana recursivamente: los rangos que abarcan varios capítulos (ej. una
+// parashá "Numbers 8:1-12:16") devuelven un array anidado [capítulo][versículo].
+function flattenDeep(value: unknown): string[] {
+  if (typeof value === "string") {
+    const s = stripHtml(value);
+    return s.length > 0 ? [s] : [];
+  }
+  if (Array.isArray(value)) {
+    return value.flatMap(flattenDeep);
+  }
+  return [];
+}
+
 function toSegments(value: string[] | string): string[] {
-  const arr = Array.isArray(value) ? value : [value];
-  return arr.map(stripHtml).filter((s) => s.length > 0);
+  return flattenDeep(value);
 }
 
 /** Obtiene un texto. `ref` ej.: "Genesis 1", "Shabbat 2a", "Tanya, Chapter 1". */

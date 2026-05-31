@@ -158,16 +158,35 @@ export default function StudyEngine() {
         </form>
 
         {parasha && parasha.ref && (
-          <button
-            onClick={() => loadRef(parasha.ref)}
-            className="mt-3 flex w-full items-center justify-between rounded-md border border-gold/30 bg-gold/[0.04] px-3 py-2 text-start text-sm transition-all hover:border-gold/60 hover:bg-gold/10"
-          >
-            <span className="text-gold/90">
-              {t("parashaButton")}:{" "}
-              <span className="text-parchment/90">{parasha.name}</span>
-            </span>
-            <span className="hebrew text-gold/70">{parasha.he}</span>
-          </button>
+          <div className="mt-3 rounded-md border border-gold/30 bg-gold/[0.04] p-2.5">
+            <button
+              onClick={() => loadRef(parasha.ref)}
+              className="flex w-full items-center justify-between text-start text-sm"
+            >
+              <span className="text-gold/90">
+                {t("parashaButton")}:{" "}
+                <span className="text-parchment/90">{parasha.name}</span>
+              </span>
+              <span className="hebrew text-gold/70">{parasha.he}</span>
+            </button>
+            {parasha.aliyot.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-1.5 border-t border-gold/10 pt-2">
+                <span className="self-center text-xs text-muted/70">
+                  {t("parashaDays")}:
+                </span>
+                {parasha.aliyot.map((a) => (
+                  <button
+                    key={a.day}
+                    onClick={() => loadRef(a.ref)}
+                    title={a.ref}
+                    className="h-7 w-7 rounded-md border border-gold/20 text-xs text-parchment/80 transition-all hover:border-gold/60 hover:bg-gold/10"
+                  >
+                    {a.day}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         )}
 
         <div className="mt-6">
