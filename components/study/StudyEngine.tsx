@@ -181,7 +181,7 @@ export default function StudyEngine() {
         </h2>
 
         {studyLoading && (
-          <div className="mt-6">
+          <div className="always-dark mt-6 rounded-lg p-4">
             <AliyatNitzotzot />
             <p className="mt-4 animate-pulse text-center text-sm text-muted">
               {t("generating")}

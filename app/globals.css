@@ -2,9 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---- Temas ---- */
+/* Por defecto: CLARO (pergamino), ideal para lectura larga. Valores en canal RGB. */
 :root {
-  --bg: #05050a;
-  --gold: #c9a43e;
+  --c-bg: 244 240 230;        /* pergamino claro */
+  --c-surface: 236 231 218;   /* tarjetas/superficies */
+  --c-text: 43 38 32;         /* tinta oscura */
+  --c-muted: 107 100 86;      /* texto secundario */
+  --c-gold: 138 109 31;       /* dorado profundo (legible sobre claro) */
+  --c-gold-soft: 122 95 24;
+  --c-prose: 38 33 28;        /* cuerpo de estudio */
+  --c-strong: 20 16 12;       /* negritas */
+  --sel: 138 109 31;
+}
+
+/* OSCURO: el tema original. */
+.dark {
+  --c-bg: 5 5 10;             /* casi negro */
+  --c-surface: 18 18 26;
+  --c-text: 232 228 216;      /* pergamino claro */
+  --c-muted: 154 149 138;
+  --c-gold: 201 164 62;
+  --c-gold-soft: 224 200 115;
+  --c-prose: 221 216 204;
+  --c-strong: 240 233 214;
+  --sel: 201 164 62;
 }
 
 html {
@@ -12,10 +34,11 @@ html {
 }
 
 body {
-  background-color: var(--bg);
-  color: #e8e4d8;
+  background-color: rgb(var(--c-bg));
+  color: rgb(var(--c-text));
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Texto hebreo: Frank Ruhl Libre, la serif hebrea clásica de los libros sagrados. */
@@ -27,28 +50,28 @@ body {
 
 /* Enlaces dorados del tejido de estudios. */
 .gold-link {
-  color: var(--gold);
-  border-bottom: 1px dotted rgba(201, 164, 62, 0.5);
+  color: rgb(var(--c-gold));
+  border-bottom: 1px dotted rgb(var(--c-gold) / 0.5);
   cursor: pointer;
   transition: color 0.2s, border-color 0.2s;
 }
 .gold-link:hover {
-  color: #e0c873;
-  border-bottom-color: #e0c873;
+  color: rgb(var(--c-gold-soft));
+  border-bottom-color: rgb(var(--c-gold-soft));
 }
 
 /* Render del análisis (texto largo de Claude). */
 .study-prose {
-  line-height: 1.8;
+  line-height: 1.85;
   font-size: 1.125rem;
   letter-spacing: 0.005em;
-  color: #ddd8cc;
+  color: rgb(var(--c-prose));
 }
 .study-prose h1,
 .study-prose h2,
 .study-prose h3 {
   font-family: var(--font-cinzel), serif;
-  color: var(--gold);
+  color: rgb(var(--c-gold));
   margin-top: 1.6em;
   margin-bottom: 0.5em;
   line-height: 1.3;
@@ -57,9 +80,24 @@ body {
   margin-bottom: 1em;
 }
 .study-prose strong {
-  color: #f0e9d6;
+  color: rgb(var(--c-strong));
 }
 
 ::selection {
-  background: rgba(201, 164, 62, 0.25);
+  background: rgb(var(--sel) / 0.25);
+}
+
+/* Zona que SIEMPRE va oscura (hero, animación del tikún): se le pone .always-dark
+   y dentro se fuerzan los tokens del tema oscuro. */
+.always-dark {
+  --c-bg: 5 5 10;
+  --c-surface: 18 18 26;
+  --c-text: 232 228 216;
+  --c-muted: 154 149 138;
+  --c-gold: 201 164 62;
+  --c-gold-soft: 224 200 115;
+  --c-prose: 221 216 204;
+  --c-strong: 240 233 214;
+  background-color: rgb(5 5 10);
+  color: rgb(232 228 216);
 }

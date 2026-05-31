@@ -63,6 +63,14 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={dir}>
+      <head>
+        {/* Anti-parpadeo: aplica el tema guardado antes de pintar. Claro por defecto. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('jashmal-theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body
         className={`${cinzel.variable} ${garamond.variable} ${frankRuhl.variable} ${vazir.variable} ${baseFont} bg-ink text-parchment min-h-screen`}
       >

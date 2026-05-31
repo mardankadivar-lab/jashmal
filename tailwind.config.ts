@@ -5,11 +5,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: "#05050a",
-        gold: "#c9a43e",
-        "gold-soft": "#e0c873",
-        parchment: "#e8e4d8",
-        muted: "#9a958a",
+        // Tokens semánticos basados en variables CSS (cambian con el tema).
+        // Formato canal RGB para que sigan funcionando los modificadores /opacidad.
+        ink: "rgb(var(--c-bg) / <alpha-value>)",
+        gold: "rgb(var(--c-gold) / <alpha-value>)",
+        "gold-soft": "rgb(var(--c-gold-soft) / <alpha-value>)",
+        parchment: "rgb(var(--c-text) / <alpha-value>)",
+        muted: "rgb(var(--c-muted) / <alpha-value>)",
       },
       fontFamily: {
         cinzel: ["var(--font-cinzel)", "serif"],

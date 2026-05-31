@@ -10,8 +10,8 @@ export default function HomePage() {
     <>
       <SiteHeader />
       <main className="relative">
-        {/* Hero con partículas Nitzotzot */}
-        <section className="relative flex min-h-[88vh] items-center justify-center overflow-hidden px-5">
+        {/* Hero con partículas Nitzotzot — siempre oscuro (el negro es dramático aquí). */}
+        <section className="always-dark relative flex min-h-[88vh] items-center justify-center overflow-hidden px-5">
           <Nitzotzot />
           <div
             className="absolute inset-0"
