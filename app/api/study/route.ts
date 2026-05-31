@@ -77,7 +77,7 @@ export async function POST(req: Request) {
   }
 
   const mode: StudyMode = body.mode ?? "text";
-  const locale = body.locale === "fa" ? "fa" : "es";
+  const locale = ["es","fa","en"].includes(body.locale ?? "") ? (body.locale as string) : "es";
   const depth: StudyDepth = body.depth === "deep" ? "deep" : "quick";
 
   // Modo profundo: recolectar fuentes reales de Sefaria (solo para estudio de texto).

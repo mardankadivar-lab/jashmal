@@ -7,6 +7,7 @@ import { routing } from "@/i18n/routing";
 const LABELS: Record<string, string> = {
   es: "ES",
   fa: "فا",
+  en: "EN",
 };
 
 export default function LanguageSwitcher() {

@@ -1,8 +1,9 @@
 import { defineRouting } from "next-intl/routing";
 
-// Solo DOS idiomas: Español (default) y Farsi/Persa. NO inglés en la interfaz.
+// Idiomas: Español (default), Farsi/Persa e Inglés (añadido para mayor alcance
+// y como respaldo cuando el Farsi no carga).
 export const routing = defineRouting({
-  locales: ["es", "fa"],
+  locales: ["es", "fa", "en"],
   defaultLocale: "es",
 });
 

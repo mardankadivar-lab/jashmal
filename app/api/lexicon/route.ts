@@ -15,6 +15,7 @@ const MYSTIC_MODEL = "claude-haiku-4-5-20251001";
 const LANG: Record<string, string> = {
   es: "español",
   fa: "persa (فارسی) — NO árabe. Usa vocabulario y gramática persas (por ejemplo «است», «این», «که», «برای»), nunca palabras o construcciones árabes",
+  en: "inglés (English)",
 };
 
 function buildMysticPrompt(
@@ -102,7 +103,7 @@ export async function POST(req: Request) {
   }
 
   const word = (body.word ?? "").trim();
-  const locale = body.locale === "fa" ? "fa" : "es";
+  const locale = ["es","fa","en"].includes(body.locale ?? "") ? (body.locale as string) : "es";
   if (!word || !stripNiqud(word)) {
     return NextResponse.json({ error: "missing_word" }, { status: 400 });
   }

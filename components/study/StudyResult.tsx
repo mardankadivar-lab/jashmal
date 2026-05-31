@@ -6,6 +6,7 @@ interface StudyResultProps {
   /** Texto del análisis devuelto por Claude (markdown ligero + hyperlinks). */
   text: string;
   onConcept?: (term: string) => void;
+  onLetter?: (key: string, label: string) => void;
 }
 
 interface Block {
@@ -49,7 +50,7 @@ function toBlocks(text: string): Block[] {
   return blocks;
 }
 
-export default function StudyResult({ text, onConcept }: StudyResultProps) {
+export default function StudyResult({ text, onConcept, onLetter }: StudyResultProps) {
   const blocks = toBlocks(text);
 
   return (
@@ -59,13 +60,13 @@ export default function StudyResult({ text, onConcept }: StudyResultProps) {
           const Tag = (`h${b.level}` as "h1" | "h2" | "h3");
           return (
             <Tag key={i}>
-              <Inline text={b.content} onConcept={onConcept} keyPrefix={`h${i}`} />
+              <Inline text={b.content} onConcept={onConcept} onLetter={onLetter} keyPrefix={`h${i}`} />
             </Tag>
           );
         }
         return (
           <p key={i}>
-            <Inline text={b.content} onConcept={onConcept} keyPrefix={`p${i}`} />
+            <Inline text={b.content} onConcept={onConcept} onLetter={onLetter} keyPrefix={`p${i}`} />
           </p>
         );
       })}

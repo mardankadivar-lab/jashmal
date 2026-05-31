@@ -11,6 +11,7 @@ export type StudyMode = "text" | "letter" | "concept";
 const LANG_NAME: Record<string, string> = {
   es: "español",
   fa: "farsi (persa)",
+  en: "inglés (English)",
 };
 
 const RTL_NOTE: Record<string, string> = {

@@ -8,6 +8,7 @@ import TextViewer from "@/components/sefaria/TextViewer";
 import StudyResult from "./StudyResult";
 import BeitMidrash from "./BeitMidrash";
 import LexiconPanel from "./LexiconPanel";
+import ConceptPanel, { type ConceptTarget } from "./ConceptPanel";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, type CatBook, type CategoryId } from "@/lib/categories";
 import { getText, type SefariaTextResult } from "@/lib/sefaria";
@@ -155,24 +156,12 @@ export default function StudyEngine() {
     }
   }
 
-  async function studyConcept(term: string) {
-    setStudyingIndex(-2);
-    setStudyLoading(true);
-    setStudyError(null);
-    setStudy(null);
-    setStudyRef(null);
-    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
-    try {
-      const { study: text } = await requestStudy({ mode: "concept", locale, term });
-      setStudy(text);
-      setStudyRef(`concept:${term}`);
-    } catch (err) {
-      const code = err instanceof StudyError ? err.code : "study_failed";
-      setStudyError(code === "rate_limited" ? t("rateLimited") : t("errorStudy"));
-    } finally {
-      setStudyLoading(false);
-      setStudyingIndex(null);
-    }
+  // Abre conceptos/letras en panel lateral SIN perder el estudio principal (#V3).
+  function openConcept(term: string) {
+    setConceptTarget({ kind: "concept", value: term, label: term });
+  }
+  function openLetter(letterKey: string, label: string) {
+    setConceptTarget({ kind: "letter", value: letterKey, label });
   }
 
   return (

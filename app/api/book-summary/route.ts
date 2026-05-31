@@ -12,6 +12,7 @@ const MODEL = "claude-haiku-4-5-20251001";
 const LANG: Record<string, string> = {
   es: "español",
   fa: "persa (فارسی) — NO árabe; usa vocabulario y gramática persas",
+  en: "inglés (English)",
 };
 
 // POST { id, locale } → { heTitle, summary } resumen breve del libro en ES/FA.
@@ -30,7 +31,7 @@ export async function POST(req: Request) {
   }
 
   const id = (body.id ?? "").trim();
-  const locale = body.locale === "fa" ? "fa" : "es";
+  const locale = ["es","fa","en"].includes(body.locale ?? "") ? (body.locale as string) : "es";
   if (!id) return NextResponse.json({ error: "missing_id" }, { status: 400 });
 
   const info = await getBookInfo(id, locale);
