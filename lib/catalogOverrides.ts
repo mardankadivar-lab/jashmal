@@ -19,6 +19,17 @@ export const COMPLEX_OVERRIDES: Record<string, RichBook[]> = {
   ],
 };
 
+// Libros EXTRA a añadir a una subcategoría existente (no reemplazan nada).
+// Clave = id de la categoría de primer nivel; valor = libros a insertar en su
+// primera (o única) subcategoría. Refs verificados contra la API de Sefaria.
+// Para el Arí seguimos el orden de estudio luriano transmitido por Jaim Vital.
+export const EXTRA_BOOKS: Record<string, RichBook[]> = {
+  Kabbalah: [
+    // Etz Chaim — la exposición sistemática completa del Arí (50 portales).
+    { id: "Sefer Etz Chaim", label: "Etz Jaim (Árbol de la Vida)", he: "עֵץ חַיִּים", type: "chapters", units: 50, refTemplate: "Sefer Etz Chaim, Gate {n}" },
+  ],
+};
+
 /** Construye el ref final de un libro, respetando refTemplate si existe. */
 export function bookRef(book: RichBook, unit: number, amud?: "a" | "b"): string {
   if (book.refTemplate) {

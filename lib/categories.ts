@@ -3,7 +3,7 @@
 // y añade nombres localizados ES/FA.
 
 import { CATALOG as RAW, type CatSub } from "./catalog.generated";
-import { COMPLEX_OVERRIDES, bookRef, type RichBook } from "./catalogOverrides";
+import { COMPLEX_OVERRIDES, EXTRA_BOOKS, bookRef, type RichBook } from "./catalogOverrides";
 import { localizedBookLabel, SUB_FA } from "./bookNames";
 
 export type CatBook = RichBook;
@@ -34,12 +34,17 @@ function expandSub(sub: CatSub): RichSub {
   return { sub: sub.sub, subHe: sub.subHe, books };
 }
 
-export const CATALOG: RichGroup[] = RAW.map((g) => ({
-  id: g.id,
-  he: g.he,
-  es: g.es,
-  subs: g.subs.map(expandSub),
-}));
+export const CATALOG: RichGroup[] = RAW.map((g) => {
+  const subs = g.subs.map(expandSub);
+  // Inyectar libros extra (ej. Etz Chaim del Arí) en la primera subcategoría.
+  const extra = EXTRA_BOOKS[g.id];
+  if (extra && subs.length > 0) {
+    const present = new Set(subs.flatMap((s) => s.books.map((b) => b.id)));
+    const toAdd = extra.filter((b) => !present.has(b.id));
+    subs[0] = { ...subs[0], books: [...toAdd, ...subs[0].books] };
+  }
+  return { id: g.id, he: g.he, es: g.es, subs };
+});
 
 export const CATEGORY_ORDER: CategoryId[] = CATALOG.map((g) => g.id);
 
