@@ -6,7 +6,8 @@
   "nav": {
     "home": "Inicio",
     "study": "Estudio",
-    "letters": "Letras"
+    "letters": "Letras",
+    "about": "Acerca de"
   },
   "hero": {
     "kicker": "Cabalá y filosofía judía",
@@ -96,6 +97,23 @@
     "koheletCta": "estudia este versículo"
   },
   "footer": {
+    "principle": "Primero la autoridad y el estudio honesto."
+  },
+  "about": {
+    "title": "Acerca de Jashmal",
+    "tagline": "La voz del silencio",
+    "s1He": "חַשְׁמַל",
+    "s1Title": "El nombre",
+    "s1Body": "Jashmal (חַשְׁמַל) es una palabra que aparece en la visión del profeta Yejezkel (Ezequiel 1:4): «y de en medio del fuego, como el resplandor del jashmal». Es una de las palabras más enigmáticas de la Torá — los sabios la describen como un fulgor, un ámbar incandescente, un electrum que brilla desde dentro del fuego. No es un color ni un metal cualquiera: es luz viva atrapada en la materia.",
+    "s2He": "חַשׁ + מַל",
+    "s2Title": "Silencio y habla",
+    "s2Body": "El Talmud (Jaguigá 13b) lee el nombre como dos palabras unidas: «jash» (חַשׁ, silencio) y «mal» (מַל, habla). Los ángeles llamados jashmalim a veces callan y a veces hablan: callan cuando la Palabra divina emana, y hablan cuando la transmiten. Por eso Jashmal es «la voz del silencio»: primero se escucha el texto en silencio, y solo después se habla. Ese es el método de este lugar.",
+    "s3He": "לִמּוּד",
+    "s3Title": "Qué es este lugar",
+    "s3Body": "Jashmal es una herramienta viva de estudio. Eliges un texto de la Torá, el Talmud, el Midrash, la Cabalá o la Jasidut, y el análisis desciende por los cuatro mundos del PaRDeS: Pshat (sentido literal), Remez (alusión), Drash (interpretación) y Sod (secreto). El motor reúne las fuentes reales conectadas a cada pasaje — los Targumim, los comentaristas, el Zohar, el Arí — como lo haría un estudiante que abre muchos libros a la vez.",
+    "s4He": "מַעֲשֶׂה",
+    "s4Title": "El propósito",
+    "s4Body": "El conocimiento solo se completa cuando desciende al mundo de la acción. No basta con contemplar: la luz de la sabiduría (Jojmá) debe bajar hasta Maljut, hasta la vida cotidiana, hasta un acto de bondad. Jashmal busca que cada estudio te acerque más a Dios, a ti mismo y al prójimo — que el silencio aprenda a hablar, y que la palabra se vuelva acto.",
     "principle": "Primero la autoridad y el estudio honesto."
   }
 }
