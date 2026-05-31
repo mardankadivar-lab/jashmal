@@ -3,13 +3,15 @@
 import { useTranslations } from "next-intl";
 import type { SefariaTextResult } from "@/lib/sefaria";
 
+type StudyDepth = "quick" | "deep";
+
 interface TextViewerProps {
   result: SefariaTextResult | null;
   loading: boolean;
   error: boolean;
   studyingIndex: number | null;
-  onStudyVerse: (index: number) => void;
-  onStudyPassage: () => void;
+  onStudyVerse: (index: number, depth: StudyDepth) => void;
+  onStudyPassage: (depth: StudyDepth) => void;
 }
 
 export default function TextViewer({
@@ -47,24 +49,47 @@ export default function TextViewer({
           >
             <span className="mt-1 select-none text-xs text-gold/50">{i + 1}</span>
             <p className="hebrew flex-1 text-xl leading-relaxed text-parchment">{seg}</p>
-            <button
-              onClick={() => onStudyVerse(i)}
-              className="mt-1 shrink-0 rounded-full border border-gold/30 px-3 py-1 text-xs text-gold opacity-0 transition-opacity hover:bg-gold/10 group-hover:opacity-100"
-              disabled={studyingIndex !== null}
-            >
-              {t("studyVerse")}
-            </button>
+            <div className="mt-1 flex shrink-0 gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+              <button
+                onClick={() => onStudyVerse(i, "quick")}
+                className="rounded-full border border-gold/30 px-3 py-1 text-xs text-gold transition-all hover:bg-gold/10 disabled:opacity-40"
+                disabled={studyingIndex !== null}
+                title={t("quickHint")}
+              >
+                {t("studyVerse")}
+              </button>
+              <button
+                onClick={() => onStudyVerse(i, "deep")}
+                className="rounded-full border border-gold/50 bg-gold/5 px-3 py-1 text-xs text-gold-soft transition-all hover:bg-gold/15 disabled:opacity-40"
+                disabled={studyingIndex !== null}
+                title={t("deepHint")}
+              >
+                {t("studyVerseDeep")}
+              </button>
+            </div>
           </li>
         ))}
       </ol>
 
-      <button
-        onClick={onStudyPassage}
-        disabled={studyingIndex !== null}
-        className="mt-5 rounded-full border border-gold/60 px-6 py-2 font-cinzel text-sm uppercase tracking-widest text-gold transition-all hover:bg-gold/10 disabled:opacity-40"
-      >
-        {t("studyPassage")}
-      </button>
+      <div className="mt-5 flex flex-wrap items-center gap-2">
+        <button
+          onClick={() => onStudyPassage("quick")}
+          disabled={studyingIndex !== null}
+          className="rounded-full border border-gold/40 px-5 py-2 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:bg-gold/10 disabled:opacity-40"
+          title={t("quickHint")}
+        >
+          {t("studyPassage")}
+        </button>
+        <button
+          onClick={() => onStudyPassage("deep")}
+          disabled={studyingIndex !== null}
+          className="rounded-full border border-gold bg-gold/10 px-5 py-2 font-cinzel text-xs uppercase tracking-widest text-gold-soft transition-all hover:bg-gold/20 disabled:opacity-40"
+          title={t("deepHint")}
+        >
+          {t("studyPassageDeep")}
+        </button>
+      </div>
+      <p className="mt-2 text-xs text-muted/70">{t("depthNote")}</p>
     </div>
   );
 }

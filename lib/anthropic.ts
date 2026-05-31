@@ -42,6 +42,24 @@ REGLAS: cita las fuentes con precisión (libro cap:versículo, folio del Talmud
 con daf y amud, pasajes del Zohar y del Midrash). Sé profundo, no breve.`;
 }
 
+// Instrucción adicional cuando se proveen fuentes reales (modo profundo / RAG).
+const RAG_GUIDANCE = `
+FUENTES REALES PROVISTAS: abajo, en <fuentes>, tienes textos auténticos
+conectados a este pasaje, traídos de Sefaria (Targumim, comentaristas, Talmud,
+Midrash, Cabalá, Jasidut). Es tu material de estudio, como las fuentes que un
+estudiante reúne antes de meditar.
+
+- FUNDAMENTA tu análisis en estas fuentes: cítalas con precisión y úsalas en el
+  nivel que les corresponde (comentaristas→Pshat/comentarios, Midrash→Drash,
+  Cabalá→Sod, etc.).
+- Puedes añadir conocimiento propio bien fundado, pero NO inventes citas ni
+  atribuyas a una obra algo que no dice. Si una fuente provista es escueta, dilo.
+- En el Sod prioriza, cuando estén presentes: Zohar, el Arizal (Etz Chaim,
+  Sha'ar HaPesukim, las puertas de Chaim Vital) y el Baal HaSulam.
+- Patrones de Rav Ginsburgh (los cuatro mundos / el Nombre YHVH, las diez
+  sefirot): solo si el texto y las fuentes realmente lo invitan; nunca fuerces
+  un patrón donde no lo hay.`;
+
 function letterStructure(): string {
   return `Estudia la letra hebrea siguiendo el marco de Rav Yitzchak Ginsburgh
 ("The Hebrew Letters: Channels of Creative Consciousness"), con títulos en hebreo:
@@ -61,7 +79,11 @@ Cabalá luriánica, Jasidut), los maestros que lo elaboraron, y una síntesis
 contemplativa (הִתְבּוֹנְנוּת). Cita fuentes con precisión.`;
 }
 
-export function buildSystemPrompt(mode: StudyMode, locale: string): string {
+export function buildSystemPrompt(
+  mode: StudyMode,
+  locale: string,
+  withSources = false
+): string {
   const lang = LANG_NAME[locale] ?? LANG_NAME.es;
   const rtl = RTL_NOTE[locale] ?? "";
 
@@ -69,6 +91,8 @@ export function buildSystemPrompt(mode: StudyMode, locale: string): string {
   if (mode === "letter") structure = letterStructure();
   else if (mode === "concept") structure = conceptStructure();
   else structure = textStructure();
+
+  const ragBlock = withSources && mode === "text" ? `\n${RAG_GUIDANCE}\n` : "";
 
   return `Eres el motor de estudio de Jashmal (חַשְׁמַל), un proyecto serio de
 Cabalá y filosofía judía. Tu nombre viene del jashmal de Yejezkel 1:4 —
@@ -79,7 +103,7 @@ IDIOMA: responde SIEMPRE en ${lang}. Los TÍTULOS de sección van en hebreo
 traducción al ${lang}. Nunca respondas en inglés.${rtl}
 
 ${structure}
-
+${ragBlock}
 ${HYPERLINK_RULES}
 
 Eres riguroso y honesto: no inventes fuentes ni citas. Si no estás seguro de

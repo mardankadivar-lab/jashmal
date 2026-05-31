@@ -1,12 +1,19 @@
 import { NextResponse } from "next/server";
+import type Anthropic from "@anthropic-ai/sdk";
 import { anthropic, buildSystemPrompt, STUDY_MODEL, type StudyMode } from "@/lib/anthropic";
 import { checkRateLimit, clientIp } from "@/lib/rateLimit";
+import { gatherSources, formatSourcesForPrompt } from "@/lib/related";
 
 export const runtime = "nodejs";
+// El modo profundo (RAG) descarga muchas fuentes y puede tardar 1-2 min.
+export const maxDuration = 120;
+
+type StudyDepth = "quick" | "deep";
 
 interface StudyRequest {
   mode: StudyMode;
   locale: string;
+  depth?: StudyDepth; // "quick" (memoria) o "deep" (RAG con fuentes reales)
   ref?: string; // referencia citable (ej. "Genesis 1:1")
   hebrewText?: string; // texto fuente en hebreo
   term?: string; // concepto (mode "concept")
@@ -27,19 +34,24 @@ function originAllowed(req: Request): boolean {
   return allowed.includes(origin);
 }
 
-function buildUserPrompt(body: StudyRequest): string {
+function buildUserPrompt(body: StudyRequest, sourcesBlock: string): string {
   if (body.mode === "letter") {
     return `Estudia la letra hebrea: ${body.letter ?? body.term ?? ""}.`;
   }
   if (body.mode === "concept") {
     return `Estudia en profundidad el concepto: ${body.term ?? ""}.`;
   }
+
+  const sources = sourcesBlock
+    ? `\n\n<fuentes>${sourcesBlock}\n</fuentes>`
+    : "";
+
   return `Referencia: ${body.ref ?? "(sin referencia)"}
 
 Texto fuente (hebreo):
 ${body.hebrewText ?? ""}
 
-Analiza este pasaje según la estructura indicada.`;
+Analiza este pasaje según la estructura indicada.${sources}`;
 }
 
 export async function POST(req: Request) {
@@ -66,28 +78,47 @@ export async function POST(req: Request) {
 
   const mode: StudyMode = body.mode ?? "text";
   const locale = body.locale === "fa" ? "fa" : "es";
+  const depth: StudyDepth = body.depth === "deep" ? "deep" : "quick";
+
+  // Modo profundo: recolectar fuentes reales de Sefaria (solo para estudio de texto).
+  let sourcesBlock = "";
+  let sourcesUsed = 0;
+  if (depth === "deep" && mode === "text" && body.ref) {
+    try {
+      const sources = await gatherSources(body.ref);
+      sourcesUsed = sources.length;
+      sourcesBlock = formatSourcesForPrompt(sources);
+    } catch (err) {
+      console.error("gatherSources error", err);
+      // Si falla la recolección, seguimos en modo memoria (no rompemos el estudio).
+    }
+  }
+
+  const withSources = sourcesBlock.length > 0;
+  // En modo profundo damos más espacio a la respuesta.
+  const maxTokens = withSources ? 6000 : 4000;
 
   try {
     const message = await anthropic.messages.create({
       model: STUDY_MODEL,
-      max_tokens: 4000,
+      max_tokens: maxTokens,
       system: [
         {
           type: "text",
-          text: buildSystemPrompt(mode, locale),
+          text: buildSystemPrompt(mode, locale, withSources),
           // El system prompt es estable → prompt caching ahorra tokens y latencia.
           cache_control: { type: "ephemeral" },
         },
       ],
-      messages: [{ role: "user", content: buildUserPrompt(body) }],
+      messages: [{ role: "user", content: buildUserPrompt(body, sourcesBlock) }],
     });
 
     const study = message.content
-      .map((block) => (block.type === "text" ? block.text : ""))
-      .join("\n")
-      .trim();
+      .filter((block): block is Anthropic.TextBlock => block.type === "text")
+      .map((block) => block.text)
+      .join("\n");
 
-    return NextResponse.json({ study });
+    return NextResponse.json({ study, depth, sourcesUsed });
   } catch (err) {
     console.error("study error", err);
     return NextResponse.json({ error: "study_failed" }, { status: 502 });

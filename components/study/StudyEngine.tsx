@@ -72,7 +72,7 @@ export default function StudyEngine() {
     if (q) loadRef(q);
   }
 
-  async function runStudy(index: number) {
+  async function runStudy(index: number, depth: "quick" | "deep" = "quick") {
     if (!sourceResult) return;
     setStudyingIndex(index);
     setStudyLoading(true);
@@ -89,9 +89,10 @@ export default function StudyEngine() {
       : `${sourceResult.ref}:${index + 1}`;
 
     try {
-      const text = await requestStudy({
+      const { study: text } = await requestStudy({
         mode: "text",
         locale,
+        depth,
         ref,
         hebrewText,
       });
@@ -114,7 +115,7 @@ export default function StudyEngine() {
     setStudyRef(null);
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
     try {
-      const text = await requestStudy({ mode: "concept", locale, term });
+      const { study: text } = await requestStudy({ mode: "concept", locale, term });
       setStudy(text);
       setStudyRef(`concept:${term}`);
     } catch (err) {
@@ -164,8 +165,8 @@ export default function StudyEngine() {
           loading={sourceLoading}
           error={sourceError}
           studyingIndex={studyingIndex}
-          onStudyVerse={(i) => runStudy(i)}
-          onStudyPassage={() => runStudy(-1)}
+          onStudyVerse={(i, depth) => runStudy(i, depth)}
+          onStudyPassage={(depth) => runStudy(-1, depth)}
         />
       </section>
 

@@ -1,13 +1,22 @@
 // Helper de cliente para llamar al motor de estudio (API route protegida).
 import type { StudyMode } from "./anthropic";
 
+export type StudyDepth = "quick" | "deep";
+
 export interface StudyClientRequest {
   mode: StudyMode;
   locale: string;
+  depth?: StudyDepth;
   ref?: string;
   hebrewText?: string;
   term?: string;
   letter?: string;
+}
+
+export interface StudyResponse {
+  study: string;
+  depth?: StudyDepth;
+  sourcesUsed?: number;
 }
 
 export class StudyError extends Error {
@@ -18,7 +27,7 @@ export class StudyError extends Error {
   }
 }
 
-export async function requestStudy(body: StudyClientRequest): Promise<string> {
+export async function requestStudy(body: StudyClientRequest): Promise<StudyResponse> {
   const res = await fetch("/api/study", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -31,5 +40,9 @@ export async function requestStudy(body: StudyClientRequest): Promise<string> {
   }
 
   const data = await res.json();
-  return data.study as string;
+  return {
+    study: data.study as string,
+    depth: data.depth,
+    sourcesUsed: data.sourcesUsed,
+  };
 }
