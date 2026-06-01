@@ -48,32 +48,44 @@ export async function POST(req: Request) {
   const fullPath = sefirot.map((s) => s!.he + " (" + s!.es + ")").join(" → ");
   const depth = path.length - 1;
 
-  const prompt = `Eres un maestro en la tradición del Arí z"l, la literatura de los Heijalot y la Cabalá
-luriánica. El estudiante ha penetrado ${depth} nivel(es) de profundidad en el Árbol de la Vida.
+  // Extraer nombres sin paréntesis para el prompt
+  const innerShort = innerName.split(" (")[0];
+  const outerShort = outerName.split(" (")[0];
 
-Camino recorrido (de afuera hacia adentro): ${fullPath}
+  const prompt = `Eres un maestro de Cabalá luriánica. El estudiante ha penetrado al nivel ${depth} del Árbol de la Vida.
 
-Cámara actual: ${innerName} DENTRO DE ${outerName} — nivel ${depth} del Héijal (הֵיכַל).
+Camino completo: ${fullPath}
+Cámara actual: ${innerShort} DENTRO DE ${outerShort} — Héijal nivel ${depth}.
 
-Explica en ${lang} con estos apartados y títulos en hebreo:
+PRINCIPIO FUNDAMENTAL: No preguntes "¿qué ES ${innerShort}?" — pregunta "¿cómo se MANIFIESTA ${innerShort} dentro de ${outerShort}?"
+Porque la esencia de las sefirot superiores es incognoscible. Solo podemos estudiar su función, sus emanaciones, sus vestiduras y sus subdivisiones.
 
-**הֵיכַל — La Cámara**
-¿Qué es este Héijal específico según la tradición de los Heijalot (Heijalot Rabbati / Heijalot Zutarti)?
-¿Qué ángeles, fuerzas o corrientes de luz habitan esta cámara?
+Responde en ${lang} con estos apartados (títulos en hebreo):
 
-**כְּלִי — El Vaso**
-¿Qué cualidad de ${innerName.split(" (")[0]} se amplifica y refina al estar DENTRO DE ${outerName.split(" (")[0]}?
-¿Cómo transforma esto la conciencia del meditador?
+**הִתְגַּלּוּת — La Manifestación**
+¿Cómo se manifiesta ${innerShort} dentro de ${outerShort}?
+¿Cuál es su FUNCIÓN específica en esta cámara? ¿Qué emana desde aquí?
+(Evita decir "es" — di "aquí ${innerShort} actúa como...", "desde esta cámara fluye...")
 
-**אוֹר — La Luz**
-¿Qué luz divina específica corresponde a esta combinación sefirótica?
-Desde la perspectiva luriánica (Etz Jaim, Shaarim del Arí), ¿qué proceso de tikún ocurre aquí?
+**הַשְׁתַּלְשְׁלוּת — La Concatenación**
+¿Cómo desciende la luz de ${outerShort} y se refina en ${innerShort}?
+¿Qué proceso de Tzimtzum, Kav o Shevirat ha-Kelim ocurre en este nivel específico?
+(Basa en Etz Jaim: Shaar ${depth >= 3 ? "ha-Partzufim" : depth >= 2 ? "ha-Nekudim" : "ha-Akudim"})
+
+**הַכְּלִי וְהָאוֹר — El Vaso y la Luz**
+¿Qué cualidad de ${innerShort} actúa como vaso para la luz de ${outerShort}?
+¿Qué pregunta contemplativa nos abre esta combinación?
+Usa la tabla del método práctico: si ${outerShort} es voluntad/estructura/amor, ¿qué ocurre cuando ${innerShort} la recibe?
+
+**הַמַּלְכוּת — La Transición**
+Si seguimos descendiendo: ¿en qué se convierte la Maljut de ${innerShort} dentro de ${outerShort}?
+¿Hacia dónde fluye la emanación siguiente?
+(Recuerda el principio: Maljut del superior = Kéter del inferior)
 
 **מְקוֹרוֹת — Fuentes**
-Cita 2-3 pasajes del Zohar, Heijalot o Torá que iluminen específicamente ESTA combinación.
-Sé preciso con capítulo y versículo.
+1 cita exacta del Zohar (volumen/parashá/folio) y 1 del Etz Jaim (Shaar y capítulo) que iluminen ESTA combinación específica.
 
-Sé específico a ESTA combinación — no genérico. El estudiante está meditando activamente.`;
+Sé específico a esta cámara — no genérico. Evita definiciones; muestra procesos vivos.`;
 
   try {
     const msg = await anthropic.messages.create({

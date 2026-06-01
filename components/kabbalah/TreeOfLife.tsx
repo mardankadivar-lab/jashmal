@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { getSefira, sefiraLabel } from "@/lib/sefirot";
 import { SEFIRA_STUDY, ROADMAP_LEVELS } from "@/lib/sefirotStudy";
+import { LETTER_MEANINGS, LETTER_TO_PATH, type HebrewLetterMeaning } from "@/lib/hebrewLetters";
 
 const Canvas = dynamic(() => import("@react-three/fiber").then((m) => m.Canvas), { ssr: false });
 const TreeScene = dynamic(() => import("./TreeScene"), { ssr: false });
@@ -145,7 +146,12 @@ export default function TreeOfLife() {
   const [depth, setDepth] = useState<DepthEntry[]>([]);
   const [heijalot, setHeijalot] = useState<string | null>(null);
   const [heijalotLoading, setHeijalotLoading] = useState(false);
+  const [activeLetter, setActiveLetter] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleLetterClick = useCallback((letter: string) => {
+    setActiveLetter((prev) => (prev === letter ? null : letter));
+  }, []);
 
   const handleSelect = useCallback((id: string) => {
     setSelected((prev) => {
@@ -220,7 +226,7 @@ export default function TreeOfLife() {
           <Canvas camera={{ position: [0, 0, 14], fov: 52 }} gl={{ antialias: true }}
             style={{ position: "absolute", inset: 0 }}
           >
-            <TreeScene selected={selected} depth={depth} onSelect={handleSelect} locale={locale} />
+            <TreeScene selected={selected} depth={depth} onSelect={handleSelect} onLetterClick={handleLetterClick} locale={locale} />
           </Canvas>
         </Suspense>
 
@@ -274,6 +280,75 @@ export default function TreeOfLife() {
         <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
           <p className="font-cinzel text-[9px] uppercase tracking-[0.3em] text-gold/20">{t("scrollHint")}</p>
         </div>
+
+        {/* Popup del léxico de la letra — aparece al centro cuando se clica una letra */}
+        {activeLetter && LETTER_MEANINGS[activeLetter] && (() => {
+          const lm: HebrewLetterMeaning = LETTER_MEANINGS[activeLetter];
+          const path = LETTER_TO_PATH[activeLetter];
+          const fromS = path ? getSefira(path.from) : null;
+          const toS = path ? getSefira(path.to) : null;
+          return (
+            <div
+              className="absolute left-1/2 top-1/2 z-40 w-[min(340px,90vw)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border border-gold/30 bg-ink/96 shadow-2xl backdrop-blur-md"
+              style={{ animation: "slideInRight 0.3s ease-out" }}
+            >
+              {/* Cabecera */}
+              <div className="flex items-center justify-between border-b border-gold/15 bg-gold/[0.06] px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <span className="hebrew text-4xl" style={{ color: "#e0c873", filter: "drop-shadow(0 0 12px #c9a43e88)", lineHeight: 1 }}>
+                    {lm.letter}
+                  </span>
+                  <div>
+                    <p className="font-cinzel text-base text-gold">{lm.name}</p>
+                    <p className="hebrew text-xs text-gold/50">{lm.nameHe} · גִּימַטְרִיָּה {lm.value}</p>
+                  </div>
+                </div>
+                <button onClick={() => setActiveLetter(null)} className="rounded-full border border-gold/20 p-1.5 text-muted hover:text-gold">✕</button>
+              </div>
+
+              {/* Contenido */}
+              <div className="max-h-[55vh] overflow-y-auto px-4 py-3 space-y-3">
+                {/* Sendero que representa */}
+                {fromS && toS && (
+                  <div className="flex items-center gap-2 rounded-lg border border-gold/10 bg-gold/[0.03] px-3 py-2">
+                    <span className="font-cinzel text-[10px] uppercase tracking-wide text-gold/40">{t("letterPath")}</span>
+                    <span className="hebrew text-sm" style={{ color: fromS.glow }}>{fromS.he}</span>
+                    <span className="text-gold/30 text-xs">→</span>
+                    <span className="hebrew text-sm" style={{ color: toS.glow }}>{toS.he}</span>
+                  </div>
+                )}
+
+                <div>
+                  <p className="mb-1 font-cinzel text-[10px] uppercase tracking-widest text-gold/40">{t("letterForm")}</p>
+                  <p className="text-sm leading-relaxed text-parchment/90">{lm.form}</p>
+                </div>
+
+                <div>
+                  <p className="mb-1 font-cinzel text-[10px] uppercase tracking-widest text-gold/40">{t("letterInner")}</p>
+                  <p className="text-sm leading-relaxed text-muted/85">{lm.innerMeaning}</p>
+                </div>
+
+                <div>
+                  <p className="mb-1 font-cinzel text-[10px] uppercase tracking-widest text-gold/40">{t("letterConsciousness")}</p>
+                  <p className="text-sm leading-relaxed text-muted/80 italic">{lm.consciousness}</p>
+                </div>
+
+                {lm.zerohar && (
+                  <div className="rounded-lg border border-gold/15 bg-gold/[0.04] p-3">
+                    <p className="mb-1 font-cinzel text-[10px] uppercase tracking-widest text-gold/40">Zohar / Talmud</p>
+                    <p className="text-xs leading-relaxed text-parchment/80 italic">{lm.zerohar}</p>
+                  </div>
+                )}
+
+                {lm.analogia && (
+                  <div className="border-t border-gold/10 pt-2">
+                    <p className="text-xs leading-relaxed text-muted/65 italic">💭 {lm.analogia}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Panel de sefirá seleccionada (overlay derecho) */}
         {selected && (

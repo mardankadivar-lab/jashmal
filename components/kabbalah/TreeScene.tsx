@@ -99,10 +99,11 @@ export interface TreeSceneProps {
   selected: string | null;
   depth: { sefiraId: string }[];
   onSelect: (id: string) => void;
+  onLetterClick?: (letter: string) => void;
   locale: string;
 }
 
-export default function TreeScene({ selected, onSelect, locale }: TreeSceneProps) {
+export default function TreeScene({ selected, onSelect, onLetterClick, locale }: TreeSceneProps) {
   const controlsRef = useRef<any>(null);
 
   return (
@@ -153,24 +154,32 @@ export default function TreeScene({ selected, onSelect, locale }: TreeSceneProps
               transparent
               opacity={isActive ? 0.7 : 0.2}
             />
-            {/* Letra hebrea en el sendero */}
-            <Html position={mid} center distanceFactor={14} zIndexRange={[0, 0]}>
-              <div
+            {/* Letra hebrea en el sendero — clicable */}
+            <Html position={mid} center distanceFactor={14} zIndexRange={[5, 0]}>
+              <button
+                onClick={(e) => { e.stopPropagation(); onLetterClick?.(letter); }}
                 title={letterName}
                 style={{
                   fontFamily: "var(--font-hebrew)",
-                  fontSize: "10px",
-                  color: isActive ? pathColor : "#c9a43e",
-                  opacity: isActive ? 0.95 : 0.45,
-                  textShadow: isActive ? `0 0 8px ${pathColor}` : "0 0 4px #c9a43e66",
-                  pointerEvents: "none",
-                  userSelect: "none",
-                  transition: "opacity 0.3s, color 0.3s",
+                  fontSize: isActive ? "15px" : "11px",
+                  fontWeight: "bold",
+                  color: isActive ? pathColor : "#e0c873",
+                  opacity: isActive ? 1 : 0.6,
+                  textShadow: isActive
+                    ? `0 0 12px ${pathColor}, 0 0 20px ${pathColor}88`
+                    : "0 0 8px #c9a43e88, 0 0 4px #e0c87366",
+                  filter: isActive ? `drop-shadow(0 0 6px ${pathColor})` : "none",
+                  cursor: "pointer",
+                  background: "none",
+                  border: "none",
+                  padding: "2px",
                   lineHeight: 1,
+                  transition: "all 0.3s",
+                  userSelect: "none",
                 }}
               >
                 {letter}
-              </div>
+              </button>
             </Html>
           </group>
         );
