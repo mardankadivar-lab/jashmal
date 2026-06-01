@@ -15,6 +15,8 @@ export interface SefariaTextResult {
   heRef: string;
   /** siempre normalizado a array de segmentos en hebreo, sin etiquetas HTML. */
   segments: string[];
+  /** traducción al idioma que devuelve Sefaria (inglés normalmente). */
+  translations: string[];
 }
 
 function stripHtml(s: string): string {
@@ -51,6 +53,7 @@ export async function getText(ref: string): Promise<SefariaTextResult> {
     ref: data.ref,
     heRef: data.heRef,
     segments: toSegments(data.he),
+    translations: toSegments(data.text),
   };
 }
 

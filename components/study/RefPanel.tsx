@@ -12,21 +12,28 @@ interface RefPanelEntry {
 }
 
 interface RefPanelProps {
-  refs: string[];            // refs abiertos en orden
+  refs: string[];
   onClose: (ref: string) => void;
-  onOpenRef: (ref: string) => void; // para encadenar desde dentro del panel
+  onOpenRef: (ref: string) => void;
 }
 
-// Panel lateral de referencias cruzadas: muestra textos de Sefaria
-// abiertos desde el análisis, encadenables (como Sefaria Reader).
+// Panel de referencias cruzadas: ventana flotante (no full-height) para no
+// bloquear el estudio principal. Se apila encima del análisis, encadenable.
 export default function RefPanel({ refs, onClose, onOpenRef }: RefPanelProps) {
   const t = useTranslations("refPanel");
   const [entries, setEntries] = useState<Record<string, RefPanelEntry>>({});
+  // Tab activo cuando hay varias refs abiertas
+  const [activeRef, setActiveRef] = useState<string>(refs[refs.length - 1] ?? "");
 
-  // Cargar cada ref nueva que llegue.
+  // Actualizar tab activo cuando cambia la lista
+  useEffect(() => {
+    if (refs.length > 0) setActiveRef(refs[refs.length - 1]);
+  }, [refs]);
+
+  // Cargar cada ref nueva
   useEffect(() => {
     for (const ref of refs) {
-      if (entries[ref]) continue; // ya cargada o cargando
+      if (entries[ref]) continue;
       setEntries((prev) => ({ ...prev, [ref]: { ref, loading: true } }));
       getText(ref)
         .then((result) =>
@@ -41,63 +48,79 @@ export default function RefPanel({ refs, onClose, onOpenRef }: RefPanelProps) {
 
   if (refs.length === 0) return null;
 
+  const entry = entries[activeRef];
+
   return (
-    <div className="fixed inset-y-0 end-0 z-40 flex w-full max-w-sm flex-col border-s border-gold/20 bg-ink/95 shadow-2xl backdrop-blur-md">
-      <div className="flex items-center justify-between border-b border-gold/15 px-4 py-3">
-        <span className="font-cinzel text-sm text-gold">{t("title")}</span>
+    // Ventana flotante no-invasiva: anclada a la derecha del panel de análisis,
+    // altura fija con scroll interno, no cubre la pantalla completa.
+    <div className="mt-4 overflow-hidden rounded-xl border border-gold/30 bg-ink/95 shadow-xl">
+      {/* Cabecera con tabs si hay varias refs */}
+      <div className="flex items-center justify-between border-b border-gold/15 bg-gold/[0.06] px-3 py-2">
+        <div className="flex flex-wrap gap-1.5">
+          {refs.map((ref) => (
+            <button
+              key={ref}
+              onClick={() => setActiveRef(ref)}
+              className={
+                "rounded px-2 py-0.5 text-xs transition-colors " +
+                (ref === activeRef
+                  ? "bg-gold/20 font-cinzel text-gold"
+                  : "text-muted hover:text-parchment")
+              }
+            >
+              {ref}
+              <span
+                onClick={(e) => { e.stopPropagation(); onClose(ref); }}
+                className="ms-1.5 text-muted/60 hover:text-red-400"
+                role="button"
+              >
+                ✕
+              </span>
+            </button>
+          ))}
+        </div>
         <button
           onClick={() => refs.forEach(onClose)}
           className="text-xs text-muted transition-colors hover:text-gold"
+          title={t("closeAll")}
         >
           {t("closeAll")}
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
-        {refs.map((ref) => {
-          const entry = entries[ref];
-          return (
-            <div key={ref} className="border-b border-gold/10">
-              {/* Cabecera del panel con el ref */}
-              <div className="flex items-center justify-between bg-gold/[0.04] px-3 py-2">
-                <div>
-                  <p className="font-cinzel text-xs text-gold">{ref}</p>
-                  {entry?.result?.heRef && (
-                    <p className="hebrew text-xs text-muted">{entry.result.heRef}</p>
+      {/* Contenido con scroll (max ~40vh) */}
+      <div className="max-h-[40vh] overflow-y-auto p-3">
+        {!entry && (
+          <p className="animate-pulse text-sm text-muted">{t("loading")}</p>
+        )}
+        {entry?.loading && (
+          <p className="animate-pulse text-sm text-muted">{t("loading")}</p>
+        )}
+        {entry?.error && (
+          <p className="text-sm text-red-400/80">{t("error")}</p>
+        )}
+        {entry?.result && (
+          <div>
+            <p className="hebrew mb-3 text-xs text-muted">{entry.result.heRef}</p>
+            <ol className="space-y-3">
+              {entry.result.segments.map((seg, i) => (
+                <li key={i} className="flex flex-col gap-1 border-s-2 border-gold/20 ps-3">
+                  <span className="select-none text-[10px] text-gold/50">{i + 1}</span>
+                  {/* Hebreo */}
+                  <p className="hebrew text-base leading-relaxed text-parchment/90">
+                    {seg}
+                  </p>
+                  {/* Traducción (inglés de Sefaria) si existe */}
+                  {entry.result!.translations[i] && (
+                    <p className="text-xs leading-relaxed text-muted/80 italic">
+                      {entry.result!.translations[i]}
+                    </p>
                   )}
-                </div>
-                <button
-                  onClick={() => onClose(ref)}
-                  className="text-xs text-muted transition-colors hover:text-gold"
-                >
-                  ✕
-                </button>
-              </div>
-
-              {/* Contenido */}
-              <div className="p-3">
-                {entry?.loading && (
-                  <p className="animate-pulse text-sm text-muted">{t("loading")}</p>
-                )}
-                {entry?.error && (
-                  <p className="text-sm text-red-400/80">{t("error")}</p>
-                )}
-                {entry?.result && (
-                  <ul className="space-y-2">
-                    {entry.result.segments.map((seg, i) => (
-                      <li key={i} className="flex gap-2">
-                        <span className="select-none text-xs text-gold/50">{i + 1}</span>
-                        <p className="hebrew text-base leading-relaxed text-parchment/90">
-                          {seg}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-          );
-        })}
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
       </div>
     </div>
   );
