@@ -25,7 +25,7 @@ export default function HomePage() {
             <p className="animate-fade-up font-cinzel text-xs uppercase tracking-[0.35em] text-gold/70">
               {t("hero.kicker")}
             </p>
-            <h1 className="electrum animate-fade-up mt-6 font-cinzel text-6xl sm:text-7xl">
+            <h1 className="electrum animate-fade-up mt-6 pt-3 pb-1 font-cinzel text-6xl leading-[1.35] sm:text-7xl">
               {t("hero.title")}
             </h1>
             <p className="hebrew electrum-he animate-fade-up mt-4 text-5xl font-bold sm:text-6xl">
