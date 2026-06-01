@@ -166,6 +166,10 @@
     "insideLevel": "Nivel {level} de profundidad",
     "refHint": "Clic sobre los rayos para estudiar la referencia textual",
     "loadingHeijalot": "Cargando el Héijal...",
-    "heijalotTitle": "Heijalot — cámaras dentro de cámaras"
+    "heijalotTitle": "Heijalot — cámaras dentro de cámaras",
+    "loading3D": "Cargando el árbol en 3D...",
+    "scrollHint": "↕ Scroll para acercar · Clic en una sefirá",
+    "roadmapTitle": "Ruta de estudio",
+    "fractalNote": "Cada sefirá contiene las 10 sefirot. Kéter de Atzilut contiene 10; Jojmá contiene 10... La estructura es fractal e infinita."
   }
 }
