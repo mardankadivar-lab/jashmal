@@ -48,12 +48,20 @@ function EinSofStrings({ opacity }: { opacity: number }) {
       const spd = 0.18 + (s % 4) * 0.06;
       for (let p = 0; p < PTS; p++) {
         const tp = p / (PTS - 1);
-        pos[p*3]   = bx + Math.sin(tp * Math.PI * 2.5 + t * spd + ph) * 3;
-        pos[p*3+1] = by + (tp - 0.5) * 13 + Math.sin(t * 0.15 + ph * 2) * 1.5;
-        pos[p*3+2] = bz + Math.cos(tp * Math.PI * 3.2 + t * spd * 0.7 + ph) * 2.5;
+        // Múltiples frecuencias → aspecto orgánico, no mecánico
+        const wx = Math.sin(tp*Math.PI*2.5 + t*spd + ph)*2.4
+                 + Math.sin(tp*Math.PI*1.1 + t*spd*1.8 + ph*0.6)*1.1
+                 + Math.sin(tp*Math.PI*5.3 + t*spd*0.35 + ph*1.4)*0.4;
+        const wy = Math.sin(t*0.15 + ph*2)*1.2
+                 + Math.sin(t*0.37 + ph*0.9)*0.6;
+        const wz = Math.cos(tp*Math.PI*3.2 + t*spd*0.7 + ph)*2.2
+                 + Math.cos(tp*Math.PI*1.8 + t*spd*1.3 + ph*0.8)*0.8
+                 + Math.sin(tp*Math.PI*4.1 + t*spd*0.5 + ph*1.1)*0.35;
+        pos[p*3]   = bx + wx;
+        pos[p*3+1] = by + (tp - 0.5) * 13 + wy;
+        pos[p*3+2] = bz + wz;
       }
       geo.attributes.position.needsUpdate = true;
-      (geo.userData.mat as THREE.LineBasicMaterial | undefined);
     });
     groupRef.current?.children.forEach((c, i) => {
       (c as THREE.Line).material && ((c as THREE.Line).material as THREE.LineBasicMaterial).opacity !== undefined &&
@@ -94,9 +102,15 @@ function TzimtzumEffect({ contraction, pointOpacity }: { contraction: number; po
       const ph = s * 0.618; const spd = 0.18 + (s%4)*0.06;
       for (let p = 0; p < PTS; p++) {
         const tp = p / (PTS-1);
-        pos[p*3]   = (bx + Math.sin(tp*Math.PI*2.5 + t*spd + ph)*3) * inv;
-        pos[p*3+1] = (by + (tp-0.5)*13 + Math.sin(t*0.15+ph*2)*1.5) * inv;
-        pos[p*3+2] = (bz + Math.cos(tp*Math.PI*3.2 + t*spd*0.7+ph)*2.5) * inv;
+        const wx = Math.sin(tp*Math.PI*2.5 + t*spd + ph)*2.4
+                 + Math.sin(tp*Math.PI*1.1 + t*spd*1.8 + ph*0.6)*1.1
+                 + Math.sin(tp*Math.PI*5.3 + t*spd*0.35 + ph*1.4)*0.4;
+        const wy = Math.sin(t*0.15+ph*2)*1.2 + Math.sin(t*0.37+ph*0.9)*0.6;
+        const wz = Math.cos(tp*Math.PI*3.2 + t*spd*0.7+ph)*2.2
+                 + Math.cos(tp*Math.PI*1.8 + t*spd*1.3+ph*0.8)*0.8;
+        pos[p*3]   = (bx + wx) * inv;
+        pos[p*3+1] = (by + (tp-0.5)*13 + wy) * inv;
+        pos[p*3+2] = (bz + wz) * inv;
       }
       geo.attributes.position.needsUpdate = true;
     });
@@ -194,58 +208,240 @@ function KavRay({ opacity, length }: { opacity: number; length: number }) {
   );
 }
 
-// ── 5. ADAM KADMÓN — estructura cósmica arquetípica ───────────────────────────
+// ── 5. ADAM KADMÓN — galaxia cósmica en rotación diferencial ─────────────────
+// "Una figura gigantesca formada por galaxias. No antropomórfica.
+//  Más bien una arquitectura de luz." (documento de Mardan)
 function AdamKadmon({ opacity }: { opacity: number }) {
-  if (opacity < 0.01) return null;
-  const o = opacity;
-  // Figura cósmica hecha de líneas luminosas (no antropomórfica, sino arquitectónica)
-  const lines: [THREE.Vector3, THREE.Vector3, number][] = [
-    // Cabeza / corona
-    [new THREE.Vector3(0, 5.8, 0), new THREE.Vector3(0, 4.2, 0), 0xd4c8ff],
-    // Hombros
-    [new THREE.Vector3(-2.5, 3.2, 0), new THREE.Vector3(2.5, 3.2, 0), 0xb0a0ff],
-    // Brazos extendidos
-    [new THREE.Vector3(-2.5, 3.2, 0), new THREE.Vector3(-4.8, 0.5, 0), 0x9090ee],
-    [new THREE.Vector3(2.5, 3.2, 0), new THREE.Vector3(4.8, 0.5, 0), 0x9090ee],
-    // Torso
-    [new THREE.Vector3(0, 3.2, 0), new THREE.Vector3(0, -1.0, 0), 0xc0b8ff],
-    // Pelvis
-    [new THREE.Vector3(-1.8, -1.0, 0), new THREE.Vector3(1.8, -1.0, 0), 0xb0a0ff],
-    // Piernas
-    [new THREE.Vector3(-1.2, -1.0, 0), new THREE.Vector3(-1.8, -5.5, 0), 0x8888dd],
-    [new THREE.Vector3(1.2, -1.0, 0), new THREE.Vector3(1.8, -5.5, 0), 0x8888dd],
-    // Líneas diagonales internas (estructura interna cósmica)
-    [new THREE.Vector3(-2.5, 3.2, 0), new THREE.Vector3(0, -1.0, 0), 0x7070cc],
-    [new THREE.Vector3(2.5, 3.2, 0), new THREE.Vector3(0, -1.0, 0), 0x7070cc],
-    // Círculo de la cabeza (arco)
-    [new THREE.Vector3(-0.8, 5.6, 0), new THREE.Vector3(0.8, 5.6, 0), 0xe0d8ff],
-    [new THREE.Vector3(-0.8, 5.6, 0), new THREE.Vector3(-0.4, 4.5, 0), 0xe0d8ff],
-    [new THREE.Vector3(0.8, 5.6, 0), new THREE.Vector3(0.4, 4.5, 0), 0xe0d8ff],
-  ];
+  const ref  = useRef<THREE.Points>(null);
+  const ref2 = useRef<THREE.Points>(null); // halo exterior
+  const N = 8000; const N2 = 2000;
+
+  const { origPos, origPos2 } = useMemo(() => {
+    const op = new Float32Array(N * 3);
+    const op2 = new Float32Array(N2 * 3);
+
+    // Disco galáctico con brazos espirales
+    for (let i = 0; i < N; i++) {
+      const r0 = Math.abs(Math.sin(i * 127.1 + 0.3));
+      const r1 = Math.abs(Math.cos(i * 311.7 + 1.1));
+      const r2 = Math.abs(Math.sin(i * 57.3 + 2.7));
+
+      // Distribución en disco: concentrada al centro
+      const radius = Math.pow(r0, 0.45) * 9;
+      // Dos brazos espirales
+      const armAngle = (Math.floor(i % 2) * Math.PI) + r1 * Math.PI * 3;
+      const angle = armAngle + radius * 0.35;
+      // Altura: disco fino, más grueso al centro
+      const diskH = (1 - Math.pow(radius / 9, 1.2));
+      const height = (r2 - 0.5) * 2.5 * diskH;
+
+      op[i*3]   = Math.cos(angle) * radius;
+      op[i*3+1] = height;
+      op[i*3+2] = Math.sin(angle) * radius;
+    }
+
+    // Halo esférico tenue
+    for (let i = 0; i < N2; i++) {
+      const r0 = Math.abs(Math.sin(i * 213.3 + 0.7));
+      const r1 = Math.abs(Math.cos(i * 157.9 + 2.3));
+      const r2 = Math.abs(Math.sin(i * 83.1 + 1.5));
+      const theta = r0 * Math.PI * 2;
+      const phi   = Math.acos(2 * r1 - 1);
+      const r     = 7 + r2 * 5;
+      op2[i*3]   = r * Math.sin(phi) * Math.cos(theta);
+      op2[i*3+1] = r * Math.sin(phi) * Math.sin(theta) * 0.45; // aplanado
+      op2[i*3+2] = r * Math.cos(phi);
+    }
+
+    return { origPos: op, origPos2: op2 };
+  }, []);
+
+  // Geometrías
+  const geo  = useMemo(() => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(origPos.slice(), 3));
+    return g;
+  }, [origPos]);
+
+  const geo2 = useMemo(() => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(origPos2.slice(), 3));
+    return g;
+  }, [origPos2]);
+
+  // Rotación diferencial: centro rota más rápido (efecto galaxia real)
+  useFrame(({ clock }) => {
+    if (!ref.current || !ref2.current) return;
+    const t = clock.elapsedTime;
+    const cur  = geo.attributes.position.array as Float32Array;
+    const cur2 = geo2.attributes.position.array as Float32Array;
+
+    for (let i = 0; i < N; i++) {
+      const ox = origPos[i*3], oy = origPos[i*3+1], oz = origPos[i*3+2];
+      const r = Math.sqrt(ox*ox + oz*oz);
+      // Velocidad angular inversa al radio (galaxia real)
+      const omega = 0.06 / (r * 0.18 + 1);
+      const angle = t * omega;
+      const cos = Math.cos(angle), sin = Math.sin(angle);
+      cur[i*3]   = ox * cos - oz * sin;
+      cur[i*3+1] = oy + Math.sin(t * 0.12 + r * 0.4) * 0.06;
+      cur[i*3+2] = ox * sin + oz * cos;
+    }
+    // Halo: rotación muy lenta
+    for (let i = 0; i < N2; i++) {
+      const ox = origPos2[i*3], oy = origPos2[i*3+1], oz = origPos2[i*3+2];
+      const angle = t * 0.008;
+      const cos = Math.cos(angle), sin = Math.sin(angle);
+      cur2[i*3]   = ox * cos - oz * sin;
+      cur2[i*3+1] = oy;
+      cur2[i*3+2] = ox * sin + oz * cos;
+    }
+
+    geo.attributes.position.needsUpdate  = true;
+    geo2.attributes.position.needsUpdate = true;
+
+    (ref.current.material  as THREE.PointsMaterial).opacity = opacity * 0.72;
+    (ref2.current.material as THREE.PointsMaterial).opacity = opacity * 0.22;
+  });
 
   return (
     <group>
-      {lines.map(([a, b, col], i) => {
-        const pts = new Float32Array([a.x, a.y, a.z, b.x, b.y, b.z]);
-        const geo = new THREE.BufferGeometry();
-        geo.setAttribute("position", new THREE.BufferAttribute(pts, 3));
-        const mat = new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: o * 0.7 });
-        return <primitive key={i} object={new THREE.Line(geo, mat)} />;
-      })}
-      {/* Puntos en nodos clave */}
-      {[[0,5.0,0],[0,3.2,0],[0,0,0],[0,-1.0,0],[-2.5,3.2,0],[2.5,3.2,0],
-        [-4.8,0.5,0],[4.8,0.5,0],[-1.8,-5.5,0],[1.8,-5.5,0]].map(([x,y,z],i) => (
-        <mesh key={i} position={[x,y,z]}>
-          <sphereGeometry args={[0.1, 8, 8]} />
-          <meshBasicMaterial color="#c0b8ff" transparent opacity={o * 0.8} />
-        </mesh>
-      ))}
-      <pointLight position={[0, 0, 5]} color="#9090ff" intensity={o * 3} distance={15} />
+      {/* Núcleo brillante */}
+      <mesh>
+        <sphereGeometry args={[0.5, 16, 16]} />
+        <meshBasicMaterial color="#e0d8ff" transparent opacity={opacity * 0.9} />
+      </mesh>
+      <mesh>
+        <sphereGeometry args={[1.4, 16, 16]} />
+        <meshBasicMaterial color="#b8a8ff" transparent opacity={opacity * 0.18} side={THREE.BackSide} />
+      </mesh>
+      <pointLight color="#c0b0ff" intensity={opacity * 4} distance={12} decay={2} />
+
+      {/* Disco galáctico */}
+      <points ref={ref} geometry={geo}>
+        <pointsMaterial
+          color="#9080ee" size={0.045} transparent opacity={opacity * 0.72}
+          sizeAttenuation blending={THREE.AdditiveBlending} depthWrite={false}
+        />
+      </points>
+
+      {/* Halo esférico tenue */}
+      <points ref={ref2} geometry={geo2}>
+        <pointsMaterial
+          color="#c0b8ff" size={0.035} transparent opacity={opacity * 0.22}
+          sizeAttenuation blending={THREE.AdditiveBlending} depthWrite={false}
+        />
+      </points>
     </group>
   );
 }
 
-// ── 7. SHEVIRAT — Big Bang ────────────────────────────────────────────────────
+// ── 6. AKUDIM — 10 luces dentro de un único recipiente ───────────────────────
+function AkudimCloud({ opacity }: { opacity: number }) {
+  const ref = useRef<THREE.Points>(null);
+  const N = 4000;
+  // Diez nebulosas en cluster apretado + esfera contenedora
+  const { geo, origPos } = useMemo(() => {
+    const op = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) {
+      const cluster = i % 10;
+      const cx = TREE_POS[cluster][0] * 0.55;
+      const cy = TREE_POS[cluster][1] * 0.55;
+      const r0 = Math.abs(Math.sin(i * 127.1 + cluster));
+      const r1 = Math.abs(Math.cos(i * 311.7 + cluster));
+      const r2 = Math.abs(Math.sin(i * 57.3 + cluster * 1.7));
+      const theta = r0 * Math.PI * 2; const phi = Math.acos(2*r1-1);
+      const r = Math.pow(r2, 0.6) * 0.7;
+      op[i*3]   = cx + r * Math.sin(phi) * Math.cos(theta);
+      op[i*3+1] = cy + r * Math.sin(phi) * Math.sin(theta);
+      op[i*3+2] = r * Math.cos(phi) * 0.4;
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(op.slice(), 3));
+    return { geo: g, origPos: op };
+  }, []);
+
+  useFrame(({ clock }) => {
+    if (!ref.current) return;
+    const t = clock.elapsedTime;
+    const cur = geo.attributes.position.array as Float32Array;
+    for (let i = 0; i < N; i++) {
+      const cl = i % 10;
+      cur[i*3]   = origPos[i*3]   + Math.sin(t*0.3 + cl*0.8) * 0.08;
+      cur[i*3+1] = origPos[i*3+1] + Math.cos(t*0.25 + cl*1.1) * 0.08;
+      cur[i*3+2] = origPos[i*3+2];
+    }
+    geo.attributes.position.needsUpdate = true;
+    (ref.current.material as THREE.PointsMaterial).opacity = opacity * 0.75;
+  });
+
+  return (
+    <group>
+      {/* Recipiente externo — esfera tenue */}
+      <mesh>
+        <sphereGeometry args={[3.2, 32, 32]} />
+        <meshBasicMaterial color="#a0c8ff" transparent opacity={opacity * 0.05} side={THREE.BackSide} />
+      </mesh>
+      <points ref={ref} geometry={geo}>
+        <pointsMaterial
+          color="#88c8ff" size={0.055} transparent opacity={opacity * 0.75}
+          sizeAttenuation blending={THREE.AdditiveBlending} depthWrite={false}
+        />
+      </points>
+    </group>
+  );
+}
+
+// ── 7. NEKUDIM — 10 puntos aislados, sin conexión ────────────────────────────
+function NekudimCloud({ opacity }: { opacity: number }) {
+  const ref = useRef<THREE.Points>(null);
+  const N = 3000;
+  const { geo, origPos } = useMemo(() => {
+    const op = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) {
+      const cluster = i % 10;
+      const cx = TREE_POS[cluster][0] * 1.3;
+      const cy = TREE_POS[cluster][1] * 1.3;
+      const r0 = Math.abs(Math.sin(i * 127.1 + cluster));
+      const r1 = Math.abs(Math.cos(i * 311.7 + cluster));
+      const r2 = Math.abs(Math.sin(i * 57.3 + cluster * 1.7));
+      const theta = r0 * Math.PI * 2; const phi = Math.acos(2*r1-1);
+      const r = Math.pow(r2, 0.5) * 0.45;
+      op[i*3]   = cx + r * Math.sin(phi) * Math.cos(theta);
+      op[i*3+1] = cy + r * Math.sin(phi) * Math.sin(theta);
+      op[i*3+2] = r * Math.cos(phi) * 0.5;
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(op.slice(), 3));
+    return { geo: g, origPos: op };
+  }, []);
+
+  useFrame(({ clock }) => {
+    if (!ref.current) return;
+    const t = clock.elapsedTime;
+    const cur = geo.attributes.position.array as Float32Array;
+    // Cada punto deriva lentamente — sin conexión entre ellos
+    for (let i = 0; i < N; i++) {
+      const cl = i % 10;
+      cur[i*3]   = origPos[i*3]   + Math.sin(t*0.18 + cl*2.1 + i*0.001) * 0.12;
+      cur[i*3+1] = origPos[i*3+1] + Math.cos(t*0.21 + cl*1.7 + i*0.001) * 0.12;
+      cur[i*3+2] = origPos[i*3+2];
+    }
+    geo.attributes.position.needsUpdate = true;
+    (ref.current.material as THREE.PointsMaterial).opacity = opacity * 0.7;
+  });
+
+  return (
+    <points ref={ref} geometry={geo}>
+      <pointsMaterial
+        color="#8888cc" size={0.05} transparent opacity={opacity * 0.7}
+        sizeAttenuation blending={THREE.AdditiveBlending} depthWrite={false}
+      />
+    </points>
+  );
+}
+
+// ── 8. SHEVIRAT — Big Bang ────────────────────────────────────────────────────
 function SheviratBigBang({ p }: P) {
   // p = 7..8 → 7=inicio explosión, 8=fin
   const frac = ss(7, 8, p);
@@ -480,51 +676,58 @@ function TikunGlow({ opacity }: { opacity: number }) {
 export default function CosmologyScene({ scrollProgress }: { scrollProgress: number }) {
   const p = scrollProgress * 14; // 0..14
 
-  // Opacidades por etapa — cada elemento tiene su ventana de visibilidad
-  const einSofOp      = ss(0, 0.3, p) * (1 - ss(1.3, 2.0, p));
-  const tzimtzumCont  = ss(0.6, 1.8, p);                         // contracción 0→1
-  const tzimtzumPtOp  = ss(1.5, 2.0, p) * (1 - ss(2.8, 3.5, p));
-  const reshimoOp     = ss(2.0, 2.8, p) * (1 - ss(3.5, 4.2, p));
-  const kavOp         = ss(3.0, 3.8, p) * (1 - ss(4.5, 5.2, p));
-  const kavLen        = Math.min(ss(3.0, 4.0, p), 1);
-  const adamOp        = ss(4.0, 4.8, p) * (1 - ss(5.5, 6.2, p));
-  const sheviratActive = p >= 6.8 && p <= 8.5;
-  const nitzotzotOp   = ss(7.8, 8.5, p) * (1 - ss(9.5, 10.2, p));
-  const kelipotOp     = ss(9.0, 9.8, p) * (1 - ss(10.5, 11.2, p));
-  const treeOp        = ss(10.0, 11.0, p) * (1 - ss(13.5, 14.0, p));
-  const abyaOp        = ss(11.0, 11.8, p) * (1 - ss(12.8, 13.5, p));
-  const tikunOp       = ss(13.0, 13.8, p);
+  // Ventanas amplias y solapadas → transiciones orgánicas, no mecánicas
+  const einSofOp      = ss(0, 0.5, p) * (1 - ss(1.5, 2.5, p));
+  const tzimtzumCont  = ss(0.8, 2.2, p);
+  const tzimtzumPtOp  = ss(1.8, 2.5, p) * (1 - ss(3.2, 4.0, p));
+  const reshimoOp     = ss(2.2, 3.2, p) * (1 - ss(4.0, 5.0, p));
+  const kavOp         = ss(3.2, 4.2, p) * (1 - ss(5.0, 5.8, p));
+  const kavLen        = Math.min(ss(3.2, 4.5, p), 1);
+  const adamOp        = ss(4.2, 5.2, p) * (1 - ss(5.8, 6.5, p));
+  const akudimOp      = ss(5.0, 5.8, p) * (1 - ss(6.2, 7.0, p));
+  const nekudimOp     = ss(6.0, 6.8, p) * (1 - ss(7.2, 8.0, p));
+  const sheviratActive = p >= 7.0 && p <= 9.0;
+  const nitzotzotOp   = ss(8.2, 9.0, p) * (1 - ss(10.0, 10.8, p));
+  const kelipotOp     = ss(9.2, 10.0, p) * (1 - ss(11.0, 11.8, p));
+  const treeOp        = ss(10.5, 11.5, p) * (1 - ss(13.5, 14.0, p));
+  const abyaOp        = ss(11.5, 12.2, p) * (1 - ss(13.0, 13.8, p));
+  const tikunOp       = ss(13.2, 14.0, p);
 
-  // Necesita tzimtzum si estamos entre 0.6 y 3.5
-  const showTzimtzum  = p > 0.5 && p < 4.0;
+  const showTzimtzum = p > 0.7 && p < 4.5;
 
   return (
     <>
       <ambientLight intensity={0.06} />
       <Stars radius={90} depth={60} count={2500} factor={2} saturation={0} fade speed={0.15} />
 
-      {/* 1. EIN SOF — cuerdas de energía */}
+      {/* 1. EIN SOF */}
       {einSofOp > 0.01 && <EinSofStrings opacity={einSofOp} />}
 
-      {/* 2. TZIMTZUM — condensación */}
+      {/* 2. TZIMTZUM */}
       {showTzimtzum && <TzimtzumEffect contraction={tzimtzumCont} pointOpacity={tzimtzumPtOp} />}
 
-      {/* 3. RESHIMÓ — huella tenue */}
+      {/* 3. RESHIMÓ */}
       {reshimoOp > 0.01 && <ReshimoStrings opacity={reshimoOp} />}
 
-      {/* 4. KAV — rayo desde el punto */}
+      {/* 4. KAV */}
       {kavOp > 0.01 && <KavRay opacity={kavOp} length={kavLen} />}
 
-      {/* 5. ADAM KADMÓN */}
+      {/* 5. ADAM KADMÓN — galaxia cósmica */}
       {adamOp > 0.01 && <AdamKadmon opacity={adamOp} />}
 
-      {/* 7. SHEVIRAT — Big Bang */}
+      {/* 6. AKUDIM — cluster apretado */}
+      {akudimOp > 0.01 && <AkudimCloud opacity={akudimOp} />}
+
+      {/* 7. NEKUDIM — puntos aislados */}
+      {nekudimOp > 0.01 && <NekudimCloud opacity={nekudimOp} />}
+
+      {/* 8. SHEVIRAT — Big Bang */}
       {sheviratActive && <SheviratBigBang p={p} />}
 
-      {/* 8. NITZOTZOT */}
+      {/* 9. NITZOTZOT */}
       {nitzotzotOp > 0.01 && <NitzotzotRain opacity={nitzotzotOp} />}
 
-      {/* 9. KELIPOT */}
+      {/* 10. KELIPOT */}
       {kelipotOp > 0.01 && <KelipotSpheres opacity={kelipotOp} />}
 
       {/* 10-12. ÁRBOL */}
