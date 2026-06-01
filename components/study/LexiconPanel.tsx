@@ -107,14 +107,29 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
 
         {data && (
           <div className="mt-4 space-y-5">
-            {/* Gematría */}
+            {/* Gematría — los 4 sistemas de Ginsburgh */}
             <section>
               <h3 className="font-cinzel text-xs uppercase tracking-widest text-gold/80">
                 {t("gematria")}
               </h3>
+              {/* Valor absoluto principal */}
               <p className="mt-1 text-2xl text-gold-soft">{data.classic.gematria}</p>
+              {/* Los 4 sistemas */}
+              <div className="mt-2 grid grid-cols-2 gap-1">
+                {[
+                  { label: "Absoluto · Atzilut", val: data.classic.gematria },
+                  { label: "Ordinal · Beriá", val: (() => { let s=0; for(const c of data.classic.consonants) { const ord: Record<string,number>={א:1,ב:2,ג:3,ד:4,ה:5,ו:6,ז:7,ח:8,ט:9,י:10,כ:11,ך:23,ל:12,מ:13,ם:24,נ:14,ן:25,ס:15,ע:16,פ:17,ף:26,צ:18,ץ:27,ק:19,ר:20,ש:21,ת:22}; s+=ord[c]??0; } return s; })() },
+                  { label: "Reducido · Yetzirá", val: (() => { let n=data.classic.gematria; while(n>9){n=String(n).split("").reduce((s,d)=>s+Number(d),0);} return n; })() },
+                  { label: "Integral · Asiá", val: (() => { let n=data.classic.gematria; while(n>9){n=String(n).split("").reduce((s,d)=>s+Number(d),0);} return n; })() },
+                ].map((sys, i) => (
+                  <div key={i} className="rounded border border-gold/10 bg-gold/[0.03] px-2 py-1">
+                    <p className="text-[9px] uppercase tracking-wide text-gold/40 font-cinzel">{sys.label}</p>
+                    <p className="text-base text-gold-soft font-semibold">{sys.val}</p>
+                  </div>
+                ))}
+              </div>
               {data.classic.breakdown.length > 0 && (
-                <p className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-xs text-muted">
+                <p className="mt-2 flex flex-wrap gap-x-2 gap-y-1 text-xs text-muted">
                   {data.classic.breakdown.map((b, i) => (
                     <span key={i}>
                       <span className="hebrew text-parchment">{b.letter}</span>

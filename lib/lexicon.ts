@@ -5,6 +5,42 @@
 const BASE = "https://www.sefaria.org/api";
 
 // ---- Gematría ----
+// Valor Ordinal: posición de cada letra en el alefbet (1-22+5 finales)
+const GEMATRIA_ORDINAL: Record<string, number> = {
+  א: 1, ב: 2, ג: 3, ד: 4, ה: 5, ו: 6, ז: 7, ח: 8, ט: 9,
+  י: 10, כ: 11, ך: 23, ל: 12, מ: 13, ם: 24, נ: 14, ן: 25,
+  ס: 15, ע: 16, פ: 17, ף: 26, צ: 18, ץ: 27,
+  ק: 19, ר: 20, ש: 21, ת: 22,
+};
+
+// Valor reducido de una palabra (suma de los digitos hasta obtener 1 digito)
+function reduceDigits(n: number): number {
+  while (n > 9) { n = String(n).split("").reduce((s, d) => s + Number(d), 0); }
+  return n;
+}
+
+export function gematriaFull(word: string): GematriaValues {
+  const consonants = stripNiqud(word);
+  let abs = 0; let ord = 0;
+  for (const ch of consonants) {
+    abs += GEMATRIA[ch] ?? 0;
+    ord += GEMATRIA_ORDINAL[ch] ?? 0;
+  }
+  return {
+    absolute: abs,
+    ordinal: ord,
+    reduced: reduceDigits(abs),
+    integral: reduceDigits(abs),
+  };
+}
+
+export interface GematriaValues {
+  absolute: number;
+  ordinal: number;
+  reduced: number;
+  integral: number;
+}
+
 
 // Valor estándar de cada letra (las finales valen igual que su forma normal).
 const GEMATRIA: Record<string, number> = {
