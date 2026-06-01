@@ -84,6 +84,12 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="hebrew text-3xl text-gold">{anchor.word}</p>
+            {/* Transliteración (pronunciación en letras latinas) */}
+            {data?.classic.transliteration && (
+              <p className="mt-0.5 font-cinzel text-sm italic text-gold-soft">
+                {data.classic.transliteration}
+              </p>
+            )}
             <p className="mt-0.5 font-cinzel text-[10px] uppercase tracking-widest text-muted">
               {t("title")}
             </p>

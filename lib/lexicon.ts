@@ -89,6 +89,8 @@ interface RawEntry {
   parent_lexicon?: string;
   headword?: string;
   strong_number?: string;
+  transliteration?: string; // pronunciación en script latino (ej. "bereshit")
+  pronunciation?: string;   // guía de pronunciación (ej. "bə-rê-šîṯ")
   content?: unknown;
 }
 
@@ -104,6 +106,7 @@ const LEXICON_ORDER = [
 export interface ClassicLexicon {
   word: string;
   consonants: string;
+  transliteration: string; // pronunciación en letras latinas, p.ej. "bereshit"
   gematria: number;
   breakdown: { letter: string; value: number }[];
   entries: LexiconEntry[];
@@ -114,6 +117,7 @@ export async function getClassicLexicon(word: string): Promise<ClassicLexicon> {
   const base: ClassicLexicon = {
     word,
     consonants,
+    transliteration: "",
     gematria: gematria(word),
     breakdown: gematriaBreakdown(word),
     entries: [],
@@ -127,7 +131,16 @@ export async function getClassicLexicon(word: string): Promise<ClassicLexicon> {
     const raw: RawEntry[] = await res.json();
     const entries: LexiconEntry[] = [];
     const seen = new Set<string>();
+
+    // Recoger la mejor transliteración de todas las entradas.
+    let bestTranslit = "";
     for (const e of raw) {
+      // Priorizar la del BDB Augmented Strong (la más completa).
+      const t = e.transliteration || e.pronunciation || "";
+      if (t && (!bestTranslit || e.parent_lexicon === "BDB Augmented Strong")) {
+        bestTranslit = t;
+      }
+
       const def = extractDefinition(e.content);
       if (!def) continue;
       const lexicon = e.parent_lexicon ?? "?";
@@ -141,6 +154,7 @@ export async function getClassicLexicon(word: string): Promise<ClassicLexicon> {
         definition: def,
       });
     }
+    base.transliteration = bestTranslit;
     // Ordenar por preferencia de diccionario.
     entries.sort((a, b) => {
       const ia = LEXICON_ORDER.indexOf(a.lexicon);
