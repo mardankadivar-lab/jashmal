@@ -248,6 +248,13 @@ export default function TreeOfLife() {
           >
             ← {t("exitTree")}
           </button>
+          <button
+            onClick={() => router.push("/creacion")}
+            className="rounded-full border border-gold/15 bg-ink/70 px-3 py-1.5 font-cinzel text-xs text-gold/50 backdrop-blur-md transition-colors hover:text-gold"
+            title="Ver el proceso completo desde Ein Sof"
+          >
+            אֵין סוֹף ←
+          </button>
           {depth.length > 0 && (
             <div className="flex items-center gap-2 rounded-full border border-gold/15 bg-ink/70 px-3 py-1.5 backdrop-blur-md">
               <button onClick={() => { setDepth([]);  }} className="font-cinzel text-xs text-gold/50 hover:text-gold">{t("root")}</button>

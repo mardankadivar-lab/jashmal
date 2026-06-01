@@ -19,6 +19,9 @@ export default function SiteHeader() {
           <Link href="/estudio" className="text-muted transition-colors hover:text-parchment">
             {t("nav.study")}
           </Link>
+          <Link href="/creacion" className="text-muted transition-colors hover:text-parchment">
+            {t("nav.creation")}
+          </Link>
           <Link href="/arbol" className="text-muted transition-colors hover:text-parchment">
             {t("nav.tree")}
           </Link>
