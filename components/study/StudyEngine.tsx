@@ -341,7 +341,8 @@ export default function StudyEngine() {
                 setOpenRefs((prev) => prev.includes(ref) ? prev : [...prev, ref]);
               }}
             />
-            <AudioPlayer study={study} />
+            {/* AudioPlayer desactivado temporalmente — pendiente de grabar voz en persa.
+            <AudioPlayer study={study} /> */}
             {studyRef && <StudyNotes studyRef={studyRef} />}
             {hasNext() && (
               <div className="mt-8 flex justify-end border-t border-gold/15 pt-4">
