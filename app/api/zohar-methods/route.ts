@@ -100,6 +100,26 @@ Aplica los métodos clásicos que el Zóhar usa para desvelar capas ocultas de s
    Cita las fuentes exactas (Zóhar parashá/folio, Midrash, Talmud o Etz Jaim).
    Solo incluye este apartado si ${word} tiene efectivamente una transformación documentada.
 
+8. **שְׁאֵלָה וּתְשׁוּבָה — Pregunta y Respuesta oculta dentro del Nombre**
+   El Zóhar tiene un método especial para los nombres divinos y palabras clave:
+   encuentra dentro de ellas una PREGUNTA y su RESPUESTA fusionadas.
+
+   Caso paradigmático (Zóhar Bereishit 1b, Parashat Bereishit):
+   El versículo de Isaías 40:26 pregunta: "מִי בָרָא אֵלֶּה" — ¿Quién (מִי) creó estos (אֵלֶּה)?
+   El Zóhar revela que esa pregunta y su respuesta están fundidas en el nombre אֱלֹהִים:
+   — מִי (Quién = 50) = Biná, el mundo oculto, las 50 puertas de la comprensión, lo incognoscible
+   — אֵלֶּה (Estos = 36) = el mundo revelado, las sefirot manifiestas, la creación
+   — מִי (50) + אֵלֶּה (36) = 86 = אֱלֹהִים ✓ (la guematría confirma la unión)
+   El nombre divino ES la pregunta abrazada por la respuesta: lo oculto (מִי) se une a lo revelado (אֵלֶּה).
+   Cuando Biná "descendió" a unirse con el mundo de abajo, su nombre se hizo אֱלֹהִים.
+
+   Aplica este método a ${word}:
+   — ¿Contiene ${word} una pregunta y respuesta teológica oculta?
+   — ¿Puede dividirse en dos conceptos opuestos/complementarios cuya unión revele un misterio?
+   — ¿La guematría de las partes confirma la división (como מִי+אֵלֶּה=אֱלֹהִים)?
+   — ¿Hay algún versículo bíblico donde este nombre aparezca en un contexto que ilumine esa tensión?
+   Solo incluye si encuentras una dialéctica real documentada en el Zóhar o la tradición cabalística.
+
 Responde en ${lang}. Usa este formato para cada método que tenga hallazgos reales:
 
 ## [nombre del método en hebreo] — [nombre en ${lang}]
@@ -111,7 +131,7 @@ Sé preciso, profundo y fiel a las fuentes. No inventes conexiones que no estén
   try {
     const msg = await anthropic.messages.create({
       model: MODEL,
-      max_tokens: 1200,
+      max_tokens: 1400,
       messages: [{ role: "user", content: prompt }],
     });
 
