@@ -62,6 +62,16 @@ export function localizedBookLabel(id: string, fallback: string, locale: string)
   return fallback; // título inglés de Sefaria
 }
 
+// Nombres de las 6 categorías principales en FA
+export const CATEGORY_FA: Record<string, string> = {
+  Tanakh:   "تنخ — کتاب مقدس",
+  Mishnah:  "میشنا",
+  Talmud:   "تلمود بابلی",
+  Midrash:  "میدراش",
+  Kabbalah: "قبالا",
+  Chasidut: "حسیدوت",
+};
+
 // Etiquetas de subcategoría en FA (las ES ya vienen en el catálogo).
 export const SUB_FA: Record<string, string> = {
   "Torá": "تورات",

@@ -10,7 +10,7 @@ import {
   bookRef,
   type RichBook,
 } from "./catalogOverrides";
-import { localizedBookLabel, SUB_FA } from "./bookNames";
+import { localizedBookLabel, SUB_FA, CATEGORY_FA } from "./bookNames";
 
 export type CatBook = RichBook;
 export { bookRef };
@@ -26,6 +26,7 @@ export interface RichGroup {
   id: string;
   he: string;
   es: string;
+  fa: string;
   subs: RichSub[];
 }
 
@@ -50,6 +51,7 @@ export const CATALOG: RichGroup[] = RAW.map((g) => ({
   id: g.id,
   he: g.he,
   es: g.es,
+  fa: CATEGORY_FA[g.id] ?? g.es, // fallback a español si no hay FA
   subs: g.subs.map(expandSub),
 }));
 

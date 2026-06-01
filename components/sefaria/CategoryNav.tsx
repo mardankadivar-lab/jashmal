@@ -25,7 +25,7 @@ export default function CategoryNav({ selected, onSelect }: CategoryNavProps) {
           }
         >
           {locale === "fa" ? (
-            <span className="hebrew">{g.he}</span>
+            <span>{g.fa}</span>
           ) : (
             <span>{g.es}</span>
           )}
