@@ -48,6 +48,8 @@ export default function StudyEngine() {
   const [wordMenu, setWordMenu] = useState<WordMenuAnchor | null>(null);
   // referencias cruzadas abiertas en el panel lateral (encadenables).
   const [openRefs, setOpenRefs] = useState<string[]>([]);
+  // historial de refs visitados para el botón ←.
+  const [refHistory, setRefHistory] = useState<string[]>([]);
   // ref del chat para enviar mensajes programáticamente (menú contextual).
   const [chatPrefill, setChatPrefill] = useState<string | null>(null);
   // unidad (capítulo/daf) actual del libro elegido, para "siguiente capítulo".
@@ -79,13 +81,24 @@ export default function StudyEngine() {
     setSourceResult(null);
   }
 
-  async function loadRef(ref: string) {
+  async function loadRef(ref: string, addToHistory = false) {
+    // Si hay un texto fuente actual, lo guardamos en el historial antes de navegar.
+    if (addToHistory && sourceResult?.ref) {
+      setRefHistory((h) => [...h, sourceResult.ref]);
+    }
     setSourceLoading(true);
     setSourceError(false);
     setSourceResult(null);
     setStudy(null);
     setStudyRef(null);
     setStudyError(null);
+    setOpenRefs([]);
+    // Guardar el ref en la URL para que el refresco no pierda el lugar.
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("ref", ref);
+      window.history.replaceState(null, "", url.toString());
+    }
     try {
       const result = await getText(ref);
       setSourceResult(result);
@@ -96,11 +109,19 @@ export default function StudyEngine() {
     }
   }
 
+  // Volver al ref anterior (botón ←).
+  function goBack() {
+    if (refHistory.length === 0) return;
+    const prev = refHistory[refHistory.length - 1];
+    setRefHistory((h) => h.slice(0, -1));
+    loadRef(prev);
+  }
+
   function selectUnit(unit: number, amud?: "a" | "b") {
     if (!book) return;
     setCurrentUnit(unit);
     setCurrentAmud(amud);
-    loadRef(bookRef(book, unit, amud));
+    loadRef(bookRef(book, unit, amud), true);
   }
 
   // Siguiente capítulo/daf del mismo libro (para no perder el hilo).
@@ -129,7 +150,7 @@ export default function StudyEngine() {
   function onSearch(e: React.FormEvent) {
     e.preventDefault();
     const q = search.trim();
-    if (q) loadRef(q);
+    if (q) loadRef(q, true);
   }
 
   async function runStudy(index: number, depth: "quick" | "deep" = "quick") {
@@ -179,6 +200,19 @@ export default function StudyEngine() {
     <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
       {/* Columna izquierda: navegación + fuente */}
       <section>
+        {/* Botón ← volver al texto anterior */}
+        {refHistory.length > 0 && (
+          <button
+            onClick={goBack}
+            className="mb-3 flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-gold"
+          >
+            ← <span className="font-cinzel text-xs uppercase tracking-wide">{t("back")}</span>
+            <span className="truncate max-w-[200px] text-xs opacity-70">
+              {refHistory[refHistory.length - 1]}
+            </span>
+          </button>
+        )}
+
         <form onSubmit={onSearch} className="flex gap-2">
           <input
             value={search}
@@ -197,7 +231,7 @@ export default function StudyEngine() {
         {parasha && parasha.ref && (
           <div className="mt-3 rounded-md border border-gold/30 bg-gold/[0.04] p-2.5">
             <button
-              onClick={() => loadRef(parasha.ref)}
+              onClick={() => loadRef(parasha.ref, true)}
               className="flex w-full items-center justify-between text-start text-sm"
             >
               <span className="text-gold/90">
@@ -283,7 +317,10 @@ export default function StudyEngine() {
               text={study}
               onConcept={openConcept}
               onLetter={openLetter}
-              onRef={(ref) => setOpenRefs((prev) => prev.includes(ref) ? prev : [...prev, ref])}
+              onRef={(ref) => {
+                // Las refs del análisis se abren en el RefPanel (no reemplazan el estudio).
+                setOpenRefs((prev) => prev.includes(ref) ? prev : [...prev, ref]);
+              }}
             />
             <AudioPlayer study={study} />
             {studyRef && <StudyNotes studyRef={studyRef} />}
@@ -308,6 +345,7 @@ export default function StudyEngine() {
           refs={openRefs}
           onClose={(ref) => setOpenRefs((prev) => prev.filter((r) => r !== ref))}
           onOpenRef={(ref) => setOpenRefs((prev) => prev.includes(ref) ? prev : [...prev, ref])}
+          onNavigate={(ref) => loadRef(ref, true)}
         />
       )}
       <WordMenu

@@ -15,11 +15,12 @@ interface RefPanelProps {
   refs: string[];
   onClose: (ref: string) => void;
   onOpenRef: (ref: string) => void;
+  onNavigate?: (ref: string) => void; // navegar al texto como estudio principal
 }
 
 // Panel de referencias cruzadas: ventana flotante (no full-height) para no
 // bloquear el estudio principal. Se apila encima del análisis, encadenable.
-export default function RefPanel({ refs, onClose, onOpenRef }: RefPanelProps) {
+export default function RefPanel({ refs, onClose, onOpenRef, onNavigate }: RefPanelProps) {
   const t = useTranslations("refPanel");
   const [entries, setEntries] = useState<Record<string, RefPanelEntry>>({});
   // Tab activo cuando hay varias refs abiertas
@@ -101,7 +102,18 @@ export default function RefPanel({ refs, onClose, onOpenRef }: RefPanelProps) {
         )}
         {entry?.result && (
           <div>
-            <p className="hebrew mb-3 text-xs text-muted">{entry.result.heRef}</p>
+            <div className="mb-3 flex items-center justify-between">
+          <p className="hebrew text-xs text-muted">{entry.result.heRef}</p>
+          {onNavigate && (
+            <button
+              onClick={() => { onNavigate(activeRef); refs.forEach(onClose); }}
+              className="text-xs text-gold/70 transition-colors hover:text-gold"
+              title={t("navigate")}
+            >
+              {t("navigate")} ↗
+            </button>
+          )}
+        </div>
             <ol className="space-y-3">
               {entry.result.segments.map((seg, i) => (
                 <li key={i} className="flex flex-col gap-1 border-s-2 border-gold/20 ps-3">

@@ -151,6 +151,7 @@
     "title": "Referencias",
     "loading": "Cargando texto...",
     "error": "No se pudo cargar.",
-    "closeAll": "Cerrar todo"
+    "closeAll": "Cerrar todo",
+    "navigate": "Ir a este texto"
   }
 }

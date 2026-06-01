@@ -151,6 +151,7 @@
     "title": "References",
     "loading": "Loading text...",
     "error": "Could not load.",
-    "closeAll": "Close all"
+    "closeAll": "Close all",
+    "navigate": "Go to this text"
   }
 }
