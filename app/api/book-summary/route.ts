@@ -54,13 +54,14 @@ Descripción de referencia (de Sefaria, en inglés): ${source || "(no disponible
 
 Escribe en ${lang}, en 3-5 frases cálidas y claras: qué es el libro, de qué trata,
 su lugar en la tradición y por qué vale la pena estudiarlo. Sin títulos, sin listas
-— un párrafo de presentación. Si la descripción de referencia está vacía, usa tu
-conocimiento del libro pero no inventes datos dudosos.`;
+— un párrafo de presentación COMPLETO que siempre termine con punto final.
+Si la descripción de referencia está vacía, usa tu conocimiento del libro pero no
+inventes datos dudosos.`;
 
   try {
     const msg = await anthropic.messages.create({
       model: MODEL,
-      max_tokens: 400,
+      max_tokens: 600,
       messages: [{ role: "user", content: prompt }],
     });
     const summary = msg.content
