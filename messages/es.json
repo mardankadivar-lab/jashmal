@@ -76,6 +76,9 @@
     "classic": "Diccionarios",
     "paleo": "צוּרוֹת — Forma primaria (paleo-hebreo)",
     "mystic": "Sentido interior",
+    "connections": "קְשָׁרִים — Conexiones numéricas",
+    "findConnections": "Descubrir conexiones",
+    "searchingConnections": "Buscando palabras con el mismo valor numérico...",
     "disclaimer": "Diccionarios clásicos vía Sefaria (BDB, Strong, Klein, Jastrow). El sentido interior y las conexiones numéricas son una meditación generada; verifícalas en las fuentes.",
     "wordHint": "Toca cualquier palabra hebrea para abrir su léxico."
   },
