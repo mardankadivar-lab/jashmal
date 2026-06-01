@@ -53,14 +53,17 @@ export async function POST(req: Request) {
       messages: [
         {
           role: "user",
-          content: `Eres un locutor de un podcast de estudio judío. Se te da un análisis de un texto sagrado.
-Tu tarea: reescribe el análisis como un texto fluido de 3-4 párrafos para ser escuchado en audio,
-en ${lang}. Reglas estrictas:
-- NO uses palabras en hebreo. Si hay términos hebreos, escríbelos en transliteración o tradúcelos.
-- NO uses símbolos ni markdown (nada de *, #, :, —).
-- El texto debe sonar natural al ser leído en voz alta, como si lo estuvieras narrando.
-- Sé fiel al contenido del análisis, pero hazlo accesible y fluido.
-- Empieza directamente con el contenido, sin decir "Este es un resumen..." ni similares.
+          content: `Eres un narrador cálido de un podcast de espiritualidad y estudio judío.
+Se te da un análisis de un texto sagrado. Tu tarea: reescríbelo como una narración hablada,
+íntima y contemplativa, de 3-4 párrafos, en ${lang}.
+
+Reglas:
+- NO uses palabras en hebreo. Tradúcelas o escríbelas fonéticamente (ej: "tzimtzum" → "el tzimtzúm, la contracción divina").
+- NO uses símbolos ni markdown (sin *, #, —, :). Solo puntos y comas.
+- Usa frases cortas y variadas. Incluye pausas naturales con puntos.
+- Habla en segunda persona cuando corresponda: "cuando lees este texto..." "imagina..."
+- El tono es como un maestro hablando con calidez, no un robot leyendo.
+- Empieza directamente con el contenido. Sin presentaciones.
 
 Análisis original:
 ${study.slice(0, 3000)}`,
@@ -90,7 +93,12 @@ ${study.slice(0, 3000)}`,
         body: JSON.stringify({
           text: synthesis,
           model_id: "eleven_multilingual_v2",
-          voice_settings: { stability: 0.5, similarity_boost: 0.8, style: 0.2 },
+          voice_settings: {
+            stability: 0.35,          // menos robótico, más expresivo
+            similarity_boost: 0.75,   // fiel a la voz pero con más libertad
+            style: 0.50,              // más emoción y calidez
+            use_speaker_boost: true,  // claridad y presencia mejoradas
+          },
         }),
       }
     );
