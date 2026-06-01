@@ -94,73 +94,133 @@ function SefiraNode({ sefira, selected, locale, onClick }: {
   );
 }
 
+// ─── Datos de cada sección YHVH + mundo ABYA ─────────────────────────────────
+export const YHVH_SECTIONS = [
+  {
+    id: "kotz",
+    he: "◆",
+    y: 6.7,
+    color: "#ffffff",
+    olamHe: "אֵין סוֹף",
+    olamAbbr: "—",
+    olamEs: "Ein Sof",
+    olamFa: "اِین سوف",
+    size: 18,
+  },
+  {
+    id: "yud",
+    he: "י",
+    y: 3.92,
+    color: "#e8d070",
+    olamHe: "אֲצִילוּת",
+    olamAbbr: "א",
+    olamEs: "Atzilut — Emanación",
+    olamFa: "عالم اَتزیلوت",
+    size: 40,
+  },
+  {
+    id: "hei1",
+    he: "ה",
+    y: 3.0,
+    color: "#9999dd",
+    olamHe: "בְּרִיאָה",
+    olamAbbr: "ב",
+    olamEs: "Beriá — Creación",
+    olamFa: "عالم بِریاه",
+    size: 40,
+  },
+  {
+    id: "vav",
+    he: "ו",
+    y: -1.85,
+    color: "#c9a43e",
+    olamHe: "יְצִירָה",
+    olamAbbr: "י",
+    olamEs: "Yetzirá — Formación",
+    olamFa: "عالم یِتزیراه",
+    size: 48,
+  },
+  {
+    id: "hei2",
+    he: "ה",
+    y: -6.44,
+    color: "#c9a43e",
+    olamHe: "עֲשִׂיָּה",
+    olamAbbr: "ע",
+    olamEs: "Asiá — Acción",
+    olamFa: "عالم عَسیاه",
+    size: 40,
+  },
+];
+
 // ─── Spine del Tetragrámmaton (YHVH) — secciona el árbol horizontalmente ──────
-// Kéter = kotz (punta) del Yud | Jojmá = Yud | Biná = primera Hei
-// ZA (Jésed→Yesod, 6 sefirot) = Vav | Maljut = Hei final
-function YHVHSpine() {
-  const XS  = 6.4;   // X del spine (más allá del árbol que va hasta ≈4.8)
-  const XL  = -5.4;  // hasta dónde llegan las líneas divisorias hacia la izquierda
+function YHVHSpine({ onYhvhClick, locale }: { onYhvhClick?: (id: string) => void; locale: string }) {
+  const XS = 6.4;
+  const XL = -5.4;
 
-  // Tres divisores horizontales principales
-  const dividers: [number, [number,number,number], [number,number,number]][] = [
-    // Y=5.0 — separa el kotz (Kéter) del Yud (Jojmá)
-    [5.0,  [XL, 5.0, -0.05], [XS + 0.3, 5.0, -0.05]],
-    // Y=2.0 — separa los Supernales (Jojmá/Biná) del ZA
-    [2.0,  [XL, 2.0, -0.05], [XS + 0.3, 2.0, -0.05]],
-    // Y=-5.3 — separa el ZA de Maljut
-    [-5.3, [XL, -5.3, -0.05], [XS + 0.3, -5.3, -0.05]],
-  ];
-
-  // Etiquetas: he=letra, y=posición 3D, color, tooltip
-  const labels = [
-    { he: "◆", y:  6.7, color: "#ffffff", desc: "קוֹץ — Kéter", size: 9 },   // kotz
-    { he: "י", y:  3.92, color: "#e8c866", desc: "יוּד — Jojmá", size: 22 },
-    { he: "ה", y:  3.1,  color: "#8888ee", desc: "הֵי עֶלְיוֹנָה — Biná", size: 22 },
-    { he: "ו", y: -1.85, color: "#c9a43e", desc: "וָיו — זְעֵיר אַנְפִּין", size: 26 },
-    { he: "ה", y: -6.44, color: "#c9a43e", desc: "הֵי תַּתָּאָה — Maljut", size: 22 },
+  const dividers: [[number,number,number],[number,number,number]][] = [
+    [[XL, 5.0, -0.05], [XS + 0.5, 5.0, -0.05]],
+    [[XL, 2.0, -0.05], [XS + 0.5, 2.0, -0.05]],
+    [[XL, -5.3,-0.05], [XS + 0.5,-5.3,-0.05]],
   ];
 
   return (
     <>
-      {/* Spine vertical tenue */}
-      <Line
-        points={[[XS, 7.2, 0], [XS, -7.2, 0]]}
-        color="#c9a43e" lineWidth={0.35} transparent opacity={0.18}
-      />
+      {/* Spine vertical */}
+      <Line points={[[XS, 7.4, 0], [XS, -7.4, 0]]}
+        color="#c9a43e" lineWidth={0.6} transparent opacity={0.3} />
 
-      {/* Divisores horizontales */}
-      {dividers.map(([, a, b], i) => (
+      {/* Divisores horizontales — más iluminados */}
+      {dividers.map(([a, b], i) => (
         <Line key={i} points={[a, b]}
-          color="#c9a43e" lineWidth={0.45} transparent opacity={0.28}
-        />
+          color="#e0c060" lineWidth={1.0} transparent opacity={0.55} />
       ))}
 
-      {/* Corchete vertical para el Vav (ZA: Jésed→Yesod) */}
+      {/* Corchete del Vav (ZA) — más visible */}
       <Line
         points={[
-          [XS + 0.25, 0.7,   0],
-          [XS + 0.55, 0.7,   0],
-          [XS + 0.55, -4.48, 0],
-          [XS + 0.25, -4.48, 0],
+          [XS + 0.2, 0.7,   0.1],
+          [XS + 0.6, 0.7,   0.1],
+          [XS + 0.6, -4.48, 0.1],
+          [XS + 0.2, -4.48, 0.1],
         ]}
-        color="#c9a43e" lineWidth={1.0} transparent opacity={0.55}
+        color="#e0c060" lineWidth={2.0} transparent opacity={0.75}
       />
 
-      {/* Etiquetas YHVH */}
-      {labels.map((l, i) => (
-        <Html key={i} position={[XS + 0.7, l.y, 0.1]} center distanceFactor={13} zIndexRange={[10,0]}>
-          <div title={l.desc} style={{ textAlign: "center", cursor: "default", userSelect: "none" }}>
+      {/* Etiquetas YHVH — más grandes + mundo ABYA */}
+      {YHVH_SECTIONS.map((s) => (
+        <Html key={s.id} position={[XS + 0.8, s.y, 0.2]} center distanceFactor={13} zIndexRange={[10,0]}>
+          <button
+            onClick={() => onYhvhClick?.(s.id)}
+            style={{
+              background: "none", border: "none", padding: "2px 4px",
+              cursor: "pointer", textAlign: "center", userSelect: "none",
+            }}
+          >
+            {/* Letra principal */}
             <div style={{
               fontFamily: "var(--font-hebrew)",
-              fontSize: `${l.size}px`,
-              color: l.color,
-              textShadow: `0 0 10px ${l.color}99, 0 0 20px ${l.color}55`,
+              fontSize: `${s.size}px`,
+              color: s.color,
+              textShadow: `0 0 14px ${s.color}cc, 0 0 28px ${s.color}77, 0 0 4px ${s.color}`,
               lineHeight: 1,
-              filter: `drop-shadow(0 0 4px ${l.color}88)`,
+              filter: `drop-shadow(0 0 6px ${s.color}aa)`,
             }}>
-              {l.he}
+              {s.he}
             </div>
-          </div>
+            {/* Mundo ABYA — pequeño, debajo de la letra */}
+            <div style={{
+              fontFamily: "var(--font-hebrew)",
+              fontSize: "9px",
+              color: s.color,
+              opacity: 0.7,
+              marginTop: "1px",
+              textShadow: `0 0 6px ${s.color}88`,
+              whiteSpace: "nowrap",
+            }}>
+              {locale === "fa" ? s.olamFa : s.olamHe}
+            </div>
+          </button>
         </Html>
       ))}
     </>
@@ -173,10 +233,11 @@ export interface TreeSceneProps {
   depth: { sefiraId: string }[];
   onSelect: (id: string) => void;
   onLetterClick?: (letter: string) => void;
+  onYhvhClick?: (id: string) => void;
   locale: string;
 }
 
-export default function TreeScene({ selected, onSelect, onLetterClick, locale }: TreeSceneProps) {
+export default function TreeScene({ selected, onSelect, onLetterClick, onYhvhClick, locale }: TreeSceneProps) {
   const controlsRef = useRef<any>(null);
 
   return (
@@ -264,7 +325,7 @@ export default function TreeScene({ selected, onSelect, onLetterClick, locale }:
       ))}
 
       {/* Tetragrámmaton — secciones YHVH al lado del árbol */}
-      <YHVHSpine />
+      <YHVHSpine onYhvhClick={onYhvhClick} locale={locale} />
     </>
   );
 }

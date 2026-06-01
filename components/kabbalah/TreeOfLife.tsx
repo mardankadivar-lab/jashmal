@@ -7,6 +7,7 @@ import { useRouter } from "@/i18n/navigation";
 import { getSefira, sefiraLabel } from "@/lib/sefirot";
 import { SEFIRA_STUDY, ROADMAP_LEVELS } from "@/lib/sefirotStudy";
 import { LETTER_MEANINGS, LETTER_TO_PATH, type HebrewLetterMeaning } from "@/lib/hebrewLetters";
+import { YHVH_SECTIONS } from "./TreeScene";
 
 const Canvas = dynamic(() => import("@react-three/fiber").then((m) => m.Canvas), { ssr: false });
 const TreeScene = dynamic(() => import("./TreeScene"), { ssr: false });
@@ -147,10 +148,17 @@ export default function TreeOfLife() {
   const [heijalot, setHeijalot] = useState<string | null>(null);
   const [heijalotLoading, setHeijalotLoading] = useState(false);
   const [activeLetter, setActiveLetter] = useState<string | null>(null);
+  const [activeYhvh, setActiveYhvh] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleLetterClick = useCallback((letter: string) => {
     setActiveLetter((prev) => (prev === letter ? null : letter));
+    setActiveYhvh(null);
+  }, []);
+
+  const handleYhvhClick = useCallback((id: string) => {
+    setActiveYhvh((prev) => (prev === id ? null : id));
+    setActiveLetter(null);
   }, []);
 
   const handleSelect = useCallback((id: string) => {
@@ -226,7 +234,7 @@ export default function TreeOfLife() {
           <Canvas camera={{ position: [0, 0, 14], fov: 52 }} gl={{ antialias: true }}
             style={{ position: "absolute", inset: 0 }}
           >
-            <TreeScene selected={selected} depth={depth} onSelect={handleSelect} onLetterClick={handleLetterClick} locale={locale} />
+            <TreeScene selected={selected} depth={depth} onSelect={handleSelect} onLetterClick={handleLetterClick} onYhvhClick={handleYhvhClick} locale={locale} />
           </Canvas>
         </Suspense>
 
@@ -280,6 +288,111 @@ export default function TreeOfLife() {
         <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
           <p className="font-cinzel text-[9px] uppercase tracking-[0.3em] text-gold/20">{t("scrollHint")}</p>
         </div>
+
+        {/* ── Popup YHVH / ABYA — aparece al hacer clic en una letra del spine ── */}
+        {activeYhvh && (() => {
+          const sec = YHVH_SECTIONS.find((s) => s.id === activeYhvh);
+          if (!sec) return null;
+
+          // Datos extendidos por sección
+          const DATA: Record<string, { sefiraEs: string; sefiraHe: string; descEs: string; descFa: string; studyRef: string }> = {
+            kotz: {
+              sefiraEs: "Kéter — Corona",
+              sefiraHe: "כֶּתֶר",
+              descEs: "La punta (קוֹץ) del Yud trasciende los cuatro mundos. Es el punto de contacto entre el Ein Sof ilimitado y el primer sefirá. Kéter no pertenece a ningún mundo: es la voluntad primordial antes de toda forma.",
+              descFa: "نقطهٔ (قوتز) یود از چهار عالم فراتر می‌رود. نقطهٔ تماس میان اِین سوف نامحدود و اولین سِفیرا است. کِتِر به هیچ عالمی تعلق ندارد — ارادهٔ ازلی پیش از هر صورتی است.",
+              studyRef: "Sefer Etz Chaim, Gate 1",
+            },
+            yud: {
+              sefiraEs: "Jojmá — Sabiduría",
+              sefiraHe: "חָכְמָה",
+              descEs: "El cuerpo del Yud corresponde al Mundo de la Emanación (Atzilut). En Atzilut, Creador y creatura aún no están separados. La luz divina fluye directamente, sin velo. Corresponde al Partzuf Aba (Padre).",
+              descFa: "جسم یود با عالم اَتزیلوت (فیض) مطابقت دارد. در اَتزیلوت، خالق و مخلوق هنوز جدا نیستند. نور الهی مستقیماً جاری است، بدون حجاب. با پارتزوف اَبا (پدر) مطابقت دارد.",
+              studyRef: "Sefer Etz Chaim, Gate 1",
+            },
+            hei1: {
+              sefiraEs: "Biná — Entendimiento",
+              sefiraHe: "בִּינָה",
+              descEs: "La primera Hei es el Mundo de la Creación (Beriá). Aquí aparece la primera separación entre Creador y creatura: la luz ya no es directa sino reflejada. Los grandes arcángeles habitan Beriá. Corresponde al Partzuf Ima (Madre).",
+              descFa: "هِی اول با عالم بِریاه (آفرینش) مطابقت دارد. اینجاست که اولین جدایی میان خالق و مخلوق پدیدار می‌شود. فرشتگان بزرگ در بِریاه ساکنند. با پارتزوف اِما (مادر) مطابقت دارد.",
+              studyRef: "Sefer Etz Chaim, Gate 1",
+            },
+            vav: {
+              sefiraEs: "Zeir Anpin — Los Seis",
+              sefiraHe: "זְעֵיר אַנְפִּין",
+              descEs: "El Vav (valor 6) corresponde a los seis sefirot del Zeir Anpin: Jésed, Guevurá, Tiferet, Netzaj, Hod, Yesod. Su mundo es Yetzirá (Formación), el mundo de los ángeles intermedios y las almas. La Torah fue dada a este nivel.",
+              descFa: "وָو (ارزش ۶) با شش سِفیروت زِئیر اَنپین مطابقت دارد: خِسِد، گِووورا، تیفِرِت، نِتزاخ، هود، یِسود. عالم آن یِتزیراه (صورت‌بندی) است — عالم فرشتگان میانی و ارواح. تورات در این سطح اعطا شد.",
+              studyRef: "Sefer Etz Chaim, Gate 1",
+            },
+            hei2: {
+              sefiraEs: "Maljut — Reino",
+              sefiraHe: "מַלְכוּת",
+              descEs: "La Hei final corresponde al Mundo de la Acción (Asiá), el mundo material. Maljut recibe de todos los sefirot superiores y los irradia en la creación física. La Shejiná (presencia divina) habita en Maljut. El alma humana opera en este mundo.",
+              descFa: "هِی آخر با عالم عَسیاه (عمل) — جهان مادی — مطابقت دارد. مالخوت از تمام سِفیروت بالاتر دریافت می‌کند و آن‌ها را در آفرینش فیزیکی می‌تاباند. شِخینا (حضور الهی) در مالخوت ساکن است.",
+              studyRef: "Sefer Etz Chaim, Gate 1",
+            },
+          };
+
+          const d = DATA[sec.id];
+
+          return (
+            <div
+              className="absolute left-1/2 top-1/2 z-40 w-[min(380px,92vw)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border border-gold/30 bg-ink/96 shadow-2xl backdrop-blur-md"
+              style={{ animation: "slideInRight 0.3s ease-out" }}
+            >
+              {/* Cabecera */}
+              <div className="flex items-center justify-between border-b border-gold/15 bg-gold/[0.06] px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <span className="hebrew leading-none" style={{ fontSize: "52px", color: sec.color, filter: `drop-shadow(0 0 14px ${sec.color}99)` }}>
+                    {sec.he}
+                  </span>
+                  <div>
+                    <p className="hebrew text-lg font-bold" style={{ color: sec.color }}>{sec.olamHe}</p>
+                    <p className="font-cinzel text-xs text-gold/50">{locale === "fa" ? sec.olamFa : sec.olamEs}</p>
+                    <p className="hebrew mt-0.5 text-xs text-muted/50">{d?.sefiraHe} — {d?.sefiraEs}</p>
+                  </div>
+                </div>
+                <button onClick={() => setActiveYhvh(null)} className="rounded-full border border-gold/20 p-1.5 text-muted hover:text-gold">✕</button>
+              </div>
+
+              {/* Contenido */}
+              <div className="px-4 py-4 space-y-4">
+                {/* Descripción */}
+                <p className="text-sm leading-relaxed text-parchment/85" dir={locale === "fa" ? "rtl" : "ltr"}>
+                  {locale === "fa" ? d?.descFa : d?.descEs}
+                </p>
+
+                {/* Diagrama ABYA mini */}
+                <div className="flex items-center justify-center gap-1 rounded-lg border border-gold/10 bg-gold/[0.03] py-2">
+                  {YHVH_SECTIONS.map((s) => (
+                    <div key={s.id} className="flex flex-col items-center px-2">
+                      <span className="hebrew text-xl leading-none" style={{
+                        color: s.id === sec.id ? s.color : "#c9a43e44",
+                        textShadow: s.id === sec.id ? `0 0 10px ${s.color}` : "none",
+                        fontSize: s.id === "vav" ? "26px" : "20px",
+                      }}>{s.he}</span>
+                      <span className="mt-0.5 font-cinzel text-[8px] uppercase tracking-wide" style={{ color: s.id === sec.id ? s.color : "#c9a43e33" }}>
+                        {s.olamAbbr}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Botón estudiar */}
+                <button
+                  onClick={() => {
+                    setActiveYhvh(null);
+                    const params = new URLSearchParams({ ref: d?.studyRef ?? "Sefer Etz Chaim, Gate 1", context: "kabbalah" });
+                    router.push(`/estudio?${params.toString()}`);
+                  }}
+                  className="w-full rounded-xl border border-gold/30 bg-gold/[0.07] px-4 py-2.5 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold/60 hover:bg-gold/15"
+                >
+                  {locale === "fa" ? "مطالعهٔ عمیق‌تر AByA — עֵץ חַיִּים" : "Profundizar en AByA — Etz Jaim שַׁעַר א"}
+                </button>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Popup del léxico de la letra — aparece al centro cuando se clica una letra */}
         {activeLetter && LETTER_MEANINGS[activeLetter] && (() => {
