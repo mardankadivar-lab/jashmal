@@ -74,21 +74,31 @@ Aplica los métodos clásicos que el Zóhar usa para desvelar capas ocultas de s
    Solo incluye si hay una conexión real documentada en la tradición zohárica o luriánica.
 
 7. **שִׁינּוּי הַשֵּׁם — Transformación del nombre**
-   Si ${word} es un nombre bíblico que Dios cambió (o que está relacionado con un cambio de nombre),
-   analiza la transformación de letras y su significado cabalístico profundo.
+   Si ${word} es un nombre bíblico que recibió una transformación divina (o está vinculado a una),
+   analiza las letras añadidas/quitadas y su significado cabalístico.
 
-   Modelo de análisis (aplícalo si es relevante para ${word}):
-   — ¿Qué letra(s) se añadieron o quitaron, y cuál es su valor numérico?
-   — ¿Qué revela ese cambio sobre la elevación espiritual del alma?
-   — Caso paradigmático del Zóhar (Lej Lejá):
-     שָׂרַי perdió su יוד (=10). Esa Yud "se dividió" en dos הֵא (5+5=10).
-     Una הֵא fue al nombre אַבְרָם → אַבְרָהָם (elevación al mundo de Atzilut).
-     La otra הֵא reemplazó la יוד final de שָׂרַי → שָׂרָה.
-     La יוד que salió de שָׂרַי subió ante el Trono y esperó hasta nacer en יִצְחָק,
-     quien lleva la יוד del pacto de la circuncisión incrustada en su nombre.
-   — Si ${word} es יִצְחָק: explica cómo la Yud de Sarai vive en él y su conexión con la Brit Milá.
-   — Cita las fuentes exactas del Zóhar, Midrash o Etz Jaim donde esto se explica.
-   Solo incluye este apartado si ${word} es efectivamente un nombre con transformación documentada.
+   Casos documentados en el Zóhar y la tradición — aplica el que corresponda a ${word}:
+
+   • אַבְרָם → אַבְרָהָם: Dios añade ה (Hei=5) del Nombre. Zohar Lej Lejá.
+   • שָׂרַי → שָׂרָה: La יוד (=10) de Sarai se "divide" en dos הֵא (5+5). Una va a Avram,
+     la otra reemplaza la Yud. La Yud sube al Trono y espera hasta nacer en יִצְחָק
+     como sello de la Brit Milá. Zohar Lej Lejá.
+   • יִצְחָק: lleva la Yud de Sarai incrustada — es el alma del pacto. Zohar Vayera.
+   • יַעֲקֹב → יִשְׂרָאֵל: añade א-ל, reorganiza. Zohar Vayishlaj 170a.
+   • הוֹשֵׁעַ → יְהוֹשֻׁעַ: Moshé añade י (Yud) del Nombre para protegerle de los espías.
+     Talmud Sotá 34b; Zohar Shelaj.
+   • אֵלִיָּהוּ / אֵלִיָּה: La ו (Vav) le fue retirada como depósito por acusar a Israel
+     ("abandonaron Tu alianza" — Reyes I 19:14); le fue restituida en Pinjás.
+     Zohar Pinjás 226b. Enseña que acusar al pueblo tiene consecuencias en el nombre.
+   • בֶּן אוֹנִי → בִּנְיָמִין: Rachel nombra desde el dolor; Yaakov eleva a gloria.
+     Zohar Vayishlaj.
+   • צָפְנַת פַּעְנֵחַ: nombre egipcio de Yosef — el Zohar lo descifra letra por letra.
+     Zohar Miketz.
+
+   Para ${word}: identifica cuál de estos casos aplica (o si hay otro caso relevante),
+   explica la mecánica exacta de las letras y lo que revela sobre el alma de ese personaje.
+   Cita las fuentes exactas (Zóhar parashá/folio, Midrash, Talmud o Etz Jaim).
+   Solo incluye este apartado si ${word} tiene efectivamente una transformación documentada.
 
 Responde en ${lang}. Usa este formato para cada método que tenga hallazgos reales:
 
