@@ -94,6 +94,79 @@ function SefiraNode({ sefira, selected, locale, onClick }: {
   );
 }
 
+// ─── Spine del Tetragrámmaton (YHVH) — secciona el árbol horizontalmente ──────
+// Kéter = kotz (punta) del Yud | Jojmá = Yud | Biná = primera Hei
+// ZA (Jésed→Yesod, 6 sefirot) = Vav | Maljut = Hei final
+function YHVHSpine() {
+  const XS  = 6.4;   // X del spine (más allá del árbol que va hasta ≈4.8)
+  const XL  = -5.4;  // hasta dónde llegan las líneas divisorias hacia la izquierda
+
+  // Tres divisores horizontales principales
+  const dividers: [number, [number,number,number], [number,number,number]][] = [
+    // Y=5.0 — separa el kotz (Kéter) del Yud (Jojmá)
+    [5.0,  [XL, 5.0, -0.05], [XS + 0.3, 5.0, -0.05]],
+    // Y=2.0 — separa los Supernales (Jojmá/Biná) del ZA
+    [2.0,  [XL, 2.0, -0.05], [XS + 0.3, 2.0, -0.05]],
+    // Y=-5.3 — separa el ZA de Maljut
+    [-5.3, [XL, -5.3, -0.05], [XS + 0.3, -5.3, -0.05]],
+  ];
+
+  // Etiquetas: he=letra, y=posición 3D, color, tooltip
+  const labels = [
+    { he: "◆", y:  6.7, color: "#ffffff", desc: "קוֹץ — Kéter", size: 9 },   // kotz
+    { he: "י", y:  3.92, color: "#e8c866", desc: "יוּד — Jojmá", size: 22 },
+    { he: "ה", y:  3.1,  color: "#8888ee", desc: "הֵי עֶלְיוֹנָה — Biná", size: 22 },
+    { he: "ו", y: -1.85, color: "#c9a43e", desc: "וָיו — זְעֵיר אַנְפִּין", size: 26 },
+    { he: "ה", y: -6.44, color: "#c9a43e", desc: "הֵי תַּתָּאָה — Maljut", size: 22 },
+  ];
+
+  return (
+    <>
+      {/* Spine vertical tenue */}
+      <Line
+        points={[[XS, 7.2, 0], [XS, -7.2, 0]]}
+        color="#c9a43e" lineWidth={0.35} transparent opacity={0.18}
+      />
+
+      {/* Divisores horizontales */}
+      {dividers.map(([, a, b], i) => (
+        <Line key={i} points={[a, b]}
+          color="#c9a43e" lineWidth={0.45} transparent opacity={0.28}
+        />
+      ))}
+
+      {/* Corchete vertical para el Vav (ZA: Jésed→Yesod) */}
+      <Line
+        points={[
+          [XS + 0.25, 0.7,   0],
+          [XS + 0.55, 0.7,   0],
+          [XS + 0.55, -4.48, 0],
+          [XS + 0.25, -4.48, 0],
+        ]}
+        color="#c9a43e" lineWidth={1.0} transparent opacity={0.55}
+      />
+
+      {/* Etiquetas YHVH */}
+      {labels.map((l, i) => (
+        <Html key={i} position={[XS + 0.7, l.y, 0.1]} center distanceFactor={13} zIndexRange={[10,0]}>
+          <div title={l.desc} style={{ textAlign: "center", cursor: "default", userSelect: "none" }}>
+            <div style={{
+              fontFamily: "var(--font-hebrew)",
+              fontSize: `${l.size}px`,
+              color: l.color,
+              textShadow: `0 0 10px ${l.color}99, 0 0 20px ${l.color}55`,
+              lineHeight: 1,
+              filter: `drop-shadow(0 0 4px ${l.color}88)`,
+            }}>
+              {l.he}
+            </div>
+          </div>
+        </Html>
+      ))}
+    </>
+  );
+}
+
 // ─── Escena exportada ─────────────────────────────────────────────
 export interface TreeSceneProps {
   selected: string | null;
@@ -189,6 +262,9 @@ export default function TreeScene({ selected, onSelect, onLetterClick, locale }:
       {SEFIROT.map((s) => (
         <SefiraNode key={s.id} sefira={s} selected={selected === s.id} locale={locale} onClick={onSelect} />
       ))}
+
+      {/* Tetragrámmaton — secciones YHVH al lado del árbol */}
+      <YHVHSpine />
     </>
   );
 }
