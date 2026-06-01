@@ -170,6 +170,9 @@
     "loading3D": "Cargando el árbol en 3D...",
     "scrollHint": "↕ Scroll para acercar · Clic en una sefirá",
     "roadmapTitle": "Ruta de estudio",
-    "fractalNote": "Cada sefirá contiene las 10 sefirot. Kéter de Atzilut contiene 10; Jojmá contiene 10... La estructura es fractal e infinita."
+    "fractalNote": "Cada sefirá contiene las 10 sefirot. Kéter de Atzilut contiene 10; Jojmá contiene 10... La estructura es fractal e infinita.",
+    "refTitle": "Referencias textuales",
+    "exitTree": "Salir del árbol",
+    "studyRoadmap": "Ruta de estudio"
   }
 }

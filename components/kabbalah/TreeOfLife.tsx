@@ -4,61 +4,133 @@ import dynamic from "next/dynamic";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { getSefira, sefiraLabel, SEFIROT } from "@/lib/sefirot";
+import { getSefira, sefiraLabel } from "@/lib/sefirot";
 import { SEFIRA_STUDY, ROADMAP_LEVELS } from "@/lib/sefirotStudy";
 
-// Canvas se carga solo en cliente (Three.js no funciona en SSR)
-const Canvas = dynamic(
-  () => import("@react-three/fiber").then((m) => m.Canvas),
-  { ssr: false }
-);
+const Canvas = dynamic(() => import("@react-three/fiber").then((m) => m.Canvas), { ssr: false });
 const TreeScene = dynamic(() => import("./TreeScene"), { ssr: false });
 
 interface DepthEntry { sefiraId: string; }
 
-// ─── Panel de textos de estudio ──────────────────────────────────
-function StudyPanel({ sefiraId, locale, t }: { sefiraId: string; locale: string; t: ReturnType<typeof useTranslations> }) {
+// ─── Panel lateral de sefirá (overlay) ───────────────────────────
+function SefiraOverlay({
+  sefiraId, locale, t, onClose, onEnter, onStudyRef,
+}: {
+  sefiraId: string; locale: string;
+  t: ReturnType<typeof useTranslations>;
+  onClose: () => void; onEnter: () => void; onStudyRef: (ref: string) => void;
+}) {
   const sefira = getSefira(sefiraId);
   const texts = SEFIRA_STUDY[sefiraId] ?? [];
   if (!sefira) return null;
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-baseline gap-2">
-        <span className="hebrew text-xl" style={{ color: sefira.glow, filter: `drop-shadow(0 0 6px ${sefira.glow}66)` }}>
-          {sefira.he}
-        </span>
-        <span className="font-cinzel text-xs uppercase tracking-widest text-gold/60">
-          {sefiraLabel(sefira, locale)}
-        </span>
+    <div
+      className="absolute inset-y-0 end-0 z-30 flex w-full max-w-xs flex-col overflow-hidden border-s border-gold/15 bg-ink/92 shadow-2xl backdrop-blur-md"
+      style={{ animation: "slideInRight 0.3s ease-out" }}
+    >
+      {/* Cabecera */}
+      <div className="flex items-center justify-between border-b border-gold/10 px-4 py-3">
+        <div>
+          <span className="hebrew text-2xl font-bold" style={{ color: sefira.glow, filter: `drop-shadow(0 0 8px ${sefira.glow}66)` }}>
+            {sefira.he}
+          </span>
+          <p className="font-cinzel text-xs uppercase tracking-widest text-gold/50">{sefiraLabel(sefira, locale)}</p>
+        </div>
+        <button onClick={onClose} className="rounded-full border border-gold/20 p-1.5 text-muted transition-colors hover:text-gold">
+          ✕
+        </button>
       </div>
-      <p className="text-xs leading-relaxed text-muted/80">{sefira.description}</p>
 
-      <div className="mt-3 border-t border-gold/10 pt-3">
-        <p className="mb-2 font-cinzel text-[10px] uppercase tracking-widest text-gold/50">
-          {t("studyRoadmap")}
-        </p>
-        <div className="space-y-2">
-          {([1, 2, 3, 4, 5, 6] as (1|2|3|4|5|6)[]).map((level) => {
-            const levelTexts = texts.filter((tx) => tx.level === level);
-            if (levelTexts.length === 0) return null;
-            return (
-              <div key={level}>
-                <p className="mb-1 text-[9px] uppercase tracking-wide text-gold/40 font-cinzel">
-                  {ROADMAP_LEVELS[level]}
-                </p>
-                {levelTexts.map((tx, i) => (
-                  <div key={i} className="mb-1.5 rounded border border-gold/10 bg-gold/[0.03] p-2">
-                    <p className="text-[11px] font-medium text-parchment/90">{tx.title}</p>
-                    <p className="text-[9px] text-gold/60">{tx.author}</p>
-                    <p className="mt-0.5 text-[10px] leading-relaxed text-muted/70">{tx.note}</p>
-                  </div>
-                ))}
-              </div>
-            );
-          })}
+      {/* Contenido scrollable */}
+      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
+        <p className="text-sm leading-relaxed text-muted/85">{sefira.description}</p>
+        <p className="text-xs text-muted/50">{sefira.world} · Pilar {sefira.pillar}</p>
+
+        {/* Referencias textuales de Sefaria */}
+        <div>
+          <p className="mb-2 font-cinzel text-[10px] uppercase tracking-widest text-gold/40">{t("refTitle")}</p>
+          <div className="space-y-1.5">
+            {sefira.refs.map((ref, i) => (
+              <button key={i} onClick={() => onStudyRef(ref)}
+                className="flex w-full items-center gap-2 rounded-lg border border-gold/15 bg-gold/[0.04] px-3 py-2 text-start transition-all hover:border-gold/40 hover:bg-gold/10"
+              >
+                <span className="text-gold/50">📖</span>
+                <span className="font-cinzel text-xs text-gold/80">{ref}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Roadmap de estudio */}
+        <div>
+          <p className="mb-2 font-cinzel text-[10px] uppercase tracking-widest text-gold/40">{t("studyRoadmap")}</p>
+          <div className="space-y-3">
+            {([1,2,3,4,5,6] as (1|2|3|4|5|6)[]).map((level) => {
+              const lvTexts = texts.filter((tx) => tx.level === level);
+              if (!lvTexts.length) return null;
+              return (
+                <div key={level}>
+                  <p className="mb-1 font-cinzel text-[9px] uppercase tracking-wide text-gold/30">
+                    {ROADMAP_LEVELS[level]}
+                  </p>
+                  {lvTexts.map((tx, j) => (
+                    <div key={j} className="mb-1.5 rounded-lg border border-gold/10 bg-white/[0.02] p-2.5">
+                      <p className="text-xs font-medium text-parchment/90">{tx.title}</p>
+                      <p className="mt-0.5 text-[10px] text-gold/55">{tx.author}</p>
+                      <p className="mt-1 text-[10px] leading-relaxed text-muted/65">{tx.note}</p>
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
+
+      {/* Botón entrar */}
+      <div className="border-t border-gold/10 p-3">
+        <button onClick={onEnter}
+          className="w-full rounded-full border py-2.5 font-cinzel text-xs uppercase tracking-widest transition-all hover:brightness-125"
+          style={{ borderColor: sefira.glow + "60", color: sefira.glow, background: sefira.glow + "10" }}
+        >
+          {t("enter")} — <span className="hebrew">{sefira.he}</span> →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Panel de Heijalot (overlay) ─────────────────────────────────
+function HeijalotOverlay({ depth, heijalot, loading, t }: {
+  depth: DepthEntry[]; heijalot: string | null; loading: boolean;
+  t: ReturnType<typeof useTranslations>;
+}) {
+  if (depth.length < 2) return null;
+  return (
+    <div className="absolute bottom-6 start-6 z-20 max-w-xs rounded-xl border border-gold/20 bg-ink/90 p-4 shadow-xl backdrop-blur-md">
+      <p className="hebrew mb-2 text-center text-base text-gold">הֵיכָלוֹת</p>
+      <div className="flex flex-wrap justify-center gap-1 mb-2">
+        {depth.map((d, i) => {
+          const s = getSefira(d.sefiraId);
+          return (
+            <span key={i} className="flex items-center gap-1">
+              {i > 0 && <span className="text-gold/30 text-xs">›</span>}
+              <span className="hebrew text-sm" style={{ color: s?.glow }}>{s?.he}</span>
+            </span>
+          );
+        })}
+      </div>
+      {loading && <p className="animate-pulse text-center text-xs text-muted">{t("loadingHeijalot")}</p>}
+      {heijalot && !loading && (
+        <div className="mt-2 max-h-48 overflow-y-auto space-y-1">
+          {heijalot.split(/\n+/).map((line, i) => {
+            const h = line.match(/^\*\*(.+?)\*\*/);
+            if (h) return <p key={i} className="mt-2 font-cinzel text-gold" style={{ fontSize: "10px" }}>{h[1]}</p>;
+            return line.trim() ? <p key={i} className="text-muted/75 leading-relaxed" style={{ fontSize: "9px" }}>{line.replace(/\*\*/g, "")}</p> : null;
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -74,39 +146,37 @@ export default function TreeOfLife() {
   const [cameraZ, setCameraZ] = useState(14);
   const [heijalot, setHeijalot] = useState<string | null>(null);
   const [heijalotLoading, setHeijalotLoading] = useState(false);
-  const [showStudy, setShowStudy] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Scroll del ratón → acerca / aleja la cámara
+  // Scroll del mouse → zoom de cámara
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const onWheel = (e: WheelEvent) => {
+    const fn = (e: WheelEvent) => {
       e.preventDefault();
-      setCameraZ((z) => Math.max(4, Math.min(18, z + e.deltaY * 0.015)));
+      setCameraZ((z) => Math.max(5, Math.min(20, z + e.deltaY * 0.012)));
     };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
+    el.addEventListener("wheel", fn, { passive: false });
+    return () => el.removeEventListener("wheel", fn);
   }, []);
 
   const handleSelect = useCallback((id: string) => {
     setSelected((prev) => {
       if (prev === id) { setCameraZ(14); return null; }
-      setCameraZ(10);
+      setCameraZ(9);
       return id;
     });
-    setShowStudy(true);
   }, []);
 
   const handleEnter = useCallback(() => {
     if (!selected) return;
-    setCameraZ(3);
+    setCameraZ(2);
     setTimeout(() => {
       setDepth((d) => [...d, { sefiraId: selected }]);
       setSelected(null);
       setCameraZ(14);
       setHeijalot(null);
-    }, 800);
+    }, 700);
   }, [selected]);
 
   const handleBack = useCallback(() => {
@@ -116,15 +186,16 @@ export default function TreeOfLife() {
     setCameraZ(14);
   }, []);
 
-  const handleRefClick = useCallback((ref: string) => {
+  const handleStudyRef = useCallback((ref: string) => {
     router.push(`/estudio?ref=${encodeURIComponent(ref)}`);
   }, [router]);
 
-  // Cargar Heijalot cuando profundidad ≥ 2
+  // Cargar Heijalot en profundidad ≥ 2
   useEffect(() => {
     if (depth.length < 2) { setHeijalot(null); return; }
     const path = depth.map((d) => d.sefiraId);
     setHeijalotLoading(true);
+    setHeijalot(null);
     fetch("/api/heijalot", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -136,139 +207,102 @@ export default function TreeOfLife() {
       .finally(() => setHeijalotLoading(false));
   }, [depth, locale]);
 
-  const selectedSefira = selected ? getSefira(selected) : null;
   const currentRoot = depth.length > 0 ? getSefira(depth[depth.length - 1].sefiraId) : null;
 
   return (
-    <div className="always-dark flex h-screen w-full overflow-hidden">
-      {/* ─── Canvas 3D ─── */}
-      <div ref={containerRef} className="relative flex-1 cursor-grab active:cursor-grabbing">
+    <>
+      {/* Pantalla completa — fixed sobre todo */}
+      <div
+        ref={containerRef}
+        className="always-dark fixed inset-0 z-50 overflow-hidden"
+        style={{ background: "#02010a" }}
+      >
+        {/* Canvas Three.js */}
         <Suspense fallback={
           <div className="flex h-full items-center justify-center">
-            <p className="animate-pulse font-cinzel text-gold/60">{t("loading3D")}</p>
+            <p className="animate-pulse font-cinzel text-gold/50">{t("loading3D")}</p>
           </div>
         }>
-          <Canvas
-            camera={{ position: [0, 0, 14], fov: 55 }}
-            gl={{ antialias: true, alpha: false }}
-            style={{ background: "#02010a" }}
+          <Canvas camera={{ position: [0, 0, 14], fov: 52 }} gl={{ antialias: true }}
+            style={{ position: "absolute", inset: 0 }}
           >
-            <TreeScene
-              selected={selected}
-              depth={depth}
-              onSelect={handleSelect}
-              onRefClick={handleRefClick}
-              locale={locale}
-              cameraZ={cameraZ}
-            />
+            <TreeScene selected={selected} depth={depth} onSelect={handleSelect} locale={locale} cameraZ={cameraZ} />
           </Canvas>
         </Suspense>
 
-        {/* Overlay de navegación (breadcrumb) */}
-        <div className="pointer-events-none absolute left-0 right-0 top-4 flex flex-col items-center gap-2">
+        {/* ── Overlays flotantes ───────────────────────── */}
+
+        {/* Botón cerrar (volver a la web) */}
+        <div className="absolute start-4 top-4 z-40 flex items-center gap-3">
+          <button
+            onClick={() => router.push("/estudio")}
+            className="rounded-full border border-gold/20 bg-ink/80 px-3 py-1.5 font-cinzel text-xs text-muted backdrop-blur-md transition-colors hover:text-gold"
+          >
+            ← {t("exitTree")}
+          </button>
           {depth.length > 0 && (
-            <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-gold/20 bg-ink/80 px-4 py-1.5 backdrop-blur-md">
-              <button onClick={() => { setDepth([]); setCameraZ(14); }} className="font-cinzel text-xs text-gold/60 hover:text-gold">
-                {t("root")}
-              </button>
+            <div className="flex items-center gap-2 rounded-full border border-gold/15 bg-ink/70 px-3 py-1.5 backdrop-blur-md">
+              <button onClick={() => { setDepth([]); setCameraZ(14); }} className="font-cinzel text-xs text-gold/50 hover:text-gold">{t("root")}</button>
               {depth.map((d, i) => {
                 const s = getSefira(d.sefiraId);
                 return (
-                  <span key={i} className="flex items-center gap-2">
-                    <span className="text-gold/30">›</span>
-                    <span className="hebrew text-sm" style={{ color: s?.glow }}>
+                  <span key={i} className="flex items-center gap-1">
+                    <span className="text-gold/30 text-xs">›</span>
+                    <button onClick={() => { setDepth(depth.slice(0, i + 1)); setCameraZ(14); }}
+                      className="hebrew text-sm" style={{ color: s?.glow }}>
                       {s?.he}
-                    </span>
+                    </button>
                   </span>
                 );
               })}
-              <button onClick={handleBack} className="ms-1 rounded-full border border-gold/25 px-2 py-0.5 text-xs text-muted hover:text-gold">
-                ←
-              </button>
-            </div>
-          )}
-
-          {currentRoot && (
-            <div className="text-center">
-              <p className="font-cinzel text-[10px] uppercase tracking-[0.3em] text-gold/40">{t("insideLevel", { level: depth.length })}</p>
-              <p className="hebrew text-2xl" style={{ color: currentRoot.glow, filter: `drop-shadow(0 0 10px ${currentRoot.glow})` }}>
-                {currentRoot.he}
-              </p>
+              <button onClick={handleBack} className="ms-1 rounded-full border border-gold/20 px-2 text-xs text-muted hover:text-gold">←</button>
             </div>
           )}
         </div>
 
-        {/* Hint de scroll */}
-        <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2">
-          <p className="text-center text-[10px] font-cinzel uppercase tracking-widest text-gold/25">
-            {t("scrollHint")}
-          </p>
-        </div>
-      </div>
-
-      {/* ─── Panel lateral ─── */}
-      <div className="flex w-80 flex-col overflow-hidden border-s border-gold/10 bg-ink/90">
-        {/* Cabecera del panel */}
-        <div className="border-b border-gold/10 p-4">
-          <p className="hebrew text-center text-3xl text-gold" style={{ filter: "drop-shadow(0 0 12px #c9a43e66)" }}>
-            עֵץ חַיִּים
-          </p>
-          <p className="mt-1 text-center font-cinzel text-xs uppercase tracking-widest text-gold/50">{t("title")}</p>
-        </div>
-
-        {/* Contenido del panel */}
-        <div className="flex-1 overflow-y-auto p-4">
-          {!selected && !heijalot && (
-            <div className="space-y-3 text-sm text-muted/80">
-              <p className="font-cinzel text-xs uppercase tracking-widest text-gold/50 mb-3">{t("roadmapTitle")}</p>
-              {Object.entries(ROADMAP_LEVELS).map(([lvl, title]) => (
-                <div key={lvl} className="flex gap-2">
-                  <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-gold/30 font-cinzel text-[9px] text-gold/60">
-                    {lvl}
-                  </span>
-                  <span className="text-xs leading-relaxed">{title}</span>
-                </div>
-              ))}
-              <p className="mt-4 text-[11px] leading-relaxed text-muted/60 italic">
-                {t("fractalNote")}
-              </p>
-            </div>
-          )}
-
-          {selected && showStudy && (
-            <StudyPanel sefiraId={selected} locale={locale} t={t} />
-          )}
-
-          {depth.length >= 2 && (
-            <div className="mt-4 border-t border-gold/10 pt-4">
-              <p className="hebrew mb-2 text-center text-base text-gold">הֵיכָלוֹת</p>
-              {heijalotLoading && <p className="animate-pulse text-xs text-muted text-center">{t("loadingHeijalot")}</p>}
-              {heijalot && (
-                <div className="study-prose text-xs">
-                  {heijalot.split(/\n+/).map((line, i) => {
-                    const h = line.match(/^\*\*(.+?)\*\*/);
-                    if (h) return <h4 key={i} className="mt-3 font-cinzel text-gold" style={{ fontSize: "11px" }}>{h[1]}</h4>;
-                    return line.trim() ? <p key={i} className="mt-1 leading-relaxed text-muted/80" style={{ fontSize: "10px" }}>{line.replace(/\*\*/g, "")}</p> : null;
-                  })}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Botón Entrar */}
-        {selectedSefira && (
-          <div className="border-t border-gold/10 p-3">
-            <button
-              onClick={handleEnter}
-              className="w-full rounded-full border border-gold/50 py-2 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:bg-gold/10"
-              style={{ borderColor: selectedSefira.glow + "80", color: selectedSefira.glow }}
-            >
-              {t("enter")} — {selectedSefira.he} →
-            </button>
+        {/* Título en el árbol */}
+        {!selected && (
+          <div className="pointer-events-none absolute left-1/2 top-5 z-10 -translate-x-1/2 text-center">
+            {currentRoot ? (
+              <>
+                <p className="font-cinzel text-[10px] uppercase tracking-[0.3em] text-gold/35">{t("insideLevel", { level: depth.length })}</p>
+                <p className="hebrew text-3xl" style={{ color: currentRoot.glow, filter: `drop-shadow(0 0 14px ${currentRoot.glow}66)` }}>
+                  {currentRoot.he}
+                </p>
+              </>
+            ) : (
+              <p className="hebrew text-2xl text-gold/50" style={{ filter: "drop-shadow(0 0 8px #c9a43e44)" }}>עֵץ חַיִּים</p>
+            )}
           </div>
         )}
+
+        {/* Hint scroll */}
+        <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
+          <p className="font-cinzel text-[9px] uppercase tracking-[0.3em] text-gold/20">{t("scrollHint")}</p>
+        </div>
+
+        {/* Panel de sefirá seleccionada (overlay derecho) */}
+        {selected && (
+          <SefiraOverlay
+            sefiraId={selected}
+            locale={locale}
+            t={t}
+            onClose={() => { setSelected(null); setCameraZ(14); }}
+            onEnter={handleEnter}
+            onStudyRef={handleStudyRef}
+          />
+        )}
+
+        {/* Panel Heijalot (overlay inferior-izquierdo) */}
+        <HeijalotOverlay depth={depth} heijalot={heijalot} loading={heijalotLoading} t={t} />
       </div>
-    </div>
+
+      <style>{`
+        @keyframes slideInRight {
+          from { transform: translateX(100%); opacity: 0; }
+          to { transform: translateX(0); opacity: 1; }
+        }
+      `}</style>
+    </>
   );
 }

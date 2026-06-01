@@ -170,6 +170,9 @@
     "loading3D": "Loading 3D tree...",
     "scrollHint": "↕ Scroll to zoom · Click a Sefira",
     "roadmapTitle": "Study roadmap",
-    "fractalNote": "Each Sefira contains all 10 Sefirot. Keter of Atzilut contains 10; Chochmah contains 10... The structure is fractal and infinite."
+    "fractalNote": "Each Sefira contains all 10 Sefirot. Keter of Atzilut contains 10; Chochmah contains 10... The structure is fractal and infinite.",
+    "refTitle": "Textual references",
+    "exitTree": "Exit tree",
+    "studyRoadmap": "Study roadmap"
   }
 }

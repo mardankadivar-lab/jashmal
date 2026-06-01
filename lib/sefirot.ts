@@ -122,17 +122,31 @@ export const SEFIROT: Sefira[] = [
   },
 ];
 
-// Los 22 senderos que conectan los sefirot (Árbol completo).
-export const PATHS: [string, string][] = [
-  ["keter", "chochmah"], ["keter", "binah"], ["keter", "tiferet"],
-  ["chochmah", "binah"], ["chochmah", "chesed"], ["chochmah", "tiferet"],
-  ["binah", "gevurah"], ["binah", "tiferet"],
-  ["chesed", "gevurah"], ["chesed", "tiferet"], ["chesed", "netzach"],
-  ["gevurah", "tiferet"], ["gevurah", "hod"],
-  ["tiferet", "netzach"], ["tiferet", "hod"], ["tiferet", "yesod"],
-  ["netzach", "hod"], ["netzach", "yesod"], ["netzach", "malchut"],
-  ["hod", "yesod"], ["hod", "malchut"],
-  ["yesod", "malchut"],
+// Los 22 senderos + su letra hebrea (Séfer Yetzirá — caminos de la sabiduría).
+// Formato: [sefirá-origen, sefirá-destino, letra, nombre-de-la-letra]
+export const PATHS: [string, string, string, string][] = [
+  ["keter",   "chochmah", "א", "Álef"],
+  ["keter",   "binah",    "ב", "Bet"],
+  ["keter",   "tiferet",  "ג", "Guimel"],
+  ["chochmah","binah",    "ד", "Dalet"],
+  ["chochmah","chesed",   "ה", "He"],
+  ["chochmah","tiferet",  "ו", "Vav"],
+  ["binah",   "gevurah",  "ז", "Zayin"],
+  ["binah",   "tiferet",  "ח", "Jet"],
+  ["chesed",  "gevurah",  "ט", "Tet"],
+  ["chesed",  "tiferet",  "י", "Yod"],
+  ["chesed",  "netzach",  "כ", "Kaf"],
+  ["gevurah", "tiferet",  "ל", "Lamed"],
+  ["gevurah", "hod",      "מ", "Mem"],
+  ["tiferet", "netzach",  "נ", "Nun"],
+  ["tiferet", "hod",      "ס", "Samej"],
+  ["tiferet", "yesod",    "ע", "Ayin"],
+  ["netzach", "hod",      "פ", "Pe"],
+  ["netzach", "yesod",    "צ", "Tzadi"],
+  ["netzach", "malchut",  "ק", "Kof"],
+  ["hod",     "yesod",    "ר", "Resh"],
+  ["hod",     "malchut",  "ש", "Shin"],
+  ["yesod",   "malchut",  "ת", "Tav"],
 ];
 
 export function getSefira(id: string): Sefira | undefined {
