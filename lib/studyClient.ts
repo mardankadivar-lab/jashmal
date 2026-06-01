@@ -12,6 +12,8 @@ export interface StudyClientRequest {
   hebrewText?: string;
   term?: string;
   letter?: string;
+  context?: string;    // "kabbalah" = modo cabalístico
+  sefiraId?: string;  // id de la sefirá de origen
 }
 
 export interface StudyResponse {

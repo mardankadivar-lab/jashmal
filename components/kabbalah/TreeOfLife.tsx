@@ -143,38 +143,25 @@ export default function TreeOfLife() {
 
   const [selected, setSelected] = useState<string | null>(null);
   const [depth, setDepth] = useState<DepthEntry[]>([]);
-  const [cameraZ, setCameraZ] = useState(14);
   const [heijalot, setHeijalot] = useState<string | null>(null);
   const [heijalotLoading, setHeijalotLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Scroll del mouse → zoom de cámara
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const fn = (e: WheelEvent) => {
-      e.preventDefault();
-      setCameraZ((z) => Math.max(5, Math.min(20, z + e.deltaY * 0.012)));
-    };
-    el.addEventListener("wheel", fn, { passive: false });
-    return () => el.removeEventListener("wheel", fn);
-  }, []);
-
   const handleSelect = useCallback((id: string) => {
     setSelected((prev) => {
-      if (prev === id) { setCameraZ(14); return null; }
-      setCameraZ(9);
+      if (prev === id) {  return null; }
+      
       return id;
     });
   }, []);
 
   const handleEnter = useCallback(() => {
     if (!selected) return;
-    setCameraZ(2);
+    
     setTimeout(() => {
       setDepth((d) => [...d, { sefiraId: selected }]);
       setSelected(null);
-      setCameraZ(14);
+      
       setHeijalot(null);
     }, 700);
   }, [selected]);
@@ -183,12 +170,19 @@ export default function TreeOfLife() {
     setDepth((d) => d.slice(0, -1));
     setSelected(null);
     setHeijalot(null);
-    setCameraZ(14);
+    
   }, []);
 
+  // Navega al estudio en modo cabalístico, pasando la sefirá como contexto.
   const handleStudyRef = useCallback((ref: string) => {
-    router.push(`/estudio?ref=${encodeURIComponent(ref)}`);
-  }, [router]);
+    const sefiraId = selected;
+    const params = new URLSearchParams({ ref });
+    if (sefiraId) {
+      params.set("context", "kabbalah");
+      params.set("sefira", sefiraId);
+    }
+    router.push(`/estudio?${params.toString()}`);
+  }, [router, selected]);
 
   // Cargar Heijalot en profundidad ≥ 2
   useEffect(() => {
@@ -226,7 +220,7 @@ export default function TreeOfLife() {
           <Canvas camera={{ position: [0, 0, 14], fov: 52 }} gl={{ antialias: true }}
             style={{ position: "absolute", inset: 0 }}
           >
-            <TreeScene selected={selected} depth={depth} onSelect={handleSelect} locale={locale} cameraZ={cameraZ} />
+            <TreeScene selected={selected} depth={depth} onSelect={handleSelect} locale={locale} />
           </Canvas>
         </Suspense>
 
@@ -242,13 +236,13 @@ export default function TreeOfLife() {
           </button>
           {depth.length > 0 && (
             <div className="flex items-center gap-2 rounded-full border border-gold/15 bg-ink/70 px-3 py-1.5 backdrop-blur-md">
-              <button onClick={() => { setDepth([]); setCameraZ(14); }} className="font-cinzel text-xs text-gold/50 hover:text-gold">{t("root")}</button>
+              <button onClick={() => { setDepth([]);  }} className="font-cinzel text-xs text-gold/50 hover:text-gold">{t("root")}</button>
               {depth.map((d, i) => {
                 const s = getSefira(d.sefiraId);
                 return (
                   <span key={i} className="flex items-center gap-1">
                     <span className="text-gold/30 text-xs">›</span>
-                    <button onClick={() => { setDepth(depth.slice(0, i + 1)); setCameraZ(14); }}
+                    <button onClick={() => { setDepth(depth.slice(0, i + 1));  }}
                       className="hebrew text-sm" style={{ color: s?.glow }}>
                       {s?.he}
                     </button>
@@ -287,7 +281,7 @@ export default function TreeOfLife() {
             sefiraId={selected}
             locale={locale}
             t={t}
-            onClose={() => { setSelected(null); setCameraZ(14); }}
+            onClose={() => { setSelected(null);  }}
             onEnter={handleEnter}
             onStudyRef={handleStudyRef}
           />

@@ -6,6 +6,54 @@ export const anthropic = new Anthropic({
 
 export const STUDY_MODEL = "claude-opus-4-8";
 
+// ─── Prompt de estudio cabalístico (desde el Árbol de la Vida) ────
+// Se activa cuando el estudio viene de hacer clic en una referencia de una sefirá.
+// NO incluye Peshat — solo Sod, Remez, Partzufim, Zohar, Tikún.
+export function buildKabbalahStudyPrompt(
+  locale: string,
+  sefiraHe: string,
+  sefiraEs: string
+): string {
+  const lang = LANG_NAME[locale] ?? LANG_NAME.es;
+  const rtl = RTL_NOTE[locale] ?? "";
+
+  return `Eres el maestro de Cabalá profunda de Jashmal (חַשְׁמַל).
+Este versículo ha sido convocado desde la sefirá ${sefiraHe} (${sefiraEs}).
+
+IDIOMA: responde SIEMPRE en ${lang}. Títulos de sección en hebreo. Nunca en inglés.${rtl}
+
+MODO: ESTUDIO CABALÍSTICO EXCLUSIVO.
+⚠️ NO incluyas el nivel Peshat (literal/gramatical) ni comentarios textuales (Rashi, Ramban etc.).
+Las sefirot son ATRIBUTOS DIVINOS — el estudiante ya comprende esto.
+Tu tarea: revelar cómo este versículo MANIFIESTA o REVELA la sefirá ${sefiraHe}.
+
+Estructura EXACTA en este orden, con títulos en hebreo:
+
+1. סוֹד — El Secreto Revelado
+   Cómo este versículo revela la esencia de ${sefiraHe}.
+   Cita el Zohar (con referencia exacta: volumen, parashá, folio).
+
+2. רֶמֶז — Gematría y Letras
+   Qué palabras/letras del versículo conectan numéricamente con ${sefiraEs}.
+   Qué valores de gematría son significativos.
+
+3. אוֹר — La Luz (Or Ein Sof)
+   Qué cualidad de la Luz Infinita se expresa aquí a través de ${sefiraHe}.
+   Perspectiva luriánica (Etz Jaim): qué proceso de emanación ocurre en este versículo.
+
+4. פַּרְצוּפִים — El Partzuf
+   Qué Partzuf (Arij Anpín, Aba, Ima, Zeir Anpín, Nukva) corresponde a ${sefiraHe}
+   y cómo aparece en este versículo según la Cabalá luriánica.
+
+5. הִתְבּוֹנְנוּת — Síntesis Contemplativa
+   Un mensaje profundo y sencillo: qué nos enseña este versículo sobre ${sefiraHe}
+   como atributo divino que podemos cultivar interiormente.
+
+${HYPERLINK_RULES}
+
+Sé riguroso. No inventes fuentes. Profundidad sobre brevedad.`;
+}
+
 export type StudyMode = "text" | "letter" | "concept";
 
 const LANG_NAME: Record<string, string> = {

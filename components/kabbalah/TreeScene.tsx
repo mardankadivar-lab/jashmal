@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
-import { Stars, Html, Line } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { Stars, Html, Line, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { SEFIROT, PATHS, getSefira, sefiraLabel, type Sefira } from "@/lib/sefirot";
 
@@ -13,15 +13,18 @@ function to3D(x2d: number, y2d: number): [number, number, number] {
 const SPOS: Record<string, [number, number, number]> = {};
 SEFIROT.forEach((s) => { SPOS[s.id] = to3D(s.x, s.y); });
 
-// ─── Cámara animada ───────────────────────────────────────────────
-function CameraRig({ targetZ, focusId }: { targetZ: number; focusId: string | null }) {
-  const { camera } = useThree();
-  const focus = focusId ? SPOS[focusId] : null;
+// ─── Ayudante de foco (mueve el pivot de órbita hacia la sefirá) ───
+function FocusHelper({ selected, controlsRef }: { selected: string | null; controlsRef: React.RefObject<any> }) {
+  const tv = useRef(new THREE.Vector3());
   useFrame(() => {
-    camera.position.z += (targetZ - camera.position.z) * 0.05;
-    camera.position.x += ((focus ? focus[0] * 0.25 : 0) - camera.position.x) * 0.05;
-    camera.position.y += ((focus ? focus[1] * 0.15 : 0) - camera.position.y) * 0.05;
-    camera.lookAt(0, 0, 0);
+    if (!controlsRef.current) return;
+    const pos = selected ? SPOS[selected] : null;
+    const goal = pos
+      ? new THREE.Vector3(pos[0] * 0.35, pos[1] * 0.25, 0)
+      : new THREE.Vector3(0, 0, 0);
+    tv.current.lerp(goal, 0.04);
+    controlsRef.current.target.copy(tv.current);
+    controlsRef.current.update();
   });
   return null;
 }
@@ -97,13 +100,25 @@ export interface TreeSceneProps {
   depth: { sefiraId: string }[];
   onSelect: (id: string) => void;
   locale: string;
-  cameraZ: number;
 }
 
-export default function TreeScene({ selected, onSelect, locale, cameraZ }: TreeSceneProps) {
+export default function TreeScene({ selected, onSelect, locale }: TreeSceneProps) {
+  const controlsRef = useRef<any>(null);
+
   return (
     <>
-      <CameraRig targetZ={cameraZ} focusId={selected} />
+      {/* 360° órbita: arrastrar para rotar, scroll para zoom */}
+      <OrbitControls
+        ref={controlsRef}
+        enablePan={false}
+        minDistance={5}
+        maxDistance={24}
+        zoomSpeed={0.7}
+        rotateSpeed={0.55}
+        dampingFactor={0.1}
+        enableDamping
+      />
+      <FocusHelper selected={selected} controlsRef={controlsRef} />
 
       {/* Iluminación */}
       <ambientLight intensity={0.1} />

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { anthropic, buildSystemPrompt, STUDY_MODEL, type StudyMode } from "@/lib/anthropic";
+import { anthropic, buildSystemPrompt, buildKabbalahStudyPrompt, STUDY_MODEL, type StudyMode } from "@/lib/anthropic";
 import { checkRateLimit, clientIp } from "@/lib/rateLimit";
 import { gatherSources, formatSourcesForPrompt } from "@/lib/related";
 
@@ -16,6 +16,8 @@ interface StudyRequest {
   hebrewText?: string;
   term?: string;
   letter?: string;
+  context?: string;   // "kabbalah" = modo cabalístico desde el Árbol de la Vida
+  sefiraId?: string;  // id de la sefirá que originó el estudio
 }
 
 function originAllowed(req: Request): boolean {
@@ -86,9 +88,16 @@ export async function POST(req: Request) {
   }
 
   const withSources = sourcesBlock.length > 0;
-  const maxTokens = withSources ? 6000 : 5000; // 5000 > 4000 para dar margen a Farsi
+  const maxTokens = withSources ? 6000 : 5000;
 
-  const systemPrompt = buildSystemPrompt(mode, locale, withSources);
+  // Modo cabalístico (viene del Árbol de la Vida) o modo estándar PaRDeS
+  const isKabbalah = body.context === "kabbalah" && !!body.sefiraId && mode === "text";
+  const { SEFIROT } = await import("@/lib/sefirot");
+  const sefira = isKabbalah ? SEFIROT.find((s) => s.id === body.sefiraId) : null;
+
+  const systemPrompt = isKabbalah && sefira
+    ? buildKabbalahStudyPrompt(locale, sefira.he, sefira.es)
+    : buildSystemPrompt(mode, locale, withSources);
   const userPrompt = buildUserPrompt(body, sourcesBlock);
 
   // --- STREAMING: el texto aparece progresivamente mientras Claude genera. ---

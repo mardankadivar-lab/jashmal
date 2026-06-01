@@ -77,11 +77,20 @@ export default function StudyEngine() {
     }
   }, [locale]);
 
-  // Carga inicial desde ?ref= (enlaces como Kohelet 11:1 del Beit Midrash).
+  // Contexto de estudio (normal o cabalístico desde el Árbol)
+  const [studyContext, setStudyContext] = useState<{ type: string; sefiraId?: string } | null>(null);
+
+  // Carga inicial desde ?ref= + detectar contexto cabalístico
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const ref = new URLSearchParams(window.location.search).get("ref");
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+    const context = params.get("context");
+    const sefiraId = params.get("sefira");
     if (ref) loadRef(ref);
+    if (context === "kabbalah" && sefiraId) {
+      setStudyContext({ type: "kabbalah", sefiraId });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -188,7 +197,10 @@ export default function StudyEngine() {
       // onChunk: el texto aparece progresivamente mientras Claude genera
       // → evita timeout en Farsi y textos largos, y da feedback visual.
       const { study: text } = await requestStudy(
-        { mode: "text", locale, depth, ref, hebrewText },
+        {
+          mode: "text", locale, depth, ref, hebrewText,
+          ...(studyContext?.type === "kabbalah" && { context: "kabbalah", sefiraId: studyContext.sefiraId }),
+        },
         (accumulated) => {
           setStudy(accumulated);
           setStudyRef(ref);
@@ -320,9 +332,21 @@ export default function StudyEngine() {
 
       {/* Columna derecha: análisis */}
       <section className="lg:border-s lg:border-gold/15 lg:ps-10">
-        <h2 className="font-cinzel text-sm uppercase tracking-widest text-gold/80">
-          {t("analysis")}
-        </h2>
+        <div className="flex items-center gap-3">
+          <h2 className="font-cinzel text-sm uppercase tracking-widest text-gold/80">
+            {t("analysis")}
+          </h2>
+          {/* Indicador de modo cabalístico */}
+          {studyContext?.type === "kabbalah" && studyContext.sefiraId && (
+            <span className="flex items-center gap-1.5 rounded-full border border-gold/30 bg-gold/[0.06] px-2.5 py-0.5 font-cinzel text-[10px] uppercase tracking-widest text-gold/70">
+              <span className="hebrew text-sm" style={{ lineHeight: 1 }}>
+                {/* Nombre hebreo de la sefirá */}
+                {{keter:"כֶּתֶר",chochmah:"חָכְמָה",binah:"בִּינָה",chesed:"חֶסֶד",gevurah:"גְּבוּרָה",tiferet:"תִּפְאֶרֶת",netzach:"נֶצַח",hod:"הוֹד",yesod:"יְסוֹד",malchut:"מַלְכוּת"}[studyContext.sefiraId] ?? ""}
+              </span>
+              · {t("kabbalahMode")}
+            </span>
+          )}
+        </div>
 
         {studyLoading && (
           <div className="mt-10 flex flex-col items-center py-8">
