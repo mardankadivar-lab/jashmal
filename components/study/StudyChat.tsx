@@ -25,6 +25,12 @@ export default function StudyChat({ studyRef, prefill, onPrefillConsumed }: Stud
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  // Scroll automático al último mensaje.
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   // Cuando llega un prefill desde el menú contextual, abre el chat y envía.
   const prevPrefill = useRef<string | null>(null);
@@ -47,13 +53,28 @@ export default function StudyChat({ studyRef, prefill, onPrefillConsumed }: Stud
     const q = question ?? input.trim();
     if (!q || loading) return;
     if (!question) setInput("");
-    setMessages((m) => [...m, { role: "user", text: q }]);
+
+    // Añadir el mensaje del usuario al historial antes de enviar.
+    const userMsg: Message = { role: "user", text: q };
+    setMessages((prev) => [...prev, userMsg]);
     setLoading(true);
+
     try {
+      // Pasar el historial completo para que el tutor mantenga el hilo.
+      const currentHistory = messages.map((m) => ({
+        role: m.role,
+        content: m.text,
+      }));
+
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: q, locale, studyRef }),
+        body: JSON.stringify({
+          question: q,
+          locale,
+          studyRef,
+          history: currentHistory, // historial PREVIO al mensaje actual
+        }),
       });
       const data = await res.json();
       const answer = data.answer || t("error");
@@ -80,7 +101,18 @@ export default function StudyChat({ studyRef, prefill, onPrefillConsumed }: Stud
         <div className="mb-3 flex h-[420px] w-80 flex-col rounded-xl border border-gold/25 bg-ink shadow-2xl">
           {/* Cabecera */}
           <div className="flex items-center justify-between rounded-t-xl border-b border-gold/15 bg-gold/[0.04] px-4 py-2.5">
-            <span className="font-cinzel text-sm text-gold">{t("title")}</span>
+            <div className="flex items-center gap-2">
+              <span className="font-cinzel text-sm text-gold">{t("title")}</span>
+              {messages.length > 0 && (
+                <button
+                  onClick={() => setMessages([])}
+                  className="text-[10px] text-muted/60 transition-colors hover:text-gold/70"
+                  title={t("clear")}
+                >
+                  {t("clear")}
+                </button>
+              )}
+            </div>
             <button
               onClick={() => setOpen(false)}
               className="text-muted transition-colors hover:text-gold"
@@ -122,6 +154,8 @@ export default function StudyChat({ studyRef, prefill, onPrefillConsumed }: Stud
                 </div>
               </div>
             )}
+            {/* Ancla para el scroll automático al último mensaje */}
+            <div ref={bottomRef} />
           </div>
 
           {/* Input */}

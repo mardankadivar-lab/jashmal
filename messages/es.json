@@ -124,7 +124,8 @@
     "placeholder": "¿Qué significa...?",
     "send": "Enviar",
     "thinking": "El tutor está pensando...",
-    "error": "No pude responder. Intenta de nuevo."
+    "error": "No pude responder. Intenta de nuevo.",
+    "clear": "Nueva conv."
   },
   "audio": {
     "listen": "Escuchar resumen",

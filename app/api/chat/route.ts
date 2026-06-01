@@ -13,9 +13,13 @@ const LANG: Record<string, string> = {
   en: "English",
 };
 
-// POST { question, locale, studyRef? } → { answer }
-// Mini-chat de ayuda dentro del estudio: responde preguntas sobre palabras,
-// conceptos o dudas del estudiante, en contexto de lo que está estudiando.
+interface HistoryMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+// POST { question, locale, studyRef?, history? } → { answer }
+// Tutor de estudio con memoria: pasa el historial completo para mantener el hilo.
 export async function POST(req: Request) {
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json({ error: "missing_api_key" }, { status: 500 });
@@ -27,7 +31,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "rate_limited" }, { status: 429 });
   }
 
-  let body: { question?: string; locale?: string; studyRef?: string };
+  let body: {
+    question?: string;
+    locale?: string;
+    studyRef?: string;
+    history?: HistoryMessage[];
+  };
   try {
     body = await req.json();
   } catch {
@@ -37,31 +46,46 @@ export async function POST(req: Request) {
   const question = (body.question ?? "").trim();
   const locale = ["es", "fa", "en"].includes(body.locale ?? "") ? (body.locale as string) : "es";
   const studyRef = body.studyRef?.trim() ?? "";
+  // Historial previo (máx. 20 mensajes para no superar tokens).
+  const history: HistoryMessage[] = (body.history ?? []).slice(-20);
 
   if (!question || question.length < 2) {
     return NextResponse.json({ error: "empty_question" }, { status: 400 });
   }
-  if (question.length > 500) {
+  if (question.length > 600) {
     return NextResponse.json({ error: "too_long" }, { status: 400 });
   }
 
   const lang = LANG[locale] ?? LANG.es;
-  const context = studyRef ? `El estudiante está estudiando el texto: ${studyRef}.` : "";
+  const context = studyRef ? `El estudiante está estudiando el texto: "${studyRef}".` : "";
 
   const system = `Eres el tutor de estudio de Jashmal, una plataforma de Torá y Cabalá.
 ${context}
-Responde en ${lang} de forma breve, clara y cálida (2-4 párrafos como máximo).
-Si la pregunta es sobre una palabra o concepto hebreo, explica su raíz, significado
-y, si corresponde, su dimensión espiritual (Cabalá, jasidut). Si es una duda general
-sobre el texto o la tradición, responde con profundidad pero sin abrumar.
-Sé riguroso: no inventes fuentes. Si no sabes algo con certeza, dilo con honestidad.`;
+
+REGLAS DE CONVERSACIÓN:
+- Mantén SIEMPRE el hilo de la conversación. Si el estudiante dice "sí", "vamos", "cuéntame más" u
+  otras respuestas cortas, entiende que se refieren a lo que acabas de decir — NUNCA pidas que
+  repita o aclare lo ya discutido.
+- Responde en ${lang}, con calidez y profundidad (2-4 párrafos).
+- Si es sobre una palabra o concepto hebreo: explica raíz, significado y dimensión espiritual.
+- Si es una duda del texto: responde con rigor. No inventes fuentes.
+- AL FINAL de cada respuesta, haz 1-2 preguntas breves para invitar al estudiante a seguir
+  profundizando. Ejemplos: "¿Quieres que exploremos la conexión con...?", "¿Te interesa ver
+  cómo el Zohar lo explica?", "¿Seguimos con el siguiente concepto?". Esto mantiene vivo el
+  estudio y el diálogo.`;
+
+  // Construir el array de mensajes con el historial completo + el nuevo.
+  const messages = [
+    ...history.map((m) => ({ role: m.role, content: m.content })),
+    { role: "user" as const, content: question },
+  ];
 
   try {
     const msg = await anthropic.messages.create({
       model: MODEL,
-      max_tokens: 600,
+      max_tokens: 700,
       system,
-      messages: [{ role: "user", content: question }],
+      messages,
     });
 
     const answer = msg.content
