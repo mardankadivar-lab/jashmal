@@ -44,6 +44,8 @@ export default function StudyEngine() {
   const [lexiconAnchor, setLexiconAnchor] = useState<WordAnchor | null>(null);
   // concepto/letra abierto en el panel lateral (sin perder el estudio).
   const [conceptTarget, setConceptTarget] = useState<ConceptTarget | null>(null);
+  // historial de paneles de concepto para poder volver al anterior con ←.
+  const [conceptHistory, setConceptHistory] = useState<ConceptTarget[]>([]);
   // menú contextual (clic derecho) sobre palabras hebreas.
   const [wordMenu, setWordMenu] = useState<WordMenuAnchor | null>(null);
   // referencias cruzadas abiertas en el panel lateral (encadenables).
@@ -188,12 +190,26 @@ export default function StudyEngine() {
     }
   }
 
-  // Abre conceptos/letras en panel lateral SIN perder el estudio principal (#V3).
+  // Abre conceptos/letras en panel lateral. Si ya hay un panel abierto,
+  // lo guarda en el historial para poder volver con ← (stack de paneles).
   function openConcept(term: string) {
+    setConceptHistory((h) => conceptTarget ? [...h, conceptTarget] : h);
     setConceptTarget({ kind: "concept", value: term, label: term });
   }
   function openLetter(letterKey: string, label: string) {
+    setConceptHistory((h) => conceptTarget ? [...h, conceptTarget] : h);
     setConceptTarget({ kind: "letter", value: letterKey, label });
+  }
+  function closeConceptPanel() {
+    // Si hay historial, volver al panel anterior; si no, cerrar.
+    if (conceptHistory.length > 0) {
+      const prev = conceptHistory[conceptHistory.length - 1];
+      setConceptHistory((h) => h.slice(0, -1));
+      setConceptTarget(prev);
+    } else {
+      setConceptTarget(null);
+      setConceptHistory([]);
+    }
   }
 
   return (
@@ -362,8 +378,11 @@ export default function StudyEngine() {
       <LexiconPanel anchor={lexiconAnchor} onClose={() => setLexiconAnchor(null)} />
       <ConceptPanel
         target={conceptTarget}
-        onClose={() => setConceptTarget(null)}
+        onClose={() => { setConceptTarget(null); setConceptHistory([]); }}
+        onBack={conceptHistory.length > 0 ? closeConceptPanel : undefined}
+        historyDepth={conceptHistory.length}
         onConcept={openConcept}
+        onLetter={openLetter}
       />
     </div>
   );
