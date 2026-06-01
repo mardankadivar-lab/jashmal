@@ -27,10 +27,33 @@ export default function StudyChat({ studyRef, prefill, onPrefillConsumed }: Stud
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
+  // Clave de sessionStorage: específica por texto estudiado.
+  const sessionKey = `jashmal-chat:${studyRef ?? "global"}`;
+
+  // Restaurar historial al montar (sobrevive al cierre/apertura del widget).
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem(sessionKey);
+      if (stored) {
+        const parsed = JSON.parse(stored) as Message[];
+        if (parsed.length > 0) setMessages(parsed);
+      }
+    } catch { /* sessionStorage no disponible */ }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionKey]);
+
+  // Guardar historial en sessionStorage cada vez que cambia.
+  useEffect(() => {
+    if (messages.length === 0) return;
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify(messages));
+    } catch { /* cuota llena */ }
+  }, [messages, sessionKey]);
+
   // Scroll automático al último mensaje.
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    if (open) bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, open]);
 
   // Cuando llega un prefill desde el menú contextual, abre el chat y envía.
   const prevPrefill = useRef<string | null>(null);
@@ -105,7 +128,10 @@ export default function StudyChat({ studyRef, prefill, onPrefillConsumed }: Stud
               <span className="font-cinzel text-sm text-gold">{t("title")}</span>
               {messages.length > 0 && (
                 <button
-                  onClick={() => setMessages([])}
+                  onClick={() => {
+                    setMessages([]);
+                    try { sessionStorage.removeItem(sessionKey); } catch { /* noop */ }
+                  }}
                   className="text-[10px] text-muted/60 transition-colors hover:text-gold/70"
                   title={t("clear")}
                 >
