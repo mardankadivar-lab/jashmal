@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
-import type Anthropic from "@anthropic-ai/sdk";
 import { anthropic, buildSystemPrompt, STUDY_MODEL, type StudyMode } from "@/lib/anthropic";
 import { checkRateLimit, clientIp } from "@/lib/rateLimit";
 import { gatherSources, formatSourcesForPrompt } from "@/lib/related";
 
 export const runtime = "nodejs";
-// El modo profundo (RAG) descarga muchas fuentes y puede tardar 1-2 min.
 export const maxDuration = 120;
 
 type StudyDepth = "quick" | "deep";
@@ -13,11 +11,11 @@ type StudyDepth = "quick" | "deep";
 interface StudyRequest {
   mode: StudyMode;
   locale: string;
-  depth?: StudyDepth; // "quick" (memoria) o "deep" (RAG con fuentes reales)
-  ref?: string; // referencia citable (ej. "Genesis 1:1")
-  hebrewText?: string; // texto fuente en hebreo
-  term?: string; // concepto (mode "concept")
-  letter?: string; // letra (mode "letter")
+  depth?: StudyDepth;
+  ref?: string;
+  hebrewText?: string;
+  term?: string;
+  letter?: string;
 }
 
 function originAllowed(req: Request): boolean {
@@ -25,12 +23,9 @@ function originAllowed(req: Request): boolean {
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
-
-  // En desarrollo, sin lista configurada, permitimos.
   if (allowed.length === 0) return true;
-
   const origin = req.headers.get("origin");
-  if (!origin) return true; // peticiones same-origin del propio Next no siempre traen Origin
+  if (!origin) return true;
   return allowed.includes(origin);
 }
 
@@ -41,11 +36,7 @@ function buildUserPrompt(body: StudyRequest, sourcesBlock: string): string {
   if (body.mode === "concept") {
     return `Estudia en profundidad el concepto: ${body.term ?? ""}.`;
   }
-
-  const sources = sourcesBlock
-    ? `\n\n<fuentes>${sourcesBlock}\n</fuentes>`
-    : "";
-
+  const sources = sourcesBlock ? `\n\n<fuentes>${sourcesBlock}\n</fuentes>` : "";
   return `Referencia: ${body.ref ?? "(sin referencia)"}
 
 Texto fuente (hebreo):
@@ -58,7 +49,6 @@ export async function POST(req: Request) {
   if (!originAllowed(req)) {
     return NextResponse.json({ error: "origin_not_allowed" }, { status: 403 });
   }
-
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json({ error: "missing_api_key" }, { status: 500 });
   }
@@ -77,10 +67,12 @@ export async function POST(req: Request) {
   }
 
   const mode: StudyMode = body.mode ?? "text";
-  const locale = ["es","fa","en"].includes(body.locale ?? "") ? (body.locale as string) : "es";
+  const locale = ["es", "fa", "en"].includes(body.locale ?? "")
+    ? (body.locale as string)
+    : "es";
   const depth: StudyDepth = body.depth === "deep" ? "deep" : "quick";
 
-  // Modo profundo: recolectar fuentes reales de Sefaria (solo para estudio de texto).
+  // Modo profundo: recolectar fuentes reales de Sefaria.
   let sourcesBlock = "";
   let sourcesUsed = 0;
   if (depth === "deep" && mode === "text" && body.ref) {
@@ -90,37 +82,68 @@ export async function POST(req: Request) {
       sourcesBlock = formatSourcesForPrompt(sources);
     } catch (err) {
       console.error("gatherSources error", err);
-      // Si falla la recolección, seguimos en modo memoria (no rompemos el estudio).
     }
   }
 
   const withSources = sourcesBlock.length > 0;
-  // En modo profundo damos más espacio a la respuesta.
-  const maxTokens = withSources ? 6000 : 4000;
+  const maxTokens = withSources ? 6000 : 5000; // 5000 > 4000 para dar margen a Farsi
 
+  const systemPrompt = buildSystemPrompt(mode, locale, withSources);
+  const userPrompt = buildUserPrompt(body, sourcesBlock);
+
+  // --- STREAMING: el texto aparece progresivamente mientras Claude genera. ---
+  // Esto evita el timeout en Farsi/textos largos (el modelo puede tardar 90-120s).
   try {
-    const message = await anthropic.messages.create({
+    const stream = anthropic.messages.stream({
       model: STUDY_MODEL,
       max_tokens: maxTokens,
       system: [
         {
           type: "text",
-          text: buildSystemPrompt(mode, locale, withSources),
-          // El system prompt es estable → prompt caching ahorra tokens y latencia.
+          text: systemPrompt,
           cache_control: { type: "ephemeral" },
         },
       ],
-      messages: [{ role: "user", content: buildUserPrompt(body, sourcesBlock) }],
+      messages: [{ role: "user", content: userPrompt }],
     });
 
-    const study = message.content
-      .filter((block): block is Anthropic.TextBlock => block.type === "text")
-      .map((block) => block.text)
-      .join("\n");
+    const encoder = new TextEncoder();
+    // El primer chunk lleva metadatos (depth, sourcesUsed) codificados en JSON
+    // separado del texto con el separador \x00 (null byte).
+    const meta = JSON.stringify({ depth, sourcesUsed });
 
-    return NextResponse.json({ study, depth, sourcesUsed });
+    const readable = new ReadableStream({
+      async start(controller) {
+        // Primer chunk: metadatos
+        controller.enqueue(encoder.encode(meta + "\x00"));
+        try {
+          for await (const event of stream) {
+            if (
+              event.type === "content_block_delta" &&
+              event.delta.type === "text_delta"
+            ) {
+              controller.enqueue(encoder.encode(event.delta.text));
+            }
+          }
+        } catch (err) {
+          console.error("study stream error", err);
+          // Enviar error al cliente
+          controller.enqueue(encoder.encode("\x01error"));
+        } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(readable, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Transfer-Encoding": "chunked",
+        "X-Accel-Buffering": "no", // desactiva buffering en nginx/Vercel
+      },
+    });
   } catch (err) {
-    console.error("study error", err);
+    console.error("study setup error", err);
     return NextResponse.json({ error: "study_failed" }, { status: 502 });
   }
 }

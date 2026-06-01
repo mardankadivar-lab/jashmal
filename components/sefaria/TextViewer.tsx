@@ -53,16 +53,24 @@ export default function TextViewer({
             className="group flex items-start gap-3 rounded-md border border-transparent p-2 transition-colors hover:border-gold/15 hover:bg-white/[0.02]"
           >
             <span className="mt-1 select-none text-xs text-gold/50">{i + 1}</span>
-            {onWord ? (
-              <ClickableHebrew
-                text={seg}
-                onWord={onWord}
-                onWordMenu={onWordMenu}
-                className="hebrew flex-1 text-xl leading-relaxed text-parchment"
-              />
-            ) : (
-              <p className="hebrew flex-1 text-xl leading-relaxed text-parchment">{seg}</p>
-            )}
+            <div className="flex-1">
+              {onWord ? (
+                <ClickableHebrew
+                  text={seg}
+                  onWord={onWord}
+                  onWordMenu={onWordMenu}
+                  className="hebrew text-xl leading-relaxed text-parchment"
+                />
+              ) : (
+                <p className="hebrew text-xl leading-relaxed text-parchment">{seg}</p>
+              )}
+              {/* Traducción en inglés — esencial para audiencia que no lee hebreo */}
+              {result.translations[i] && (
+                <p className="mt-1 text-sm leading-relaxed text-muted/80 italic">
+                  {result.translations[i]}
+                </p>
+              )}
+            </div>
             <div className="mt-1 flex shrink-0 gap-1 opacity-0 transition-opacity group-hover:opacity-100">
               <button
                 onClick={() => onStudyVerse(i, "quick")}

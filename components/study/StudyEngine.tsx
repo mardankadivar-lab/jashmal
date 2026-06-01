@@ -172,13 +172,16 @@ export default function StudyEngine() {
       : `${sourceResult.ref}:${index + 1}`;
 
     try {
-      const { study: text } = await requestStudy({
-        mode: "text",
-        locale,
-        depth,
-        ref,
-        hebrewText,
-      });
+      // onChunk: el texto aparece progresivamente mientras Claude genera
+      // → evita timeout en Farsi y textos largos, y da feedback visual.
+      const { study: text } = await requestStudy(
+        { mode: "text", locale, depth, ref, hebrewText },
+        (accumulated) => {
+          setStudy(accumulated);
+          setStudyRef(ref);
+          setStudyLoading(false); // quitar la animación de espera en cuanto llega el 1er chunk
+        }
+      );
       setStudy(text);
       setStudyRef(ref);
     } catch (err) {
