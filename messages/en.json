@@ -135,5 +135,16 @@
     "error": "Could not generate audio.",
     "retry": "Retry",
     "hint": "Narrated study, ready to listen in the car 🚗"
+  },
+  "notes": {
+    "toggle": "My notes",
+    "placeholder": "Write your notes, reflections or questions about this text...",
+    "local": "Saved locally on your device",
+    "saved": "✓ Saved",
+    "saving": "Saving..."
+  },
+  "wordMenu": {
+    "lexicon": "Open in lexicon",
+    "askTutor": "Ask the tutor"
   }
 }

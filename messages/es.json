@@ -135,5 +135,16 @@
     "error": "No se pudo generar el audio.",
     "retry": "Reintentar",
     "hint": "Narración del estudio, lista para escuchar en el auto 🚗"
+  },
+  "notes": {
+    "toggle": "Mis anotaciones",
+    "placeholder": "Escribe tus notas, reflexiones o preguntas sobre este texto...",
+    "local": "Guardado localmente en tu dispositivo",
+    "saved": "✓ Guardado",
+    "saving": "Guardando..."
+  },
+  "wordMenu": {
+    "lexicon": "Abrir en el léxico",
+    "askTutor": "Preguntar al tutor"
   }
 }

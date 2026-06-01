@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import type { SefariaTextResult } from "@/lib/sefaria";
-import ClickableHebrew, { type WordAnchor } from "./ClickableHebrew";
+import ClickableHebrew, { type WordAnchor, type WordMenuAnchorEvt } from "./ClickableHebrew";
 
 type StudyDepth = "quick" | "deep";
 
@@ -14,6 +14,7 @@ interface TextViewerProps {
   onStudyVerse: (index: number, depth: StudyDepth) => void;
   onStudyPassage: (depth: StudyDepth) => void;
   onWord?: (anchor: WordAnchor) => void;
+  onWordMenu?: (anchor: WordMenuAnchorEvt) => void;
 }
 
 export default function TextViewer({
@@ -24,6 +25,7 @@ export default function TextViewer({
   onStudyVerse,
   onStudyPassage,
   onWord,
+  onWordMenu,
 }: TextViewerProps) {
   const t = useTranslations("study");
 
@@ -55,6 +57,7 @@ export default function TextViewer({
               <ClickableHebrew
                 text={seg}
                 onWord={onWord}
+                onWordMenu={onWordMenu}
                 className="hebrew flex-1 text-xl leading-relaxed text-parchment"
               />
             ) : (

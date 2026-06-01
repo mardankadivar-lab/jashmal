@@ -11,6 +11,8 @@ import LexiconPanel from "./LexiconPanel";
 import ConceptPanel, { type ConceptTarget } from "./ConceptPanel";
 import StudyChat from "./StudyChat";
 import AudioPlayer from "./AudioPlayer";
+import StudyNotes from "./StudyNotes";
+import WordMenu, { type WordMenuAnchor } from "./WordMenu";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, type CatBook, type CategoryId } from "@/lib/categories";
 import { getText, type SefariaTextResult } from "@/lib/sefaria";
@@ -41,6 +43,10 @@ export default function StudyEngine() {
   const [lexiconAnchor, setLexiconAnchor] = useState<WordAnchor | null>(null);
   // concepto/letra abierto en el panel lateral (sin perder el estudio).
   const [conceptTarget, setConceptTarget] = useState<ConceptTarget | null>(null);
+  // menú contextual (clic derecho) sobre palabras hebreas.
+  const [wordMenu, setWordMenu] = useState<WordMenuAnchor | null>(null);
+  // ref del chat para enviar mensajes programáticamente (menú contextual).
+  const [chatPrefill, setChatPrefill] = useState<string | null>(null);
   // unidad (capítulo/daf) actual del libro elegido, para "siguiente capítulo".
   const [currentUnit, setCurrentUnit] = useState<number | null>(null);
   const [currentAmud, setCurrentAmud] = useState<"a" | "b" | undefined>(undefined);
@@ -239,6 +245,7 @@ export default function StudyEngine() {
           onStudyVerse={(i, depth) => runStudy(i, depth)}
           onStudyPassage={(depth) => runStudy(-1, depth)}
           onWord={(a) => setLexiconAnchor(a)}
+          onWordMenu={(a) => setWordMenu(a)}
         />
       </section>
 
@@ -271,6 +278,7 @@ export default function StudyEngine() {
           <div className="mt-6">
             <StudyResult text={study} onConcept={openConcept} onLetter={openLetter} />
             <AudioPlayer study={study} />
+            {studyRef && <StudyNotes studyRef={studyRef} />}
             {hasNext() && (
               <div className="mt-8 flex justify-end border-t border-gold/15 pt-4">
                 <button
@@ -286,7 +294,18 @@ export default function StudyEngine() {
         )}
       </section>
 
-      <StudyChat studyRef={studyRef} />
+      <StudyChat studyRef={studyRef} prefill={chatPrefill} onPrefillConsumed={() => setChatPrefill(null)} />
+      <WordMenu
+        anchor={wordMenu}
+        onClose={() => setWordMenu(null)}
+        onLexicon={(word) => {
+          // Simular un WordAnchor para el LexiconPanel desde la posición del menú.
+          if (wordMenu) setLexiconAnchor({ word, x: wordMenu.x, y: wordMenu.y, top: wordMenu.y - 20 });
+        }}
+        onChat={(word) => {
+          setChatPrefill(`¿Qué significa la palabra hebrea "${word}"?`);
+        }}
+      />
       <LexiconPanel anchor={lexiconAnchor} onClose={() => setLexiconAnchor(null)} />
       <ConceptPanel
         target={conceptTarget}
