@@ -17,70 +17,6 @@ export const COMPLEX_OVERRIDES: Record<string, RichBook[]> = {
     { id: "Tanya-QA", label: "Kuntrés Ajarón", he: "קוּנְטְרֵס אַחֲרוֹן", type: "chapters", units: 9, refTemplate: "Tanya, Part V; Kuntres Acharon {n}" },
   ],
 
-  // ─── ZOHAR — 53 parashot/secciones reales (Sefaria API verificado 2026-06-01) ───
-  // Refs: "Zohar, {Parasha} {n}" — estructura por Jumash + secciones especiales.
-  Zohar: [
-    // Hakdamá
-    { id: "Zohar, Introduction", label: "★ Hakdamá — Introducción", he: "הַקְדָּמָה", type: "chapters", units: 34 },
-    // Bereshit (Génesis)
-    { id: "Zohar, Bereshit",    label: "Bereshit",    he: "בְּרֵאשִׁית",    type: "chapters", units: 102 },
-    { id: "Zohar, Noach",       label: "Noaj",        he: "נֹחַ",           type: "chapters", units: 44  },
-    { id: "Zohar, Lech Lecha",  label: "Lej Lejá",    he: "לֶךְ לְךָ",      type: "chapters", units: 35  },
-    { id: "Zohar, Vayera",      label: "Vayerá",      he: "וַיֵּרָא",       type: "chapters", units: 36  },
-    { id: "Zohar, Chayei Sara", label: "Jayéi Sará",  he: "חַיֵּי שָׂרָה",  type: "chapters", units: 27  },
-    { id: "Zohar, Toldot",      label: "Toledot",     he: "תּוֹלְדֹת",      type: "chapters", units: 19  },
-    { id: "Zohar, Vayetzei",    label: "Vayetzé",     he: "וַיֵּצֵא",       type: "chapters", units: 43  },
-    { id: "Zohar, Vayishlach",  label: "Vayishlaj",   he: "וַיִּשְׁלַח",    type: "chapters", units: 30  },
-    { id: "Zohar, Vayeshev",    label: "Vayeshev",    he: "וַיֵּשֶׁב",      type: "chapters", units: 25  },
-    { id: "Zohar, Miketz",      label: "Mikets",      he: "מִקֵּץ",         type: "chapters", units: 15  },
-    { id: "Zohar, Vayigash",    label: "Vayigash",    he: "וַיִּגַּשׁ",     type: "chapters", units: 12  },
-    { id: "Zohar, Vayechi",     label: "Vayejí",      he: "וַיְחִי",        type: "chapters", units: 86  },
-    // Shemot (Éxodo)
-    { id: "Zohar, Shemot",      label: "Shemot",      he: "שְׁמוֹת",        type: "chapters", units: 52  },
-    { id: "Zohar, Vaera",       label: "Vaerá",       he: "וָאֵרָא",        type: "chapters", units: 22  },
-    { id: "Zohar, Bo",          label: "Bó",          he: "בֹּא",           type: "chapters", units: 17  },
-    { id: "Zohar, Beshalach",   label: "Beshalaj",    he: "בְּשַׁלַּח",     type: "chapters", units: 34  },
-    { id: "Zohar, Yitro",       label: "Yitró",       he: "יִתְרוֹ",        type: "chapters", units: 35  },
-    { id: "Zohar, Mishpatim",   label: "Mishpatim",   he: "מִשְׁפָּטִים",   type: "chapters", units: 30  },
-    { id: "Zohar, Terumah",     label: "Terumá",      he: "תְּרוּמָה",      type: "chapters", units: 98  },
-    { id: "Zohar, Sifra DiTzniuta", label: "★ Sifra diTzniutá — Libro del Ocultamiento", he: "סִפְרָא דְצְנִיעוּתָא", type: "chapters", units: 6 },
-    { id: "Zohar, Tetzaveh",    label: "Tetzavé",     he: "תְּצַוֶּה",      type: "chapters", units: 18  },
-    { id: "Zohar, Ki Tisa",     label: "Ki Tisá",     he: "כִּי תִשָּׂא",   type: "chapters", units: 12  },
-    { id: "Zohar, Vayakhel",    label: "Vayakhél",    he: "וַיַּקְהֵל",     type: "chapters", units: 43  },
-    { id: "Zohar, Pekudei",     label: "Pekudéi",     he: "פְקוּדֵי",       type: "chapters", units: 63  },
-    // Vayikra (Levítico)
-    { id: "Zohar, Vayikra",     label: "Vayikrá",     he: "וַיִּקְרָא",     type: "chapters", units: 67  },
-    { id: "Zohar, Tzav",        label: "Tzav",        he: "צַו",            type: "chapters", units: 30  },
-    { id: "Zohar, Shmini",      label: "Shminí",      he: "שְׁמִינִי",      type: "chapters", units: 16  },
-    { id: "Zohar, Tazria",      label: "Tazría",      he: "תַּזְרִיעַ",     type: "chapters", units: 35  },
-    { id: "Zohar, Metzora",     label: "Metzorá",     he: "מְצֹרָע",        type: "chapters", units: 16  },
-    { id: "Zohar, Achrei Mot",  label: "Ajaréi Mot",  he: "אַחֲרֵי מוֹת",   type: "chapters", units: 75  },
-    { id: "Zohar, Kedoshim",    label: "Kedoshim",    he: "קְדֹשִׁים",      type: "chapters", units: 21  },
-    { id: "Zohar, Emor",        label: "Emor",        he: "אֱמֹר",          type: "chapters", units: 51  },
-    { id: "Zohar, Behar",       label: "Behar",       he: "בְּהַר",         type: "chapters", units: 14  },
-    { id: "Zohar, Bechukotai",  label: "Bejukotái",   he: "בְּחֻקֹּתַי",    type: "chapters", units: 16  },
-    // Bamidbar (Números)
-    { id: "Zohar, Bamidbar",    label: "Bamidbar",    he: "בַּמִּדְבָּר",   type: "chapters", units: 8   },
-    { id: "Zohar, Nasso",       label: "Nasó",        he: "נָשֹׂא",         type: "chapters", units: 23  },
-    { id: "Zohar, Idra Rabba",  label: "★ Idra Rabá — Gran Asamblea", he: "אִדְרָא רַבָּא", type: "chapters", units: 52 },
-    { id: "Zohar, Beha'alotcha",label: "Behaalotkjá", he: "בְּהַעֲלֹתְךָ",  type: "chapters", units: 27  },
-    { id: "Zohar, Sh'lach",     label: "Shelaj",      he: "שְׁלַח",         type: "chapters", units: 46  },
-    { id: "Zohar, Korach",      label: "Koraj",       he: "קֹרַח",          type: "chapters", units: 14  },
-    { id: "Zohar, Chukat",      label: "Jukat",       he: "חֻקַּת",         type: "chapters", units: 12  },
-    { id: "Zohar, Balak",       label: "Balak",       he: "בָּלָק",         type: "chapters", units: 47  },
-    { id: "Zohar, Pinchas",     label: "Pinjas",      he: "פִּינְחָס",      type: "chapters", units: 129 },
-    { id: "Zohar, Matot",       label: "Matot",       he: "מַטּוֹת",        type: "chapters", units: 1   },
-    // Devarim (Deuteronomio)
-    { id: "Zohar, Vaetchanan",  label: "Vaetjanán",   he: "וָאֶתְחַנַּן",   type: "chapters", units: 32  },
-    { id: "Zohar, Eikev",       label: "Ekev",        he: "עֵקֶב",          type: "chapters", units: 6   },
-    { id: "Zohar, Shoftim",     label: "Shoftim",     he: "שֹׁפְטִים",      type: "chapters", units: 5   },
-    { id: "Zohar, Ki Teitzei",  label: "Ki Tetzé",    he: "כִּי תֵצֵא",     type: "chapters", units: 30  },
-    { id: "Zohar, Vayeilech",   label: "Vayelej",     he: "וַיֵּלֶךְ",      type: "chapters", units: 9   },
-    { id: "Zohar, Ha'Azinu",    label: "Haazinú",     he: "הַאֲזִינוּ",     type: "chapters", units: 17  },
-    // Secciones especiales
-    { id: "Zohar, Idra Zuta",   label: "★ Idra Zutá — Pequeña Asamblea", he: "אִדְרָא זוּטָא", type: "chapters", units: 43 },
-    { id: "Zohar, Addenda",     label: "Tosafot — Suplementos", he: "תּוֹסָפוֹת", type: "chapters", units: 81 },
-  ],
 };
 
 // Libros EXTRA a añadir a una subcategoría (no usado por ahora).
@@ -101,6 +37,116 @@ export const REF_OVERRIDES: Record<string, Partial<RichBook>> = {
 // Libros a OCULTAR del menú (ref roto sin plantilla numérica viable; accesibles
 // por el buscador). Pri Etz Chaim es complejo con secciones de nombre.
 export const HIDDEN_BOOKS = new Set<string>(["Pri Etz Chaim"]);
+
+// ─── Estructura jerárquica del Zohar (para el navegador especial) ───────────
+// Cada grupo = libro del Jumash (o sección especial).
+// Cada parashá tiene: id del ref Sefaria, label ES, label FA, he, units.
+export interface ZoharParasha {
+  id: string;      // ref Sefaria: "Zohar, Bereshit"
+  label: string;   // español
+  labelFa: string; // farsi
+  he: string;
+  units: number;
+  special?: boolean; // ★ secciones clave
+}
+export interface ZoharGroup {
+  id: string;
+  label: string;   // español
+  labelFa: string; // farsi
+  he: string;
+  parashot: ZoharParasha[];
+}
+
+export const ZOHAR_GROUPS: ZoharGroup[] = [
+  {
+    id: "hakdama", label: "Hakdamá", labelFa: "مقدمه", he: "הַקְדָּמָה",
+    parashot: [
+      { id: "Zohar, Introduction", label: "Hakdamá — Introducción", labelFa: "مقدمه — درآمد", he: "הַקְדָּמָה", units: 34, special: true },
+    ],
+  },
+  {
+    id: "bereshit", label: "Bereshit — Génesis", labelFa: "برشیت — پیدایش", he: "בְּרֵאשִׁית",
+    parashot: [
+      { id: "Zohar, Bereshit",    label: "Bereshit",   labelFa: "برشیت",      he: "בְּרֵאשִׁית",   units: 102 },
+      { id: "Zohar, Noach",       label: "Noaj",       labelFa: "نوح",        he: "נֹחַ",           units: 44  },
+      { id: "Zohar, Lech Lecha",  label: "Lej Lejá",   labelFa: "لخ لخا",     he: "לֶךְ לְךָ",      units: 35  },
+      { id: "Zohar, Vayera",      label: "Vayerá",     labelFa: "وییرا",       he: "וַיֵּרָא",       units: 36  },
+      { id: "Zohar, Chayei Sara", label: "Jayéi Sará", labelFa: "حیی سارا",   he: "חַיֵּי שָׂרָה",  units: 27  },
+      { id: "Zohar, Toldot",      label: "Toledot",    labelFa: "تولدوت",     he: "תּוֹלְדֹת",      units: 19  },
+      { id: "Zohar, Vayetzei",    label: "Vayetzé",    labelFa: "وییتصه",     he: "וַיֵּצֵא",       units: 43  },
+      { id: "Zohar, Vayishlach",  label: "Vayishlaj",  labelFa: "وییشلح",     he: "וַיִּשְׁלַח",    units: 30  },
+      { id: "Zohar, Vayeshev",    label: "Vayeshev",   labelFa: "وییشب",      he: "וַיֵּשֶׁב",      units: 25  },
+      { id: "Zohar, Miketz",      label: "Mikets",     labelFa: "میقص",       he: "מִקֵּץ",         units: 15  },
+      { id: "Zohar, Vayigash",    label: "Vayigash",   labelFa: "وییگش",      he: "וַיִּגַּשׁ",     units: 12  },
+      { id: "Zohar, Vayechi",     label: "Vayejí",     labelFa: "وییحی",      he: "וַיְחִי",        units: 86  },
+    ],
+  },
+  {
+    id: "shemot", label: "Shemot — Éxodo", labelFa: "شموت — خروج", he: "שְׁמוֹת",
+    parashot: [
+      { id: "Zohar, Shemot",      label: "Shemot",     labelFa: "شموت",       he: "שְׁמוֹת",        units: 52  },
+      { id: "Zohar, Vaera",       label: "Vaerá",      labelFa: "واارا",       he: "וָאֵרָא",        units: 22  },
+      { id: "Zohar, Bo",          label: "Bó",         labelFa: "بوا",        he: "בֹּא",           units: 17  },
+      { id: "Zohar, Beshalach",   label: "Beshalaj",   labelFa: "بشلح",       he: "בְּשַׁלַּח",     units: 34  },
+      { id: "Zohar, Yitro",       label: "Yitró",      labelFa: "یترو",       he: "יִתְרוֹ",        units: 35  },
+      { id: "Zohar, Mishpatim",   label: "Mishpatim",  labelFa: "میشپاتیم",   he: "מִשְׁפָּטִים",   units: 30  },
+      { id: "Zohar, Terumah",     label: "Terumá",     labelFa: "ترومه",      he: "תְּרוּמָה",      units: 98  },
+      { id: "Zohar, Sifra DiTzniuta", label: "Sifra diTzniutá ★", labelFa: "سیفرا دیتصنیعوتا ★", he: "סִפְרָא דְצְנִיעוּתָא", units: 6, special: true },
+      { id: "Zohar, Tetzaveh",    label: "Tetzavé",    labelFa: "تتصوه",      he: "תְּצַוֶּה",      units: 18  },
+      { id: "Zohar, Ki Tisa",     label: "Ki Tisá",    labelFa: "کی تیسا",    he: "כִּי תִשָּׂא",   units: 12  },
+      { id: "Zohar, Vayakhel",    label: "Vayakhél",   labelFa: "وییقهل",     he: "וַיַּקְהֵל",     units: 43  },
+      { id: "Zohar, Pekudei",     label: "Pekudéi",    labelFa: "پقودی",      he: "פְקוּדֵי",       units: 63  },
+    ],
+  },
+  {
+    id: "vayikra", label: "Vayikrá — Levítico", labelFa: "وییقرا — لاویان", he: "וַיִּקְרָא",
+    parashot: [
+      { id: "Zohar, Vayikra",     label: "Vayikrá",    labelFa: "وییقرا",     he: "וַיִּקְרָא",     units: 67  },
+      { id: "Zohar, Tzav",        label: "Tzav",       labelFa: "تصاو",       he: "צַו",            units: 30  },
+      { id: "Zohar, Shmini",      label: "Shminí",     labelFa: "شمینی",      he: "שְׁמִינִי",      units: 16  },
+      { id: "Zohar, Tazria",      label: "Tazría",     labelFa: "تزریع",      he: "תַּזְרִיעַ",     units: 35  },
+      { id: "Zohar, Metzora",     label: "Metzorá",    labelFa: "متصورا",     he: "מְצֹרָע",        units: 16  },
+      { id: "Zohar, Achrei Mot",  label: "Ajaréi Mot", labelFa: "احاری موت",  he: "אַחֲרֵי מוֹת",   units: 75  },
+      { id: "Zohar, Kedoshim",    label: "Kedoshim",   labelFa: "قدوشیم",     he: "קְדֹשִׁים",      units: 21  },
+      { id: "Zohar, Emor",        label: "Emor",       labelFa: "امور",       he: "אֱמֹר",          units: 51  },
+      { id: "Zohar, Behar",       label: "Behar",      labelFa: "بهار",       he: "בְּהַר",         units: 14  },
+      { id: "Zohar, Bechukotai",  label: "Bejukotái",  labelFa: "بحوقوتای",   he: "בְּחֻקֹּתַי",    units: 16  },
+    ],
+  },
+  {
+    id: "bamidbar", label: "Bamidbar — Números", labelFa: "بمیدبار — اعداد", he: "בַּמִּדְבָּר",
+    parashot: [
+      { id: "Zohar, Bamidbar",      label: "Bamidbar",      labelFa: "بمیدبار",    he: "בַּמִּדְבָּר",   units: 8   },
+      { id: "Zohar, Nasso",         label: "Nasó",          labelFa: "ناسو",       he: "נָשֹׂא",         units: 23  },
+      { id: "Zohar, Idra Rabba",    label: "Idra Rabá ★",   labelFa: "ایدرا ربا ★", he: "אִדְרָא רַבָּא", units: 52, special: true },
+      { id: "Zohar, Beha'alotcha",  label: "Behaalotkjá",   labelFa: "بهعلوتخا",   he: "בְּהַעֲלֹתְךָ",  units: 27  },
+      { id: "Zohar, Sh'lach",       label: "Shelaj",        labelFa: "شلح",        he: "שְׁלַח",         units: 46  },
+      { id: "Zohar, Korach",        label: "Koraj",         labelFa: "قورح",       he: "קֹרַח",          units: 14  },
+      { id: "Zohar, Chukat",        label: "Jukat",         labelFa: "حوقت",       he: "חֻקַּת",         units: 12  },
+      { id: "Zohar, Balak",         label: "Balak",         labelFa: "بلق",        he: "בָּלָק",         units: 47  },
+      { id: "Zohar, Pinchas",       label: "Pinjas",        labelFa: "پینحاس",     he: "פִּינְחָס",      units: 129 },
+      { id: "Zohar, Matot",         label: "Matot",         labelFa: "ماطوت",      he: "מַטּוֹת",        units: 1   },
+    ],
+  },
+  {
+    id: "devarim", label: "Devarim — Deuteronomio", labelFa: "دواریم — تثنیه", he: "דְּבָרִים",
+    parashot: [
+      { id: "Zohar, Vaetchanan",  label: "Vaetjanán",  labelFa: "واتحانان",   he: "וָאֶתְחַנַּן",   units: 32  },
+      { id: "Zohar, Eikev",       label: "Ekev",       labelFa: "عیقب",       he: "עֵקֶב",          units: 6   },
+      { id: "Zohar, Shoftim",     label: "Shoftim",    labelFa: "شوفطیم",     he: "שֹׁפְטִים",      units: 5   },
+      { id: "Zohar, Ki Teitzei",  label: "Ki Tetzé",   labelFa: "کی تتصه",    he: "כִּי תֵצֵא",     units: 30  },
+      { id: "Zohar, Vayeilech",   label: "Vayelej",    labelFa: "وییلخ",      he: "וַיֵּלֶךְ",      units: 9   },
+      { id: "Zohar, Ha'Azinu",    label: "Haazinú",    labelFa: "هاازینو",    he: "הַאֲזִינוּ",     units: 17  },
+    ],
+  },
+  {
+    id: "special", label: "Secciones especiales", labelFa: "بخش‌های ویژه", he: "סְפָרִים מְיֻחָדִים",
+    parashot: [
+      { id: "Zohar, Idra Zuta",  label: "Idra Zutá — Pequeña Asamblea ★", labelFa: "ایدرا زوطا ★", he: "אִדְרָא זוּטָא", units: 43, special: true },
+      { id: "Zohar, Addenda",    label: "Tosafot — Suplementos",           labelFa: "توسافوت",      he: "תּוֹסָפוֹת",    units: 81  },
+    ],
+  },
+];
 
 /** Construye el ref final de un libro, respetando refTemplate si existe. */
 export function bookRef(book: RichBook, unit: number, amud?: "a" | "b"): string {

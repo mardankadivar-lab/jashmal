@@ -10,6 +10,8 @@ import {
   type CategoryId,
 } from "@/lib/categories";
 import BookSummary from "./BookSummary";
+import ZoharNavigator from "./ZoharNavigator";
+import type { RichBook } from "@/lib/catalogOverrides";
 
 interface BookBrowserProps {
   category: CategoryId;
@@ -31,6 +33,19 @@ export default function BookBrowser({
   const [openSub, setOpenSub] = useState<number>(0);
 
   if (!group) return null;
+
+  // ---- Navegador especial del Zohar (por parashot agrupadas por libro) ----
+  if (selectedBook?.id === "Zohar") {
+    return (
+      <div className="mt-4">
+        <p className="mb-2 text-sm text-muted">
+          <span className="hebrew me-2 text-gold/80">זֹהַר</span>
+          {locale === "fa" ? "یک پاراشا را انتخاب کنید" : "Elige una parashá"}
+        </p>
+        <ZoharNavigator onSelectParasha={(book) => onSelectBook(book as CatBook)} />
+      </div>
+    );
+  }
 
   // ---- Selección de capítulo/daf de un libro ya elegido ----
   if (selectedBook) {
