@@ -146,5 +146,11 @@
   "wordMenu": {
     "lexicon": "Open in lexicon",
     "askTutor": "Ask the tutor"
+  },
+  "refPanel": {
+    "title": "References",
+    "loading": "Loading text...",
+    "error": "Could not load.",
+    "closeAll": "Close all"
   }
 }

@@ -13,6 +13,7 @@ import StudyChat from "./StudyChat";
 import AudioPlayer from "./AudioPlayer";
 import StudyNotes from "./StudyNotes";
 import WordMenu, { type WordMenuAnchor } from "./WordMenu";
+import RefPanel from "./RefPanel";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, type CatBook, type CategoryId } from "@/lib/categories";
 import { getText, type SefariaTextResult } from "@/lib/sefaria";
@@ -45,6 +46,8 @@ export default function StudyEngine() {
   const [conceptTarget, setConceptTarget] = useState<ConceptTarget | null>(null);
   // menú contextual (clic derecho) sobre palabras hebreas.
   const [wordMenu, setWordMenu] = useState<WordMenuAnchor | null>(null);
+  // referencias cruzadas abiertas en el panel lateral (encadenables).
+  const [openRefs, setOpenRefs] = useState<string[]>([]);
   // ref del chat para enviar mensajes programáticamente (menú contextual).
   const [chatPrefill, setChatPrefill] = useState<string | null>(null);
   // unidad (capítulo/daf) actual del libro elegido, para "siguiente capítulo".
@@ -276,7 +279,12 @@ export default function StudyEngine() {
         )}
         {study && !studyLoading && (
           <div className="mt-6">
-            <StudyResult text={study} onConcept={openConcept} onLetter={openLetter} />
+            <StudyResult
+              text={study}
+              onConcept={openConcept}
+              onLetter={openLetter}
+              onRef={(ref) => setOpenRefs((prev) => prev.includes(ref) ? prev : [...prev, ref])}
+            />
             <AudioPlayer study={study} />
             {studyRef && <StudyNotes studyRef={studyRef} />}
             {hasNext() && (
@@ -295,6 +303,13 @@ export default function StudyEngine() {
       </section>
 
       <StudyChat studyRef={studyRef} prefill={chatPrefill} onPrefillConsumed={() => setChatPrefill(null)} />
+      {openRefs.length > 0 && (
+        <RefPanel
+          refs={openRefs}
+          onClose={(ref) => setOpenRefs((prev) => prev.filter((r) => r !== ref))}
+          onOpenRef={(ref) => setOpenRefs((prev) => prev.includes(ref) ? prev : [...prev, ref])}
+        />
+      )}
       <WordMenu
         anchor={wordMenu}
         onClose={() => setWordMenu(null)}

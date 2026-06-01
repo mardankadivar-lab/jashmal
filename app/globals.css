@@ -140,3 +140,16 @@ body {
 .hebrew-inline {
   font-family: var(--font-hebrew), "Frank Ruhl Libre", "David Libre", serif;
 }
+
+/* Referencias cruzadas detectadas automáticamente en el análisis. */
+.ref-link {
+  color: rgb(var(--c-gold));
+  border-bottom: 1px solid rgb(var(--c-gold) / 0.4);
+  cursor: pointer;
+  font-style: italic;
+  transition: color 0.2s, border-color 0.2s;
+}
+.ref-link:hover {
+  color: rgb(var(--c-gold-soft));
+  border-bottom-color: rgb(var(--c-gold-soft));
+}
