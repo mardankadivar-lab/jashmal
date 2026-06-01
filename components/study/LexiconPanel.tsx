@@ -22,6 +22,8 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
   const [error, setError] = useState(false);
   const [connections, setConnections] = useState<string | null>(null);
   const [connectionsLoading, setConnectionsLoading] = useState(false);
+  const [zohar, setZohar] = useState<string | null>(null);
+  const [zoharLoading, setZoharLoading] = useState(false);
 
   const loadConnections = useCallback(async (w: string, g: number) => {
     setConnectionsLoading(true);
@@ -40,6 +42,25 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
       setConnectionsLoading(false);
     }
   }, [locale]);
+
+  const loadZoharMethods = useCallback(async (w: string) => {
+    setZoharLoading(true);
+    setZohar(null);
+    try {
+      const res = await fetch("/api/zohar-methods", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ word: w, locale }),
+      });
+      const d = await res.json();
+      setZohar(d.analysis || "");
+    } catch {
+      setZohar("");
+    } finally {
+      setZoharLoading(false);
+    }
+  }, [locale]);
+
   const popupRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
 
@@ -53,6 +74,8 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
     setLoading(true);
     setConnections(null);
     setConnectionsLoading(false);
+    setZohar(null);
+    setZoharLoading(false);
     requestLexicon(word, locale)
       .then((res) => !cancelled && setData(res))
       .catch(() => !cancelled && setError(true))
@@ -275,6 +298,54 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
                     }
                     return line.trim() ? (
                       <p key={i} className="text-muted/70 leading-relaxed">{line.replace(/\*\*/g,"")}</p>
+                    ) : null;
+                  })}
+                </div>
+              )}
+            </section>
+
+            {/* ─── Métodos del Zohar (Notarikon, Tzeruf, palabras ocultas) ─── */}
+            <section>
+              <div className="flex items-center justify-between">
+                <h3 className="font-cinzel text-xs uppercase tracking-widest text-gold/80">
+                  {t("zoharMethods")}
+                </h3>
+                {!zohar && !zoharLoading && (
+                  <button
+                    onClick={() => loadZoharMethods(anchor!.word)}
+                    className="rounded-full border border-gold/25 px-2 py-0.5 text-[10px] font-cinzel text-gold/60 transition-colors hover:border-gold/50 hover:text-gold"
+                  >
+                    {t("analyzeZohar")}
+                  </button>
+                )}
+              </div>
+              {zoharLoading && (
+                <p className="mt-2 animate-pulse text-[10px] text-muted">{t("analyzingZohar")}</p>
+              )}
+              {zohar && !zoharLoading && (
+                <div className="mt-2 space-y-2 text-[10px] leading-relaxed">
+                  {zohar.split(/\n+/).map((line, i) => {
+                    // Encabezado de sección: ## título
+                    const heading = line.match(/^##\s+(.+)$/);
+                    if (heading) {
+                      return (
+                        <h4 key={i} className="mt-3 font-cinzel text-[10px] uppercase tracking-widest text-gold/70 first:mt-0">
+                          {heading[1]}
+                        </h4>
+                      );
+                    }
+                    // Palabra hebrea en negrita **xxx**
+                    const bold = line.match(/^\*\*(.+?)\*\*\s*(.*)$/);
+                    if (bold) {
+                      return (
+                        <div key={i} className="rounded border border-gold/10 bg-gold/[0.03] px-2 py-1.5">
+                          <span className="hebrew text-sm text-gold">{bold[1]}</span>
+                          {bold[2] && <span className="text-muted/80"> {bold[2]}</span>}
+                        </div>
+                      );
+                    }
+                    return line.trim() ? (
+                      <p key={i} className="text-muted/70 leading-relaxed">{line.replace(/\*\*/g, "")}</p>
                     ) : null;
                   })}
                 </div>
