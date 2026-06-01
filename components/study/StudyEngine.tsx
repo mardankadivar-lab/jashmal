@@ -10,6 +10,7 @@ import BeitMidrash from "./BeitMidrash";
 import LexiconPanel from "./LexiconPanel";
 import ConceptPanel, { type ConceptTarget } from "./ConceptPanel";
 import StudyChat from "./StudyChat";
+import AudioPlayer from "./AudioPlayer";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, type CatBook, type CategoryId } from "@/lib/categories";
 import { getText, type SefariaTextResult } from "@/lib/sefaria";
@@ -269,6 +270,7 @@ export default function StudyEngine() {
         {study && !studyLoading && (
           <div className="mt-6">
             <StudyResult text={study} onConcept={openConcept} onLetter={openLetter} />
+            <AudioPlayer study={study} />
             {hasNext() && (
               <div className="mt-8 flex justify-end border-t border-gold/15 pt-4">
                 <button

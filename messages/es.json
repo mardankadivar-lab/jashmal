@@ -125,5 +125,15 @@
     "send": "Enviar",
     "thinking": "El tutor está pensando...",
     "error": "No pude responder. Intenta de nuevo."
+  },
+  "audio": {
+    "listen": "Escuchar resumen",
+    "generating": "Preparando el audio (20-30 seg)...",
+    "play": "Reproducir",
+    "pause": "Pausar",
+    "download": "Descargar MP3",
+    "error": "No se pudo generar el audio.",
+    "retry": "Reintentar",
+    "hint": "Narración del estudio, lista para escuchar en el auto 🚗"
   }
 }

@@ -125,5 +125,15 @@
     "send": "Send",
     "thinking": "The tutor is thinking...",
     "error": "Couldn't answer. Please try again."
+  },
+  "audio": {
+    "listen": "Listen to summary",
+    "generating": "Preparing audio (20-30 sec)...",
+    "play": "Play",
+    "pause": "Pause",
+    "download": "Download MP3",
+    "error": "Could not generate audio.",
+    "retry": "Retry",
+    "hint": "Narrated study, ready to listen in the car 🚗"
   }
 }
