@@ -164,6 +164,8 @@
     "root": "Árbol",
     "within": "dentro de",
     "insideLevel": "Nivel {level} de profundidad",
-    "refHint": "Clic sobre los rayos para estudiar la referencia textual"
+    "refHint": "Clic sobre los rayos para estudiar la referencia textual",
+    "loadingHeijalot": "Cargando el Héijal...",
+    "heijalotTitle": "Heijalot — cámaras dentro de cámaras"
   }
 }

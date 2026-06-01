@@ -164,6 +164,8 @@
     "root": "Tree",
     "within": "within",
     "insideLevel": "Depth level {level}",
-    "refHint": "Click the rays to study the textual reference"
+    "refHint": "Click the rays to study the textual reference",
+    "loadingHeijalot": "Loading the Heikal...",
+    "heijalotTitle": "Heijalot — chambers within chambers"
   }
 }
