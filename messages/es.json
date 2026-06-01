@@ -7,7 +7,8 @@
     "home": "Inicio",
     "study": "Estudio",
     "letters": "Letras",
-    "about": "Acerca de"
+    "about": "Acerca de",
+    "tree": "Árbol"
   },
   "hero": {
     "kicker": "Cabalá y filosofía judía",
@@ -154,5 +155,15 @@
     "error": "No se pudo cargar.",
     "closeAll": "Cerrar todo",
     "navigate": "Ir a este texto"
+  },
+  "tree": {
+    "title": "Árbol de la Vida",
+    "subtitle": "Los 10 sefirot y los 22 senderos. Clic sobre una sefirá para ver sus referencias textuales. 'Entrar' para descender al nivel interior — cada sefirá contiene las 10.",
+    "enter": "Entrar",
+    "back": "Volver",
+    "root": "Árbol",
+    "within": "dentro de",
+    "insideLevel": "Nivel {level} de profundidad",
+    "refHint": "Clic sobre los rayos para estudiar la referencia textual"
   }
 }

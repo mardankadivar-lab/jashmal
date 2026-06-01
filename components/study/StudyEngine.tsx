@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import CategoryNav from "@/components/sefaria/CategoryNav";
 import BookBrowser from "@/components/sefaria/BookBrowser";
@@ -63,6 +63,19 @@ export default function StudyEngine() {
   useEffect(() => {
     getParashaHashavua().then((p) => p && setParasha(p));
   }, []);
+
+  // Al cambiar de idioma, limpiar el estudio actual (fue generado en el idioma anterior).
+  // El texto fuente y la navegación se mantienen para que el usuario pueda regenerar.
+  const prevLocale = useRef(locale);
+  useEffect(() => {
+    if (prevLocale.current !== locale) {
+      prevLocale.current = locale;
+      setStudy(null);
+      setStudyRef(null);
+      setStudyError(null);
+      setOpenRefs([]);
+    }
+  }, [locale]);
 
   // Carga inicial desde ?ref= (enlaces como Kohelet 11:1 del Beit Midrash).
   useEffect(() => {
