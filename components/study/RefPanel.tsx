@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { getText, type SefariaTextResult } from "@/lib/sefaria";
+import { segmentText } from "@/lib/refDetector";
 
 interface RefPanelEntry {
   ref: string;
@@ -122,10 +123,24 @@ export default function RefPanel({ refs, onClose, onOpenRef, onNavigate }: RefPa
                   <p className="hebrew text-base leading-relaxed text-parchment/90">
                     {seg}
                   </p>
-                  {/* Traducción (inglés de Sefaria) si existe */}
+                  {/* Traducción con referencias bíblicas clicables */}
                   {entry.result!.translations[i] && (
                     <p className="text-xs leading-relaxed text-muted/80 italic">
-                      {entry.result!.translations[i]}
+                      {segmentText(entry.result!.translations[i]).map((seg, j) =>
+                        seg.type === "ref" ? (
+                          <button
+                            key={j}
+                            type="button"
+                            className="ref-link"
+                            onClick={() => onOpenRef(seg.ref)}
+                            title={`Abrir ${seg.ref}`}
+                          >
+                            {seg.value}
+                          </button>
+                        ) : (
+                          <span key={j}>{seg.value}</span>
+                        )
+                      )}
                     </p>
                   )}
                 </li>
