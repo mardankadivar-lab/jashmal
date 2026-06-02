@@ -60,10 +60,22 @@ export default function StudyEngine() {
   const [parasha, setParasha] = useState<ParashaInfo | null>(null);
   // ref a la columna de análisis, para hacer scroll automático al generar estudio.
   const analysisRef = useRef<HTMLElement | null>(null);
+  // ref al panel de referencias, para llevar la vista cuando se abre una ref.
+  const refPanelRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     getParashaHashavua().then((p) => p && setParasha(p));
   }, []);
+
+  // Al abrir/añadir una referencia, llevar la vista al panel (si no, en estudios
+  // largos el panel aparece muy abajo y parece que "no se abre").
+  useEffect(() => {
+    if (openRefs.length > 0) {
+      requestAnimationFrame(() => {
+        refPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    }
+  }, [openRefs]);
 
   // Al cambiar de idioma, limpiar el estudio actual (fue generado en el idioma anterior).
   // El texto fuente y la navegación se mantienen para que el usuario pueda regenerar.
@@ -393,14 +405,17 @@ export default function StudyEngine() {
               }}
             />
             {/* Panel de referencias cruzadas — aparece justo debajo del estudio
-                (antes estaba fuera de esta columna y se veía lejos del clic). */}
+                (antes estaba fuera de esta columna y se veía lejos del clic).
+                El scroll automático (useEffect sobre openRefs) lo trae a la vista. */}
             {openRefs.length > 0 && (
-              <RefPanel
-                refs={openRefs}
-                onClose={(ref) => setOpenRefs((prev) => prev.filter((r) => r !== ref))}
-                onOpenRef={(ref) => setOpenRefs((prev) => prev.includes(ref) ? prev : [...prev, ref])}
-                onNavigate={(ref) => loadRef(ref, true)}
-              />
+              <div ref={refPanelRef} className="scroll-mt-20">
+                <RefPanel
+                  refs={openRefs}
+                  onClose={(ref) => setOpenRefs((prev) => prev.filter((r) => r !== ref))}
+                  onOpenRef={(ref) => setOpenRefs((prev) => prev.includes(ref) ? prev : [...prev, ref])}
+                  onNavigate={(ref) => loadRef(ref, true)}
+                />
+              </div>
             )}
             {/* AudioPlayer desactivado temporalmente — pendiente de grabar voz en persa.
             <AudioPlayer study={study} /> */}
