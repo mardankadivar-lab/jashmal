@@ -8,6 +8,27 @@ interface Message {
   text: string;
 }
 
+// Detecta el bloque de opciones al final de la respuesta del tutor.
+// Formatos: "**Opción 1:** X / **Opción 2:** Y"  (en línea o separados por salto)
+// Devuelve { body: texto sin opciones, options: ["X", "Y"] }
+function parseOptions(text: string): { body: string; options: string[] } {
+  const labelPattern = /\*\*(?:Opción|Option|گزینه)\s*\d+[:\s*]+\*\*\s*/gi;
+  // Buscar el primer marcador de opción en la parte final del texto
+  // Buscar desde el último marcador de opción hasta el final
+  const firstMarker = text.search(/\*\*(?:Opción|Option|گزینه)\s*\d+/i);
+  if (firstMarker === -1) return { body: text, options: [] };
+  const blockMatch = [null, text.slice(firstMarker)];
+  const block = blockMatch[1] ?? "";
+  // Separar por " / " o salto de línea entre opciones
+  const parts = block.split(/\s*\/\s*(?=\*\*(?:Opción|Option|گزینه))/i);
+  const options = parts
+    .map((p) => p.replace(labelPattern, "").trim())
+    .filter(Boolean);
+
+  const body = text.slice(0, firstMarker).trimEnd();
+  return { body, options };
+}
+
 interface StudyChatProps {
   studyRef?: string | null;
   prefill?: string | null;          // mensaje pre-rellenado (desde menú contextual)
@@ -153,26 +174,41 @@ export default function StudyChat({ studyRef, prefill, onPrefillConsumed }: Stud
             {messages.length === 0 && (
               <p className="text-center text-xs text-muted/70 mt-4">{t("hint")}</p>
             )}
-            {messages.map((m, i) => (
-              <div
-                key={i}
-                className={
-                  m.role === "user"
-                    ? "flex justify-end"
-                    : "flex justify-start"
-                }
-              >
-                <div
-                  className={
-                    m.role === "user"
-                      ? "max-w-[80%] rounded-2xl rounded-tr-sm bg-gold/15 px-3 py-2 text-parchment/90"
-                      : "max-w-[90%] rounded-2xl rounded-tl-sm bg-white/[0.04] px-3 py-2 text-parchment/85 leading-relaxed"
-                  }
-                >
-                  {m.text}
+            {messages.map((m, i) => {
+              const isLastAssistant =
+                m.role === "assistant" && i === messages.length - 1;
+              const { body, options } = isLastAssistant
+                ? parseOptions(m.text)
+                : { body: m.text, options: [] };
+
+              return (
+                <div key={i} className={m.role === "user" ? "flex justify-end" : "flex justify-start flex-col gap-1.5"}>
+                  <div
+                    className={
+                      m.role === "user"
+                        ? "max-w-[80%] rounded-2xl rounded-tr-sm bg-gold/15 px-3 py-2 text-parchment/90"
+                        : "max-w-[90%] rounded-2xl rounded-tl-sm bg-white/[0.04] px-3 py-2 text-parchment/85 leading-relaxed"
+                    }
+                  >
+                    {body}
+                  </div>
+                  {options.length > 0 && (
+                    <div className="flex flex-col gap-1.5 ps-1">
+                      {options.map((opt, j) => (
+                        <button
+                          key={j}
+                          onClick={() => sendMessage(opt)}
+                          disabled={loading}
+                          className="rounded-xl border border-gold/30 bg-gold/[0.06] px-3 py-1.5 text-left text-xs text-gold/80 transition-all hover:border-gold/60 hover:bg-gold/[0.12] hover:text-gold disabled:opacity-40"
+                        >
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
             {loading && (
               <div className="flex justify-start">
                 <div className="max-w-[90%] rounded-2xl rounded-tl-sm bg-white/[0.04] px-3 py-2">
