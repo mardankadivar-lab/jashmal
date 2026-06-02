@@ -49,49 +49,54 @@ function GematriaRow({
         <span className="text-parchment/60 text-sm italic">{translation}</span>
       </div>
 
-      {/* Letras con valores */}
-      <div className="flex flex-wrap items-end gap-2 mb-4 sm:gap-3">
+      {/* Letras con valores — tiles oscuros auto-contenidos (legibles en cualquier tema) */}
+      <div className="flex flex-wrap items-end gap-2.5 mb-4 sm:gap-3">
         {letters.map((l, i) => (
           <div
             key={i}
-            className="flex flex-col items-center rounded-xl border px-3 py-2.5 transition-all duration-700 sm:px-4 sm:py-3"
+            className="flex flex-col items-center rounded-2xl border-2 px-4 py-4 transition-all duration-700 sm:px-5 sm:py-5"
             style={{
-              borderColor: visible ? `${color}66` : "transparent",
-              background: visible ? `${color}12` : "transparent",
+              borderColor: visible ? `${color}99` : "transparent",
+              background: visible ? "rgba(14,12,22,0.96)" : "transparent",
+              boxShadow: visible ? `0 0 24px ${color}33` : "none",
               opacity: visible ? 1 : 0,
               transform: visible ? "translateY(0)" : "translateY(20px)",
               transitionDelay: `${delay + i * 120}ms`,
             }}
           >
             <span
-              className="hebrew text-6xl font-bold leading-none sm:text-5xl"
-              style={{ color: "#fdf4dd", textShadow: `0 0 18px ${color}, 0 0 5px ${color}` }}
+              className="hebrew font-bold leading-none"
+              style={{
+                fontSize: "clamp(72px, 17vw, 92px)",
+                color: "#fff6e0",
+                textShadow: `0 0 22px ${color}, 0 0 8px ${color}, 0 0 2px ${color}`,
+              }}
             >
               {l.letter}
             </span>
-            <span className="mt-1.5 font-cinzel text-[10px] uppercase tracking-widest text-parchment/60">{l.name}</span>
-            <span className="mt-1 font-cinzel text-xl font-bold" style={{ color, textShadow: `0 0 8px ${color}88` }}>+{l.value}</span>
+            <span className="mt-2.5 font-cinzel text-xs uppercase tracking-widest text-parchment/70">{l.name}</span>
+            <span className="mt-1 font-cinzel text-2xl font-black" style={{ color, textShadow: `0 0 10px ${color}` }}>+{l.value}</span>
           </div>
         ))}
 
         {/* Igual */}
-        <div className="flex flex-col items-center px-2">
-          <span className="text-3xl font-bold text-gold/40">=</span>
+        <div className="flex flex-col items-center self-center px-1">
+          <span className="text-4xl font-bold" style={{ color: `${color}99` }}>=</span>
         </div>
 
         {/* Total */}
         <div
-          className="flex flex-col items-center rounded-xl border-2 px-6 py-3 transition-all duration-700"
+          className="flex flex-col items-center self-center rounded-2xl border-2 px-6 py-5 transition-all duration-700"
           style={{
             borderColor: color,
-            background: `${color}12`,
+            background: "rgba(14,12,22,0.96)",
             opacity: visible ? 1 : 0,
             transform: visible ? "scale(1)" : "scale(0.8)",
             transitionDelay: `${delay + letters.length * 120 + 200}ms`,
-            boxShadow: `0 0 20px ${color}44`,
+            boxShadow: `0 0 28px ${color}55`,
           }}
         >
-          <span className="font-cinzel text-4xl font-black" style={{ color, filter: `drop-shadow(0 0 8px ${color})` }}>
+          <span className="font-cinzel font-black" style={{ fontSize: "clamp(48px, 12vw, 64px)", color, filter: `drop-shadow(0 0 10px ${color})` }}>
             {total}
           </span>
         </div>
@@ -149,21 +154,51 @@ export default function MisterioPage() {
   const router = useRouter();
   const fa = locale === "fa";
 
+  // Tema claro/oscuro propio de la landing (sincronizado con el global).
+  const [dark, setDark] = useState(true);
+  useEffect(() => {
+    setDark(document.documentElement.classList.contains("dark"));
+  }, []);
+  function toggleTheme() {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle("dark", next);
+    try { localStorage.setItem("jashmal-theme", next ? "dark" : "light"); } catch { /* noop */ }
+  }
+
+  const bg = dark ? "#05050a" : "#f1ebdd";
+  const navBg = dark ? "rgba(5,5,10,0.9)" : "rgba(241,235,221,0.9)";
+
   return (
-    <div className="always-dark min-h-screen bg-ink" dir={fa ? "rtl" : "ltr"}>
+    <div
+      className={`${dark ? "always-dark" : ""} min-h-screen`}
+      style={{ background: bg }}
+      dir={fa ? "rtl" : "ltr"}
+    >
 
       {/* Nav mínima */}
-      <nav className="sticky top-0 z-40 border-b border-gold/10 bg-ink/90 px-5 py-3 backdrop-blur-md">
+      <nav className="sticky top-0 z-40 border-b border-gold/10 px-5 py-3 backdrop-blur-md" style={{ background: navBg }}>
         <div className="mx-auto flex max-w-2xl items-center justify-between">
           <Link href="/" className="font-cinzel text-sm text-gold/70 hover:text-gold">
             חַשְׁמַל · Jashmal
           </Link>
-          <button
-            onClick={() => router.push("/estudio")}
-            className="rounded-full border border-gold/30 px-4 py-1.5 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/10"
-          >
-            {fa ? "شروع مطالعه" : "Comenzar estudio →"}
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Toggle claro/oscuro */}
+            <button
+              onClick={toggleTheme}
+              aria-label={dark ? "Modo claro" : "Modo oscuro"}
+              title={dark ? "Modo claro" : "Modo oscuro"}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-gold/30 text-gold transition-colors hover:bg-gold/10"
+            >
+              {dark ? "☀" : "☾"}
+            </button>
+            <button
+              onClick={() => router.push("/estudio")}
+              className="rounded-full border border-gold/30 px-4 py-1.5 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/10"
+            >
+              {fa ? "شروع مطالعه" : "Comenzar estudio →"}
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -181,10 +216,12 @@ export default function MisterioPage() {
               className="font-cinzel font-black"
               style={{
                 fontSize: "clamp(100px, 28vw, 180px)",
-                background: "linear-gradient(180deg, #fff8d0 0%, #f0d060 35%, #c9a43e 70%, #a07828 100%)",
+                background: dark
+                  ? "linear-gradient(180deg, #fff8d0 0%, #f0d060 35%, #c9a43e 70%, #a07828 100%)"
+                  : "linear-gradient(180deg, #b58a2a 0%, #9a6f1c 50%, #6e4f12 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
-                filter: "drop-shadow(0 0 30px rgba(201,164,62,0.5))",
+                filter: dark ? "drop-shadow(0 0 30px rgba(201,164,62,0.5))" : "drop-shadow(0 0 6px rgba(138,109,31,0.25))",
                 lineHeight: 1,
               }}
             >
