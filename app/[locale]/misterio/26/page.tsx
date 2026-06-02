@@ -47,30 +47,38 @@ function GematriaRow({
 
   return (
     <div ref={ref} className="mb-10">
-      <div className="mb-4 flex items-baseline gap-3">
-        <span className="hebrew text-4xl font-bold" style={{ color }}>
+      <div className="mb-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <span
+          className="hebrew text-4xl font-bold"
+          style={{ color: "#fdf4dd", textShadow: `0 0 16px ${color}, 0 0 4px ${color}` }}
+        >
           {letters.map(l => l.letter).join("")}
         </span>
         <span className="font-cinzel text-lg tracking-widest" style={{ color }}>{word}</span>
-        <span className="text-muted/60 text-sm italic">{translation}</span>
+        <span className="text-parchment/60 text-sm italic">{translation}</span>
       </div>
 
-      <div className="flex flex-wrap items-end gap-3 mb-4" dir="rtl">
+      <div className="flex flex-wrap items-end gap-2 mb-4 sm:gap-3" dir="rtl">
         {displayLetters.map((l, i) => (
           <div
             key={i}
-            className="flex flex-col items-center rounded-xl border px-4 py-3 transition-all duration-700"
+            className="flex flex-col items-center rounded-xl border px-3 py-2.5 transition-all duration-700 sm:px-4 sm:py-3"
             style={{
-              borderColor: visible ? `${color}55` : "transparent",
-              background: visible ? `${color}08` : "transparent",
+              borderColor: visible ? `${color}66` : "transparent",
+              background: visible ? `${color}12` : "transparent",
               opacity: visible ? 1 : 0,
               transform: visible ? "translateY(0)" : "translateY(20px)",
               transitionDelay: `${delay + i * 120}ms`,
             }}
           >
-            <span className="hebrew text-5xl font-bold leading-none" style={{ color }}>{l.letter}</span>
-            <span className="mt-1 font-cinzel text-[10px] uppercase tracking-widest text-muted/50">{l.name}</span>
-            <span className="mt-1 font-cinzel text-lg font-bold" style={{ color }}>+{l.value}</span>
+            <span
+              className="hebrew text-6xl font-bold leading-none sm:text-5xl"
+              style={{ color: "#fdf4dd", textShadow: `0 0 18px ${color}, 0 0 5px ${color}` }}
+            >
+              {l.letter}
+            </span>
+            <span className="mt-1.5 font-cinzel text-[10px] uppercase tracking-widest text-parchment/60">{l.name}</span>
+            <span className="mt-1 font-cinzel text-xl font-bold" style={{ color, textShadow: `0 0 8px ${color}88` }}>+{l.value}</span>
           </div>
         ))}
         <div className="flex flex-col items-center px-2">
