@@ -4,11 +4,13 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
-  // Atajos cortos para campañas de TikTok → redirigen a la landing completa.
-  async redirects() {
+  async rewrites() {
+    // Atajos TikTok: la URL en el navegador QUEDA como /26 o /358
+    // (rewrite interno, no redirect). El middleware los ignora para que
+    // next-intl no añada /es antes de que lleguen aquí.
     return [
-      { source: "/358", destination: "/misterio/358", permanent: false },
-      { source: "/26",  destination: "/misterio/26",  permanent: false },
+      { source: "/358", destination: "/es/misterio/358" },
+      { source: "/26",  destination: "/es/misterio/26"  },
     ];
   },
 };
