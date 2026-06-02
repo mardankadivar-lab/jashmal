@@ -18,7 +18,9 @@ interface Aliyah {
 // GET /api/parasha → { name, he, ref, aliyot:[{day,ref}] } de la semana actual.
 export async function GET() {
   try {
-    const calRes = await fetch(`${BASE}/calendars`, {
+    // diaspora=1: calendario de la Diáspora (no Israel). Tras Shavuot/festivos,
+    // Israel va una semana adelantada; nuestra audiencia sigue la Diáspora.
+    const calRes = await fetch(`${BASE}/calendars?diaspora=1`, {
       next: { revalidate: 60 * 60 * 6 },
     });
     if (!calRes.ok) return NextResponse.json({ parasha: null });
