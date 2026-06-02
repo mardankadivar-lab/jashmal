@@ -8,7 +8,8 @@
     "study": "Study",
     "letters": "Letters",
     "about": "About",
-    "tree": "Tree"
+    "tree": "Tree",
+    "creation": "Creation"
   },
   "hero": {
     "kicker": "Kabbalah and Jewish philosophy",
@@ -77,7 +78,13 @@
     "paleo": "צוּרוֹת — Primary form (paleo-Hebrew)",
     "mystic": "Inner meaning",
     "disclaimer": "Classic dictionaries via Sefaria (BDB, Strong, Klein, Jastrow). The inner meaning and numeric connections are a generated meditation; verify them in the sources.",
-    "wordHint": "Tap any Hebrew word to open its lexicon."
+    "wordHint": "Tap any Hebrew word to open its lexicon.",
+    "analyzeZohar": "Analyze in Zohar",
+    "analyzingZohar": "Analyzing in Zohar...",
+    "connections": "Connections",
+    "findConnections": "Find connections",
+    "searchingConnections": "Searching connections...",
+    "zoharMethods": "Zohar methods"
   },
   "beitMidrash": {
     "title": "בֵּית מִדְרָשׁ — House of study",
@@ -179,5 +186,31 @@
     "letterForm": "The form",
     "letterInner": "Inner meaning",
     "letterConsciousness": "Channel of consciousness"
+  },
+  "tour": {
+    "next": "Next →",
+    "prev": "← Back",
+    "done": "Start",
+    "relaunch": "Show tutorial",
+    "step1": {
+      "title": "Welcome to Jashmal",
+      "desc": "This is your study room for Torah, Talmud and Kabbalah. Claude analyzes each passage using the PaRDeS method — in depth, in your language. Let me show you how it works."
+    },
+    "step2": {
+      "title": "Search any text",
+      "desc": "Type a reference directly: Genesis 1:1, Shabbat 2a, Zohar Bereshit. Or use the categories below to browse book by book."
+    },
+    "step3": {
+      "title": "Browse by category",
+      "desc": "Choose from Torah, Talmud, Midrash, Kabbalah or Chassidut. Then select the book, chapter and verse you want to study."
+    },
+    "step4": {
+      "title": "Analysis appears here",
+      "desc": "Once you choose a text and press Study, Claude generates a structured analysis: translation, classic commentators, PaRDeS and Chassidic synthesis."
+    },
+    "step5": {
+      "title": "Switch language",
+      "desc": "All analysis is generated in the chosen language. In Farsi, the interface switches to full right-to-left layout."
+    }
   }
 }
