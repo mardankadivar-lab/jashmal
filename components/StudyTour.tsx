@@ -107,7 +107,7 @@ export default function StudyTour() {
       onClick={relaunch}
       title={t("relaunch")}
       aria-label={t("relaunch")}
-      className={`fixed bottom-6 z-[9999] flex h-9 w-9 items-center justify-center rounded-full border border-gold/50 bg-ink font-cinzel text-sm text-gold shadow-[0_0_12px_rgba(201,164,62,0.15)] backdrop-blur-sm transition-all hover:border-gold hover:bg-gold/10 ${locale === "fa" ? "left-6" : "right-6"}`}
+      className={`fixed bottom-24 z-[9999] flex h-9 w-9 items-center justify-center rounded-full border border-gold/50 bg-ink font-cinzel text-sm text-gold shadow-[0_0_12px_rgba(201,164,62,0.15)] backdrop-blur-sm transition-all hover:border-gold hover:bg-gold/10 ${locale === "fa" ? "left-6" : "right-6"}`}
     >
       ?
     </button>
