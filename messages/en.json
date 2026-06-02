@@ -209,8 +209,12 @@
       "desc": "Once you choose a text and press Study, Claude generates a structured analysis: translation, classic commentators, PaRDeS and Chassidic synthesis."
     },
     "step5": {
-      "title": "Switch language",
-      "desc": "All analysis is generated in the chosen language. In Farsi, the interface switches to full right-to-left layout."
+      "title": "Your personal tutor",
+      "desc": "Have a question about a word or concept? Tap this button to open the tutor. Claude answers your questions in real time, without losing your place in the study."
+    },
+    "step6": {
+      "title": "Change the language",
+      "desc": "The entire analysis is generated in the chosen language. In Farsi, the interface switches to right-to-left writing."
     }
   }
 }

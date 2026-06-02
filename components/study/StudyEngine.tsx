@@ -11,7 +11,6 @@ import LexiconPanel from "./LexiconPanel";
 import ConceptPanel, { type ConceptTarget } from "./ConceptPanel";
 import StudyChat from "./StudyChat";
 import AudioPlayer from "./AudioPlayer";
-import StudyNotes from "./StudyNotes";
 import WordMenu, { type WordMenuAnchor } from "./WordMenu";
 import RefPanel from "./RefPanel";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
@@ -59,6 +58,8 @@ export default function StudyEngine() {
   const [currentAmud, setCurrentAmud] = useState<"a" | "b" | undefined>(undefined);
   // parashá de la semana (Sefaria), para el acceso directo.
   const [parasha, setParasha] = useState<ParashaInfo | null>(null);
+  // ref a la columna de análisis, para hacer scroll automático al generar estudio.
+  const analysisRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     getParashaHashavua().then((p) => p && setParasha(p));
@@ -191,6 +192,12 @@ export default function StudyEngine() {
     setStudyError(null);
     setStudy(null);
     setStudyRef(null);
+
+    // Llevar la vista a donde se está generando el estudio (clave en móvil:
+    // el análisis está debajo; en escritorio, arriba a la derecha si bajaste).
+    requestAnimationFrame(() => {
+      analysisRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
 
     const isPassage = index < 0;
     const hebrewText = isPassage
@@ -338,7 +345,7 @@ export default function StudyEngine() {
       </section>
 
       {/* Columna derecha: análisis */}
-      <section id="tour-analysis" className="lg:border-s lg:border-gold/15 lg:ps-10">
+      <section ref={analysisRef} id="tour-analysis" className="scroll-mt-20 lg:border-s lg:border-gold/15 lg:ps-10">
         <div className="flex items-center gap-3">
           <h2 className="font-cinzel text-sm uppercase tracking-widest text-gold/80">
             {t("analysis")}
@@ -385,9 +392,18 @@ export default function StudyEngine() {
                 setOpenRefs((prev) => prev.includes(ref) ? prev : [...prev, ref]);
               }}
             />
+            {/* Panel de referencias cruzadas — aparece justo debajo del estudio
+                (antes estaba fuera de esta columna y se veía lejos del clic). */}
+            {openRefs.length > 0 && (
+              <RefPanel
+                refs={openRefs}
+                onClose={(ref) => setOpenRefs((prev) => prev.filter((r) => r !== ref))}
+                onOpenRef={(ref) => setOpenRefs((prev) => prev.includes(ref) ? prev : [...prev, ref])}
+                onNavigate={(ref) => loadRef(ref, true)}
+              />
+            )}
             {/* AudioPlayer desactivado temporalmente — pendiente de grabar voz en persa.
             <AudioPlayer study={study} /> */}
-            {studyRef && <StudyNotes studyRef={studyRef} />}
             {hasNext() && (
               <div className="mt-8 flex justify-end border-t border-gold/15 pt-4">
                 <button
@@ -406,14 +422,6 @@ export default function StudyEngine() {
       </section>
 
       <StudyChat studyRef={studyRef} prefill={chatPrefill} onPrefillConsumed={() => setChatPrefill(null)} />
-      {openRefs.length > 0 && (
-        <RefPanel
-          refs={openRefs}
-          onClose={(ref) => setOpenRefs((prev) => prev.filter((r) => r !== ref))}
-          onOpenRef={(ref) => setOpenRefs((prev) => prev.includes(ref) ? prev : [...prev, ref])}
-          onNavigate={(ref) => loadRef(ref, true)}
-        />
-      )}
       <WordMenu
         anchor={wordMenu}
         onClose={() => setWordMenu(null)}

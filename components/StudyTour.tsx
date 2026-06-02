@@ -62,10 +62,19 @@ export default function StudyTour() {
             },
           },
           {
-            element: "#tour-language",
+            element: "#tour-tutor",
             popover: {
               title: t("step5.title"),
               description: t("step5.desc"),
+              side: "left",
+              align: "end",
+            },
+          },
+          {
+            element: "#tour-language",
+            popover: {
+              title: t("step6.title"),
+              description: t("step6.desc"),
               side: "bottom",
               align: "end",
             },

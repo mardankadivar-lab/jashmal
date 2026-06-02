@@ -209,6 +209,10 @@
       "desc": "Una vez que elijas un texto y presiones <em>Estudiar</em>, Claude genera un análisis estructurado: traducción, comentaristas clásicos, PRDS y síntesis jasídica."
     },
     "step5": {
+      "title": "Tu tutor personal",
+      "desc": "¿Una duda sobre una palabra o un concepto? Toca este botón para abrir el tutor. Claude responde tus preguntas en tiempo real, sin perder tu lugar en el estudio."
+    },
+    "step6": {
       "title": "Cambia el idioma",
       "desc": "Todo el análisis se genera en el idioma elegido. En farsi, la interfaz cambia a escritura de derecha a izquierda."
     }

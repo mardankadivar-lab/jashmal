@@ -248,6 +248,7 @@ export default function StudyChat({ studyRef, prefill, onPrefillConsumed }: Stud
 
       {/* Botón flotante */}
       <button
+        id="tour-tutor"
         onClick={() => {
           setOpen((o) => !o);
           if (!open) setTimeout(() => inputRef.current?.focus(), 100);
