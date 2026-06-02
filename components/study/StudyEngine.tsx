@@ -148,21 +148,28 @@ export default function StudyEngine() {
     loadRef(bookRef(book, unit, amud), true);
   }
 
-  // Siguiente capítulo/daf del mismo libro (para no perder el hilo).
+  // Siguiente capítulo/daf/anaf. Prioriza el campo `next` de Sefaria porque
+  // respeta la jerarquía real del texto (p.ej. Gate → Anaf en Etz Chaim).
+  // Cae al cálculo local solo cuando navegamos por el BookBrowser y el libro
+  // tiene estructura de Talmud (amudim).
   function nextUnit() {
+    if (sourceResult?.next) {
+      loadRef(sourceResult.next, true);
+      return;
+    }
     if (!book || currentUnit === null) return;
     if (book.type === "talmud") {
-      // daf con amud: a → b, luego siguiente daf a.
       if (currentAmud === "a") return selectUnit(currentUnit, "b");
       return selectUnit(currentUnit + 1, "a");
     }
-    const first = 1;
-    const last = book.units + (first - 1);
-    if (currentUnit >= last) return; // último capítulo
+    const last = book.units;
+    if (currentUnit >= last) return;
     selectUnit(currentUnit + 1);
   }
 
   function hasNext(): boolean {
+    // Si Sefaria nos indica que hay siguiente sección, siempre mostramos el botón.
+    if (sourceResult?.next) return true;
     if (!book || currentUnit === null) return false;
     if (book.type === "talmud") {
       const lastDaf = (book.firstDaf ?? 2) + book.units - 1;
@@ -257,7 +264,7 @@ export default function StudyEngine() {
           </button>
         )}
 
-        <form onSubmit={onSearch} className="flex gap-2">
+        <form id="tour-search" onSubmit={onSearch} className="flex gap-2">
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -304,7 +311,7 @@ export default function StudyEngine() {
           </div>
         )}
 
-        <div className="mt-6">
+        <div id="tour-categories" className="mt-6">
           <p className="mb-2 text-sm text-muted">{t("chooseCategory")}</p>
           <CategoryNav selected={category} onSelect={selectCategory} />
         </div>
@@ -331,7 +338,7 @@ export default function StudyEngine() {
       </section>
 
       {/* Columna derecha: análisis */}
-      <section className="lg:border-s lg:border-gold/15 lg:ps-10">
+      <section id="tour-analysis" className="lg:border-s lg:border-gold/15 lg:ps-10">
         <div className="flex items-center gap-3">
           <h2 className="font-cinzel text-sm uppercase tracking-widest text-gold/80">
             {t("analysis")}
@@ -387,7 +394,9 @@ export default function StudyEngine() {
                   onClick={nextUnit}
                   className="rounded-full border border-gold/50 px-5 py-2 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:bg-gold/10"
                 >
-                  {t("nextChapter")} →
+                  {sourceResult?.next
+                    ? `${sourceResult.next} →`
+                    : `${t("nextChapter")} →`}
                 </button>
               </div>
             )}

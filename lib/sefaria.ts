@@ -8,6 +8,8 @@ export interface SefariaText {
   /** versículos/segmentos en hebreo (array) o un único string. */
   he: string[] | string;
   text: string[] | string;
+  next: string | null;
+  prev: string | null;
 }
 
 export interface SefariaTextResult {
@@ -17,6 +19,10 @@ export interface SefariaTextResult {
   segments: string[];
   /** traducción al idioma que devuelve Sefaria (inglés normalmente). */
   translations: string[];
+  /** ref de la sección siguiente según Sefaria (null si es la última). */
+  next: string | null;
+  /** ref de la sección anterior según Sefaria (null si es la primera). */
+  prev: string | null;
 }
 
 function stripHtml(s: string): string {
@@ -54,6 +60,8 @@ export async function getText(ref: string): Promise<SefariaTextResult> {
     heRef: data.heRef,
     segments: toSegments(data.he),
     translations: toSegments(data.text),
+    next: data.next ?? null,
+    prev: data.prev ?? null,
   };
 }
 

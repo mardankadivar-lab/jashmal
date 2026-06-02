@@ -186,5 +186,31 @@
     "letterForm": "La forma",
     "letterInner": "Significado interior",
     "letterConsciousness": "Canal de consciencia"
+  },
+  "tour": {
+    "next": "Siguiente →",
+    "prev": "← Anterior",
+    "done": "Comenzar",
+    "relaunch": "Ver tutorial",
+    "step1": {
+      "title": "Bienvenido a Jashmal",
+      "desc": "Esta es tu sala de estudio para la Torá, el Talmud y la Cabalá. Claude analiza cada pasaje con el método PRDS — en profundidad, en tu idioma. Déjame mostrarte cómo funciona."
+    },
+    "step2": {
+      "title": "Busca cualquier texto",
+      "desc": "Escribe una referencia directamente: <em>Bereshit 1:1</em>, <em>Shabat 2a</em>, <em>Zohar Bereishit</em>. O usa las categorías de abajo para navegar libro por libro."
+    },
+    "step3": {
+      "title": "Navega por categoría",
+      "desc": "Elige entre Torá, Talmud, Midrash, Cabalá o Jasidut. Después seleccionas el libro, el capítulo y el versículo que quieras estudiar."
+    },
+    "step4": {
+      "title": "El análisis aparece aquí",
+      "desc": "Una vez que elijas un texto y presiones <em>Estudiar</em>, Claude genera un análisis estructurado: traducción, comentaristas clásicos, PRDS y síntesis jasídica."
+    },
+    "step5": {
+      "title": "Cambia el idioma",
+      "desc": "Todo el análisis se genera en el idioma elegido. En farsi, la interfaz cambia a escritura de derecha a izquierda."
+    }
   }
 }

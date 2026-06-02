@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import SiteHeader from "@/components/SiteHeader";
 import StudyEngine from "@/components/study/StudyEngine";
+import StudyTour from "@/components/StudyTour";
 
 export default function StudyPage() {
   const t = useTranslations("study");
@@ -15,6 +16,7 @@ export default function StudyPage() {
         </header>
         <StudyEngine />
       </main>
+      <StudyTour />
     </>
   );
 }

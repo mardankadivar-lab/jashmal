@@ -153,3 +153,85 @@ body {
   color: rgb(var(--c-gold-soft));
   border-bottom-color: rgb(var(--c-gold-soft));
 }
+
+/* ---- driver.js tour — tema Jashmal ---- */
+.jashmal-tour.driver-popover {
+  background: rgb(12 12 20) !important;
+  border: 1px solid rgba(201, 164, 62, 0.35) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 0 40px rgba(201, 164, 62, 0.08), 0 8px 32px rgba(0,0,0,0.7) !important;
+  padding: 20px 24px 16px !important;
+  max-width: 320px !important;
+}
+.jashmal-tour .driver-popover-title {
+  font-family: var(--font-cinzel), "Cinzel", serif !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: rgb(201, 164, 62) !important;
+  margin-bottom: 8px !important;
+}
+.jashmal-tour .driver-popover-description {
+  font-size: 0.875rem !important;
+  line-height: 1.6 !important;
+  color: rgb(232, 228, 216) !important;
+}
+.jashmal-tour .driver-popover-footer {
+  margin-top: 16px !important;
+  padding-top: 12px !important;
+  border-top: 1px solid rgba(201, 164, 62, 0.15) !important;
+  gap: 8px !important;
+}
+.jashmal-tour .driver-popover-prev-btn,
+.jashmal-tour .driver-popover-next-btn,
+.jashmal-tour .driver-popover-done-btn {
+  font-family: var(--font-cinzel), "Cinzel", serif !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  border-radius: 999px !important;
+  padding: 5px 16px !important;
+  transition: background 0.2s, color 0.2s !important;
+}
+.jashmal-tour .driver-popover-next-btn,
+.jashmal-tour .driver-popover-done-btn {
+  background: transparent !important;
+  border: 1px solid rgba(201, 164, 62, 0.6) !important;
+  color: rgb(201, 164, 62) !important;
+}
+.jashmal-tour .driver-popover-next-btn:hover,
+.jashmal-tour .driver-popover-done-btn:hover {
+  background: rgba(201, 164, 62, 0.12) !important;
+  border-color: rgba(201, 164, 62, 0.9) !important;
+}
+.jashmal-tour .driver-popover-prev-btn {
+  background: transparent !important;
+  border: 1px solid rgba(154, 149, 138, 0.35) !important;
+  color: rgb(154, 149, 138) !important;
+}
+.jashmal-tour .driver-popover-prev-btn:hover {
+  border-color: rgba(154, 149, 138, 0.7) !important;
+  color: rgb(200, 195, 184) !important;
+}
+.jashmal-tour .driver-popover-close-btn {
+  color: rgba(154, 149, 138, 0.6) !important;
+  font-size: 1.1rem !important;
+  top: 10px !important;
+  right: 12px !important;
+  transition: color 0.2s !important;
+}
+.jashmal-tour .driver-popover-close-btn:hover {
+  color: rgb(201, 164, 62) !important;
+}
+.jashmal-tour .driver-popover-progress-text {
+  color: rgba(154, 149, 138, 0.7) !important;
+  font-size: 0.7rem !important;
+  font-family: var(--font-cinzel), serif !important;
+  letter-spacing: 0.05em !important;
+}
+.driver-active-element {
+  outline: 2px solid rgba(201, 164, 62, 0.5) !important;
+  outline-offset: 3px !important;
+  border-radius: 6px !important;
+}
