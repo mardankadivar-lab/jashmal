@@ -3,6 +3,13 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
-const nextConfig: NextConfig = {};
+const nextConfig: NextConfig = {
+  // Atajos cortos para campañas de TikTok → redirigen a la landing completa.
+  async redirects() {
+    return [
+      { source: "/358", destination: "/es/misterio/358", permanent: false },
+    ];
+  },
+};
 
 export default withNextIntl(nextConfig);
