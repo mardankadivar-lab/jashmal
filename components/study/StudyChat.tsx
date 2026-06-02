@@ -11,21 +11,28 @@ interface Message {
 // Detecta el bloque de opciones al final de la respuesta del tutor.
 // Formatos: "**Opción 1:** X / **Opción 2:** Y"  (en línea o separados por salto)
 // Devuelve { body: texto sin opciones, options: ["X", "Y"] }
+// Divide por los marcadores **Opción N:** mismos — robusto a cualquier
+// separador entre ellos (salto de línea, " / ", nada). Antes dependía de un
+// " / " antes de "**Opción 2**" y, si Claude usaba un salto de línea, las dos
+// preguntas terminaban juntas en un solo botón.
 function parseOptions(text: string): { body: string; options: string[] } {
-  const labelPattern = /\*\*(?:Opción|Option|گزینه)\s*\d+[:\s*]+\*\*\s*/gi;
-  // Buscar el primer marcador de opción en la parte final del texto
-  // Buscar desde el último marcador de opción hasta el final
-  const firstMarker = text.search(/\*\*(?:Opción|Option|گزینه)\s*\d+/i);
-  if (firstMarker === -1) return { body: text, options: [] };
-  const blockMatch = [null, text.slice(firstMarker)];
-  const block = blockMatch[1] ?? "";
-  // Separar por " / " o salto de línea entre opciones
-  const parts = block.split(/\s*\/\s*(?=\*\*(?:Opción|Option|گزینه))/i);
-  const options = parts
-    .map((p) => p.replace(labelPattern, "").trim())
-    .filter(Boolean);
+  // Marcador: **Opción 1:**, **Option 2**, **گزینه ۱:** (dígitos latinos o persas)
+  const markerRe = /\*\*\s*(?:Opción|Opcion|Option|گزینه)\s*[\d۰-۹]+\s*[:：]?\s*\*\*/gi;
+  const markers = [...text.matchAll(markerRe)];
+  if (markers.length === 0) return { body: text, options: [] };
 
-  const body = text.slice(0, firstMarker).trimEnd();
+  const body = text.slice(0, markers[0].index).trimEnd();
+  const options: string[] = [];
+  for (let i = 0; i < markers.length; i++) {
+    const start = (markers[i].index ?? 0) + markers[i][0].length;
+    const end = i + 1 < markers.length ? markers[i + 1].index : text.length;
+    const opt = text
+      .slice(start, end)
+      .replace(/^[\s:：/.-]+/, "")  // limpiar separadores iniciales
+      .replace(/[\s/]+$/, "")        // y finales
+      .trim();
+    if (opt) options.push(opt);
+  }
   return { body, options };
 }
 

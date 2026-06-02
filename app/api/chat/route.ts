@@ -97,9 +97,12 @@ CRITICAL CONVERSATION RULES:
 
 5. FORMAT: 2-4 paragraphs, warmth and depth. Do not invent sources.
 
-6. NUMBERED QUESTIONS AT THE END: Always end with 1-2 options labeled as:
-   **${opt1}:** [question A] / **${opt2}:** [question B]
-   This allows the student to say "the second" and you know exactly which one they mean.`;
+6. NUMBERED QUESTIONS AT THE END: Always end with exactly 1-2 options, EACH ON ITS OWN LINE,
+   labeled exactly like this (keep the ** asterisks and the colon):
+   **${opt1}:** [a single short question]
+   **${opt2}:** [a single short question]
+   Each option must be ONE question only. Put a line break between them. This lets the
+   student say "the second" and you know exactly which one they mean.`;
 
   // Construir el array de mensajes con el historial completo + el nuevo.
   const messages = [
