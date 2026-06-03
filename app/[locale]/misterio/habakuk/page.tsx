@@ -296,6 +296,35 @@ export default function HabakukPage() {
               {fa ? "خروج ۱۴:۱۹ · مطالعه ↗" : "Éxodo 14:19 · estudiar ↗"}
             </button>
           </div>
+
+          {/* Caja profunda: el 72 (relleno de Yud), la semilla y el cuerpo BYA */}
+          <div className="mt-4 rounded-2xl border border-gold/15 bg-white/[0.02] p-5">
+            <p className="mb-3 font-cinzel text-[10px] uppercase tracking-[0.3em] text-gold/55">
+              {fa ? "چرا ۷۲؟ بذرِ یود و تنِ جهان‌ها" : "¿Por qué 72? La semilla de Yud y el cuerpo de los mundos"}
+            </p>
+            <div className="space-y-3 text-xs leading-relaxed text-muted/90" dir={fa ? "rtl" : "ltr"}>
+              <p>
+                {fa
+                  ? "عددِ ۷۲ از «پُرکردنِ» نامِ یهوה زاده می‌شود: هر حرف را با یود می‌نویسند — יוד (۲۰) + הי (۱۵) + ויו (۲۲) + הי (۱۵) = ۷۲. به همین سبب آن را «اَب» (ע״ב = ۷۲) می‌نامند. این بالاترین پُرکردن است، پُرکردنِ یود — و یود همان حکمت است، نقطهٔ بذر."
+                  : "El número 72 nace de «rellenar» el Nombre YHVH: cada letra se escribe con Yud — יוד (20) + הי (15) + ויו (22) + הי (15) = 72. Por eso se llama «AB» (ע״ב = 72). Es el relleno más alto, el de la Yud — y la Yud es Jojmá, el punto-semilla."}
+              </p>
+              <p>
+                {fa
+                  ? "خودِ نام، ساختارِ «یک و سه» دارد: یود = اَتزیلوت (سر، بذر)؛ و سه حرفِ دیگر، הוה = بِریاه-یِتزیراه-عَسیاه، تنِ جهان‌ها. بذر بالا، تن پایین."
+                  : "El Nombre mismo tiene estructura de «uno y tres»: la Yud = Atzilut (la cabeza, la semilla); y las otras tres letras, הוה = Beriá-Yetzirá-Asiá, el cuerpo de los mundos. La semilla arriba, el cuerpo abajo."}
+              </p>
+              <p className="font-cinzel text-gold/70">
+                {fa
+                  ? "۲۱۶ = ۷۲ × ۳: روح (یود/اَتزیلوت) پوشیده در تن (سه حرف / بِریاه-یِتزیراه-عَسیاه)."
+                  : "216 = 72 × 3: el alma (Yud/Atzilut) vestida en cuerpo (las tres letras / BY\"A)."}
+              </p>
+              <p className="text-muted/70">
+                {fa
+                  ? "و حَبَقّوق همین است: تنش (۲۱۶ = گِوورا، یک آغوشِ مادر) مُرد، و آغوشِ دوم — «والاترین درجهٔ علیا» — روح را فروفرستاد تا تن را زنده کند. حَبَقّوق همان ۷۲ است که به ۲۱۶ وارد می‌شود."
+                  : "Y Habakuk es eso: su cuerpo (216 = Gevurá, el un abrazo de la madre) murió, y el segundo abrazo — «el grado supernal más alto» — hizo descender el alma para revivir el cuerpo. Habakuk es el 72 entrando en el 216."}
+              </p>
+            </div>
+          </div>
         </Section>
 
         {/* ── EL PATRÓN CÓSMICO ── */}
