@@ -258,6 +258,44 @@ export default function HabakukPage() {
                 : "Esos 72 Nombres surgen de los tres versículos de Éxodo 14:19-21 (3 × 72 = 216 letras) — en la misma parashá Beshalaj, la partición del mar. La guematría de Habakuk equivale exactamente a las 216 letras divinas que nacen de su propia parashá."}
             </p>
           </div>
+
+          {/* Caja explicativa: ¿qué es el Shem HaMeforash y cómo se calcula? */}
+          <div className="mt-6 rounded-2xl border border-gold/15 bg-white/[0.02] p-5">
+            <p className="mb-3 font-cinzel text-[10px] uppercase tracking-[0.3em] text-gold/55">
+              {fa ? "شِم هَمِفوراش چیست؟" : "¿Qué es el Shem HaMeforash?"}
+            </p>
+            <div className="space-y-3 text-xs leading-relaxed text-muted/90" dir={fa ? "rtl" : "ltr"}>
+              <p>
+                {fa
+                  ? "«شِم هَمِفوراش» (שֵׁם הַמְּפֹרָשׁ، «نامِ آشکارشده») یکی از مقدّس‌ترین نام‌های خداست — معروف به «نامِ ۷۲» (שֵׁם עֲ‍ב، عَین-بِت = ۷۲). از واژه‌ها ساخته نشده، بلکه از یک محاسبهٔ دقیق روی متنِ تورات."
+                  : "El «Shem HaMeforash» (שֵׁם הַמְּפֹרָשׁ, «el Nombre explicitado») es uno de los nombres más sagrados de Dios — conocido como «el Nombre de 72» (שֵׁם עַ‍ב, Ayin-Bet = 72). No se forma con palabras, sino con un cálculo preciso sobre el texto de la Torá."}
+              </p>
+              <p>
+                {fa
+                  ? "چگونه محاسبه می‌شود: سه آیهٔ پیاپی از خروج (۱۴:۱۹، ۲۰، ۲۱) هرکدام دقیقاً ۷۲ حرف دارند. آیهٔ نخست را از آغاز، آیهٔ دوم را از پایان (وارونه)، و آیهٔ سوم را از آغاز می‌خوانند؛ سپس حرف‌به‌حرف کنار هم می‌گذارند و ۷۲ نامِ سه‌حرفی به دست می‌آید."
+                  : "Cómo se calcula: tres versículos consecutivos del Éxodo (14:19, 20, 21) tienen cada uno exactamente 72 letras. Se toma el primer versículo de principio a fin, el segundo al revés (de fin a principio), y el tercero de nuevo de principio a fin; luego se combinan letra por letra, formando 72 Nombres de tres letras cada uno."}
+              </p>
+              <p className="font-cinzel text-gold/70">
+                {fa
+                  ? "۷۲ نام × ۳ حرف = ۲۱۶ حرف. همان عددِ حَبَקّوק."
+                  : "72 Nombres × 3 letras = 216 letras. El mismo número de Habakuk."}
+              </p>
+              <p className="text-muted/70">
+                {fa
+                  ? "این سه آیه دربارهٔ شکافتنِ دریای سرخ‌اند: ستونِ ابر و فرشتهٔ خدا که میانِ اسرائیل و مصر می‌ایستد. از دلِ آن نجات، نامِ پنهانِ خدا زاده می‌شود."
+                  : "Esos tres versículos narran la partición del Mar Rojo: la columna de nube y el ángel de Dios que se interpone entre Israel y Egipto. Del corazón de esa salvación nace el Nombre oculto de Dios."}
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                const params = new URLSearchParams({ ref: "Exodus 14:19" });
+                window.location.assign(`/estudio?${params.toString()}`);
+              }}
+              className="mt-3 font-cinzel text-[11px] uppercase tracking-widest text-gold/60 transition-colors hover:text-gold"
+            >
+              {fa ? "خروج ۱۴:۱۹ · مطالعه ↗" : "Éxodo 14:19 · estudiar ↗"}
+            </button>
+          </div>
         </Section>
 
         {/* ── EL PATRÓN CÓSMICO ── */}

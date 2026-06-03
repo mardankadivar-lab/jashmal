@@ -3,6 +3,7 @@
 import { useLocale } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { MISTERIOS_ORDENADOS } from "@/lib/misterios";
+import MisterioTutor from "@/components/MisterioTutor";
 
 export default function MisteriosPage() {
   const locale = useLocale();
@@ -92,6 +93,9 @@ export default function MisteriosPage() {
       <p className="mt-12 text-center font-cinzel text-xs uppercase tracking-widest text-muted/40">
         {fa ? "اسرارِ بیشتر در راه‌اند" : "Más misterios en camino"}
       </p>
+
+      {/* Tutor flotante */}
+      <MisterioTutor />
     </main>
   );
 }
