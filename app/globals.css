@@ -8,7 +8,7 @@
   --c-bg: 244 240 230;        /* pergamino claro */
   --c-surface: 236 231 218;   /* tarjetas/superficies */
   --c-text: 43 38 32;         /* tinta oscura */
-  --c-muted: 107 100 86;      /* texto secundario */
+  --c-muted: 84 77 64;        /* texto secundario (más contraste para leer) */
   --c-gold: 138 109 31;       /* dorado profundo (legible sobre claro) */
   --c-gold-soft: 122 95 24;
   --c-prose: 38 33 28;        /* cuerpo de estudio */
@@ -21,7 +21,7 @@
   --c-bg: 5 5 10;             /* casi negro */
   --c-surface: 18 18 26;
   --c-text: 232 228 216;      /* pergamino claro */
-  --c-muted: 154 149 138;
+  --c-muted: 178 172 159;     /* texto secundario (más contraste para leer) */
   --c-gold: 201 164 62;
   --c-gold-soft: 224 200 115;
   --c-prose: 221 216 204;
@@ -31,11 +31,15 @@
 
 html {
   scroll-behavior: smooth;
+  /* EB Garamond tiene altura-x pequeña y se lee chico: subimos el tamaño raíz
+     ~12.5% para que TODO el texto escale proporcionalmente y se lea cómodo. */
+  font-size: 112.5%; /* 16px → 18px */
 }
 
 body {
   background-color: rgb(var(--c-bg));
   color: rgb(var(--c-text));
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   transition: background-color 0.3s ease, color 0.3s ease;
