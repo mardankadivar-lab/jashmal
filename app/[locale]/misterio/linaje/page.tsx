@@ -126,13 +126,9 @@ export default function LinajePage() {
   const fa = locale === "fa";
 
   const [dark, setDark] = useState(true);
-  useEffect(() => { setDark(document.documentElement.classList.contains("dark")); }, []);
-  function toggleTheme() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    try { localStorage.setItem("jashmal-theme", next ? "dark" : "light"); } catch { /* noop */ }
-  }
+  // Las páginas de misterio van SIEMPRE en oscuro: las letras hebreas doradas y
+  // el texto pergamino solo se leen bien sobre fondo #05050a.
+  useEffect(() => { document.documentElement.classList.add("dark"); setDark(true); }, []);
   const bg = dark ? "#05050a" : "#f1ebdd";
   const navBg = dark ? "rgba(5,5,10,0.9)" : "rgba(241,235,221,0.9)";
 
@@ -144,10 +140,6 @@ export default function LinajePage() {
         <div className="mx-auto flex max-w-2xl items-center justify-between">
           <Link href="/" className="font-cinzel text-sm text-gold/70 hover:text-gold">חַשְׁמַל · Jashmal</Link>
           <div className="flex items-center gap-2">
-            <button onClick={toggleTheme} aria-label={dark ? "Modo claro" : "Modo oscuro"}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-gold/30 text-gold transition-colors hover:bg-gold/10">
-              {dark ? "☀" : "☾"}
-            </button>
             <button onClick={() => router.push("/estudio")}
               className="rounded-full border border-gold/30 px-4 py-1.5 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/10">
               {fa ? "شروع مطالعه" : "Comenzar estudio →"}

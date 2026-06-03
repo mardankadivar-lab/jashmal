@@ -14,11 +14,77 @@ export default function StudyTour() {
     try {
       const { driver } = await import("driver.js");
 
+      // Definimos todos los pasos. Los que apuntan a un elemento solo se incluyen
+      // si ese elemento existe en la página en este momento — así el tour NUNCA se
+      // corta ni queda en blanco por un objetivo que aún no se ha renderizado.
+      const allSteps = [
+        {
+          // Paso de bienvenida: sin elemento, centrado en pantalla.
+          popover: { title: t("step1.title"), description: t("step1.desc") },
+        },
+        {
+          element: "#tour-search",
+          popover: {
+            title: t("step2.title"),
+            description: t("step2.desc"),
+            side: "bottom" as const,
+            align: "start" as const,
+          },
+        },
+        {
+          element: "#tour-categories",
+          popover: {
+            title: t("step3.title"),
+            description: t("step3.desc"),
+            side: "bottom" as const,
+            align: "start" as const,
+          },
+        },
+        {
+          element: "#tour-analysis",
+          popover: {
+            title: t("step4.title"),
+            description: t("step4.desc"),
+            side: "left" as const,
+            align: "start" as const,
+          },
+        },
+        {
+          element: "#tour-tutor",
+          popover: {
+            title: t("step5.title"),
+            description: t("step5.desc"),
+            side: "left" as const,
+            align: "end" as const,
+          },
+        },
+        {
+          element: "#tour-language",
+          popover: {
+            title: t("step6.title"),
+            description: t("step6.desc"),
+            side: "bottom" as const,
+            align: "end" as const,
+          },
+        },
+        {
+          // Paso de cierre: sin elemento, centrado. Invita a empezar a estudiar.
+          popover: { title: t("step7.title"), description: t("step7.desc") },
+        },
+      ];
+
+      // Filtramos los pasos cuyo elemento aún no está en el DOM, para que el
+      // recorrido sea siempre completo y coherente (sin huecos ni cortes).
+      const steps = allSteps.filter(
+        (s) => !("element" in s) || document.querySelector(s.element as string)
+      );
+
       const driverObj = driver({
         popoverClass: "jashmal-tour",
         showProgress: true,
         animate: true,
         smoothScroll: true,
+        allowClose: true,
         overlayColor: "rgba(5,5,10,0.88)",
         nextBtnText: t("next"),
         prevBtnText: t("prev"),
@@ -27,59 +93,7 @@ export default function StudyTour() {
         onDestroyed: () => {
           localStorage.setItem(TOUR_KEY, "1");
         },
-        steps: [
-          {
-            popover: {
-              title: t("step1.title"),
-              description: t("step1.desc"),
-            },
-          },
-          {
-            element: "#tour-search",
-            popover: {
-              title: t("step2.title"),
-              description: t("step2.desc"),
-              side: "bottom",
-              align: "start",
-            },
-          },
-          {
-            element: "#tour-categories",
-            popover: {
-              title: t("step3.title"),
-              description: t("step3.desc"),
-              side: "bottom",
-              align: "start",
-            },
-          },
-          {
-            element: "#tour-analysis",
-            popover: {
-              title: t("step4.title"),
-              description: t("step4.desc"),
-              side: "left",
-              align: "start",
-            },
-          },
-          {
-            element: "#tour-tutor",
-            popover: {
-              title: t("step5.title"),
-              description: t("step5.desc"),
-              side: "left",
-              align: "end",
-            },
-          },
-          {
-            element: "#tour-language",
-            popover: {
-              title: t("step6.title"),
-              description: t("step6.desc"),
-              side: "bottom",
-              align: "end",
-            },
-          },
-        ],
+        steps,
       });
 
       driverObj.drive();

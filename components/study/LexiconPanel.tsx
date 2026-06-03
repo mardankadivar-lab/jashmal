@@ -13,9 +13,27 @@ interface LexiconPanelProps {
 
 const POPUP_W = 360;
 
+// Los diccionarios de Sefaria llegan con su nombre en inglés. La interfaz solo
+// puede estar en español o farsi, así que traducimos la ETIQUETA a una clave de
+// i18n. Las DEFINICIONES siguen en su idioma académico original (lo avisamos).
+const DICT_KEY: Record<string, string> = {
+  "BDB Augmented Strong": "dictBDBStrong",
+  "Klein Dictionary": "dictKlein",
+  "BDB Dictionary": "dictBDB",
+  "Jastrow Dictionary": "dictJastrow",
+  "BDB Aramaic Dictionary": "dictBDBAramaic",
+};
+
 export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
   const locale = useLocale();
   const t = useTranslations("lexicon");
+
+  // Devuelve el nombre del diccionario traducido; si no lo conocemos, deja el
+  // original (es un nombre propio académico, no texto de interfaz traducible).
+  const dictLabel = (name: string) => {
+    const key = DICT_KEY[name];
+    return key ? t(key) : name;
+  };
 
   const [data, setData] = useState<LexiconResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -198,7 +216,7 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
                   {data.classic.entries.map((e, i) => (
                     <li key={i} className="border-s-2 border-gold/20 ps-2.5">
                       <p className="text-[10px] uppercase tracking-wide text-gold/60">
-                        {e.lexicon}
+                        {dictLabel(e.lexicon)}
                         {e.strongNumber ? ` · Strong ${e.strongNumber}` : ""}
                       </p>
                       <p className="mt-0.5 text-sm leading-relaxed text-parchment/90">
@@ -207,6 +225,10 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
                     </li>
                   ))}
                 </ul>
+                {/* Aviso: las definiciones académicas vienen en su idioma original. */}
+                <p className="mt-2 text-[10px] italic leading-relaxed text-muted/60">
+                  {t("sourceNote")}
+                </p>
               </section>
             )}
 

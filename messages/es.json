@@ -88,7 +88,13 @@
     "analyzeZohar": "Analizar con el Zohar",
     "analyzingZohar": "Buscando el Nombre oculto, anagramas, transformaciones...",
     "disclaimer": "Diccionarios clásicos vía Sefaria (BDB, Strong, Klein, Jastrow). El sentido interior y las conexiones numéricas son una meditación generada; verifícalas en las fuentes.",
-    "wordHint": "Toca cualquier palabra hebrea para abrir su léxico."
+    "wordHint": "Toca cualquier palabra hebrea para abrir su léxico.",
+    "dictBDBStrong": "BDB · Strong",
+    "dictKlein": "Diccionario Klein",
+    "dictBDB": "Diccionario BDB",
+    "dictJastrow": "Diccionario Jastrow (Talmud)",
+    "dictBDBAramaic": "BDB · Arameo",
+    "sourceNote": "Definiciones de los diccionarios académicos (en su idioma original)."
   },
   "beitMidrash": {
     "title": "בֵּית מִדְרָשׁ — Casa de estudio",
@@ -219,6 +225,10 @@
     "step6": {
       "title": "Cambia el idioma",
       "desc": "Todo el análisis se genera en el idioma elegido. En farsi, la interfaz cambia a escritura de derecha a izquierda."
+    },
+    "step7": {
+      "title": "Comienza tu estudio",
+      "desc": "Eso es todo. Escribe una referencia o elige una categoría y presiona <em>Estudiar</em>. Si alguna vez quieres volver a ver este recorrido, toca el botón <strong>?</strong> en la esquina inferior."
     }
   }
 }

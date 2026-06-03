@@ -58,6 +58,22 @@ export default function CreacionPage() {
         <div style={{ height: `${TOTAL * 100}vh` }} />
       </div>
 
+      {/* ── Velo legibilidad ─────────────────────────────────────────
+          Un degradado radial oscuro entre el 3D y el texto: las esferas,
+          chispas y destellos del fondo nunca tapan la letra hebrea ni la
+          cita. No bloquea el scroll (pointer-events-none). En Ein Sof el
+          fondo es luz blanca y el texto es oscuro, así que ahí usamos un
+          velo CLARO en vez de oscuro. */}
+      <div
+        className="pointer-events-none absolute inset-0 z-[15] transition-[background] duration-1000"
+        style={{
+          background:
+            stage.id === "ein-sof"
+              ? "radial-gradient(ellipse 62% 58% at 50% 50%, rgba(255,254,248,0.55) 0%, rgba(255,254,248,0.28) 45%, transparent 72%)"
+              : "radial-gradient(ellipse 60% 55% at 50% 50%, rgba(5,5,10,0.62) 0%, rgba(5,5,10,0.32) 45%, transparent 72%)",
+        }}
+      />
+
       {/* ── Overlay de texto — sticky, centrado ──────────────────── */}
       <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center px-6">
 
@@ -163,11 +179,21 @@ export default function CreacionPage() {
 
       {/* ── Controles superiores ──────────────────────────────────── */}
       <div className="pointer-events-auto absolute start-4 top-4 z-40 flex items-center gap-3">
+        {/* Volver a la página principal (inicio), igual que en /misterios */}
+        <button
+          onClick={() => router.push("/")}
+          className="flex items-center gap-1.5 rounded-full border border-gold/20 bg-black/40 px-3 py-1.5 font-cinzel text-xs text-gold/70 backdrop-blur-md transition-colors hover:text-gold"
+        >
+          <span>{locale === "fa" ? "→" : "←"}</span>
+          <span className="hebrew">חַשְׁמַל</span>
+          <span>· Jashmal</span>
+        </button>
+        {/* Acceso directo al motor de estudio */}
         <button
           onClick={() => router.push("/estudio")}
           className="rounded-full border border-gold/20 bg-black/40 px-3 py-1.5 font-cinzel text-xs text-gold/60 backdrop-blur-md transition-colors hover:text-gold"
         >
-          ← {locale === "fa" ? "بازگشت" : "Volver"}
+          {locale === "fa" ? "مطالعه" : "Estudio"}
         </button>
 
         {/* Botón al Árbol de la Vida (visible desde Atzilut en adelante) */}

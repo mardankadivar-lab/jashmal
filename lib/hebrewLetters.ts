@@ -218,3 +218,54 @@ export const LETTER_TO_PATH: Record<string, { from: string; to: string }> = {
   "ש": { from: "hod", to: "malchut" },
   "ת": { from: "yesod", to: "malchut" },
 };
+
+// Resolución de slug (transliteración) → letra hebrea.
+// El motor de IA genera enlaces {{letter:bet|...}} con transliteraciones libres
+// y a veces variantes (jet/chet, tzadi/tzadik, kof/quf). Este mapa cubre los
+// alias comunes para que la página de la letra muestre SIEMPRE el glifo hebreo,
+// nunca el texto latino del slug.
+const SLUG_ALIASES: Record<string, string> = {
+  alef: "א", aleph: "א", alaf: "א",
+  bet: "ב", vet: "ב", beth: "ב", bait: "ב", bayit: "ב",
+  gimel: "ג", guimel: "ג", gimmel: "ג", guimmel: "ג",
+  dalet: "ד", daleth: "ד", daled: "ד",
+  he: "ה", hei: "ה", hey: "ה",
+  vav: "ו", waw: "ו", vau: "ו",
+  zayin: "ז", zain: "ז",
+  jet: "ח", chet: "ח", het: "ח", cheth: "ח", jhet: "ח",
+  tet: "ט", teth: "ט",
+  yod: "י", yud: "י", iod: "י",
+  kaf: "כ", khaf: "כ", caf: "כ", jaf: "כ",
+  lamed: "ל", lammed: "ל",
+  mem: "מ",
+  nun: "נ",
+  samej: "ס", samekh: "ס", samech: "ס", samaj: "ס",
+  ayin: "ע", ain: "ע",
+  pe: "פ", peh: "פ", fe: "פ", pei: "פ",
+  tzadi: "צ", tzadik: "צ", tsadi: "צ", tzaddi: "צ", tzade: "צ",
+  kof: "ק", quf: "ק", qof: "ק", kuf: "ק", cof: "ק",
+  resh: "ר", reish: "ר", rosh: "ר",
+  shin: "ש", sin: "ש", shen: "ש",
+  tav: "ת", taw: "ת", sav: "ת", tau: "ת",
+};
+
+/**
+ * Convierte lo que llega como "letra" (puede ser ya el glifo hebreo, o un slug
+ * en transliteración como "alef"/"bet"/"jet") en la letra hebrea correcta.
+ * Si no la reconoce, devuelve la entrada original (mejor mostrar algo que romper).
+ */
+export function resolveHebrewLetter(input: string): string {
+  if (!input) return input;
+  const raw = input.trim();
+  // ¿Ya es un glifo hebreo conocido? (con o sin niqud)
+  const bare = raw.replace(/[֑-ׇ]/g, ""); // quita niqud/cantilación
+  if (LETTER_MEANINGS[bare]) return bare;
+  if (LETTER_MEANINGS[raw]) return raw;
+  // Normaliza el slug: minúsculas, sin acentos, solo letras a-z.
+  const slug = raw
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z]/g, "");
+  return SLUG_ALIASES[slug] ?? raw;
+}

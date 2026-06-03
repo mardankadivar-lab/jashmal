@@ -88,7 +88,13 @@
     "connections": "Connections",
     "findConnections": "Find connections",
     "searchingConnections": "Searching connections...",
-    "zoharMethods": "Zohar methods"
+    "zoharMethods": "Zohar methods",
+    "dictBDBStrong": "BDB · Strong",
+    "dictKlein": "Klein Dictionary",
+    "dictBDB": "BDB Dictionary",
+    "dictJastrow": "Jastrow Dictionary (Talmud)",
+    "dictBDBAramaic": "BDB · Aramaic",
+    "sourceNote": "Definitions from the academic dictionaries (in their original language)."
   },
   "beitMidrash": {
     "title": "בֵּית מִדְרָשׁ — House of study",
@@ -219,6 +225,10 @@
     "step6": {
       "title": "Change the language",
       "desc": "The entire analysis is generated in the chosen language. In Farsi, the interface switches to right-to-left writing."
+    },
+    "step7": {
+      "title": "Begin your study",
+      "desc": "That's it. Type a reference or pick a category and press <em>Study</em>. Whenever you want to see this tour again, tap the <strong>?</strong> button in the corner."
     }
   }
 }

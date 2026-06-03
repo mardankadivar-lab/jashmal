@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter, Link } from "@/i18n/navigation";
 import { GEMATRIAS } from "@/lib/gematrias";
 import MisterioTutor from "@/components/MisterioTutor";
 
@@ -24,8 +24,16 @@ export default function GematriasPage() {
 
   return (
     <main className="mx-auto max-w-4xl px-5 pb-24 pt-12" dir={fa ? "rtl" : "ltr"}>
-      {/* Botón claro/oscuro */}
-      <div className="mb-2 flex justify-end">
+      {/* Barra superior: volver al inicio + botón claro/oscuro */}
+      <div className="mb-2 flex items-center justify-between">
+        <Link
+          href="/"
+          className="flex items-center gap-1.5 font-cinzel text-sm text-gold/70 transition-colors hover:text-gold"
+        >
+          <span>{fa ? "→" : "←"}</span>
+          <span className="hebrew">חַשְׁמַל</span>
+          <span>· Jashmal</span>
+        </Link>
         <button
           onClick={toggleTheme}
           aria-label={dark ? "Modo claro" : "Modo oscuro"}

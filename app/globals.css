@@ -45,11 +45,15 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Texto hebreo: Frank Ruhl Libre, la serif hebrea clásica de los libros sagrados. */
+/* Texto hebreo: Frank Ruhl Libre, la serif hebrea clásica de los libros sagrados.
+   La tipografía hebrea tiene una altura-x menor que la latina y se ve pequeña al
+   mismo tamaño de fuente; la subimos ~18% para que la letra se lea con dignidad. */
 .hebrew {
   font-family: var(--font-hebrew), "Frank Ruhl Libre", "David Libre", serif;
   direction: rtl;
   unicode-bidi: isolate;
+  font-size: 1.18em;
+  line-height: 1.5;
 }
 
 /* Enlaces dorados del tejido de estudios. */
@@ -143,6 +147,9 @@ body {
    aísla la dirección sin voltear el párrafo. Solo aplica la fuente hebrea. */
 .hebrew-inline {
   font-family: var(--font-hebrew), "Frank Ruhl Libre", "David Libre", serif;
+  /* La palabra hebrea dentro del párrafo latino se agranda para que se lea bien. */
+  font-size: 1.2em;
+  line-height: 1;
 }
 
 /* Referencias cruzadas detectadas automáticamente en el análisis. */

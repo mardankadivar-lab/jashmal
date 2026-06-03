@@ -159,14 +159,10 @@ export default function MisterioPage() {
   // Tema claro/oscuro propio de la landing (sincronizado con el global).
   const [dark, setDark] = useState(true);
   useEffect(() => {
-    setDark(document.documentElement.classList.contains("dark"));
+    // Forzamos SIEMPRE oscuro: las letras hebreas doradas solo se leen sobre #05050a.
+    document.documentElement.classList.add("dark");
+    setDark(true);
   }, []);
-  function toggleTheme() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    try { localStorage.setItem("jashmal-theme", next ? "dark" : "light"); } catch { /* noop */ }
-  }
 
   const bg = dark ? "#05050a" : "#f1ebdd";
   const navBg = dark ? "rgba(5,5,10,0.9)" : "rgba(241,235,221,0.9)";
@@ -185,15 +181,6 @@ export default function MisterioPage() {
             חַשְׁמַל · Jashmal
           </Link>
           <div className="flex items-center gap-2">
-            {/* Toggle claro/oscuro */}
-            <button
-              onClick={toggleTheme}
-              aria-label={dark ? "Modo claro" : "Modo oscuro"}
-              title={dark ? "Modo claro" : "Modo oscuro"}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-gold/30 text-gold transition-colors hover:bg-gold/10"
-            >
-              {dark ? "☀" : "☾"}
-            </button>
             <button
               onClick={() => router.push("/estudio")}
               className="rounded-full border border-gold/30 px-4 py-1.5 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/10"
