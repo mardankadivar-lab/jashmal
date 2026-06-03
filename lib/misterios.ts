@@ -63,6 +63,17 @@ export const MISTERIOS: Misterio[] = [
     color: "#b89a4e",
     orden: 4,
   },
+  {
+    slug: "bilaam",
+    he: "בִּלְעָם",
+    titulo: "Bilaam — la boca de la serpiente",
+    tituloFa: "بیلعام — دهانِ مار",
+    gancho: "El hechicero con el espíritu de Samael vino a maldecir a Israel — y de su boca salió la profecía mesiánica más profunda de la Biblia. Del lugar más oscuro, la luz más brillante.",
+    ganchoFa: "جادوگری با روحِ سَمائل آمد تا نفرین کند — و از دهانش ژرف‌ترین پیشگوییِ مسیحایی برآمد.",
+    serie: "dos-filos",
+    color: "#9a6a8e",
+    orden: 5,
+  },
 ];
 
 export function getMisterio(slug: string): Misterio | undefined {

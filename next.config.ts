@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
       { source: "/26",  destination: "/es/misterio/26"  },
       { source: "/linaje", destination: "/es/misterio/linaje" },
       { source: "/habakuk", destination: "/es/misterio/habakuk" },
+      { source: "/bilaam", destination: "/es/misterio/bilaam" },
     ];
   },
 };
