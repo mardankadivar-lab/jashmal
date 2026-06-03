@@ -51,6 +51,18 @@ export const MISTERIOS: Misterio[] = [
     color: "#e0a850",
     orden: 3,
   },
+  {
+    slug: "habakuk",
+    numero: "216",
+    he: "חֲבַקּוּק",
+    titulo: "Habakuk y el doble abrazo",
+    tituloFa: "حَبَقّوق و دو آغوش",
+    gancho: "Shigyonot: ¿errores o instrumentos? Habakuk: ¿un abrazo o dos? Una palabra con dos filos, y una gematría que abraza la partición del mar.",
+    ganchoFa: "شیگیونوت: خطاها یا سازها؟ حَبَقّوق: یک آغوش یا دو؟ یک واژه با دو لبه.",
+    serie: "358",
+    color: "#b89a4e",
+    orden: 4,
+  },
 ];
 
 export function getMisterio(slug: string): Misterio | undefined {
