@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { GEMATRIAS } from "@/lib/gematrias";
@@ -12,8 +12,30 @@ export default function GematriasPage() {
   const fa = locale === "fa";
   const [abierto, setAbierto] = useState<number | null>(null);
 
+  // Tema claro/oscuro (sincronizado con el global).
+  const [dark, setDark] = useState(true);
+  useEffect(() => { setDark(document.documentElement.classList.contains("dark")); }, []);
+  function toggleTheme() {
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle("dark", next);
+    try { localStorage.setItem("jashmal-theme", next ? "dark" : "light"); } catch { /* noop */ }
+  }
+
   return (
     <main className="mx-auto max-w-4xl px-5 pb-24 pt-12" dir={fa ? "rtl" : "ltr"}>
+      {/* Botón claro/oscuro */}
+      <div className="mb-2 flex justify-end">
+        <button
+          onClick={toggleTheme}
+          aria-label={dark ? "Modo claro" : "Modo oscuro"}
+          title={dark ? "Modo claro" : "Modo oscuro"}
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-gold/30 text-gold transition-colors hover:bg-gold/10"
+        >
+          {dark ? "☀" : "☾"}
+        </button>
+      </div>
+
       {/* Encabezado */}
       <div className="mb-12 text-center">
         <p className="hebrew mb-2 text-3xl text-gold/80" style={{ filter: "drop-shadow(0 0 10px rgba(201,164,62,0.4))" }}>
@@ -39,9 +61,13 @@ export default function GematriasPage() {
               onClick={() => setAbierto(open ? null : g.num)}
               className={
                 "group relative flex flex-col items-center overflow-hidden rounded-2xl border p-5 text-center transition-all " +
-                (open ? "border-gold/60 bg-gold/[0.06]" : "border-gold/20 bg-white/[0.02] hover:border-gold/45 hover:bg-gold/[0.04]")
+                (open ? "border-gold/60" : "border-gold/25 hover:border-gold/50")
               }
-              style={open ? { gridColumn: "1 / -1" } : undefined}
+              style={{
+                // Fondo oscuro propio: la letra crema se lee en modo claro y oscuro.
+                background: open ? "rgba(18,15,28,0.97)" : "rgba(14,12,22,0.94)",
+                ...(open ? { gridColumn: "1 / -1" } : {}),
+              }}
             >
               {/* Glow */}
               <div className="pointer-events-none absolute -top-8 left-1/2 h-32 w-32 -translate-x-1/2 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
@@ -70,15 +96,15 @@ export default function GematriasPage() {
                 {fa ? g.tituloFa : g.titulo}
               </span>
 
-              {/* Detalle expandido */}
+              {/* Detalle expandido — texto claro fijo (el azulejo siempre es oscuro) */}
               {open && (
                 <div className="mt-4 w-full max-w-md" style={{ animation: "fadeIn 0.4s ease" }}>
-                  <p className="text-sm leading-relaxed text-parchment/85" dir={fa ? "rtl" : "ltr"}>
+                  <p className="text-sm leading-relaxed" style={{ color: "rgba(232,228,216,0.9)" }} dir={fa ? "rtl" : "ltr"}>
                     {fa ? g.sigFa : g.sig}
                   </p>
                   <ul className="mt-3 space-y-1.5 text-start">
                     {(fa ? g.asociacionesFa : g.asociaciones).map((a, i) => (
-                      <li key={i} className="flex items-start gap-2 text-xs leading-relaxed text-muted/90" dir={fa ? "rtl" : "ltr"}>
+                      <li key={i} className="flex items-start gap-2 text-xs leading-relaxed" style={{ color: "rgba(200,196,184,0.85)" }} dir={fa ? "rtl" : "ltr"}>
                         <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full" style={{ background: g.color }} />
                         <span>{a}</span>
                       </li>
