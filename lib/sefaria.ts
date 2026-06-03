@@ -76,7 +76,14 @@ export interface SefariaNameResult {
   completions: string[];
 }
 
-/** Autocompletado de la lupa: sugerencias de referencias/títulos. */
+// Sugerencia de autocompletado, con su naturaleza (texto vs tema/persona/lugar).
+export interface NameSuggestion {
+  title: string;     // lo que se muestra
+  key: string;       // ref (si es texto) o slug del tema
+  kind: "ref" | "topic"; // ref → carga el texto; topic → estudio de concepto
+}
+
+/** Autocompletado de la lupa: refs, libros, temas, personas y lugares. */
 export async function getName(q: string): Promise<SefariaNameResult> {
   const res = await fetch(`${BASE}/name/${encodeURIComponent(q)}`);
   if (!res.ok) throw new Error(`Sefaria name error: ${res.status}`);
@@ -85,6 +92,31 @@ export async function getName(q: string): Promise<SefariaNameResult> {
     is_ref: Boolean(data.is_ref),
     completions: Array.isArray(data.completions) ? data.completions.slice(0, 8) : [],
   };
+}
+
+/** Sugerencias enriquecidas: distingue textos (ref) de temas/personas/lugares. */
+export async function searchSuggestions(q: string): Promise<NameSuggestion[]> {
+  if (!q.trim()) return [];
+  const res = await fetch(`${BASE}/name/${encodeURIComponent(q)}`);
+  if (!res.ok) return [];
+  const data = await res.json();
+  const objs: Array<{ title?: string; key?: string; type?: string }> =
+    Array.isArray(data.completion_objects) ? data.completion_objects : [];
+  const out: NameSuggestion[] = [];
+  const seen = new Set<string>();
+  for (const o of objs) {
+    const title = o.title ?? "";
+    if (!title || seen.has(title)) continue;
+    seen.add(title);
+    const isRef = o.type === "ref";
+    out.push({
+      title,
+      key: o.key ?? title,
+      kind: isRef ? "ref" : "topic",
+    });
+    if (out.length >= 8) break;
+  }
+  return out;
 }
 
 /** Construye la ref de un capítulo o daf de Talmud. */

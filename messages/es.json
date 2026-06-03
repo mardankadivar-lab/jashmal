@@ -24,7 +24,7 @@
   "study": {
     "title": "Motor de estudio",
     "subtitle": "Navega una fuente o búscala directamente. El análisis aparecerá en tu idioma; los textos fuente, en hebreo.",
-    "searchPlaceholder": "Buscar una referencia (ej. Bereshit 1:1, Shabat 2a)...",
+    "searchPlaceholder": "Busca un texto, nombre, lugar o tema (ej. Abraham, Jerusalén, Bereshit 1:1)...",
     "searchButton": "Buscar",
     "chooseCategory": "Elige una categoría",
     "chooseBook": "Elige un libro",
@@ -55,7 +55,9 @@
     "parashaButton": "Parashá de la semana",
     "parashaDays": "Por día",
     "nextChapter": "Siguiente capítulo",
-    "kabbalahMode": "Modo cabalístico"
+    "kabbalahMode": "Modo cabalístico",
+    "sugText": "Texto",
+    "sugTopic": "Tema"
   },
   "categories": {
     "Torah": "Torá",

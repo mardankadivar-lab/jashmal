@@ -24,7 +24,7 @@
   "study": {
     "title": "موتور مطالعه",
     "subtitle": "یک منبع را مرور کن یا مستقیم جست‌وجو کن. تحلیل به زبان تو ظاهر می‌شود؛ متون اصلی به عبری.",
-    "searchPlaceholder": "جست‌وجوی یک ارجاع (مثال: Bereshit 1:1، Shabbat 2a)...",
+    "searchPlaceholder": "جست‌وجوی متن، نام، مکان یا موضوع (مثال: ابراهیم، اورشلیم، Bereshit 1:1)...",
     "searchButton": "جست‌وجو",
     "chooseCategory": "یک دسته را برگزین",
     "chooseBook": "یک کتاب را برگزین",
@@ -55,7 +55,9 @@
     "parashaButton": "پاراشای هفته",
     "parashaDays": "به‌تفکیک روز",
     "nextChapter": "باب بعدی",
-    "kabbalahMode": "حالت کابالیستی"
+    "kabbalahMode": "حالت کابالیستی",
+    "sugText": "متن",
+    "sugTopic": "موضوع"
   },
   "categories": {
     "Torah": "تورات",

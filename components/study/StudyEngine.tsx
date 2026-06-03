@@ -15,7 +15,7 @@ import WordMenu, { type WordMenuAnchor } from "./WordMenu";
 import RefPanel from "./RefPanel";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, type CatBook, type CategoryId } from "@/lib/categories";
-import { getText, type SefariaTextResult } from "@/lib/sefaria";
+import { getText, searchSuggestions, type SefariaTextResult, type NameSuggestion } from "@/lib/sefaria";
 import { requestStudy, StudyError } from "@/lib/studyClient";
 import { getParashaHashavua, type ParashaInfo } from "@/lib/calendar";
 
@@ -31,6 +31,9 @@ export default function StudyEngine() {
   const [sourceError, setSourceError] = useState(false);
 
   const [search, setSearch] = useState("");
+  // Autocompletado: sugerencias de Sefaria (refs, libros, temas, personas, lugares).
+  const [suggestions, setSuggestions] = useState<NameSuggestion[]>([]);
+  const [showSug, setShowSug] = useState(false);
 
   const [study, setStudy] = useState<string | null>(null);
   const [studyLoading, setStudyLoading] = useState(false);
@@ -187,7 +190,41 @@ export default function StudyEngine() {
   function onSearch(e: React.FormEvent) {
     e.preventDefault();
     const q = search.trim();
-    if (q) loadRef(q, true);
+    if (!q) return;
+    // Si hay sugerencias, usar la primera; si no, intentar como ref directa.
+    if (suggestions.length > 0) {
+      pickSuggestion(suggestions[0]);
+    } else {
+      loadRef(q, true);
+    }
+    setShowSug(false);
+  }
+
+  // Buscar sugerencias mientras el usuario escribe (con debounce).
+  useEffect(() => {
+    const q = search.trim();
+    if (q.length < 2) { setSuggestions([]); return; }
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      try {
+        const sug = await searchSuggestions(q);
+        if (!cancelled) { setSuggestions(sug); setShowSug(true); }
+      } catch { /* noop */ }
+    }, 220);
+    return () => { cancelled = true; clearTimeout(timer); };
+  }, [search]);
+
+  // Al elegir una sugerencia: texto → carga la ref; tema/persona/lugar → estudio de concepto.
+  function pickSuggestion(s: NameSuggestion) {
+    setSearch("");
+    setSuggestions([]);
+    setShowSug(false);
+    if (s.kind === "ref") {
+      loadRef(s.title, true);
+    } else {
+      // Tema / persona / lugar: abrir un estudio de concepto en el panel lateral.
+      openConcept(s.title);
+    }
   }
 
   async function runStudy(index: number, depth: "quick" | "deep" = "quick") {
@@ -276,13 +313,37 @@ export default function StudyEngine() {
           </button>
         )}
 
-        <form id="tour-search" onSubmit={onSearch} className="flex gap-2">
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder={t("searchPlaceholder")}
-            className="flex-1 rounded-md border border-gold/25 bg-white/[0.03] px-3 py-2 text-sm text-parchment placeholder:text-muted/70 focus:border-gold/60 focus:outline-none"
-          />
+        <form id="tour-search" onSubmit={onSearch} className="relative flex gap-2">
+          <div className="relative flex-1">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onFocus={() => suggestions.length > 0 && setShowSug(true)}
+              onBlur={() => setTimeout(() => setShowSug(false), 150)}
+              placeholder={t("searchPlaceholder")}
+              autoComplete="off"
+              className="w-full rounded-md border border-gold/25 bg-white/[0.03] px-3 py-2 text-sm text-parchment placeholder:text-muted/70 focus:border-gold/60 focus:outline-none"
+            />
+            {/* Dropdown de sugerencias */}
+            {showSug && suggestions.length > 0 && (
+              <ul className="absolute left-0 right-0 top-full z-30 mt-1 overflow-hidden rounded-md border border-gold/25 bg-ink/98 shadow-xl backdrop-blur-md">
+                {suggestions.map((s, i) => (
+                  <li key={i}>
+                    <button
+                      type="button"
+                      onMouseDown={(e) => { e.preventDefault(); pickSuggestion(s); }}
+                      className="flex w-full items-center justify-between gap-2 px-3 py-2 text-start text-sm text-parchment/90 transition-colors hover:bg-gold/10"
+                    >
+                      <span className="truncate">{s.title}</span>
+                      <span className="shrink-0 font-cinzel text-[9px] uppercase tracking-wider text-gold/45">
+                        {s.kind === "ref" ? t("sugText") : t("sugTopic")}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
           <button
             type="submit"
             className="rounded-md border border-gold/50 px-4 py-2 text-sm text-gold transition-all hover:bg-gold/10"

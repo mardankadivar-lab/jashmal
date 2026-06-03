@@ -24,7 +24,7 @@
   "study": {
     "title": "Study engine",
     "subtitle": "Browse a source or search it directly. The analysis appears in your language; the source texts, in Hebrew.",
-    "searchPlaceholder": "Search a reference (e.g. Genesis 1:1, Shabbat 2a)...",
+    "searchPlaceholder": "Search a text, name, place or topic (e.g. Abraham, Jerusalem, Bereshit 1:1)...",
     "searchButton": "Search",
     "chooseCategory": "Choose a category",
     "chooseBook": "Choose a book",
@@ -55,7 +55,9 @@
     "parashaButton": "Weekly portion",
     "parashaDays": "By day",
     "nextChapter": "Next chapter",
-    "kabbalahMode": "Kabbalistic mode"
+    "kabbalahMode": "Kabbalistic mode",
+    "sugText": "Text",
+    "sugTopic": "Topic"
   },
   "categories": {
     "Torah": "Torah",
