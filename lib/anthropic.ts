@@ -49,11 +49,12 @@ Estructura EXACTA en este orden, con títulos en hebreo:
    Un mensaje profundo y sencillo: qué nos enseña este versículo sobre ${sefiraHe}
    como atributo divino que podemos cultivar interiormente.
 
+${DOS_FILOS_RULE}
 ${GLOSAS_RULE}
 ${HYPERLINK_RULES}
 ${HILOS_RULE}
 
-Sé riguroso. No inventes fuentes. Profundidad sobre brevedad.`;
+Sé riguroso. No inventes fuentes. Termina SIEMPRE con "Sigue el hilo" completo.`;
 }
 
 export type StudyMode = "text" | "letter" | "concept";
@@ -91,6 +92,24 @@ quizá tampoco conoce los términos del estudio judío. Por eso:
   palabra hebrea suelta sin decir cómo se lee y qué significa.
 - Escribe con calidez, como un maestro que toma de la mano a un principiante
   sin perder ni un gramo de profundidad.`;
+
+// "Dos filos": contrastar lecturas divergentes (pshat vs Sod, negativo vs elevado).
+const DOS_FILOS_RULE = `
+DOS FILOS — la palabra de Dios tiene dos filos. Una misma figura, palabra o
+acto puede leerse de formas OPUESTAS según el ángulo: lo que en el sentido
+simple (pshat) parece bajo o negativo, la Cabalá y el Zohar a menudo lo ELEVAN
+a lo más alto (y a veces al revés). Cuando un personaje, nombre o palabra del
+pasaje cargue esta tensión, NO te quedes con una sola lectura: muestra AMBAS y
+contrástalas explícitamente.
+Ejemplo arquetípico (Rut 4): el pariente redentor anónimo, "Ploni Almoni"
+(פְּלוֹנִי אַלְמוֹנִי, "fulano de tal"), que muchos comentaristas ven con
+sentido negativo —sin nombre porque rehusó redimir—; pero el Zohar lo eleva
+muchísimo, asociándolo a un redentor cercano sin nombre, a la Shejiná misma;
+y hay quien (en nombre de Rav Ginsburgh) enseña que era el propio Mashíaj, que
+no tomó a Rut porque aún no era el tiempo de su venida.
+Esto enlaza con el corazón de Jashmal: lo mismo puede ser מָשִׁיחַ o נָחָשׁ
+(Mashíaj o la serpiente, ambos 358) según de qué lado se mire. Busca activamente
+estas tensiones reveladoras; son donde el texto respira.`;
 
 // Cierre que mantiene al estudiante indagando — los "hilos para tirar".
 const HILOS_RULE = `
@@ -195,10 +214,14 @@ traducción al ${lang}. Nunca respondas en inglés.${rtl}
 
 ${structure}
 ${ragBlock}
+${DOS_FILOS_RULE}
 ${GLOSAS_RULE}
 ${HYPERLINK_RULES}
 ${HILOS_RULE}
 
 Eres riguroso y honesto: no inventes fuentes ni citas. Si no estás seguro de
-una referencia, dilo. Profundidad sobre brevedad.`;
+una referencia, dilo. Profundidad sobre brevedad — pero ADMINISTRA tu espacio:
+es OBLIGATORIO que termines SIEMPRE con la sección "Sigue el hilo" completa.
+Si el texto es muy rico, sé algo más conciso en los comentaristas, pero NUNCA
+dejes el estudio a medias ni omitas el cierre.`;
 }

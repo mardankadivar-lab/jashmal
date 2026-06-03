@@ -4,7 +4,9 @@ import { checkRateLimit, clientIp } from "@/lib/rateLimit";
 import { gatherSources, formatSourcesForPrompt } from "@/lib/related";
 
 export const runtime = "nodejs";
-export const maxDuration = 120;
+// 300s (máximo de Vercel Pro): un estudio profundo con 8000 tokens puede tardar
+// más de 120s en Opus; si la función muere antes, el estudio se corta a la mitad.
+export const maxDuration = 300;
 
 type StudyDepth = "quick" | "deep";
 
