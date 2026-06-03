@@ -22,6 +22,9 @@ export default function SiteHeader() {
           <Link href="/misterios" className="text-muted transition-colors hover:text-parchment">
             {t("nav.mysteries")}
           </Link>
+          <Link href="/gematrias" className="text-muted transition-colors hover:text-parchment">
+            {t("nav.gematria")}
+          </Link>
           <Link href="/creacion" className="text-muted transition-colors hover:text-parchment">
             {t("nav.creation")}
           </Link>
