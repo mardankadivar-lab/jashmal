@@ -9,6 +9,15 @@ export type Token =
 
 const PATTERN = /\{\{(letter|study):([^|}]+)\|([^}]+)\}\}/g;
 
+// Fragmento de enlace MALFORMADO o incompleto (sin cerrar, sin label, truncado
+// por streaming o por el límite de tokens). Lo ocultamos para que nunca se vea
+// el código crudo "{{study:..." en pantalla.
+const STRAY = /\{\{(?:letter|study):[^}]*\}?\}?/g;
+
+function cleanText(text: string): string {
+  return text.replace(STRAY, "").replace(/\{\{[^}]*$/g, "");
+}
+
 export function parseHyperlinks(input: string): Token[] {
   const tokens: Token[] = [];
   let lastIndex = 0;
@@ -17,7 +26,8 @@ export function parseHyperlinks(input: string): Token[] {
   PATTERN.lastIndex = 0;
   while ((match = PATTERN.exec(input)) !== null) {
     if (match.index > lastIndex) {
-      tokens.push({ type: "text", value: input.slice(lastIndex, match.index) });
+      const txt = cleanText(input.slice(lastIndex, match.index));
+      if (txt) tokens.push({ type: "text", value: txt });
     }
     const [, kind, ref, label] = match;
     if (kind === "letter") {
@@ -29,7 +39,8 @@ export function parseHyperlinks(input: string): Token[] {
   }
 
   if (lastIndex < input.length) {
-    tokens.push({ type: "text", value: input.slice(lastIndex) });
+    const txt = cleanText(input.slice(lastIndex));
+    if (txt) tokens.push({ type: "text", value: txt });
   }
 
   return tokens;

@@ -88,7 +88,8 @@ export async function POST(req: Request) {
   }
 
   const withSources = sourcesBlock.length > 0;
-  const maxTokens = withSources ? 6000 : 5000;
+  // Margen amplio para que la sección final "Sigue el hilo" no se trunque.
+  const maxTokens = withSources ? 8000 : 6500;
 
   // Modo cabalístico (viene del Árbol de la Vida) o modo estándar PaRDeS
   const isKabbalah = body.context === "kabbalah" && !!body.sefiraId && mode === "text";
