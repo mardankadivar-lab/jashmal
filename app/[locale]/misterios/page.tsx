@@ -87,6 +87,11 @@ export default function MisteriosPage() {
                   {fa ? "دو لبه" : "שְׁנֵי פִּיּוֹת"}
                 </span>
               )}
+              {m.serie === "gematria" && (
+                <span className="hebrew text-xs text-gold/40">
+                  {fa ? "گیماتریا" : "גִּימַטְרִיָּה"}
+                </span>
+              )}
               <span className="font-cinzel text-xs text-gold/60 transition-colors group-hover:text-gold">
                 {fa ? "خواندن ←" : "leer →"}
               </span>

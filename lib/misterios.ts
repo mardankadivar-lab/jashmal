@@ -74,6 +74,18 @@ export const MISTERIOS: Misterio[] = [
     color: "#9a6a8e",
     orden: 5,
   },
+  {
+    slug: "137",
+    numero: "137",
+    he: "קַבָּלָה",
+    titulo: "137 — El acertijo de la creación",
+    tituloFa: "۱۳۷ — معمای آفرینش",
+    gancho: "Kabalah = 137. Y la constante de estructura fina α ≈ 1/137 que gobierna la luz. El número que une la Cabalá con la física (Rav Ginsburgh).",
+    ganchoFa: "قبالا = ۱۳۷. و ثابتِ ساختارِ ریز α ≈ ۱/۱۳۷ که نور را حکم می‌راند. عددی که کابالا را با فیزیک می‌پیوندد.",
+    serie: "gematria",
+    color: "#9a6a8e",
+    orden: 6,
+  },
 ];
 
 export function getMisterio(slug: string): Misterio | undefined {
