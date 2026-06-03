@@ -25,6 +25,12 @@ export default function MisteriosPage() {
             ? "مطالعه‌هایی که لایه‌های پنهانِ متن را می‌گشایند — گیماتریا، صرافِ حروف، و رازهای زوهر. هر مطالعه دری است به‌سوی موتورِ کاوش."
             : "Estudios que abren las capas ocultas del texto — gematría, permutación de letras y secretos del Zohar. Cada uno es una puerta al motor de estudio."}
         </p>
+        {/* El hilo que los une: la paradoja — שְׁנֵי פִּיּוֹת */}
+        <p className="mx-auto mt-3 max-w-md text-xs italic leading-relaxed text-gold/50">
+          {fa
+            ? "نخی که آن‌ها را پیوند می‌دهد: «دو لبه» (שְׁנֵי פִּיּוֹת) — همان چیز، بسته به زاویه، می‌تواند سقوط باشد یا رستگاری."
+            : "El hilo que los une: «Dos Filos» (שְׁנֵי פִּיּוֹת) — lo mismo, según el ángulo, puede ser la caída o la redención."}
+        </p>
       </div>
 
       {/* Rejilla de misterios */}
@@ -76,9 +82,9 @@ export default function MisteriosPage() {
 
             {/* Pie */}
             <div className="mt-4 flex items-center justify-between">
-              {m.serie && (
-                <span className="font-cinzel text-[10px] uppercase tracking-widest text-gold/40">
-                  {fa ? `سلسلهٔ ${m.serie}` : `Serie ${m.serie}`}
+              {m.serie === "dos-filos" && (
+                <span className="hebrew text-xs text-gold/40">
+                  {fa ? "دو لبه" : "שְׁנֵי פִּיּוֹת"}
                 </span>
               )}
               <span className="font-cinzel text-xs text-gold/60 transition-colors group-hover:text-gold">

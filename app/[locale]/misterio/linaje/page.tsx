@@ -161,7 +161,7 @@ export default function LinajePage() {
         {/* ── HERO ── */}
         <div className="mb-16 text-center">
           <p className="mb-4 font-cinzel text-xs uppercase tracking-[0.4em] text-gold/50">
-            {fa ? "ادامهٔ سلسلهٔ ۳۵۸" : "La serie 358 · continúa"}
+            {fa ? "زوهر · میدراش · تلمود" : "Zohar · Midrash · Talmud"}
           </p>
           <h1 className="hebrew mb-3 font-bold leading-none"
             style={{ fontSize: "clamp(44px, 11vw, 76px)", color: dark ? "#fdf4dd" : "#6e4f12",
@@ -177,24 +177,6 @@ export default function LinajePage() {
               : "El Mashíaj no desciende del lugar más puro — se levanta del más caído. Para recoger las chispas que el acusador no vigila."}
           </p>
         </div>
-
-        {/* ── Conexión 358 ── */}
-        <Section>
-          <button onClick={() => router.push("/358")}
-            className="mb-14 w-full rounded-2xl border border-gold/25 bg-gold/[0.04] p-5 text-start transition-all hover:border-gold/50 hover:bg-gold/[0.08]">
-            <div className="flex items-center justify-between gap-4">
-              <div>
-                <p className="font-cinzel text-xs uppercase tracking-widest text-gold/60">{fa ? "پایه" : "El fundamento"}</p>
-                <p className="mt-1 text-sm text-parchment/85">
-                  {fa
-                    ? "مَشیاح = نَحاش = ۳۵۸. رهاننده ریشهٔ مار را در خود دارد."
-                    : "Mashíaj = Najash = 358. El redentor comparte la raíz de la serpiente."}
-                </p>
-              </div>
-              <span className="hebrew text-2xl text-gold shrink-0">358 ↗</span>
-            </div>
-          </button>
-        </Section>
 
         {/* ── Las cuatro madres ── */}
         <Section>
@@ -326,8 +308,8 @@ export default function LinajePage() {
             </h3>
             <p className="mx-auto mb-6 max-w-md text-sm leading-relaxed text-muted" dir={fa ? "rtl" : "ltr"}>
               {fa
-                ? "از تامار پِرِص زاده شد — «شکننده» (هَپورِص، میخا ۲:۱۳)، لقبِ خودِ ماشیح. رهاننده از شکافِ دیوار می‌آید، از همان جا که همه چیز فرو ریخت. این همان ۳۵۸ است: آنچه باید ترمیم شود و آنکه ترمیم می‌کند، یک ریشه دارند."
-                : "De Tamar nació Péretz — «el que irrumpe» (HaPoretz, Mijá 2:13), título del propio Mashíaj. El redentor entra por la brecha del muro, por donde todo se rompió. Eso es el 358: lo que debe rectificarse y quien rectifica comparten la misma raíz."}
+                ? "از تامار پِرِص زاده شد — «شکننده» (هَپورِص، میخا ۲:۱۳)، لقبِ خودِ ماشیح. رهاننده از شکافِ دیوار می‌آید، از همان جا که همه چیز فرو ریخت. دو لبه در یک حقیقت: آنچه باید ترمیم شود و آنکه ترمیم می‌کند، یک ریشه دارند."
+                : "De Tamar nació Péretz — «el que irrumpe» (HaPoretz, Mijá 2:13), título del propio Mashíaj. El redentor entra por la brecha del muro, por donde todo se rompió. Dos filos en una sola verdad: lo que debe rectificarse y quien rectifica comparten la misma raíz."}
             </p>
 
             <div className="mb-6 flex flex-wrap justify-center gap-2">
@@ -352,9 +334,8 @@ export default function LinajePage() {
               {fa ? "مطالعهٔ عمیق در جاشمال ←" : "Estudiar este misterio en Jashmal →"}
             </button>
 
-            <div className="mt-6 flex justify-center gap-4 font-cinzel text-[11px] uppercase tracking-widest text-gold/50">
-              <Link href="/358" className="hover:text-gold">358 ↗</Link>
-              <Link href="/26" className="hover:text-gold">26 ↗</Link>
+            <div className="mt-6 flex justify-center font-cinzel text-[11px] uppercase tracking-widest text-gold/50">
+              <Link href="/misterios" className="hover:text-gold">{fa ? "اسرارِ بیشتر ←" : "Más misterios →"}</Link>
             </div>
           </div>
         </Section>

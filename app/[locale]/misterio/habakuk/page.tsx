@@ -357,8 +357,8 @@ export default function HabakukPage() {
             </h3>
             <p className="mx-auto mb-6 max-w-md text-sm leading-relaxed text-muted" dir={fa ? "rtl" : "ltr"}>
               {fa
-                ? "شیگیونوت هم خطاست هم موسیقی. حَبَقّوق هم گِوورا (داوری) است هم پیامبرِ دو آغوش. خطاها، چون چون موسیقی نواخته شوند، به نبوّت بدل می‌شوند. این همان ۳۵۸ است: همان چیز، بسته به زاویه، مَشیاح است یا نَحاش."
-                : "Shigyonot es a la vez error y música. Habakuk es a la vez Gevurá (juicio) y profeta del doble abrazo. Los errores, tocados como música, se vuelven profecía. Esto es el 358: lo mismo, según el ángulo, es Mashíaj o Najash."}
+                ? "شیگیونوت هم خطاست هم موسیقی. حَبَقّوق هم گِوورا (داوری) است هم پیامبرِ دو آغوش. خطاها، چون موسیقی نواخته شوند، به نبوّت بدل می‌شوند. واقعیت همین است: یک حقیقت، دو لبه — بسته به اینکه از کدام سو بنگری."
+                : "Shigyonot es a la vez error y música. Habakuk es a la vez Gevurá (juicio) y profeta del doble abrazo. Los errores, tocados como música, se vuelven profecía. Así es la realidad: una sola verdad, dos filos — según el lado desde el que la mires."}
             </p>
 
             <div className="mb-6 flex flex-wrap justify-center gap-2">
@@ -383,9 +383,8 @@ export default function HabakukPage() {
               {fa ? "مطالعهٔ عمیق در جاشمال ←" : "Estudiar este misterio en Jashmal →"}
             </button>
 
-            <div className="mt-6 flex justify-center gap-4 font-cinzel text-[11px] uppercase tracking-widest text-gold/50">
-              <Link href="/358" className="hover:text-gold">358 ↗</Link>
-              <Link href="/linaje" className="hover:text-gold">{fa ? "تبار" : "Linaje"} ↗</Link>
+            <div className="mt-6 flex justify-center font-cinzel text-[11px] uppercase tracking-widest text-gold/50">
+              <Link href="/misterios" className="hover:text-gold">{fa ? "اسرارِ بیشتر ←" : "Más misterios →"}</Link>
             </div>
           </div>
         </Section>
