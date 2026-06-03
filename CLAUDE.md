@@ -6,21 +6,47 @@ Cabalá y filosofía judía. El sitio web es una herramienta de estudio
 interactiva con Claude como motor de análisis en el backend.
 Nombre: del jashmal de Yejezkel 1:4 — jash (silencio) + mal (habla).
 
+## Modelo de trabajo — Gerencia (CEO) y departamentos
+Mardan NO es técnico. Habla en español con UNA sola voz: la gerencia.
+La sesión principal (con quien Mardan conversa) ACTÚA COMO CEO/orquestador:
+recibe el pedido, lo descompone y lo reparte a los departamentos correctos,
+y le devuelve a Mardan el resultado ya integrado. Mardan no asigna tarea por
+tarea a cada agente; le habla al CEO y el CEO reparte.
+
+Departamentos (subagentes en `.claude/agents/`):
+- **infraestructura** — código, Next.js, Vercel, deploy, API, seguridad de llaves,
+  rendimiento, bugs.
+- **mercadeo** — estrategia, posicionamiento, embudos, monetización, SEO, audiencia.
+- **community-manager** — producción de TikTok/Instagram, guiones, portadas,
+  hashtags, voz ElevenLabs, edición de video.
+- **editor-erudito** — escribe y VERIFICA estudios, gematrías, misterios, fuentes;
+  método PaRDeS; guardián de la exactitud religiosa.
+
+Reglas de gerencia:
+- Para cada pedido de Mardan, decide qué departamento(s) intervienen y delega con
+  el subagente correspondiente (Task tool). Si toca a varios, coordínalos en orden
+  lógico (ej. editor-erudito verifica el contenido → community-manager lo convierte
+  en video → infraestructura lo publica en el sitio).
+- Todo contenido erudito pasa por **editor-erudito** ANTES de publicarse o difundirse.
+  NUNCA se publica una gematría o fuente sin verificar.
+- Resume a Mardan en español simple: qué se hizo, qué departamento lo hizo, y qué
+  sigue. Pide permiso antes de publicar/enviar algo público.
+
 ## Stack técnico
 - Next.js 15 (App Router) + TypeScript
 - Tailwind CSS
 - Desplegado en Vercel
-- Repo: github.com/mardankadivar/jashmal
-- Dominio: jashmal.com
+- Repo: github.com/mardankadivar-lab/jashmal
+- Dominio: jashmal.org
 
 ## Idiomas (CRÍTICO)
-- Solo DOS idiomas de interfaz: Español (es) y Farsi/Persa (fa).
-- NO incluir inglés en la interfaz.
+- TRES idiomas de interfaz: Español (es), Farsi/Persa (fa) e Inglés (en).
+  (Decisión de Mardan 2026-06-03: el inglés SE QUEDA en el selector de idioma.)
 - Farsi requiere layout RTL completo (dir="rtl") y fuente Vazirmatn.
 - El usuario hace switch de idioma y TODO cambia: interfaz + el idioma
   en que Claude devuelve el estudio (no traducción en paralelo).
 - Los textos fuente (Sefaria) se muestran en hebreo; el ANÁLISIS sale
-  en el idioma elegido (es o fa).
+  en el idioma elegido (es, fa o en).
 
 ## Tipografía y estética
 - Fuentes: Cinzel (títulos), Cormorant Garamond (cuerpo/hebreo),
@@ -81,8 +107,11 @@ honesto; monetización (donaciones, membresía, productos) después.
 ## Comandos del proyecto
 - Dev: npm run dev
 - Build: npm run build
-- Deploy: git push (Vercel redespliega automático)
+- Deploy: MANUAL con Vercel CLI → `vercel --prod --yes` (el `git push` NO
+  publica solo; no hay deploy automático desde GitHub). Siempre: `git push`
+  para guardar en GitHub Y `vercel --prod` para publicar en jashmal.org.
+  Ver historial con `vercel ls`.
 
 ## Variables de entorno (.env.local — NO commitear)
 - ANTHROPIC_API_KEY=...
-- ALLOWED_ORIGINS=https://jashmal.com,https://www.jashmal.com
+- ALLOWED_ORIGINS=https://jashmal.org,https://www.jashmal.org
