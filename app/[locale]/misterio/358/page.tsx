@@ -49,8 +49,10 @@ function GematriaRow({
         <span className="text-parchment/60 text-sm italic">{translation}</span>
       </div>
 
-      {/* Letras con valores — tiles oscuros auto-contenidos (legibles en cualquier tema) */}
-      <div className="flex flex-wrap items-end gap-2.5 mb-4 sm:gap-3">
+      {/* Letras con valores — tiles oscuros auto-contenidos (legibles en cualquier tema).
+          dir="rtl": el hebreo se lee de derecha a izquierda, así la primera letra
+          (מ / נ) queda a la derecha y la palabra se lee en su orden correcto. */}
+      <div className="flex flex-wrap items-end gap-2.5 mb-4 sm:gap-3" dir="rtl">
         {letters.map((l, i) => (
           <div
             key={i}
