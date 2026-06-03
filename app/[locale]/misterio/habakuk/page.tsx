@@ -121,6 +121,35 @@ export default function HabakukPage() {
           </p>
         </div>
 
+        {/* ── EL VERSÍCULO FUENTE — de aquí parte todo ── */}
+        <Section>
+          <div className="mb-16 rounded-2xl border border-gold/30 bg-gold/[0.04] p-6 text-center">
+            <p className="mb-4 font-cinzel text-[10px] uppercase tracking-[0.35em] text-gold/50">
+              {fa ? "متنِ پایه" : "El texto fuente"}
+            </p>
+            <p className="hebrew mb-4 leading-relaxed text-gold" dir="rtl"
+              style={{ fontSize: "clamp(22px, 5.5vw, 30px)", textShadow: dark ? "0 0 14px #c9a43e55" : "none" }}>
+              תְּפִלָּה לַחֲבַקּוּק הַנָּבִיא עַל שִׁגְיֹנוֹת
+            </p>
+            <p className="text-sm italic leading-relaxed text-parchment/85" dir={fa ? "rtl" : "ltr"}>
+              {fa
+                ? "«دعای حَبَقّوقِ نبی، بر شیگیونوت.»"
+                : "«Oración del profeta Habakuk, sobre shigyonot.»"}
+            </p>
+            <button
+              onClick={() => router.push(`/estudio?ref=${encodeURIComponent("Habakkuk 3:1")}`)}
+              className="mt-3 font-cinzel text-[11px] uppercase tracking-widest text-gold/60 transition-colors hover:text-gold"
+            >
+              חֲבַקּוּק 3:1 · {fa ? "مطالعه ↗" : "estudiar ↗"}
+            </button>
+            <p className="mx-auto mt-4 max-w-md text-xs leading-relaxed text-muted/70" dir={fa ? "rtl" : "ltr"}>
+              {fa
+                ? "از همین یک آیه، دو راز می‌شکفد: راز یک واژه (شیگیونوت)، و راز یک نام (حَبَقّوق)."
+                : "De este único versículo brotan dos misterios: el de una palabra (shigyonot) y el de un nombre (Habakuk)."}
+            </p>
+          </div>
+        </Section>
+
         {/* ── PARADOJA 1: SHIGYONOT ── */}
         <Section>
           <div className="mb-4 text-center">
