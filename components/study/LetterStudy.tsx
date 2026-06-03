@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import StudyResult from "./StudyResult";
 import { requestStudy, StudyError } from "@/lib/studyClient";
 import { resolveHebrewLetter } from "@/lib/hebrewLetters";
 
 export default function LetterStudy({ letter }: { letter: string }) {
   const locale = useLocale();
+  const router = useRouter();
   const t = useTranslations("letters");
   const ts = useTranslations("study");
 
@@ -62,7 +63,12 @@ export default function LetterStudy({ letter }: { letter: string }) {
       {error && <p className="mt-8 text-sm text-red-400/80">{error}</p>}
       {study && (
         <div className="mt-6">
-          <StudyResult text={study} />
+          <StudyResult
+            text={study}
+            onLetter={(key) => router.push(`/letras/${encodeURIComponent(key)}`)}
+            onConcept={(term) => router.push(`/estudio?concept=${encodeURIComponent(term)}`)}
+            onRef={(ref) => router.push(`/estudio?ref=${encodeURIComponent(ref)}`)}
+          />
         </div>
       )}
     </div>
