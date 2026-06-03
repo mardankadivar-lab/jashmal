@@ -12,6 +12,7 @@ export interface Gematria {
   asociaciones: string[];   // viñetas (español)
   asociacionesFa: string[];
   color: string;
+  mystery?: string;         // slug de misterio dedicado (ej. "137"), si lo tiene
 }
 
 export const GEMATRIAS: Gematria[] = [
@@ -152,6 +153,7 @@ export const GEMATRIAS: Gematria[] = [
       "پیدایش ۱ دقیقاً ۱۳۷ واژهٔ سه‌حرفی دارد",
     ],
     color: "#9a6a8e",
+    mystery: "137",
   },
   {
     num: 248, he: "אַבְרָהָם", titulo: "Avraham y los 248", tituloFa: "اَبراهام",

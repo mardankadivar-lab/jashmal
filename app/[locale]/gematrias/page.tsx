@@ -113,11 +113,20 @@ export default function GematriasPage() {
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
-                      router.push(`/estudio`);
+                      if (g.mystery) {
+                        // Número con misterio dedicado (ej. 137) → su landing.
+                        router.push(`/misterio/${g.mystery}`);
+                      } else {
+                        // Resto → estudio de concepto en el motor.
+                        const concept = `${(fa ? g.tituloFa : g.titulo)} — la gematría ${g.num}: ${g.he}`;
+                        router.push(`/estudio?concept=${encodeURIComponent(concept)}`);
+                      }
                     }}
-                    className="mt-4 inline-block cursor-pointer font-cinzel text-[11px] uppercase tracking-widest text-gold/70 transition-colors hover:text-gold"
+                    className="mt-4 inline-block cursor-pointer rounded-full border border-gold/30 px-4 py-1.5 font-cinzel text-[11px] uppercase tracking-widest text-gold/80 transition-all hover:border-gold hover:bg-gold/10 hover:text-gold"
                   >
-                    {fa ? "در موتورِ مطالعه عمیق شو ↗" : "Profundizar en el motor de estudio ↗"}
+                    {g.mystery
+                      ? (fa ? "گشودنِ راز ↗" : "Abrir el misterio ↗")
+                      : (fa ? "مطالعهٔ عمیق این عدد ↗" : "Estudiar este número a fondo ↗")}
                   </div>
                 </div>
               )}

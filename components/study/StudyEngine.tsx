@@ -100,6 +100,11 @@ export default function StudyEngine() {
     if (context === "kabbalah" && sefiraId) {
       setStudyContext({ type: "kabbalah", sefiraId });
     }
+    // ?concept= → abre un estudio de concepto (desde la galería de Gematría, etc.)
+    const concept = params.get("concept");
+    if (concept) {
+      setTimeout(() => openConcept(concept), 50);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
