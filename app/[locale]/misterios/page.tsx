@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter, Link } from "@/i18n/navigation";
 import { MISTERIOS_ORDENADOS } from "@/lib/misterios";
 import MisterioTutor from "@/components/MisterioTutor";
 
@@ -11,7 +11,28 @@ export default function MisteriosPage() {
   const fa = locale === "fa";
 
   return (
-    <main className="mx-auto max-w-4xl px-5 pb-24 pt-12" dir={fa ? "rtl" : "ltr"}>
+    <div className="always-dark min-h-screen bg-ink" dir={fa ? "rtl" : "ltr"}>
+      {/* Nav: regreso al inicio + acceso al estudio */}
+      <nav className="sticky top-0 z-40 border-b border-gold/10 bg-ink/90 px-5 py-3 backdrop-blur-md">
+        <div className="mx-auto flex max-w-4xl items-center justify-between">
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 font-cinzel text-sm text-gold/70 transition-colors hover:text-gold"
+          >
+            <span>{fa ? "→" : "←"}</span>
+            <span className="hebrew">חַשְׁמַל</span>
+            <span>· Jashmal</span>
+          </Link>
+          <button
+            onClick={() => router.push("/estudio")}
+            className="rounded-full border border-gold/30 px-4 py-1.5 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/10"
+          >
+            {fa ? "شروع مطالعه" : "Comenzar estudio →"}
+          </button>
+        </div>
+      </nav>
+
+      <main className="mx-auto max-w-4xl px-5 pb-24 pt-12">
       {/* Encabezado */}
       <div className="mb-12 text-center">
         <p className="hebrew mb-2 text-3xl text-gold/80" style={{ filter: "drop-shadow(0 0 10px rgba(201,164,62,0.4))" }}>
@@ -107,6 +128,7 @@ export default function MisteriosPage() {
 
       {/* Tutor flotante */}
       <MisterioTutor />
-    </main>
+      </main>
+    </div>
   );
 }
