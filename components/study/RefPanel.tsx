@@ -53,9 +53,10 @@ export default function RefPanel({ refs, onClose, onOpenRef, onNavigate }: RefPa
   const entry = entries[activeRef];
 
   return (
-    // Ventana flotante no-invasiva: anclada a la derecha del panel de análisis,
-    // altura fija con scroll interno, no cubre la pantalla completa.
-    <div className="mt-4 overflow-hidden rounded-xl border border-gold/30 bg-ink/95 shadow-xl">
+    // Ventana FLOTANTE (fixed): aparece sobre el contenido, abajo-centro, sin
+    // mover el scroll de la página. Así al cerrarla el estudiante sigue
+    // exactamente donde estaba leyendo. Scroll interno propio.
+    <div className="fixed bottom-4 left-1/2 z-40 w-[min(92vw,640px)] -translate-x-1/2 overflow-hidden rounded-xl border border-gold/40 bg-ink/98 shadow-2xl backdrop-blur-md">
       {/* Cabecera con tabs si hay varias refs */}
       <div className="flex items-center justify-between border-b border-gold/15 bg-gold/[0.06] px-3 py-2">
         <div className="flex flex-wrap gap-1.5">

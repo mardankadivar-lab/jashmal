@@ -49,7 +49,9 @@ Estructura EXACTA en este orden, con títulos en hebreo:
    Un mensaje profundo y sencillo: qué nos enseña este versículo sobre ${sefiraHe}
    como atributo divino que podemos cultivar interiormente.
 
+${GLOSAS_RULE}
 ${HYPERLINK_RULES}
+${HILOS_RULE}
 
 Sé riguroso. No inventes fuentes. Profundidad sobre brevedad.`;
 }
@@ -75,6 +77,36 @@ TEJIDO DE ESTUDIOS — marca términos cruzables con esta sintaxis exacta:
 Usa estos enlaces con naturalidad cuando menciones una letra hebrea relevante
 o un concepto que merezca su propio estudio (ej. tzimtzum, sefirot, devekut).
 No abuses: 3–8 enlaces por estudio es un buen rango.`;
+
+// El lector NO sabe hebreo. Hay que abrirle cada término.
+const GLOSAS_RULE = `
+LECTOR SIN HEBREO — asume que quien lee NO entiende hebreo ni arameo, y que
+quizá tampoco conoce los términos del estudio judío. Por eso:
+- La PRIMERA vez que uses un término técnico (Targum, Pshat, Drash, Sod, Midrash,
+  guematría, etc.), explícalo en una frase muy breve entre paréntesis. Ej.:
+  "el Targum (la antigua traducción aramea de la Torá)".
+- Toda palabra hebrea o aramea que cites debe llevar SIEMPRE su transliteración
+  y su significado. Formato: la palabra en hebreo, luego (transliteración,
+  "significado"). Ej.: תּוֹלְדוֹת (toldot, "generaciones"). NUNCA dejes una
+  palabra hebrea suelta sin decir cómo se lee y qué significa.
+- Escribe con calidez, como un maestro que toma de la mano a un principiante
+  sin perder ni un gramo de profundidad.`;
+
+// Cierre que mantiene al estudiante indagando — los "hilos para tirar".
+const HILOS_RULE = `
+TERMINA SIEMPRE con una sección final titulada en hebreo:
+
+הֶמְשֵׁךְ — Sigue el hilo
+2 a 4 preguntas breves e intrigantes que despierten ganas de seguir estudiando,
+CADA UNA como un enlace clicable que abre un nuevo estudio. Usa la sintaxis:
+- {{letter:vav|¿Quieres descubrir por qué la Vav es llamada "la letra de la Torá"?}}
+- {{study:gilgul de Rut|¿Sabías que esta alma reaparece en otra generación?}}
+Las preguntas pueden apuntar a: una letra clave del pasaje, el significado oculto
+de un nombre o de un lugar, la guematría de una palabra, la reencarnación (gilgul)
+de un personaje, un concepto cabalístico que asoma, o una conexión con otro pasaje.
+Que cada pregunta encienda curiosidad real — el objetivo es que el estudiante
+NUNCA deje de estudiar. No hagas preguntas genéricas; que cada una prometa una
+revelación concreta.`;
 
 function textStructure(): string {
   return `Estructura tu análisis EXACTAMENTE en este orden, con los títulos en hebreo:
@@ -163,7 +195,9 @@ traducción al ${lang}. Nunca respondas en inglés.${rtl}
 
 ${structure}
 ${ragBlock}
+${GLOSAS_RULE}
 ${HYPERLINK_RULES}
+${HILOS_RULE}
 
 Eres riguroso y honesto: no inventes fuentes ni citas. Si no estás seguro de
 una referencia, dilo. Profundidad sobre brevedad.`;

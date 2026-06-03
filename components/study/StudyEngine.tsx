@@ -67,15 +67,8 @@ export default function StudyEngine() {
     getParashaHashavua().then((p) => p && setParasha(p));
   }, []);
 
-  // Al abrir/añadir una referencia, llevar la vista al panel (si no, en estudios
-  // largos el panel aparece muy abajo y parece que "no se abre").
-  useEffect(() => {
-    if (openRefs.length > 0) {
-      requestAnimationFrame(() => {
-        refPanelRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-      });
-    }
-  }, [openRefs]);
+  // El RefPanel ahora es flotante (position: fixed) — aparece sobre el contenido
+  // sin mover el scroll, así el estudiante no pierde su lugar al cerrarlo.
 
   // Al cambiar de idioma, limpiar el estudio actual (fue generado en el idioma anterior).
   // El texto fuente y la navegación se mantienen para que el usuario pueda regenerar.
