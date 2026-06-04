@@ -469,6 +469,7 @@ export default function GrafoPage() {
   const [hovered, setHovered] = useState<string | null>(null);
   // el cerebro lee sus sinapsis/conexiones de /api/brain (BD); semilla como respaldo
   const [graph, setGraph] = useState<Graph>({ nodes: BNODES, edges: BEDGES });
+  const [expanding, setExpanding] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -496,10 +497,43 @@ export default function GrafoPage() {
       : "Arrastra para girar · rueda o pellizca para acercar · clic en una sinapsis · doble clic para estudiar",
     legend: isFa ? "دامنه‌های دانش" : "Dominios del saber",
     study: isFa ? "مطالعه ←" : "Estudiar →",
+    expand: isFa ? "✦ گسترش" : "✦ Expandir",
+    expanding: isFa ? "در حال پژوهش…" : "Investigando…",
   };
 
   const handleSelect = (id: string) => setSelected((p) => (p === id ? null : id));
   const handleDouble = (n: BNode) => { if (n.url) window.open("https://jashmal.org" + n.url, "_blank"); };
+
+  // Expansión recursiva: el Sofer del dominio investiga el nodo → el cerebro crece.
+  function mergeGraph(prev: Graph, addNodes: BNode[], addEdges: [string, string][]): Graph {
+    const ids = new Set(prev.nodes.map((n) => n.id));
+    const nodes = [...prev.nodes];
+    for (const n of addNodes) if (!ids.has(n.id)) { ids.add(n.id); nodes.push(n); }
+    const key = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`);
+    const ek = new Set(prev.edges.map(([a, b]) => key(a, b)));
+    const edges = [...prev.edges];
+    for (const [a, b] of addEdges) { const k = key(a, b); if (!ek.has(k)) { ek.add(k); edges.push([a, b]); } }
+    return { nodes, edges };
+  }
+
+  async function expandNode() {
+    if (!selNode || expanding) return;
+    setExpanding(true);
+    try {
+      const res = await fetch("/api/brain/expand", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nodeId: selNode.id, label: selNode.label, cat: selNode.cat, level: selNode.level, locale }),
+      });
+      const d = await res.json();
+      if (d?.ok && Array.isArray(d.nodes) && d.nodes.length) {
+        setGraph((prev) => mergeGraph(prev, d.nodes as BNode[], (d.edges ?? []) as [string, string][]));
+      }
+    } catch {
+      /* silencioso */
+    }
+    setExpanding(false);
+  }
 
   return (
     <div
@@ -573,12 +607,20 @@ export default function GrafoPage() {
             {isFa ? selNode.labelFa : selNode.label}
           </p>
           <p className="mt-0.5 text-[10px] uppercase tracking-wide text-muted/50">{BRAIN_CATS[selNode.cat]?.label}</p>
+          <button
+            onClick={expandNode}
+            disabled={expanding}
+            className="mt-3 block w-full rounded-full border border-cyan-300/30 bg-cyan-300/[0.06] px-4 py-2 text-center font-cinzel text-xs uppercase tracking-widest text-cyan-200/90 transition-all hover:border-cyan-300/60 hover:bg-cyan-300/15 disabled:opacity-50"
+            title="El Sofer investiga este tema y abre sus conexiones"
+          >
+            {expanding ? T.expanding : T.expand}
+          </button>
           {selNode.url && (
             <a
               href={"https://jashmal.org" + selNode.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-3 block rounded-full border border-gold/30 bg-gold/[0.07] px-4 py-2 text-center font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold/60 hover:bg-gold/15"
+              className="mt-2 block rounded-full border border-gold/30 bg-gold/[0.07] px-4 py-2 text-center font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold/60 hover:bg-gold/15"
             >
               {T.study}
             </a>

@@ -71,6 +71,46 @@ export type StudyMode = "text" | "letter" | "concept";
 // (solo el array de traducciones), así que el costo y la latencia son bajos.
 export const TRANSLATE_MODEL = STUDY_MODEL;
 
+// ─── Sofer investigador: expansión recursiva del cerebro ──────────
+// Dado un nodo (tema), un Sofer del dominio devuelve los conceptos / fuentes /
+// personajes / comentarios REALES conectados → el cerebro se abre en más capas.
+// Salida: SOLO JSON estricto (sin prosa). Cada item con su categoría y nivel.
+export const EXPAND_MODEL = STUDY_MODEL;
+
+const SOFER_BY_CAT: Record<string, string> = {
+  torah: "Sofer HaTanakh", tanakh: "Sofer HaTanakh",
+  mishnah: "Sofer HaMishnah", talmud: "Sofer HaTalmud",
+  midrash: "Sofer HaMefarshim", halakhah: "Sofer HaHalakhah",
+  kabbalah: "Sofer HaKabbalah", chasidut: "Sofer HaHasidut",
+  philosophy: "Sofer HaMefarshim", science: "Sofer HaTanakh",
+  jashmal: "Sofer HaKabbalah",
+};
+
+export function buildExpandPrompt(cat: string, locale: string): string {
+  const lang = LANG_NAME[locale] ?? LANG_NAME.es;
+  const sofer = SOFER_BY_CAT[cat] ?? "Sofer";
+  return `Eres ${sofer}, un erudito investigador de Jashmal (חַשְׁמַל), experto en la
+sabiduría judía (Torá, Tanaj, Mishná, Talmud, Midrash, Mefarshim, Halajá, Cabalá, Jasidut).
+
+Te doy UN concepto/tema. Devuelve los nodos de conocimiento REALES y VERIFICABLES
+directamente conectados a él — como las sinapsis de un cerebro de Torá. Incluye una
+mezcla de: fuentes y textos donde aparece, comentaristas que lo tratan, conceptos
+relacionados, personajes, e implicaciones (cabalística, halájica, lingüística) cuando
+correspondan. Piensa: "¿qué es?, ¿dónde aparece?, ¿su fuente?, ¿qué textos y
+comentarios lo discuten?, ¿conceptos relacionados?".
+
+REGLAS:
+- 6 a 9 items. SOLO conexiones reales de la tradición judía; NUNCA inventes fuentes ni vínculos.
+- Usa nombres canónicos y reconocibles (ej: Rashi, Zohar, Akedá, Avraham, Tzimtzum, Tiféret, Génesis 22, Bereshit Rabá). Esto permite reconectar con nodos que ya existen.
+- "label": el nombre en ${lang} (transliterado si es nombre propio hebreo), corto (1–4 palabras).
+- "cat": EXACTAMENTE una de: tanakh, mishnah, talmud, midrash, halakhah, kabbalah, chasidut, philosophy, science, jashmal.
+- "level": 2 = libro/obra/tratado; 3 = concepto/personaje/tema; 4 = artículo.
+- "relation": 2–4 palabras que digan cómo se conecta (ej: "fuente bíblica", "lo comenta", "concepto madre").
+
+Responde ÚNICAMENTE con un objeto JSON válido, sin texto antes ni después, con esta forma:
+{"related":[{"label":"...","cat":"...","level":3,"relation":"..."}]}`;
+}
+
 export function buildTranslatePrompt(): string {
   // Reutiliza las reglas de persa del estudio (خَشمَل, nombres de libros, NUNCA árabe).
   const rtl = RTL_NOTE.fa;
