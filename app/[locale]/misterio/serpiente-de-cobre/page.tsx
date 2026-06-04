@@ -46,6 +46,29 @@ function PullQuoteLite({ es, fa, source, fa_active }: { es: string; fa: string; 
   );
 }
 
+// La serpiente sobre el asta de Números 21 = la Vara de Asclepio,
+// símbolo de la medicina hasta hoy (una sola serpiente en un bastón).
+function AsclepiusRod({ color, size = 150 }: { color: string; size?: number }) {
+  return (
+    <svg width={size} height={size * 1.6} viewBox="0 0 120 200" fill="none"
+      role="img" aria-label="Vara de Asclepio"
+      style={{ filter: `drop-shadow(0 0 18px ${color}aa)`, display: "inline-block" }}>
+      {/* el asta */}
+      <line x1="60" y1="12" x2="60" y2="192" stroke={color} strokeWidth="6" strokeLinecap="round" />
+      {/* la serpiente enroscada */}
+      <path
+        d="M58 184 C 36 172, 36 150, 60 142 C 84 134, 84 112, 60 104 C 36 96, 36 74, 60 66 C 82 58, 82 42, 64 36"
+        stroke={color} strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      {/* la cabeza */}
+      <path d="M64 36 C 52 30, 42 34, 42 44 C 42 53, 52 55, 60 50 C 66 46, 67 40, 64 36 Z" fill={color} />
+      {/* el ojo */}
+      <circle cx="50" cy="42" r="1.8" fill="#05050a" />
+      {/* la lengua bífida */}
+      <path d="M42 46 l -7 3 M 42 47 l -7 -1" stroke={color} strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export default function PageSerpienteDeCobre() {
   const locale = useLocale();
   const router = useRouter();
@@ -96,6 +119,16 @@ export default function PageSerpienteDeCobre() {
           <h2 className="mt-2 font-cinzel text-xl font-bold text-parchment/90 sm:text-2xl">
             {fa ? "مارِ مفرغین" : "La serpiente de cobre"}
           </h2>
+
+          {/* La Vara de Asclepio — la serpiente sobre el asta, símbolo de la medicina */}
+          <div className="mt-8 flex justify-center">
+            <AsclepiusRod color={C} size={130} />
+          </div>
+          <p className="mx-auto mt-3 max-w-sm text-xs italic leading-relaxed text-muted/70" dir={fa ? "rtl" : "ltr"}>
+            {fa
+              ? "همان مار بر چوب‌دست — «عصای آسکلپیوس»، نمادِ پزشکی تا به امروز."
+              : "La misma serpiente sobre el asta — la «Vara de Asclepio», símbolo de la medicina hasta hoy."}
+          </p>
         </div>
 
         {/* ── EL VENENO Y EL REMEDIO ── */}
