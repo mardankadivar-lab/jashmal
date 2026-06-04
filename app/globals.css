@@ -265,3 +265,14 @@ html.study-mode.dark { --c-prose: 246 242 233; }
 html.study-mode .nitzotzot { opacity: 0.12 !important; transition: opacity 0.5s ease; }
 /* en el cerebro, el modo estudio deja la mente de fondo (secundaria) */
 html.study-mode .always-dark canvas { opacity: 0.4; transition: opacity 0.5s ease; }
+
+/* Brain v4.1 · letras hebreas sobre los senderos del Árbol (en el cerebro) */
+.tree-letter {
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease, text-shadow 0.2s ease;
+}
+.tree-letter:hover {
+  opacity: 1 !important;
+  transform: scale(1.4);
+  text-shadow: 0 0 16px #ffe08a, 0 0 6px #c9a43e !important;
+}

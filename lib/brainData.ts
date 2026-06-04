@@ -182,6 +182,45 @@ export const V4_EDGES: MaseiEdge[] = [
   { a: "Tefilá", b: "Bet HaMikdash", kind: "solid" }, { a: "Brit", b: "Eretz Israel", kind: "solid" },
 ];
 
+// ─── Brain v4.1 · Las 22 letras en los senderos del Árbol (disposición Ari-Gra) ──
+// Verificado por el Sofer. Netzaj y Hod completan las 10 sefirot. Cada sendero
+// (par de sefirot) lleva su letra, clickeable → estudio de la letra (/letras/slug).
+// NOTA: la colocación letra↔sendero es la disposición del Arizal (no texto literal
+// del Sefer Yetzirá, que solo da 3 madres / 7 dobles / 12 simples).
+export const TREE_NODES: BNode[] = [
+  { id: "Netzaj", label: "Netzaj", labelFa: "نتسح", cat: "kabbalah", level: 3 },
+  { id: "Hod", label: "Hod", labelFa: "هود", cat: "kabbalah", level: 3 },
+];
+
+export type TreePath = { from: string; to: string; letter: string; name: string; slug: string };
+export const TREE_PATHS: TreePath[] = [
+  // 3 madres (אמ"ש)
+  { from: "Keter", to: "Tiféret", letter: "א", name: "Álef", slug: "alef" },
+  { from: "Biná", to: "Guevurá", letter: "מ", name: "Mem", slug: "mem" },
+  { from: "Jojmá", to: "Jésed", letter: "ש", name: "Shin", slug: "shin" },
+  // 7 dobles (בג"ד כפר"ת)
+  { from: "Keter", to: "Jojmá", letter: "ב", name: "Bet", slug: "bet" },
+  { from: "Keter", to: "Biná", letter: "ג", name: "Guímel", slug: "guimel" },
+  { from: "Jojmá", to: "Biná", letter: "ד", name: "Dálet", slug: "dalet" },
+  { from: "Jésed", to: "Guevurá", letter: "כ", name: "Caf", slug: "kaf" },
+  { from: "Tiféret", to: "Yesod", letter: "פ", name: "Pe", slug: "pe" },
+  { from: "Netzaj", to: "Hod", letter: "ר", name: "Resh", slug: "resh" },
+  { from: "Yesod", to: "Maljut", letter: "ת", name: "Tav", slug: "tav" },
+  // 12 simples (הוז"ח טי"ל נ"ס ע"צ ק)
+  { from: "Keter", to: "Jésed", letter: "ה", name: "He", slug: "he" },
+  { from: "Keter", to: "Guevurá", letter: "ו", name: "Vav", slug: "vav" },
+  { from: "Jojmá", to: "Tiféret", letter: "ז", name: "Zayin", slug: "zayin" },
+  { from: "Jojmá", to: "Netzaj", letter: "ח", name: "Jet", slug: "jet" },
+  { from: "Biná", to: "Tiféret", letter: "ט", name: "Tet", slug: "tet" },
+  { from: "Biná", to: "Hod", letter: "י", name: "Yod", slug: "yod" },
+  { from: "Jésed", to: "Tiféret", letter: "ל", name: "Lámed", slug: "lamed" },
+  { from: "Jésed", to: "Netzaj", letter: "נ", name: "Nun", slug: "nun" },
+  { from: "Guevurá", to: "Tiféret", letter: "ס", name: "Sámej", slug: "samej" },
+  { from: "Guevurá", to: "Hod", letter: "ע", name: "Áyin", slug: "ayin" },
+  { from: "Tiféret", to: "Netzaj", letter: "צ", name: "Tzadi", slug: "tzadi" },
+  { from: "Tiféret", to: "Hod", letter: "ק", name: "Quf", slug: "kuf" },
+];
+
 // ─── Nodos ───────────────────────────────────────────────────────────────
 export const BNODES: BNode[] = [
   // ── Nivel 0 — corazón (Torá y Tanaj UNIFICADOS: la Torá es el núcleo del Tanaj) ──
@@ -272,6 +311,8 @@ export const BNODES: BNode[] = [
   ...MASEI_NODES,
   // ── Brain v4: personajes bíblicos + dominios temáticos ──
   ...V4_NODES,
+  // ── Sefirot que faltaban (Netzaj, Hod) para los 22 senderos ──
+  ...TREE_NODES,
 ];
 
 // ─── Aristas (relaciones reales, NO dirigidas). Se deduplican antes de render ─
@@ -324,6 +365,8 @@ const RAW_EDGES: [string, string][] = [
   ...MASEI_EDGES.map((e) => [e.a, e.b] as [string, string]),
   // Brain v4: personajes + temas
   ...V4_EDGES.map((e) => [e.a, e.b] as [string, string]),
+  // Brain v4.1: los 22 senderos del Árbol (entre sefirot) — llevan las letras
+  ...TREE_PATHS.map((p) => [p.from, p.to] as [string, string]),
 ];
 
 // dedup + descarta aristas a nodos inexistentes (p.ej. placeholders)
@@ -361,7 +404,7 @@ function hashStr(s: string): number {
 // ─── Anatomía: regiones (lóbulos) — centro + radios, en espacio normalizado ─
 // Brain mira hacia +X (frontal adelante). Hemisferios en ±Z. La UNIÓN de
 // estos elipsoides (espejados en Z) forma la silueta del cerebro en 3D.
-export const BRAIN_SCALE = 3.0;
+export const BRAIN_SCALE = 3.5;
 type Region = { c: [number, number, number]; r: [number, number, number]; hemi: boolean };
 export const REGIONS: Record<string, Region> = {
   core:       { c: [0.1, 0.1, 0.0],   r: [0.55, 0.5, 0.5],  hemi: false }, // Torá (centro profundo)
@@ -413,6 +456,7 @@ export const SEFIRA_ANCHORS: Record<string, [number, number, number]> = {
 export const SEFIRA_AFFINITY: Record<string, string[]> = {
   Keter: ["Keter"], "Jojmá": ["Jojmá"], "Biná": ["Biná"], "Jésed": ["Jésed"],
   "Guevurá": ["Guevurá"], "Tiféret": ["Tiféret"], Yesod: ["Yesod"], "Maljut": ["Maljut"],
+  Netzaj: ["Netzaj"], Hod: ["Hod"],
   Tzimtzum: ["Keter"], "Mashíaj": ["Yesod", "Maljut"], "Teshuvá": ["Biná"],
   Zohar: ["Tiféret"], "Etz Jaim": ["Jojmá"], Tania: ["Daat"],
   "Mishné Torá": ["Guevurá", "Tiféret"], "Moré Nevujim": ["Biná"],
@@ -441,8 +485,9 @@ function sampleInRegion(reg: Region, rng: () => number, hemiSign: number): [numb
   // dirección aleatoria uniforme en la esfera
   let dx = rng() * 2 - 1, dy = rng() * 2 - 1, dz = rng() * 2 - 1;
   const dl = Math.hypot(dx, dy, dz) || 1; dx /= dl; dy /= dl; dz /= dl;
-  // radio sesgado hacia la corteza (superficie más densa): r in [0.55, 1]
-  const rad = 0.55 + Math.pow(rng(), 0.45) * 0.45;
+  // radio: llena desde el interior medio hasta un poco más allá de la corteza
+  // (Brain v4.1: rellenar más volumen y los alrededores con tejido latente)
+  const rad = 0.42 + Math.pow(rng(), 0.5) * 0.7;
   const cz = reg.hemi ? reg.c[2] * hemiSign : reg.c[2];
   return [
     (reg.c[0] + dx * reg.r[0] * rad) * BRAIN_SCALE,

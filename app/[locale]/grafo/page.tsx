@@ -27,6 +27,7 @@ import {
   bfsDistances,
   shortestPath,
   neighborsIn,
+  TREE_PATHS,
   type BNode,
 } from "@/lib/brainData";
 
@@ -41,8 +42,8 @@ const CFG = {
   fiberOpacityIdle: 0.05,   // casi invisible en reposo
   fiberOpacityDimmed: 0.02, // cuando hay selección, la base se apaga más
   fiberOpacityActive: 0.9,  // fibras encendidas
-  ambientCount: 6500,       // sinapsis decorativas (tejido del cerebro)
-  ambientSize: 0.05,
+  ambientCount: 12000,      // sinapsis latentes (tejido del cerebro) — más denso/lleno
+  ambientSize: 0.045,
   ambientOpacity: 0.6,
   haloBase: 0.55,           // tamaño del halo de una sinapsis
   coreBase: 0.16,           // tamaño del núcleo brillante
@@ -290,6 +291,61 @@ function FiberHighlight({ curves, color }: { curves: EdgeCurve[]; color: string 
   );
 }
 
+// ── Las 22 letras sobre los senderos del Árbol (entre sefirot), clickeables ─
+function TreePathLetters({
+  positions,
+  curves,
+  locale,
+}: {
+  positions: Record<string, [number, number, number]>;
+  curves: EdgeCurve[];
+  locale: string;
+}) {
+  const items = useMemo(() => {
+    return TREE_PATHS.map((p) => {
+      const c = curves.find(
+        (c) => (c.a === p.from && c.b === p.to) || (c.a === p.to && c.b === p.from),
+      );
+      let mid: [number, number, number] | null = null;
+      if (c && c.pts.length) {
+        const m = c.pts[Math.floor(c.pts.length / 2)];
+        mid = [m.x, m.y, m.z];
+      } else {
+        const a = positions[p.from];
+        const b = positions[p.to];
+        if (a && b) mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2];
+      }
+      return mid ? { ...p, mid } : null;
+    }).filter(Boolean) as Array<(typeof TREE_PATHS)[number] & { mid: [number, number, number] }>;
+  }, [positions, curves]);
+
+  return (
+    <>
+      {items.map((it) => (
+        <Html key={it.slug} position={it.mid} center distanceFactor={12} zIndexRange={[16, 0]} style={{ pointerEvents: "auto" }}>
+          <a
+            href={`/${locale}/letras/${it.slug}`}
+            className="tree-letter hebrew"
+            title={`Estudiar la letra ${it.name}`}
+            style={{
+              fontSize: "22px",
+              lineHeight: 1,
+              color: "#ffe9a8",
+              textShadow: "0 0 9px #c9a43e, 0 0 3px #000",
+              textDecoration: "none",
+              opacity: 0.8,
+              display: "inline-block",
+              padding: "3px",
+            }}
+          >
+            {it.letter}
+          </a>
+        </Html>
+      ))}
+    </>
+  );
+}
+
 // ── Una sinapsis (nodo) ────────────────────────────────────────────────────
 function Synapse({
   node,
@@ -405,6 +461,7 @@ function BrainScene({
   hovered,
   compare,
   isFa,
+  locale,
   onSelect,
   onHover,
   onDouble,
@@ -416,6 +473,7 @@ function BrainScene({
   hovered: string | null;
   compare: string[];
   isFa: boolean;
+  locale: string;
   onSelect: (id: string, additive: boolean) => void;
   onHover: (id: string | null) => void;
   onDouble: (n: BNode) => void;
@@ -570,6 +628,9 @@ function BrainScene({
             />
           );
         })}
+
+        {/* las 22 letras hebreas sobre los senderos del Árbol (clickeables → estudio) */}
+        <TreePathLetters positions={positions} curves={curves} locale={locale} />
       </group>
     </>
   );
@@ -719,6 +780,7 @@ export default function GrafoPage() {
             hovered={hovered}
             compare={compare}
             isFa={isFa}
+            locale={locale}
             onSelect={handleSelect}
             onHover={setHovered}
             onDouble={handleDouble}
