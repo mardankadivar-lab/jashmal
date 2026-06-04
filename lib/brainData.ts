@@ -221,6 +221,53 @@ export const TREE_PATHS: TreePath[] = [
   { from: "Tiféret", to: "Hod", letter: "ק", name: "Quf", slug: "kuf" },
 ];
 
+// ─── Estudios: Birurim (Números 21/Arad) + Cuerdas de vanidad (Isaías 5:18) ──
+// Desarrollados y verificados por el Sofer. Hallazgos: jamor=jómer=254 (gematría
+// exacta); el "cananeo" de Arad era Amalek (Rashi/Tanjumá Jukat 18); el hilo→soga
+// de Is 5:18 es Rashi citando Sukká 52a (Rav Asi). Aristas solid/interp.
+export const STUDY2_NODES: BNode[] = [
+  { id: "Birurim", label: "Birurim", labelFa: "بیروریم (پالایش جرقه‌ها)", cat: "jashmal", level: 4, region: "occipital" },
+  { id: "Cuerdas de vanidad", label: "Cuerdas de vanidad", labelFa: "ریسمان‌های پوچی", cat: "jashmal", level: 4, region: "frontal" },
+  { id: "Números 21", label: "Números 21", labelFa: "اعداد ۲۱", cat: "tanakh", level: 3 },
+  { id: "Arad", label: "Arad (terquedad)", labelFa: "عَراد (لجاجت)", cat: "tema", level: 3 },
+  { id: "Kelipot", label: "Kelipot (cáscaras)", labelFa: "قلیپوت (پوسته‌ها)", cat: "kabbalah", level: 3 },
+  { id: "Ratzón", label: "Ratzón (deseo/voluntad)", labelFa: "راتسون (اراده/میل)", cat: "kabbalah", level: 3 },
+  { id: "Koaj HaMedameh", label: "Koaj HaMedameh (imaginación)", labelFa: "کوح هَمِدَمه (قوّهٔ خیال)", cat: "tema", level: 3 },
+  { id: "Reshimó", label: "Reshimó (la huella)", labelFa: "رِشیمو (ردِّ نور)", cat: "kabbalah", level: 3 },
+  { id: "Yetzer Hará", label: "Yetzer Hará", labelFa: "یِتسِر هَرَع (میل بد)", cat: "tema", level: 3 },
+];
+
+export const STUDY2_EDGES: MaseiEdge[] = [
+  // Birurim (Números 21 / Arad / birur)
+  { a: "Birurim", b: "Números 21", kind: "solid" }, { a: "Birurim", b: "Bamidbar", kind: "solid" },
+  { a: "Birurim", b: "Arad", kind: "solid" }, { a: "Arad", b: "Números 21", kind: "solid" },
+  { a: "Birurim", b: "Birur", kind: "solid" }, { a: "Birurim", b: "Nitzotzot", kind: "solid" },
+  { a: "Birurim", b: "Shevirá", kind: "solid" }, { a: "Kelipot", b: "Cabalá", kind: "solid" },
+  { a: "Kelipot", b: "Nitzotzot", kind: "solid" }, { a: "Kelipot", b: "Shevirá", kind: "solid" },
+  { a: "Birur", b: "Kelipot", kind: "solid" }, { a: "Ratzón", b: "Cabalá", kind: "solid" },
+  { a: "Birurim", b: "Tania", kind: "solid" },
+  { a: "Arad", b: "Yetzer Hará", kind: "interp" }, { a: "Birurim", b: "Ratzón", kind: "interp" },
+  { a: "Birurim", b: "Tikún", kind: "interp" }, { a: "Birurim", b: "Kelipot", kind: "interp" },
+  { a: "Ratzón", b: "Tikún", kind: "interp" }, { a: "Birurim", b: "Jasidut", kind: "interp" },
+  { a: "Arad", b: "Guevurá", kind: "interp" },
+  // Números 21 cruza con la serpiente de cobre (mismo capítulo)
+  { a: "Números 21", b: "Serpiente de cobre", kind: "solid" }, { a: "Números 21", b: "Najash", kind: "interp" },
+  // Cuerdas de vanidad (Isaías 5:18 / yetzer hará / imaginación)
+  { a: "Cuerdas de vanidad", b: "Yeshayahu", kind: "solid" }, { a: "Cuerdas de vanidad", b: "Neviim", kind: "solid" },
+  { a: "Cuerdas de vanidad", b: "Yetzer Hará", kind: "solid" }, { a: "Cuerdas de vanidad", b: "Talmud", kind: "solid" },
+  { a: "Yetzer Hará", b: "Talmud", kind: "solid" }, { a: "Yetzer Hará", b: "Yeshayahu", kind: "solid" },
+  { a: "Cuerdas de vanidad", b: "Koaj HaMedameh", kind: "solid" }, { a: "Koaj HaMedameh", b: "Nevuá", kind: "solid" },
+  { a: "Koaj HaMedameh", b: "Moré Nevujim", kind: "solid" }, { a: "Reshimó", b: "Tzimtzum", kind: "solid" },
+  { a: "Reshimó", b: "Etz Jaim", kind: "solid" },
+  { a: "Cuerdas de vanidad", b: "Reshimó", kind: "interp" }, { a: "Cuerdas de vanidad", b: "Kelipot", kind: "interp" },
+  { a: "Cuerdas de vanidad", b: "Teshuvá", kind: "interp" }, { a: "Cuerdas de vanidad", b: "Mashíaj", kind: "interp" },
+  { a: "Cuerdas de vanidad", b: "Yosef", kind: "interp" }, { a: "Koaj HaMedameh", b: "Hod", kind: "interp" },
+  { a: "Yetzer Hará", b: "Guevurá", kind: "interp" },
+  // Puente entre los dos estudios (jidush)
+  { a: "Birurim", b: "Cuerdas de vanidad", kind: "interp" }, { a: "Arad", b: "Cuerdas de vanidad", kind: "interp" },
+  { a: "Kelipot", b: "Yetzer Hará", kind: "interp" }, { a: "Birur", b: "Cuerdas de vanidad", kind: "interp" },
+];
+
 // ─── Nodos ───────────────────────────────────────────────────────────────
 export const BNODES: BNode[] = [
   // ── Nivel 0 — corazón (Torá y Tanaj UNIFICADOS: la Torá es el núcleo del Tanaj) ──
@@ -313,6 +360,8 @@ export const BNODES: BNode[] = [
   ...V4_NODES,
   // ── Sefirot que faltaban (Netzaj, Hod) para los 22 senderos ──
   ...TREE_NODES,
+  // ── Estudios Birurim + Cuerdas de vanidad (verificado por el Sofer) ──
+  ...STUDY2_NODES,
 ];
 
 // ─── Aristas (relaciones reales, NO dirigidas). Se deduplican antes de render ─
@@ -367,6 +416,8 @@ const RAW_EDGES: [string, string][] = [
   ...V4_EDGES.map((e) => [e.a, e.b] as [string, string]),
   // Brain v4.1: los 22 senderos del Árbol (entre sefirot) — llevan las letras
   ...TREE_PATHS.map((p) => [p.from, p.to] as [string, string]),
+  // Estudios Birurim + Cuerdas de vanidad
+  ...STUDY2_EDGES.map((e) => [e.a, e.b] as [string, string]),
 ];
 
 // dedup + descarta aristas a nodos inexistentes (p.ej. placeholders)
@@ -473,6 +524,9 @@ export const SEFIRA_AFFINITY: Record<string, string[]> = {
   "Gueulá": ["Yesod", "Maljut"], Galut: ["Maljut"], "Eretz Israel": ["Maljut"],
   "Bet HaMikdash": ["Maljut"], "Tefilá": ["Maljut"], Shabat: ["Maljut"],
   "Yirá": ["Guevurá"], "Ahavá": ["Jésed"], Brit: ["Yesod"], "Shejiná": ["Maljut"],
+  // Brain — estudios Birurim + Cuerdas de vanidad
+  Arad: ["Guevurá"], Kelipot: ["Guevurá"], "Yetzer Hará": ["Guevurá"],
+  "Ratzón": ["Keter"], "Koaj HaMedameh": ["Hod"], "Reshimó": ["Keter"],
 };
 const SEFIRA_PULL = 0.45; // fuerza del jalón hacia el ancla (suave)
 

@@ -9,7 +9,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 import { getSql } from "./db";
-import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, type BNode } from "./brainData";
+import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, STUDY2_NODES, STUDY2_EDGES, type BNode } from "./brainData";
 
 export type BrainGraph = { nodes: BNode[]; edges: [string, string][] };
 
@@ -214,6 +214,34 @@ export async function addTreePaths(): Promise<void> {
         INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
         VALUES (${edgeKey(p.from, p.to)}, ${p.from}, ${p.to}, 'tree', 1, 'approved', 'seed')
         ON CONFLICT (id) DO UPDATE SET status = 'approved'
+      `;
+    }
+  } catch {
+    /* nunca romper la lectura del cerebro */
+  }
+}
+
+// ── Estudios: Birurim + Cuerdas de vanidad (verificado por el Sofer) ──
+export async function addStudies2(): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  try {
+    for (const n of STUDY2_NODES) {
+      await sql`
+        INSERT INTO brain_nodes (id, label, label_fa, cat, level, url, region, status, source)
+        VALUES (${n.id}, ${n.label}, ${n.labelFa}, ${n.cat}, ${n.level},
+                ${n.url ?? null}, ${n.region ?? null}, 'approved', 'sofer')
+        ON CONFLICT (id) DO UPDATE SET
+          label = EXCLUDED.label, label_fa = EXCLUDED.label_fa,
+          cat = EXCLUDED.cat, level = EXCLUDED.level,
+          status = 'approved', source = 'sofer'
+      `;
+    }
+    for (const e of STUDY2_EDGES) {
+      await sql`
+        INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
+        VALUES (${edgeKey(e.a, e.b)}, ${e.a}, ${e.b}, ${e.kind}, 1, 'approved', 'sofer')
+        ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, status = 'approved'
       `;
     }
   } catch {
