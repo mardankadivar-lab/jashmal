@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
       { source: "/bilaam", destination: "/es/misterio/bilaam" },
       { source: "/137", destination: "/es/misterio/137" },
       { source: "/entrelazamiento", destination: "/es/misterio/entrelazamiento" },
+      { source: "/sanador", destination: "/es/misterio/sanador" },
+      { source: "/refael", destination: "/es/misterio/refael" },
+      { source: "/serpiente-de-cobre", destination: "/es/misterio/serpiente-de-cobre" },
+      { source: "/refua", destination: "/es/misterio/refua" },
     ];
   },
 };

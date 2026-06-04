@@ -58,72 +58,80 @@ export default function MisteriosPage() {
         </p>
       </div>
 
-      {/* Rejilla de misterios */}
-      <div className="grid gap-5 sm:grid-cols-2">
-        {MISTERIOS_ORDENADOS.map((m) => (
-          <button
-            key={m.slug}
-            onClick={() => router.push(`/misterio/${m.slug}`)}
-            className="group relative flex flex-col overflow-hidden rounded-2xl border border-gold/20 bg-white/[0.02] p-6 text-start transition-all hover:border-gold/50 hover:bg-gold/[0.04]"
-            style={{ minHeight: 200 }}
-          >
-            {/* Glow de fondo en hover */}
-            <div
-              className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
-              style={{ background: `radial-gradient(circle, ${m.color}33 0%, transparent 70%)` }}
-            />
-
-            {/* Número/gematría destacado */}
-            {m.numero && (
-              <span
-                className="font-cinzel font-black leading-none"
-                style={{
-                  fontSize: "44px",
-                  color: m.color,
-                  textShadow: `0 0 18px ${m.color}66`,
-                }}
-              >
-                {m.numero}
-              </span>
-            )}
-
-            {/* Hebreo central */}
-            <span
-              className="hebrew mt-2 text-2xl font-bold leading-tight"
-              style={{ color: "#fdf4dd", textShadow: `0 0 14px ${m.color}88` }}
-            >
-              {m.he}
-            </span>
-
-            {/* Título */}
-            <h2 className="mt-3 font-cinzel text-base font-bold tracking-wide" style={{ color: m.color }}>
-              {fa ? m.tituloFa : m.titulo}
-            </h2>
-
-            {/* Gancho */}
-            <p className="mt-2 flex-1 text-sm leading-relaxed text-muted/90">
-              {fa ? m.ganchoFa : m.gancho}
-            </p>
-
-            {/* Pie */}
-            <div className="mt-4 flex items-center justify-between">
-              {m.serie === "dos-filos" && (
-                <span className="hebrew text-xs text-gold/40">
-                  {fa ? "دو لبه" : "שְׁנֵי פִּיּוֹת"}
-                </span>
-              )}
-              {m.serie === "gematria" && (
-                <span className="hebrew text-xs text-gold/40">
-                  {fa ? "گیماتریا" : "גִּימַטְרִיָּה"}
-                </span>
-              )}
-              <span className="font-cinzel text-xs text-gold/60 transition-colors group-hover:text-gold">
-                {fa ? "خواندن ←" : "leer →"}
-              </span>
+      {/* Misterios agrupados por categoría */}
+      {[
+        { serie: "dos-filos", es: "Dos Filos", fa: "دو لبه", he: "שְׁנֵי פִּיּוֹת" },
+        { serie: "gematria", es: "Gematría", fa: "گیماتریا", he: "גִּימַטְרִיָּה" },
+        { serie: "sanidad", es: "Sanidad", fa: "شفا", he: "רְפוּאָה" },
+      ].map((cat) => {
+        const items = MISTERIOS_ORDENADOS.filter((m) => m.serie === cat.serie);
+        if (items.length === 0) return null;
+        return (
+          <section key={cat.serie} className="mb-14">
+            {/* Encabezado de categoría */}
+            <div className="mb-5 flex items-center gap-3">
+              <span className="hebrew text-lg text-gold/70">{cat.he}</span>
+              <h2 className="font-cinzel text-sm font-bold uppercase tracking-[0.3em] text-gold/80">
+                {fa ? cat.fa : cat.es}
+              </h2>
+              <span className="h-px flex-1 bg-gold/15" />
             </div>
-          </button>
-        ))}
-      </div>
+
+            {/* Rejilla de la categoría */}
+            <div className="grid gap-5 sm:grid-cols-2">
+              {items.map((m) => (
+                <button
+                  key={m.slug}
+                  onClick={() => router.push(`/misterio/${m.slug}`)}
+                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-gold/20 bg-white/[0.02] p-6 text-start transition-all hover:border-gold/50 hover:bg-gold/[0.04]"
+                  style={{ minHeight: 200 }}
+                >
+                  {/* Glow de fondo en hover */}
+                  <div
+                    className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
+                    style={{ background: `radial-gradient(circle, ${m.color}33 0%, transparent 70%)` }}
+                  />
+
+                  {/* Número/gematría destacado */}
+                  {m.numero && (
+                    <span
+                      className="font-cinzel font-black leading-none"
+                      style={{ fontSize: "44px", color: m.color, textShadow: `0 0 18px ${m.color}66` }}
+                    >
+                      {m.numero}
+                    </span>
+                  )}
+
+                  {/* Hebreo central */}
+                  <span
+                    className="hebrew mt-2 text-2xl font-bold leading-tight"
+                    style={{ color: "#fdf4dd", textShadow: `0 0 14px ${m.color}88` }}
+                  >
+                    {m.he}
+                  </span>
+
+                  {/* Título */}
+                  <h3 className="mt-3 font-cinzel text-base font-bold tracking-wide" style={{ color: m.color }}>
+                    {fa ? m.tituloFa : m.titulo}
+                  </h3>
+
+                  {/* Gancho */}
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-muted/90">
+                    {fa ? m.ganchoFa : m.gancho}
+                  </p>
+
+                  {/* Pie */}
+                  <div className="mt-4 flex items-center justify-end">
+                    <span className="font-cinzel text-xs text-gold/60 transition-colors group-hover:text-gold">
+                      {fa ? "خواندن ←" : "leer →"}
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
+        );
+      })}
 
       {/* Nota: más por venir */}
       <p className="mt-12 text-center font-cinzel text-xs uppercase tracking-widest text-muted/40">
