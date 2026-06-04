@@ -268,6 +268,61 @@ export const STUDY2_EDGES: MaseiEdge[] = [
   { a: "Kelipot", b: "Yetzer Hará", kind: "interp" }, { a: "Birur", b: "Cuerdas de vanidad", kind: "interp" },
 ];
 
+// ─── Estudios: 3 oraciones (Berajot 26b) · Sansón (Shoftim) · Descensos de la Shejiná ──
+// Verificado por el Sofer. Hallazgos: la lista de descensos es Avot DeRabbi Natan 34
+// (no Bereshit Rabá 19:7, que es 7 ascensos/7 descensos por los justos); Rashi a
+// Jueces 14:4 (toaná=pretexto) respalda lo de Sansón infiltrado; sulam=Sinaí=130.
+export const STUDY3_NODES: BNode[] = [
+  { id: "Tres oraciones", label: "Tres oraciones", labelFa: "سه نماز", cat: "jashmal", level: 4 },
+  { id: "Sansón", label: "Sansón (Shimshón)", labelFa: "شَمشون", cat: "jashmal", level: 4 },
+  { id: "Descensos de la Shejiná", label: "Descensos de la Shejiná", labelFa: "فرودهای شخینا", cat: "jashmal", level: 4 },
+  { id: "Shimshon", label: "Shimshón", labelFa: "شَمشون", cat: "figure", level: 3 },
+  { id: "Ester", label: "Ester", labelFa: "اِستر", cat: "figure", level: 3 },
+  { id: "Dagón", label: "Dagón (ídolo)", labelFa: "داگون (بت)", cat: "tema", level: 3 },
+  { id: "Sinaí", label: "Sinaí", labelFa: "سینای", cat: "tema", level: 3 },
+  { id: "Itaruta", label: "Itaruta (despertar arriba/abajo)", labelFa: "اِتعَروتا (بیداری از بالا و پایین)", cat: "kabbalah", level: 3 },
+  { id: "Shoftim", label: "Shoftim (Jueces)", labelFa: "شوفطیم (داوران)", cat: "tanakh", level: 2 },
+];
+
+export const STUDY3_EDGES: MaseiEdge[] = [
+  // A — Tres oraciones (Berajot 26b)
+  { a: "Tres oraciones", b: "Berajot", kind: "solid" }, { a: "Tres oraciones", b: "Talmud", kind: "solid" },
+  { a: "Tres oraciones", b: "Tefilá", kind: "solid" }, { a: "Tres oraciones", b: "Avraham", kind: "solid" },
+  { a: "Tres oraciones", b: "Yitzjak", kind: "solid" }, { a: "Tres oraciones", b: "Yaakov", kind: "solid" },
+  { a: "Avraham", b: "Tefilá", kind: "solid" }, { a: "Yitzjak", b: "Tefilá", kind: "solid" },
+  { a: "Yaakov", b: "Tefilá", kind: "solid" },
+  { a: "Tres oraciones", b: "Jésed", kind: "interp" }, { a: "Tres oraciones", b: "Guevurá", kind: "interp" },
+  { a: "Tres oraciones", b: "Tiféret", kind: "interp" }, { a: "Tres oraciones", b: "Cabalá", kind: "interp" },
+  { a: "Tres oraciones", b: "Neshamá", kind: "interp" },
+  // B — Sansón (Shoftim 14:4, 16:23)
+  { a: "Sansón", b: "Shimshon", kind: "solid" }, { a: "Sansón", b: "Shoftim", kind: "solid" },
+  { a: "Sansón", b: "Neviim", kind: "solid" }, { a: "Sansón", b: "Dagón", kind: "solid" },
+  { a: "Shimshon", b: "Shoftim", kind: "solid" }, { a: "Shimshon", b: "Neviim", kind: "solid" },
+  { a: "Shoftim", b: "Neviim", kind: "solid" }, { a: "Shimshon", b: "Dagón", kind: "solid" },
+  { a: "Sansón", b: "Birur", kind: "interp" }, { a: "Sansón", b: "Nitzotzot", kind: "interp" },
+  { a: "Sansón", b: "Kelipot", kind: "interp" }, { a: "Sansón", b: "Yosef", kind: "interp" },
+  { a: "Sansón", b: "Ester", kind: "interp" }, { a: "Sansón", b: "Galut", kind: "interp" },
+  { a: "Shimshon", b: "Guevurá", kind: "interp" }, { a: "Ester", b: "Galut", kind: "interp" },
+  { a: "Ester", b: "Shejiná", kind: "interp" }, { a: "Ester", b: "Birur", kind: "interp" },
+  { a: "Dagón", b: "Kelipot", kind: "interp" },
+  // C — Descensos de la Shejiná (BR 19:7 + Avot DeRabbi Natan 34)
+  { a: "Descensos de la Shejiná", b: "Bereshit Rabá", kind: "solid" }, { a: "Descensos de la Shejiná", b: "Midrash", kind: "solid" },
+  { a: "Descensos de la Shejiná", b: "Shejiná", kind: "solid" }, { a: "Descensos de la Shejiná", b: "Bereshit", kind: "solid" },
+  { a: "Descensos de la Shejiná", b: "Shemot", kind: "solid" }, { a: "Descensos de la Shejiná", b: "Bamidbar", kind: "solid" },
+  { a: "Descensos de la Shejiná", b: "Sinaí", kind: "solid" }, { a: "Descensos de la Shejiná", b: "Avraham", kind: "solid" },
+  { a: "Descensos de la Shejiná", b: "Yitzjak", kind: "solid" }, { a: "Descensos de la Shejiná", b: "Yaakov", kind: "solid" },
+  { a: "Descensos de la Shejiná", b: "Moshé", kind: "solid" }, { a: "Descensos de la Shejiná", b: "Gan Edén", kind: "solid" },
+  { a: "Sinaí", b: "Shemot", kind: "solid" }, { a: "Sinaí", b: "Moshé", kind: "solid" }, { a: "Sinaí", b: "Tefilá", kind: "interp" },
+  { a: "Descensos de la Shejiná", b: "Galut", kind: "interp" }, { a: "Descensos de la Shejiná", b: "Gueulá", kind: "interp" },
+  { a: "Descensos de la Shejiná", b: "Itaruta", kind: "interp" }, { a: "Descensos de la Shejiná", b: "Tzimtzum", kind: "interp" },
+  { a: "Descensos de la Shejiná", b: "Zohar", kind: "interp" }, { a: "Descensos de la Shejiná", b: "Maljut", kind: "interp" },
+  { a: "Itaruta", b: "Tzimtzum", kind: "interp" }, { a: "Itaruta", b: "Gueulá", kind: "interp" },
+  { a: "Itaruta", b: "Cabalá", kind: "solid" }, { a: "Sinaí", b: "Tiféret", kind: "interp" },
+  // Puentes entre los 3 estudios
+  { a: "Tres oraciones", b: "Descensos de la Shejiná", kind: "interp" },
+  { a: "Sansón", b: "Descensos de la Shejiná", kind: "interp" },
+];
+
 // ─── Nodos ───────────────────────────────────────────────────────────────
 export const BNODES: BNode[] = [
   // ── Nivel 0 — corazón (Torá y Tanaj UNIFICADOS: la Torá es el núcleo del Tanaj) ──
@@ -362,6 +417,8 @@ export const BNODES: BNode[] = [
   ...TREE_NODES,
   // ── Estudios Birurim + Cuerdas de vanidad (verificado por el Sofer) ──
   ...STUDY2_NODES,
+  // ── Estudios 3 oraciones · Sansón · Descensos de la Shejiná ──
+  ...STUDY3_NODES,
 ];
 
 // ─── Aristas (relaciones reales, NO dirigidas). Se deduplican antes de render ─
@@ -418,6 +475,8 @@ const RAW_EDGES: [string, string][] = [
   ...TREE_PATHS.map((p) => [p.from, p.to] as [string, string]),
   // Estudios Birurim + Cuerdas de vanidad
   ...STUDY2_EDGES.map((e) => [e.a, e.b] as [string, string]),
+  // Estudios 3 oraciones · Sansón · Descensos de la Shejiná
+  ...STUDY3_EDGES.map((e) => [e.a, e.b] as [string, string]),
 ];
 
 // dedup + descarta aristas a nodos inexistentes (p.ej. placeholders)
@@ -527,6 +586,10 @@ export const SEFIRA_AFFINITY: Record<string, string[]> = {
   // Brain — estudios Birurim + Cuerdas de vanidad
   Arad: ["Guevurá"], Kelipot: ["Guevurá"], "Yetzer Hará": ["Guevurá"],
   "Ratzón": ["Keter"], "Koaj HaMedameh": ["Hod"], "Reshimó": ["Keter"],
+  // Brain — estudios 3 oraciones · Sansón · Descensos de la Shejiná
+  Shimshon: ["Guevurá"], Ester: ["Maljut"], "Dagón": ["Guevurá"], "Sinaí": ["Tiféret"],
+  Itaruta: ["Yesod"], "Tres oraciones": ["Tiféret"], "Sansón": ["Guevurá"],
+  "Descensos de la Shejiná": ["Maljut"],
 };
 const SEFIRA_PULL = 0.45; // fuerza del jalón hacia el ancla (suave)
 

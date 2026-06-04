@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured, getSql } from "@/lib/db";
-import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2 } from "@/lib/brainStore";
+import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3 } from "@/lib/brainStore";
 import { BNODES, BEDGES } from "@/lib/brainData";
 
 export const runtime = "nodejs";
@@ -29,6 +29,8 @@ function ensureInit(): Promise<void> {
       await addTreePaths();
       // Estudios verificados: Birurim + Cuerdas de vanidad
       await addStudies2();
+      // Estudios verificados: 3 oraciones + Sansón + Descensos de la Shejiná
+      await addStudies3();
     })().catch((e) => {
       initPromise = null; // permite reintentar en la próxima llamada
       throw e;
