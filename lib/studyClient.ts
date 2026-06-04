@@ -100,5 +100,25 @@ export async function requestStudy(
 
   if (!study.trim()) throw new StudyError("study_failed");
 
+  // Alimentar el cerebro: cosecha en segundo plano (no bloquea ni rompe el estudio).
+  // Cada estudio con cross-links {{...}} se convierte en sinapsis/conexiones 'pending'.
+  try {
+    const subject =
+      body.mode === "letter"
+        ? body.letter || body.term
+        : body.mode === "concept"
+          ? body.term
+          : body.ref;
+    if (subject && study) {
+      void fetch("/api/brain/harvest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode: body.mode, subject, text: study }),
+      }).catch(() => {});
+    }
+  } catch {
+    /* la cosecha nunca debe afectar al usuario */
+  }
+
   return { study, depth: meta.depth, sourcesUsed: meta.sourcesUsed };
 }

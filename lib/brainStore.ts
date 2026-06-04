@@ -168,3 +168,82 @@ export async function addEdge(
   `;
   return true;
 }
+
+// ── Revisión del Sofer (panel) ────────────────────────────────────────────
+// ids de nodos YA existentes (cualquier estado) → para que la cosecha reutilice
+// el nodo canónico en vez de crear duplicados con otra grafía.
+export async function existingNodeIds(): Promise<Map<string, string>> {
+  const sql = getSql();
+  const map = new Map<string, string>(); // lowercase → id real
+  if (!sql) return map;
+  try {
+    const rows = (await sql`SELECT id FROM brain_nodes`) as Array<{ id: string }>;
+    for (const r of rows) map.set(r.id.toLowerCase(), r.id);
+  } catch {
+    /* ignore */
+  }
+  return map;
+}
+
+export type PendingNode = {
+  id: string; label: string; cat: string; level: number; url: string | null; source: string | null;
+};
+export type PendingEdge = {
+  id: string; source_id: string; target_id: string; source_label: string | null; target_label: string | null; origin: string | null;
+};
+
+export async function listPending(): Promise<{ nodes: PendingNode[]; edges: PendingEdge[] }> {
+  const sql = getSql();
+  if (!sql) return { nodes: [], edges: [] };
+  const nodes = (await sql`
+    SELECT id, label, cat, level, url, source
+    FROM brain_nodes WHERE status = 'pending'
+    ORDER BY created_at DESC LIMIT 300
+  `) as PendingNode[];
+  const edges = (await sql`
+    SELECT e.id, e.source_id, e.target_id, e.origin,
+           ns.label AS source_label, nt.label AS target_label
+    FROM brain_edges e
+    LEFT JOIN brain_nodes ns ON ns.id = e.source_id
+    LEFT JOIN brain_nodes nt ON nt.id = e.target_id
+    WHERE e.status = 'pending'
+    ORDER BY e.created_at DESC LIMIT 300
+  `) as PendingEdge[];
+  return { nodes, edges };
+}
+
+export async function countPending(): Promise<number> {
+  const sql = getSql();
+  if (!sql) return 0;
+  try {
+    const r = (await sql`
+      SELECT (SELECT count(*) FROM brain_nodes WHERE status='pending')
+           + (SELECT count(*) FROM brain_edges WHERE status='pending') AS n
+    `) as Array<{ n: number }>;
+    return Number(r?.[0]?.n ?? 0);
+  } catch {
+    return 0;
+  }
+}
+
+export async function setNodeStatus(id: string, status: "approved" | "rejected"): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  await sql`UPDATE brain_nodes SET status = ${status} WHERE id = ${id}`;
+  // al aprobar un nodo, aprueba también sus aristas pendientes entre nodos aprobados
+  if (status === "approved") {
+    await sql`
+      UPDATE brain_edges SET status = 'approved'
+      WHERE status = 'pending'
+        AND (source_id = ${id} OR target_id = ${id})
+        AND source_id IN (SELECT id FROM brain_nodes WHERE status='approved')
+        AND target_id IN (SELECT id FROM brain_nodes WHERE status='approved')
+    `;
+  }
+}
+
+export async function setEdgeStatus(id: string, status: "approved" | "rejected"): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  await sql`UPDATE brain_edges SET status = ${status} WHERE id = ${id}`;
+}
