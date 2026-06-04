@@ -11,8 +11,8 @@
 
 import { useMemo, useRef, useState, Suspense } from "react";
 import dynamic from "next/dynamic";
-import { useFrame, useThree } from "@react-three/fiber";
-import { Html } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import { Html, OrbitControls } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { useLocale } from "next-intl";
@@ -317,31 +317,19 @@ function Synapse({
   );
 }
 
-// ── Cámara cinematográfica (deriva + parallax con el mouse + inercia) ──────
-function Rig({ focusPos }: { focusPos: THREE.Vector3 | null }) {
-  const { camera, pointer } = useThree();
-  const azim = useRef(0);
-  const radius = useRef(CFG.radiusIdle);
-  const focus = useRef(CENTER.clone());
-  const camPos = useRef(new THREE.Vector3(0, 6, CFG.radiusIdle));
+// ── Foco de cámara: centra suavemente el target en el nodo seleccionado ───
+function FocusHelper({
+  selectedPos,
+  controlsRef,
+}: {
+  selectedPos: THREE.Vector3 | null;
+  controlsRef: React.RefObject<any>;
+}) {
   useFrame((_, dt) => {
-    const d = Math.min(0.05, dt);
-    azim.current += d * CFG.driftSpeed * Math.PI * 2 * 0.16;
-    const targetRadius = focusPos ? CFG.radiusFocus : CFG.radiusIdle;
-    radius.current += (targetRadius - radius.current) * Math.min(1, d * 1.6);
-    focus.current.lerp(focusPos ?? CENTER, Math.min(1, d * 2.2));
-    const az = azim.current + pointer.x * 0.6;
-    const pol = 1.32 - pointer.y * 0.32;
-    const r = radius.current;
-    const sp = Math.sin(pol);
-    const target = new THREE.Vector3(
-      focus.current.x + r * sp * Math.cos(az),
-      focus.current.y + r * Math.cos(pol),
-      focus.current.z + r * sp * Math.sin(az),
-    );
-    camPos.current.lerp(target, Math.min(1, d * 1.3));
-    camera.position.copy(camPos.current);
-    camera.lookAt(focus.current);
+    const c = controlsRef.current;
+    if (!c) return;
+    const goal = selectedPos ?? CENTER;
+    c.target.lerp(goal, Math.min(1, dt * 2.2));
   });
   return null;
 }
@@ -373,8 +361,18 @@ function BrainScene({
     () => (focusId ? neighborsOf(focusId) : new Set<string>()),
     [focusId],
   );
-  const focusPos = focusId && positions[focusId] ? new THREE.Vector3(...positions[focusId]) : null;
+  const selectedPos = selected && positions[selected] ? new THREE.Vector3(...positions[selected]) : null;
   const focusColor = focusId ? (BRAIN_CATS[nodeById(focusId)?.cat ?? ""]?.c ?? "#cfe6ff") : "#cfe6ff";
+
+  // controles de mouse (girar / mover / zoom) con pausa de auto-giro al interactuar
+  const controlsRef = useRef<any>(null);
+  const [autoRot, setAutoRot] = useState(true);
+  const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pauseAuto = () => { setAutoRot(false); if (idleTimer.current) clearTimeout(idleTimer.current); };
+  const resumeAuto = () => {
+    if (idleTimer.current) clearTimeout(idleTimer.current);
+    idleTimer.current = setTimeout(() => setAutoRot(true), 3000);
+  };
 
   // breathing group
   const groupRef = useRef<THREE.Group>(null);
@@ -402,7 +400,23 @@ function BrainScene({
 
   return (
     <>
-      <Rig focusPos={focusPos} />
+      <OrbitControls
+        ref={controlsRef}
+        makeDefault
+        enableDamping
+        dampingFactor={0.08}
+        enablePan
+        panSpeed={0.5}
+        rotateSpeed={0.55}
+        zoomSpeed={0.9}
+        minDistance={6}
+        maxDistance={42}
+        autoRotate={autoRot && !selected}
+        autoRotateSpeed={0.3}
+        onStart={pauseAuto}
+        onEnd={resumeAuto}
+      />
+      <FocusHelper selectedPos={selectedPos} controlsRef={controlsRef} />
       <ambientLight intensity={0.35} />
 
       {/* plano de fondo invisible → clic en vacío deselecciona */}
@@ -452,8 +466,8 @@ export default function GrafoPage() {
     subtitle: isFa ? "مغزِ زندهٔ خَשمَل" : "El cerebro vivo de Jashmal",
     back: isFa ? "بازگشت به خانه" : "Volver al inicio",
     hint: isFa
-      ? "حرکت موس برای چرخش · کلیک روی یک سیناپس · دوبار کلیک برای مطالعه"
-      : "Mueve el mouse para girar · clic en una sinapsis · doble clic para estudiar",
+      ? "بکشید برای چرخش · اسکرول/پینچ برای زوم · کلیک روی سیناپس · دوبار کلیک برای مطالعه"
+      : "Arrastra para girar · rueda o pellizca para acercar · clic en una sinapsis · doble clic para estudiar",
     legend: isFa ? "دامنه‌های دانش" : "Dominios del saber",
     study: isFa ? "مطالعه ←" : "Estudiar →",
   };
