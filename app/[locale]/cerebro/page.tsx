@@ -11,7 +11,7 @@
 
 import { useMemo, useRef, useState, useEffect, Suspense } from "react";
 import dynamic from "next/dynamic";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Html, OrbitControls } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
@@ -434,19 +434,34 @@ function Synapse({
   );
 }
 
-// ── Foco de cámara: centra suavemente el target en el nodo seleccionado ───
+// ── Vuelo de cámara: SOLO al BUSCAR un nodo (no al hacer clic). Lleva el nodo
+// al centro de la vista y lo encuadra a una distancia cómoda. Al hacer clic la
+// cámara NO se mueve — así el punto se queda donde lo tocaste y no se pierde. ──
 function FocusHelper({
-  selectedPos,
+  flyToPos,
   controlsRef,
+  onArrived,
 }: {
-  selectedPos: THREE.Vector3 | null;
+  flyToPos: THREE.Vector3 | null;
   controlsRef: React.RefObject<any>;
+  onArrived: () => void;
 }) {
+  const camera = useThree((s) => s.camera);
   useFrame((_, dt) => {
     const c = controlsRef.current;
-    if (!c) return;
-    const goal = selectedPos ?? CENTER;
-    c.target.lerp(goal, Math.min(1, dt * 2.2));
+    if (!c || !flyToPos) return;
+    const k = Math.min(1, dt * 2.4);
+    // centrar el objetivo en el nodo buscado
+    c.target.lerp(flyToPos, k);
+    // acercar suavemente la cámara a una distancia cómoda del nodo
+    const dir = camera.position.clone().sub(flyToPos);
+    const len = dir.length();
+    if (len > 0.001) {
+      const newLen = THREE.MathUtils.lerp(len, CFG.radiusFocus, k);
+      camera.position.copy(flyToPos).add(dir.multiplyScalar(newLen / len));
+    }
+    c.update();
+    if (c.target.distanceTo(flyToPos) < 0.3) onArrived();
   });
   return null;
 }
@@ -460,6 +475,8 @@ function BrainScene({
   compare,
   isFa,
   locale,
+  flyToId,
+  onFlewTo,
   onSelect,
   onHover,
   onDouble,
@@ -472,6 +489,8 @@ function BrainScene({
   compare: string[];
   isFa: boolean;
   locale: string;
+  flyToId: string | null;
+  onFlewTo: () => void;
   onSelect: (id: string, additive: boolean) => void;
   onHover: (id: string | null) => void;
   onDouble: (n: BNode) => void;
@@ -494,7 +513,7 @@ function BrainScene({
     [edges, selected],
   );
   const pathSet = useMemo(() => new Set(pathToTorah), [pathToTorah]);
-  const selectedPos = selected && positions[selected] ? new THREE.Vector3(...positions[selected]) : null;
+  const flyToPos = flyToId && positions[flyToId] ? new THREE.Vector3(...positions[flyToId]) : null;
   const focusColor = focusId ? (BRAIN_CATS[nodeMap.get(focusId)?.cat ?? ""]?.c ?? "#cfe6ff") : "#cfe6ff";
 
   // ── Modo comparación (Cmd/Ctrl-clic 2+ nodos): qué COMPARTEN ──
@@ -520,15 +539,13 @@ function BrainScene({
         (compareSet.has(c.b) && sharedSet.has(c.a)),
     );
   }, [compareActive, curves, compareSet, sharedSet]);
-  const comparePos = useMemo(() => {
-    if (!compareActive) return null;
-    let x = 0, y = 0, z = 0, k = 0;
-    for (const id of compare) { const p = positions[id]; if (p) { x += p[0]; y += p[1]; z += p[2]; k++; } }
-    return k ? new THREE.Vector3(x / k, y / k, z / k) : null;
-  }, [compareActive, compare, positions]);
-
   // controles de mouse (girar / mover / zoom) con pausa de auto-giro al interactuar
   const controlsRef = useRef<any>(null);
+  // marca de tiempo del último movimiento real de cámara (girar/zoom/pinch):
+  // sirve para NO deseleccionar cuando el "clic" en el fondo viene de un gesto.
+  // Solo cuenta mientras el usuario interactúa (no el auto-giro).
+  const lastCamMove = useRef(0);
+  const interacting = useRef(false);
   const [autoRot, setAutoRot] = useState(true);
   const idleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pauseAuto = () => { setAutoRot(false); if (idleTimer.current) clearTimeout(idleTimer.current); };
@@ -586,18 +603,27 @@ function BrainScene({
         panSpeed={0.5}
         rotateSpeed={0.55}
         zoomSpeed={0.9}
-        minDistance={6}
-        maxDistance={42}
+        minDistance={5}
+        maxDistance={54}
         autoRotate={autoRot && !selected && !compareActive}
         autoRotateSpeed={0.3}
-        onStart={pauseAuto}
-        onEnd={resumeAuto}
+        onStart={() => { interacting.current = true; pauseAuto(); }}
+        onEnd={() => { interacting.current = false; resumeAuto(); }}
+        onChange={() => { if (interacting.current) lastCamMove.current = performance.now(); }}
       />
-      <FocusHelper selectedPos={compareActive ? comparePos : selectedPos} controlsRef={controlsRef} />
+      <FocusHelper flyToPos={flyToPos} controlsRef={controlsRef} onArrived={onFlewTo} />
       <ambientLight intensity={0.35} />
 
-      {/* plano de fondo invisible → clic en vacío deselecciona */}
-      <mesh position={[0, 0, -40]} onClick={(e) => { e.stopPropagation(); onBackground(); }}>
+      {/* plano de fondo invisible → un TAP limpio en vacío deselecciona.
+          Si el usuario acaba de girar/zoom/pinch, el "clic" del gesto se ignora. */}
+      <mesh
+        position={[0, 0, -40]}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (performance.now() - lastCamMove.current < 350) return; // fue un gesto de cámara
+          onBackground();
+        }}
+      >
         <planeGeometry args={[400, 400]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
@@ -645,6 +671,7 @@ export default function GrafoPage() {
   const [expanding, setExpanding] = useState(false);
   const [searchQ, setSearchQ] = useState("");
   const [compare, setCompare] = useState<string[]>([]); // modo comparación (Cmd/Ctrl-clic)
+  const [flyToId, setFlyToId] = useState<string | null>(null); // SOLO al buscar: vuela al nodo
 
   useEffect(() => {
     let alive = true;
@@ -687,14 +714,18 @@ export default function GrafoPage() {
       .slice(0, 8);
   }, [searchQ, graph.nodes]);
 
+  // Buscar = seleccionar + VOLAR hacia el nodo (porque no se ve en pantalla).
   const pickNode = (id: string) => {
     setCompare([]);
     setSelected(id);
     setSearchQ("");
+    setFlyToId(id);
   };
 
-  // clic normal = seleccionar uno; Cmd/Ctrl/Shift-clic = agregar a comparación
+  // clic normal = seleccionar uno; Cmd/Ctrl/Shift-clic = agregar a comparación.
+  // Al hacer clic NO se vuela (la cámara se queda quieta y no se pierde el punto).
   const handleSelect = (id: string, additive: boolean) => {
+    setFlyToId(null); // cancela cualquier vuelo en curso si el usuario toca algo
     if (additive) {
       setSelected(null);
       setCompare((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
@@ -703,7 +734,7 @@ export default function GrafoPage() {
       setSelected((p) => (p === id ? null : id));
     }
   };
-  const clearAll = () => { setSelected(null); setCompare([]); };
+  const clearAll = () => { setSelected(null); setCompare([]); setFlyToId(null); };
   const handleDouble = (n: BNode) => { if (n.url) window.open("https://jashmal.org" + n.url, "_blank"); };
 
   // qué COMPARTEN los nodos en comparación (vecinos comunes)
@@ -770,7 +801,7 @@ export default function GrafoPage() {
       >
         <Canvas camera={{ position: [0, 6, CFG.radiusIdle], fov: 55 }} gl={{ antialias: true }} style={{ position: "absolute", inset: 0 }}>
           <color attach="background" args={["#03040a"]} />
-          <fogExp2 attach="fog" args={["#03040a", 0.018]} />
+          <fogExp2 attach="fog" args={["#03040a", 0.011]} />
           <BrainScene
             nodes={graph.nodes}
             edges={graph.edges}
@@ -779,6 +810,8 @@ export default function GrafoPage() {
             compare={compare}
             isFa={isFa}
             locale={locale}
+            flyToId={flyToId}
+            onFlewTo={() => setFlyToId(null)}
             onSelect={handleSelect}
             onHover={setHovered}
             onDouble={handleDouble}
@@ -865,9 +898,18 @@ export default function GrafoPage() {
       {/* Tarjeta del nodo seleccionado */}
       {selNode && (
         <div className="absolute bottom-4 end-4 z-10 w-[min(260px,80vw)] rounded-xl border border-gold/25 bg-ink/90 p-4 backdrop-blur-md">
-          <p className="font-cinzel text-base" style={{ color: BRAIN_CATS[selNode.cat]?.c ?? "#c9a43e" }}>
-            {isFa ? selNode.labelFa : selNode.label}
-          </p>
+          <div className="flex items-start justify-between gap-2">
+            <p className="font-cinzel text-base" style={{ color: BRAIN_CATS[selNode.cat]?.c ?? "#c9a43e" }}>
+              {isFa ? selNode.labelFa : selNode.label}
+            </p>
+            <button
+              onClick={clearAll}
+              aria-label={isFa ? "بستن" : "cerrar"}
+              className="-me-1 -mt-1 shrink-0 rounded-full px-2 py-0.5 text-lg leading-none text-muted/50 transition-colors hover:text-gold"
+            >
+              ×
+            </button>
+          </div>
           <p className="mt-0.5 text-[10px] uppercase tracking-wide text-muted/50">{BRAIN_CATS[selNode.cat]?.label}</p>
           <button
             onClick={expandNode}
