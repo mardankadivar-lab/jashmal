@@ -41,6 +41,62 @@ export const BRAIN_CATS: Record<string, { c: string; label: string; labelFa: str
   jashmal:    { c: "#f4cf5a", label: "Jashmal",   labelFa: "خَשمَل" },  // contenido propio (oro)
 };
 
+// ─── Estudio: 42 estaciones (Mas'ei) · Nombre de 42 · Ana BeKoaj ──────────
+// Verificado por el Sofer (editor-erudito). Cada arista marcada SÓLIDA (fuente
+// clásica directa) o INTERPRETATIVA (lectura meditativa, NO texto del Arizal).
+// Fuentes: Bamidbar 33; Rashi/Ramban/Or HaJaim 33:1; Zohar II 157a (vía Or
+// HaJaim) = viajes para liberar chispas; Nombre de 42 = Kidushín 71a;
+// Ana BeKoaj (7×6=42) atribución tradicional a R. Nejunia ben HaKana.
+export const MASEI_NODES: BNode[] = [
+  { id: "Masei",          label: "Mas'ei · 42 estaciones", labelFa: "مَسعِی · ۴۲ منزل",          cat: "tanakh",   level: 3 },
+  { id: "Nombre de 42",   label: "Nombre de 42 (Mem-Bet)", labelFa: "نام ۴۲ حرفی (مم-بت)",        cat: "kabbalah", level: 3 },
+  { id: "Ana BeKoaj",     label: "Ana BeKoaj",             labelFa: "آنا بِخوآח",                cat: "kabbalah", level: 3 },
+  { id: "Birur",          label: "Birur (chispas)",        labelFa: "بیرور (جدا کردن جرقه‌ها)",   cat: "kabbalah", level: 3 },
+  { id: "Tikún",          label: "Tikún",                  labelFa: "تیقون (اصلاح)",             cat: "kabbalah", level: 3 },
+  { id: "Nitzotzot",      label: "Nitzotzot (chispas)",    labelFa: "نیتسوتسوت (جرقه‌ها)",         cat: "kabbalah", level: 3 },
+  { id: "Gilgulim",       label: "Gilgulim",               labelFa: "گیلگولیم (تناسخ)",           cat: "kabbalah", level: 3 },
+  { id: "Cuatro Mundos",  label: "Cuatro Mundos (ABYA)",   labelFa: "چهار عالم (آبیع)",           cat: "kabbalah", level: 3 },
+  { id: "Raamses",        label: "Raamsés (esclavitud)",   labelFa: "رَعمسیس (بردگی)",            cat: "tanakh",   level: 3 },
+  { id: "Mara",           label: "Mará (amargura)",        labelFa: "مارا (تلخی)",                cat: "tanakh",   level: 3 },
+  { id: "Kivrot HaTaava", label: "Kivrot HaTaavá",         labelFa: "قبروت هَتَّاوا",              cat: "tanakh",   level: 3 },
+  { id: "Arvot Moav",     label: "Arvot Moav (umbral)",    labelFa: "عَرووت موآو (آستانه)",        cat: "tanakh",   level: 3 },
+];
+
+export type MaseiEdge = { a: string; b: string; kind: "solid" | "interp" };
+export const MASEI_EDGES: MaseiEdge[] = [
+  // SÓLIDAS — fuente clásica directa
+  { a: "Masei", b: "Bamidbar", kind: "solid" },
+  { a: "Masei", b: "Raamses", kind: "solid" },
+  { a: "Masei", b: "Arvot Moav", kind: "solid" },
+  { a: "Masei", b: "Mara", kind: "solid" },
+  { a: "Masei", b: "Kivrot HaTaava", kind: "solid" },
+  { a: "Masei", b: "Birur", kind: "solid" },          // Zohar II 157a vía Or HaJaim 33:1
+  { a: "Birur", b: "Nitzotzot", kind: "solid" },
+  { a: "Birur", b: "Cabalá", kind: "solid" },
+  { a: "Nitzotzot", b: "Cabalá", kind: "solid" },
+  { a: "Tikún", b: "Cabalá", kind: "solid" },
+  { a: "Gilgulim", b: "Cabalá", kind: "solid" },
+  { a: "Cuatro Mundos", b: "Cabalá", kind: "solid" },
+  { a: "Cuatro Mundos", b: "Tzimtzum", kind: "solid" },
+  { a: "Nombre de 42", b: "Cabalá", kind: "solid" },
+  { a: "Ana BeKoaj", b: "Nombre de 42", kind: "solid" }, // el Ana BeKoaj codifica el Nombre de 42
+  { a: "Birur", b: "Tikún", kind: "solid" },
+  { a: "Nitzotzot", b: "358", kind: "solid" },         // chispas ↔ Mashíaj (358)
+  // INTERPRETATIVAS — lectura meditativa (NO texto literal del Arizal)
+  { a: "Masei", b: "Nombre de 42", kind: "interp" },   // 42 estaciones ↔ 42 letras (paralelo de CONTEO)
+  { a: "Masei", b: "Ana BeKoaj", kind: "interp" },
+  { a: "Masei", b: "Tikún", kind: "interp" },
+  { a: "Masei", b: "Gilgulim", kind: "interp" },
+  { a: "Masei", b: "Cuatro Mundos", kind: "interp" },
+  { a: "Nombre de 42", b: "Cuatro Mundos", kind: "interp" },
+  { a: "Masei", b: "Mashíaj", kind: "interp" },
+  { a: "Arvot Moav", b: "Mashíaj", kind: "interp" },
+  { a: "Raamses", b: "Birur", kind: "interp" },
+  { a: "Ana BeKoaj", b: "Jésed", kind: "interp" },
+  { a: "Masei", b: "Maljut", kind: "interp" },
+  { a: "Nombre de 42", b: "Tiféret", kind: "interp" },
+];
+
 // ─── Nodos ───────────────────────────────────────────────────────────────
 export const BNODES: BNode[] = [
   // ── Nivel 0 — corazón (Torá y Tanaj UNIFICADOS: la Torá es el núcleo del Tanaj) ──
@@ -126,6 +182,9 @@ export const BNODES: BNode[] = [
   { id: "Refuá",              label: "Refuá",              labelFa: "رِفوآه",      cat: "jashmal", level: 4, url: "/refua",              region: "tanakh" },
   { id: "Linaje",             label: "Linaje",             labelFa: "تبار",        cat: "jashmal", level: 4, url: "/linaje",             region: "kabbalah" },
   { id: "Bilaam",             label: "Bilaam",             labelFa: "بَلعام",      cat: "jashmal", level: 4, url: "/bilaam",             region: "tanakh" },
+
+  // ── Estudio Mas'ei / Nombre de 42 / Ana BeKoaj (verificado por el Sofer) ──
+  ...MASEI_NODES,
 ];
 
 // ─── Aristas (relaciones reales, NO dirigidas). Se deduplican antes de render ─
@@ -174,6 +233,8 @@ const RAW_EDGES: [string, string][] = [
   ["Nes", "Nun"], ["Nes", "Sámej"], ["Nes", "Yosef"], ["Nes", "Tehilim"],
   ["Refuá", "Refael"], ["Refuá", "Sanador"], ["Refuá", "Tehilim"], ["Sanador", "Shemot"], ["Refael", "Bereshit Rabá"],
   ["Sanador", "Mishné Torá"], ["Linaje", "Mashíaj"], ["Linaje", "Yosef"], ["Bilaam", "Najash"], ["Bilaam", "Bamidbar"],
+  // Estudio Mas'ei / Nombre de 42 / Ana BeKoaj (sólidas + interpretativas)
+  ...MASEI_EDGES.map((e) => [e.a, e.b] as [string, string]),
 ];
 
 // dedup + descarta aristas a nodos inexistentes (p.ej. placeholders)

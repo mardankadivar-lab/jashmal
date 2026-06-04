@@ -9,7 +9,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 import { getSql } from "./db";
-import { BNODES, BEDGES, type BNode } from "./brainData";
+import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, type BNode } from "./brainData";
 
 export type BrainGraph = { nodes: BNode[]; edges: [string, string][] };
 
@@ -133,6 +133,33 @@ export async function unifyTanakh(): Promise<void> {
         INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
         VALUES (${edgeKey(a, b)}, ${a}, ${b}, 'rel', 1, 'approved', 'seed')
         ON CONFLICT (id) DO NOTHING
+      `;
+    }
+  } catch {
+    /* nunca romper la lectura del cerebro */
+  }
+}
+
+// ── Estudio verificado: 42 estaciones / Nombre de 42 / Ana BeKoaj ─────────
+// Inserta el estudio del Sofer como APROBADO (ya verificado). Idempotente.
+// Guarda en cada arista su 'kind': 'solid' (fuente clásica) | 'interp' (meditativo).
+export async function addMaseiStudy(): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  try {
+    for (const n of MASEI_NODES) {
+      await sql`
+        INSERT INTO brain_nodes (id, label, label_fa, cat, level, url, region, status, source)
+        VALUES (${n.id}, ${n.label}, ${n.labelFa}, ${n.cat}, ${n.level},
+                ${n.url ?? null}, ${n.region ?? null}, 'approved', 'sofer')
+        ON CONFLICT (id) DO NOTHING
+      `;
+    }
+    for (const e of MASEI_EDGES) {
+      await sql`
+        INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
+        VALUES (${edgeKey(e.a, e.b)}, ${e.a}, ${e.b}, ${e.kind}, 1, 'approved', 'sofer')
+        ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, status = 'approved'
       `;
     }
   } catch {
