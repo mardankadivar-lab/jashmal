@@ -366,6 +366,59 @@ export function degreesIn(nodes: BNode[], edges: [string, string][]): Record<str
   return deg;
 }
 
+// ─── Lista de adyacencia ──────────────────────────────────────────────────
+function buildAdj(edges: [string, string][]): Map<string, string[]> {
+  const adj = new Map<string, string[]>();
+  const add = (a: string, b: string) => {
+    const l = adj.get(a);
+    if (l) l.push(b);
+    else adj.set(a, [b]);
+  };
+  for (const [a, b] of edges) { add(a, b); add(b, a); }
+  return adj;
+}
+
+// Distancia (nº de saltos) desde un nodo a todos los demás (BFS).
+// Capa 1 = primaria, 2 = secundaria, 3 = terciaria… → visibilidad jerárquica.
+export function bfsDistances(edges: [string, string][], start: string): Map<string, number> {
+  const adj = buildAdj(edges);
+  const dist = new Map<string, number>([[start, 0]]);
+  let frontier = [start];
+  let d = 0;
+  while (frontier.length) {
+    d++;
+    const next: string[] = [];
+    for (const u of frontier)
+      for (const v of adj.get(u) ?? []) {
+        if (!dist.has(v)) { dist.set(v, d); next.push(v); }
+      }
+    frontier = next;
+    if (d > 16) break;
+  }
+  return dist;
+}
+
+// Camino más corto entre dos nodos (lista de ids); [] si no hay. → "Camino a la Torá".
+export function shortestPath(edges: [string, string][], from: string, to: string): string[] {
+  if (from === to) return [from];
+  const adj = buildAdj(edges);
+  const prev = new Map<string, string | null>([[from, null]]);
+  let frontier = [from];
+  while (frontier.length && !prev.has(to)) {
+    const next: string[] = [];
+    for (const u of frontier)
+      for (const v of adj.get(u) ?? []) {
+        if (!prev.has(v)) { prev.set(v, u); next.push(v); }
+      }
+    frontier = next;
+  }
+  if (!prev.has(to)) return [];
+  const path: string[] = [];
+  let c: string | null = to;
+  while (c != null) { path.unshift(c); c = prev.get(c) ?? null; }
+  return path;
+}
+
 // ─── Tejido ambiental: sinapsis decorativas que dan masa/forma al cerebro ──
 // Puntos tenues dentro de la unión de los lóbulos (ambos hemisferios).
 // Devuelve { positions: Float32Array(n*3), colors: Float32Array(n*3) }.

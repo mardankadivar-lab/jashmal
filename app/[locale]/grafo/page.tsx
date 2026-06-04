@@ -24,7 +24,8 @@ import {
   BRAIN_SCALE,
   layoutNodes,
   ambientTissue,
-  neighborsIn,
+  bfsDistances,
+  shortestPath,
   type BNode,
 } from "@/lib/brainData";
 
@@ -173,37 +174,52 @@ function BaseFibers({ segments, dimmed }: { segments: Float32Array; dimmed: bool
   );
 }
 
-// ── Fibras activas (las del nodo enfocado) + pulsos viajando ───────────────
-function ActiveFibers({
+// ── Fibras jerárquicas: capas por distancia (primaria→secundaria→terciaria) ─
+// Cada arista pertenece a la capa = min(distancia de sus dos extremos al foco).
+// Capa 0 = primaria (más brillante) · 1 = secundaria · 2 = terciaria (tenue).
+const LAYER_OPACITY = [CFG.fiberOpacityActive, 0.38, 0.15];
+function LayeredFibers({
   curves,
+  dist,
   focusId,
   color,
 }: {
   curves: EdgeCurve[];
+  dist: Map<string, number>;
   focusId: string;
   color: string;
 }) {
-  const active = useMemo(
-    () => curves.filter((c) => c.a === focusId || c.b === focusId),
-    [curves, focusId],
-  );
-  const geom = useMemo(() => {
-    const segs = curvesToSegments(active);
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.BufferAttribute(segs, 3));
-    return g;
-  }, [active]);
+  const layers = useMemo(() => {
+    const out: EdgeCurve[][] = [[], [], []];
+    for (const c of curves) {
+      const da = dist.get(c.a);
+      const db = dist.get(c.b);
+      if (da == null || db == null) continue;
+      const layer = Math.min(da, db);
+      if (layer <= 2) out[layer].push(c);
+    }
+    return out;
+  }, [curves, dist]);
 
-  const tex = useMemo(() => glowTexture(), []);
+  const geoms = useMemo(
+    () =>
+      layers.map((ls) => {
+        const g = new THREE.BufferGeometry();
+        g.setAttribute("position", new THREE.BufferAttribute(curvesToSegments(ls), 3));
+        return g;
+      }),
+    [layers],
+  );
+
   const col = useMemo(() => new THREE.Color(color), [color]);
-  // un pulso por arista activa (sprite que viaja del nodo al vecino)
+  const tex = useMemo(() => glowTexture(), []);
+  const primary = layers[0];
   const pulseRefs = useRef<(THREE.Sprite | null)[]>([]);
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
-    active.forEach((c, i) => {
+    primary.forEach((c, i) => {
       const spr = pulseRefs.current[i];
       if (!spr) return;
-      // dirección: siempre sale DESDE el nodo enfocado
       const fwd = c.a === focusId;
       let u = (t * 0.6 + i * 0.13) % 1;
       if (!fwd) u = 1 - u;
@@ -217,21 +233,45 @@ function ActiveFibers({
 
   return (
     <group>
-      <lineSegments geometry={geom}>
-        <lineBasicMaterial
-          color={col}
-          transparent
-          opacity={CFG.fiberOpacityActive}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
-      </lineSegments>
-      {active.map((c, i) => (
+      {geoms.map((g, i) => (
+        <lineSegments key={i} geometry={g}>
+          <lineBasicMaterial
+            color={col}
+            transparent
+            opacity={LAYER_OPACITY[i]}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </lineSegments>
+      ))}
+      {primary.map((c, i) => (
         <sprite key={c.a + c.b} ref={(el) => { pulseRefs.current[i] = el; }}>
           <spriteMaterial map={tex} color={col} transparent opacity={0.95} blending={THREE.AdditiveBlending} depthWrite={false} />
         </sprite>
       ))}
     </group>
+  );
+}
+
+// ── Camino a la Torá: hilo dorado del nodo seleccionado de vuelta al núcleo ─
+function PathToTorah({ path, curves }: { path: string[]; curves: EdgeCurve[] }) {
+  const geom = useMemo(() => {
+    const arr: EdgeCurve[] = [];
+    for (let i = 0; i < path.length - 1; i++) {
+      const a = path[i];
+      const b = path[i + 1];
+      const c = curves.find((c) => (c.a === a && c.b === b) || (c.a === b && c.b === a));
+      if (c) arr.push(c);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(curvesToSegments(arr), 3));
+    return g;
+  }, [path, curves]);
+
+  return (
+    <lineSegments geometry={geom}>
+      <lineBasicMaterial color="#ffe9a8" transparent opacity={0.95} blending={THREE.AdditiveBlending} depthWrite={false} />
+    </lineSegments>
   );
 }
 
@@ -366,10 +406,17 @@ function BrainScene({
   const nodeMap = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
 
   const focusId = selected ?? hovered;
-  const neighbors = useMemo(
-    () => (focusId ? neighborsIn(edges, focusId) : new Set<string>()),
+  // distancias por capas desde el foco (BFS) → visibilidad jerárquica
+  const dist = useMemo(
+    () => (focusId ? bfsDistances(edges, focusId) : null),
     [edges, focusId],
   );
+  // camino a la Torá (solo al SELECCIONAR, no al pasar el mouse)
+  const pathToTorah = useMemo(
+    () => (selected && selected !== "Torá" ? shortestPath(edges, selected, "Torá") : []),
+    [edges, selected],
+  );
+  const pathSet = useMemo(() => new Set(pathToTorah), [pathToTorah]);
   const selectedPos = selected && positions[selected] ? new THREE.Vector3(...positions[selected]) : null;
   const focusColor = focusId ? (BRAIN_CATS[nodeMap.get(focusId)?.cat ?? ""]?.c ?? "#cfe6ff") : "#cfe6ff";
 
@@ -392,17 +439,25 @@ function BrainScene({
     }
   });
 
-  // intensidad por nodo (0 dormido .. 1.4 enfocado)
+  // intensidad por nodo según capa: primaria > secundaria > terciaria > lejana
   const intensityOf = (n: BNode): number => {
     const awakeBase = n.level <= 1 ? 0.55 : n.level === 2 ? 0.32 : 0.18; // latente
-    if (!focusId) return awakeBase;
+    if (!focusId || !dist) return awakeBase;
     if (n.id === focusId) return 1.4;
-    if (neighbors.has(n.id)) return 1.0;
-    return awakeBase * 0.35; // baja opacidad pero no desaparece
+    const d = dist.get(n.id);
+    if (d === 1) return 1.0; // primaria
+    if (d === 2) return 0.62; // secundaria
+    if (d === 3) return 0.38; // terciaria
+    if (pathSet.has(n.id)) return 0.8; // en el camino a la Torá
+    return awakeBase * 0.2; // lejano: muy tenue (no desaparece)
   };
   const showLabelOf = (n: BNode): boolean => {
     if (n.id === focusId) return true;
-    if (focusId && neighbors.has(n.id)) return true;
+    if (dist) {
+      const d = dist.get(n.id);
+      if (d === 1) return true; // primarias rotuladas
+      if (pathSet.has(n.id)) return true; // el camino a la Torá rotulado
+    }
     if (!focusId && n.level <= 1) return true; // dominios + Torá siempre rotulados
     return false;
   };
@@ -437,7 +492,8 @@ function BrainScene({
       <group ref={groupRef}>
         <AmbientTissue />
         <BaseFibers segments={baseSegments} dimmed={focusId !== null} />
-        {focusId && <ActiveFibers curves={curves} focusId={focusId} color={focusColor} />}
+        {focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} />}
+        {pathToTorah.length > 1 && <PathToTorah path={pathToTorah} curves={curves} />}
 
         {nodes.map((n) => {
           const pos = positions[n.id];
@@ -470,6 +526,7 @@ export default function GrafoPage() {
   // el cerebro lee sus sinapsis/conexiones de /api/brain (BD); semilla como respaldo
   const [graph, setGraph] = useState<Graph>({ nodes: BNODES, edges: BEDGES });
   const [expanding, setExpanding] = useState(false);
+  const [searchQ, setSearchQ] = useState("");
 
   useEffect(() => {
     let alive = true;
@@ -499,6 +556,22 @@ export default function GrafoPage() {
     study: isFa ? "مطالعه ←" : "Estudiar →",
     expand: isFa ? "✦ گسترش" : "✦ Expandir",
     expanding: isFa ? "در حال پژوهش…" : "Investigando…",
+    search: isFa ? "جستجوی هر مفهوم…" : "Busca cualquier concepto…",
+  };
+
+  // Buscador global: sugerencias por nombre (es/fa). Seleccionar = volar + encender.
+  const suggestions = useMemo(() => {
+    const q = searchQ.trim().toLowerCase();
+    if (q.length < 1) return [] as BNode[];
+    return graph.nodes
+      .filter((n) => n.label.toLowerCase().includes(q) || (n.labelFa ?? "").toLowerCase().includes(q))
+      .sort((a, b) => a.label.toLowerCase().indexOf(q) - b.label.toLowerCase().indexOf(q))
+      .slice(0, 8);
+  }, [searchQ, graph.nodes]);
+
+  const pickNode = (id: string) => {
+    setSelected(id);
+    setSearchQ("");
   };
 
   const handleSelect = (id: string) => setSelected((p) => (p === id ? null : id));
@@ -580,6 +653,46 @@ export default function GrafoPage() {
         >
           {isFa ? "→ " : "← "}{T.back}
         </Link>
+      </div>
+
+      {/* Buscador global (motor de búsqueda visual) */}
+      <div className="pointer-events-none absolute inset-x-0 top-16 z-20 flex justify-center px-4">
+        <div className="pointer-events-auto w-[min(360px,86vw)]">
+          <div className="relative">
+            <input
+              value={searchQ}
+              onChange={(e) => setSearchQ(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && suggestions[0]) pickNode(suggestions[0].id);
+                if (e.key === "Escape") setSearchQ("");
+              }}
+              placeholder={T.search}
+              dir={isFa ? "rtl" : "ltr"}
+              style={{ fontFamily: "var(--font-cormorant, serif)" }}
+              className="w-full rounded-full border border-gold/25 bg-ink/85 px-4 py-2 pe-9 text-base text-[#e8e4d8] outline-none backdrop-blur-md placeholder:text-muted/40 focus:border-gold/60"
+            />
+            <span className="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-gold/50">⌕</span>
+          </div>
+          {suggestions.length > 0 && (
+            <ul className="mt-1.5 overflow-hidden rounded-2xl border border-gold/15 bg-ink/90 backdrop-blur-md">
+              {suggestions.map((n) => {
+                const c = BRAIN_CATS[n.cat]?.c ?? "#c9a43e";
+                return (
+                  <li key={n.id}>
+                    <button
+                      onClick={() => pickNode(n.id)}
+                      className="flex w-full items-center gap-2 px-4 py-2 text-start transition-colors hover:bg-gold/10"
+                    >
+                      <span className="inline-block h-2 w-2 shrink-0 rounded-full" style={{ background: c, boxShadow: `0 0 6px ${c}` }} />
+                      <span className="truncate text-sm text-[#e8e4d8]">{isFa ? n.labelFa : n.label}</span>
+                      <span className="ms-auto shrink-0 text-[10px] uppercase tracking-wide text-muted/40">{BRAIN_CATS[n.cat]?.label}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
       </div>
 
       {/* Leyenda */}
