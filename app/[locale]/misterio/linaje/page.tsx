@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "@/i18n/navigation";
+import MisterioLangToggle from "@/components/MisterioLangToggle";
 
 // ── Las cuatro madres de la sombra ────────────────────────────────────────────
 interface Madre {
@@ -139,7 +140,8 @@ export default function LinajePage() {
       <nav className="sticky top-0 z-40 border-b border-gold/10 px-5 py-3 backdrop-blur-md" style={{ background: navBg }}>
         <div className="mx-auto flex max-w-2xl items-center justify-between">
           <Link href="/" className="font-cinzel text-sm text-gold/70 hover:text-gold">חַשְׁמַל · Jashmal</Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <MisterioLangToggle />
             <button onClick={() => router.push("/estudio")}
               className="rounded-full border border-gold/30 px-4 py-1.5 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/10">
               {fa ? "شروع مطالعه" : "Comenzar estudio →"}

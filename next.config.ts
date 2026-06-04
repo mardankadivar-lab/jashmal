@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
       { source: "/habakuk", destination: "/es/misterio/habakuk" },
       { source: "/bilaam", destination: "/es/misterio/bilaam" },
       { source: "/137", destination: "/es/misterio/137" },
+      { source: "/entrelazamiento", destination: "/es/misterio/entrelazamiento" },
     ];
   },
 };

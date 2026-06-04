@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "@/i18n/navigation";
+import MisterioLangToggle from "@/components/MisterioLangToggle";
 
 function Section({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -21,12 +22,19 @@ function Section({ children, delay = 0 }: { children: React.ReactNode; delay?: n
   );
 }
 
-function Tile({ he, sub, color, size = 56 }: { he: string; sub: string; color: string; size?: number }) {
+function Tile({ he, sub, color, size = 56, parts }: { he?: string; sub: string; color: string; size?: number; parts?: { t: string; hi?: boolean }[] }) {
+  const HI = "#c9a43e"; // dorado: resalta las letras iniciales que forman el acrónimo
   return (
     <div className="inline-flex flex-col items-center rounded-2xl border-2 px-5 py-4"
       style={{ borderColor: `${color}99`, background: "rgba(14,12,22,0.96)", boxShadow: `0 0 24px ${color}33` }}>
       <span className="hebrew font-bold leading-none"
-        style={{ fontSize: `${size}px`, color: "#fff6e0", textShadow: `0 0 20px ${color}, 0 0 7px ${color}` }}>{he}</span>
+        style={{ fontSize: `${size}px`, color: "#fff6e0", textShadow: `0 0 20px ${color}, 0 0 7px ${color}` }}>
+        {parts
+          ? parts.map((p, i) => (
+              <span key={i} style={p.hi ? { color: HI, textShadow: `0 0 18px ${HI}` } : undefined}>{p.t}</span>
+            ))
+          : he}
+      </span>
       <span className="mt-2 font-cinzel text-xs uppercase tracking-widest" style={{ color }}>{sub}</span>
     </div>
   );
@@ -51,7 +59,8 @@ export default function Page137() {
       <nav className="sticky top-0 z-40 border-b border-gold/10 px-5 py-3 backdrop-blur-md" style={{ background: navBg }}>
         <div className="mx-auto flex max-w-2xl items-center justify-between">
           <Link href="/gematrias" className="font-cinzel text-sm text-gold/70 hover:text-gold">← {fa ? "گیماتریا" : "Gematría"}</Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <MisterioLangToggle />
             <button onClick={() => router.push("/estudio")}
               className="rounded-full border border-gold/30 px-4 py-1.5 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/10">
               {fa ? "شروع مطالعه" : "Comenzar estudio →"}
@@ -124,12 +133,12 @@ export default function Page137() {
           <h3 className="mb-5 mt-12 text-center font-cinzel text-sm uppercase tracking-[0.3em] text-gold/60">
             {fa ? "אמר — نور، آب، فلک" : "אמר — luz, agua, firmamento"}
           </h3>
-          <div className="flex flex-wrap items-center justify-center gap-2.5">
-            <Tile he="אוֹר" sub={fa ? "نور" : "Luz"} color="#f0d060" size={40} />
-            <Tile he="מַיִם" sub={fa ? "آب" : "Agua"} color="#6a9acc" size={40} />
-            <Tile he="רָקִיעַ" sub={fa ? "فلک" : "Firmamento"} color="#9a6a8e" size={40} />
-            <span className="font-cinzel text-2xl text-gold/40">→</span>
-            <Tile he="אָמַר" sub={fa ? "«گفت»" : "«dijo»"} color="#c9a43e" size={44} />
+          <div className="flex flex-wrap items-center justify-center gap-2.5" dir={fa ? "rtl" : "ltr"}>
+            <Tile parts={[{ t: "א", hi: true }, { t: "וֹר" }]} sub={fa ? "نور" : "Luz"} color="#f0d060" size={40} />
+            <Tile parts={[{ t: "מַ", hi: true }, { t: "יִם" }]} sub={fa ? "آب" : "Agua"} color="#6a9acc" size={40} />
+            <Tile parts={[{ t: "רָ", hi: true }, { t: "קִיעַ" }]} sub={fa ? "فلک" : "Firmamento"} color="#9a6a8e" size={40} />
+            <span className="font-cinzel text-2xl text-gold/40">{fa ? "←" : "→"}</span>
+            <Tile parts={[{ t: "אָ", hi: true }, { t: "מַ", hi: true }, { t: "ר", hi: true }]} sub={fa ? "«گفت»" : "«dijo»"} color="#c9a43e" size={44} />
           </div>
           <div className="mt-7 space-y-4 text-sm leading-relaxed text-parchment/85" dir={fa ? "rtl" : "ltr"}>
             <p>
@@ -166,7 +175,7 @@ export default function Page137() {
           <div className="flex flex-wrap items-center justify-center gap-2.5">
             <Tile he="אַבְרָהָם" sub="248" color="#e0a850" size={40} />
             <span className="font-cinzel text-2xl text-gold/40">+</span>
-            <Tile he="הוי׳" sub="26" color="#c9a43e" size={40} />
+            <Tile he="הוי״ה" sub="26" color="#c9a43e" size={40} />
             <span className="font-cinzel text-2xl text-gold/40">=</span>
             <Tile he="274" sub={fa ? "۲ × ۱۳۷" : "2 × 137"} color={C} size={40} />
           </div>

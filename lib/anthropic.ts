@@ -71,7 +71,7 @@ const LANG_NAME: Record<string, string> = {
 };
 
 const RTL_NOTE: Record<string, string> = {
-  fa: "\nEl usuario lee en farsi/persa (RTL). Escribe en persa (فارسی) natural y fluido — NUNCA en árabe, aunque compartan alfabeto. Usa vocabulario y gramática persas.",
+  fa: "\nEl usuario lee en farsi/persa (RTL). Escribe en persa (فارسی) natural y fluido — NUNCA en árabe, aunque compartan alfabeto. Usa vocabulario y gramática persas. LIBROS BÍBLICOS: el lector persa conoce los libros por su nombre de la Septuaginta/Biblia persa, NO por el hebreo; usa SIEMPRE el nombre persa conocido y añade el hebreo una vez entre paréntesis (ej.: مزامیر para Salmos/Tehilim, پیدایش para Génesis, خروج para Éxodo, لاویان para Levítico, اعداد para Números, تثنیه para Deuteronomio, امثال para Proverbios, اشعیا para Isaías, ارمیا para Jeremías, حزقیال para Ezequiel, ایوب para Job). NUNCA cites un libro solo con su transliteración hebrea suelta. El nombre del proyecto «Jashmal» (חַשְׁמַל) en persa SIEMPRE se escribe خَشمَל (con la letra خ); NUNCA lo escribas جشمل ni چشمل.",
   es: "",
 };
 

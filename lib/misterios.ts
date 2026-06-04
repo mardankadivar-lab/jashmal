@@ -86,6 +86,18 @@ export const MISTERIOS: Misterio[] = [
     color: "#9a6a8e",
     orden: 6,
   },
+  {
+    slug: "entrelazamiento",
+    numero: "137",
+    he: "אַהֲבָה ⊗ יִרְאָה",
+    titulo: "El entrelazamiento de las almas",
+    tituloFa: "درهم‌تنیدگیِ جان‌ها",
+    gancho: "Amor (42 veces) + Temor (95 veces) = 137. En la atadura de Isaac, el amor y el temor quedan entrelazados — como dos partículas que actúan como una. Y la Cabalá (=137) es la constante que acopla el alma con Dios.",
+    ganchoFa: "عشق (۴۲ بار) + ترس (۹۵ بار) = ۱۳۷. در بستنِ اسحاق، عشق و ترس درهم‌تنیده می‌شوند — چون دو ذرّه که چون یکی رفتار می‌کنند. و کابالا (=۱۳۷) ثابتی است که جان را به خدا می‌پیوندد.",
+    serie: "gematria",
+    color: "#b5557a",
+    orden: 7,
+  },
 ];
 
 export function getMisterio(slug: string): Misterio | undefined {

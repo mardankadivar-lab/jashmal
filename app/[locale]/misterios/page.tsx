@@ -4,6 +4,7 @@ import { useLocale } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
 import { MISTERIOS_ORDENADOS } from "@/lib/misterios";
 import MisterioTutor from "@/components/MisterioTutor";
+import MisterioLangToggle from "@/components/MisterioLangToggle";
 
 export default function MisteriosPage() {
   const locale = useLocale();
@@ -23,12 +24,15 @@ export default function MisteriosPage() {
             <span className="hebrew">חַשְׁמַל</span>
             <span>· Jashmal</span>
           </Link>
-          <button
-            onClick={() => router.push("/estudio")}
-            className="rounded-full border border-gold/30 px-4 py-1.5 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/10"
-          >
-            {fa ? "شروع مطالعه" : "Comenzar estudio →"}
-          </button>
+          <div className="flex items-center gap-3">
+            <MisterioLangToggle />
+            <button
+              onClick={() => router.push("/estudio")}
+              className="rounded-full border border-gold/30 px-4 py-1.5 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/10"
+            >
+              {fa ? "شروع مطالعه" : "Comenzar estudio →"}
+            </button>
+          </div>
         </div>
       </nav>
 
