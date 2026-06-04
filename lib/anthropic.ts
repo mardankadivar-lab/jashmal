@@ -64,6 +64,39 @@ Sé riguroso. No inventes fuentes. Termina SIEMPRE con "Sigue el hilo" completo.
 
 export type StudyMode = "text" | "letter" | "concept";
 
+// ─── Prompt de traducción al PERSA del texto fuente ──────────────
+// Para usuarios en farsi: el texto sagrado se muestra en hebreo original + persa
+// (en vez del inglés de Sefaria, que no entienden). Traducción FIEL, no interpretación.
+// Usa el mismo modelo del estudio (alias del proyecto). La salida es corta
+// (solo el array de traducciones), así que el costo y la latencia son bajos.
+export const TRANSLATE_MODEL = STUDY_MODEL;
+
+export function buildTranslatePrompt(): string {
+  // Reutiliza las reglas de persa del estudio (خَشمَل, nombres de libros, NUNCA árabe).
+  const rtl = RTL_NOTE.fa;
+  return `Eres un traductor experto de textos sagrados judíos (Torá, Talmud, Midrash,
+Cabalá, Jasidut) del HEBREO/ARAMEO al PERSA (فارسی).
+
+TU TAREA: traducir cada segmento del texto fuente al persa, de forma FIEL y
+respetuosa. Es texto sagrado y clásico: traduce el SIGNIFICADO LITERAL del hebreo
+con fidelidad — NO interpretes, NO comentes, NO expandas, NO resumas. Una traducción
+limpia y precisa, como la de una buena Biblia/Tanaj en persa.
+
+APÓYATE en la traducción inglesa que se te da junto a cada segmento solo como
+referencia de sentido, pero traduce desde el HEBREO. Si el inglés y el hebreo
+difieren, manda el hebreo.
+
+REGLAS DE IDIOMA:${rtl}
+- Persa natural y fluido, NUNCA árabe (aunque compartan alfabeto).
+- No añadas transliteraciones ni notas; SOLO la traducción persa del versículo.
+
+FORMATO DE SALIDA — OBLIGATORIO:
+Devuelve EXCLUSIVAMENTE un array JSON de strings, una entrada por cada segmento de
+entrada, EN EL MISMO ORDEN y con EXACTAMENTE el mismo número de elementos. Sin texto
+antes ni después, sin markdown, sin claves: solo el array JSON. Ejemplo de forma:
+["ترجمهٔ آیهٔ اول", "ترجمهٔ آیهٔ دوم"]`;
+}
+
 const LANG_NAME: Record<string, string> = {
   es: "español",
   fa: "farsi (persa)",
@@ -71,7 +104,7 @@ const LANG_NAME: Record<string, string> = {
 };
 
 const RTL_NOTE: Record<string, string> = {
-  fa: "\nEl usuario lee en farsi/persa (RTL). Escribe en persa (فارسی) natural y fluido — NUNCA en árabe, aunque compartan alfabeto. Usa vocabulario y gramática persas. LIBROS BÍBLICOS: el lector persa conoce los libros por su nombre de la Septuaginta/Biblia persa, NO por el hebreo; usa SIEMPRE el nombre persa conocido y añade el hebreo una vez entre paréntesis (ej.: مزامیر para Salmos/Tehilim, پیدایش para Génesis, خروج para Éxodo, لاویان para Levítico, اعداد para Números, تثنیه para Deuteronomio, امثال para Proverbios, اشعیا para Isaías, ارمیا para Jeremías, حزقیال para Ezequiel, ایوب para Job). NUNCA cites un libro solo con su transliteración hebrea suelta. El nombre del proyecto «Jashmal» (חַשְׁמַל) en persa SIEMPRE se escribe خَشمَל (con la letra خ); NUNCA lo escribas جشمل ni چشمل.",
+  fa: "\nEl usuario lee en farsi/persa (RTL). Escribe en persa (فارسی) natural y fluido — NUNCA en árabe, aunque compartan alfabeto. Usa vocabulario y gramática persas y EVITA préstamos y fórmulas árabes (a un iraní le resultan ajenos e incluso ofensivos): prefiere siempre el equivalente persa. En especial NUNCA uses fórmulas islámicas árabes como «بسم الله»; si invocas a Dios al abrir, di «به نام خدا». LIBROS BÍBLICOS: el lector persa conoce los libros por su nombre de la Septuaginta/Biblia persa, NO por el hebreo; usa SIEMPRE el nombre persa conocido y añade el hebreo una vez entre paréntesis (ej.: مزامیر para Salmos/Tehilim, پیدایش para Génesis, خروج para Éxodo, لاویان para Levítico, اعداد para Números, تثنیه para Deuteronomio, امثال para Proverbios, اشعیا para Isaías, ارمیا para Jeremías, حزقیال para Ezequiel, ایوب para Job). NUNCA cites un libro solo con su transliteración hebrea suelta. El nombre del proyecto «Jashmal» (חַשְׁמַל) en persa SIEMPRE se escribe خَشمَל (con la letra خ); NUNCA lo escribas جشمل ni چشمل.",
   es: "",
 };
 

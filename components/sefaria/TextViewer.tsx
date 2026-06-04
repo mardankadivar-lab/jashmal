@@ -10,6 +10,10 @@ interface TextViewerProps {
   result: SefariaTextResult | null;
   loading: boolean;
   error: boolean;
+  /** Solo en farsi: traducción persa alineada con segments (null = usar inglés). */
+  faTranslations?: string[] | null;
+  /** Solo en farsi: la traducción persa se está generando. */
+  faTranslating?: boolean;
   studyingIndex: number | null;
   onStudyVerse: (index: number, depth: StudyDepth) => void;
   onStudyPassage: (depth: StudyDepth) => void;
@@ -21,6 +25,8 @@ export default function TextViewer({
   result,
   loading,
   error,
+  faTranslations = null,
+  faTranslating = false,
   studyingIndex,
   onStudyVerse,
   onStudyPassage,
@@ -28,6 +34,10 @@ export default function TextViewer({
   onWordMenu,
 }: TextViewerProps) {
   const t = useTranslations("study");
+
+  // ¿Mostramos la traducción persa en vez del inglés de Sefaria?
+  // Solo entra aquí cuando StudyEngine pasa faTranslations/faTranslating (locale fa).
+  const faMode = faTranslations !== null || faTranslating;
 
   if (loading) {
     return <p className="mt-6 animate-pulse text-sm text-muted">{t("loadingText")}</p>;
@@ -64,11 +74,35 @@ export default function TextViewer({
               ) : (
                 <p className="hebrew text-xl leading-relaxed text-parchment">{seg}</p>
               )}
-              {/* Traducción en inglés — esencial para audiencia que no lee hebreo */}
-              {result.translations[i] && (
-                <p className="mt-1 text-sm leading-relaxed text-muted/80 italic">
-                  {result.translations[i]}
-                </p>
+              {/* Traducción — esencial para audiencia que no lee hebreo.
+                  En farsi: persa (RTL) traducido por Claude; mientras carga,
+                  un aviso "traduciendo…"; si falla, cae al inglés de Sefaria.
+                  En español/inglés: el inglés de Sefaria, igual que siempre. */}
+              {faMode ? (
+                faTranslations && faTranslations[i] ? (
+                  <p
+                    dir="rtl"
+                    className="font-vazir mt-1 text-base leading-relaxed text-muted/90"
+                  >
+                    {faTranslations[i]}
+                  </p>
+                ) : faTranslating ? (
+                  <p dir="rtl" className="font-vazir mt-1 animate-pulse text-sm text-muted/60">
+                    {t("translating")}
+                  </p>
+                ) : (
+                  result.translations[i] && (
+                    <p className="mt-1 text-sm leading-relaxed text-muted/80 italic">
+                      {result.translations[i]}
+                    </p>
+                  )
+                )
+              ) : (
+                result.translations[i] && (
+                  <p className="mt-1 text-sm leading-relaxed text-muted/80 italic">
+                    {result.translations[i]}
+                  </p>
+                )
               )}
             </div>
             <div className="mt-1 flex shrink-0 gap-1 opacity-0 transition-opacity group-hover:opacity-100">

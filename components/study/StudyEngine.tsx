@@ -17,6 +17,7 @@ import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, type CatBook, type CategoryId } from "@/lib/categories";
 import { getText, searchSuggestions, type SefariaTextResult, type NameSuggestion } from "@/lib/sefaria";
 import { requestStudy, StudyError } from "@/lib/studyClient";
+import { requestTranslation } from "@/lib/translateClient";
 import { getParashaHashavua, type ParashaInfo } from "@/lib/calendar";
 
 export default function StudyEngine() {
@@ -29,6 +30,11 @@ export default function StudyEngine() {
   const [sourceResult, setSourceResult] = useState<SefariaTextResult | null>(null);
   const [sourceLoading, setSourceLoading] = useState(false);
   const [sourceError, setSourceError] = useState(false);
+
+  // Solo en farsi: traducción persa del texto fuente (en vez del inglés de Sefaria).
+  // null = aún no disponible (se usa el inglés como respaldo). Alineado con segments.
+  const [faTranslations, setFaTranslations] = useState<string[] | null>(null);
+  const [faTranslating, setFaTranslating] = useState(false);
 
   const [search, setSearch] = useState("");
   // Autocompletado: sugerencias de Sefaria (refs, libros, temas, personas, lugares).
@@ -85,6 +91,29 @@ export default function StudyEngine() {
       setOpenRefs([]);
     }
   }, [locale]);
+
+  // Solo en farsi: al cargar/cambiar el texto fuente, pedir su traducción persa
+  // para mostrar hebreo + persa (en vez de hebreo + inglés). Si falla, se queda
+  // el inglés de Sefaria como respaldo (no rompe la página).
+  useEffect(() => {
+    if (locale !== "fa") { setFaTranslations(null); setFaTranslating(false); return; }
+    if (!sourceResult || sourceResult.segments.length === 0) {
+      setFaTranslations(null);
+      setFaTranslating(false);
+      return;
+    }
+    let cancelled = false;
+    setFaTranslations(null);
+    setFaTranslating(true);
+    requestTranslation({
+      ref: sourceResult.ref,
+      segments: sourceResult.segments,
+      english: sourceResult.translations,
+    })
+      .then((tr) => { if (!cancelled) setFaTranslations(tr); })
+      .finally(() => { if (!cancelled) setFaTranslating(false); });
+    return () => { cancelled = true; };
+  }, [sourceResult, locale]);
 
   // Contexto de estudio (normal o cabalístico desde el Árbol)
   const [studyContext, setStudyContext] = useState<{ type: string; sefiraId?: string } | null>(null);
@@ -407,6 +436,8 @@ export default function StudyEngine() {
           result={sourceResult}
           loading={sourceLoading}
           error={sourceError}
+          faTranslations={locale === "fa" ? faTranslations : null}
+          faTranslating={locale === "fa" && faTranslating}
           studyingIndex={studyingIndex}
           onStudyVerse={(i, depth) => runStudy(i, depth)}
           onStudyPassage={(depth) => runStudy(-1, depth)}
