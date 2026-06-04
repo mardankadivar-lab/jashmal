@@ -173,11 +173,16 @@ export async function addV4Content(): Promise<void> {
   if (!sql) return;
   try {
     for (const n of V4_NODES) {
+      // UPSERT: la versión verificada del Sofer gana sobre cualquier nodo
+      // 'pending' previo (p.ej. creado por una expansión) con el mismo id.
       await sql`
         INSERT INTO brain_nodes (id, label, label_fa, cat, level, url, region, status, source)
         VALUES (${n.id}, ${n.label}, ${n.labelFa}, ${n.cat}, ${n.level},
                 ${n.url ?? null}, ${n.region ?? null}, 'approved', 'sofer')
-        ON CONFLICT (id) DO NOTHING
+        ON CONFLICT (id) DO UPDATE SET
+          label = EXCLUDED.label, label_fa = EXCLUDED.label_fa,
+          cat = EXCLUDED.cat, level = EXCLUDED.level,
+          status = 'approved', source = 'sofer'
       `;
     }
     for (const e of V4_EDGES) {
