@@ -283,6 +283,119 @@ export default function PageSerpienteDeCobre() {
           </div>
         </Section>
 
+        {/* ── EL ASTA: נֵס — DEL CAÍDO AL SOSTENIDO ── */}
+        <Section>
+          <h3 className="mb-5 mt-12 text-center font-cinzel text-sm uppercase tracking-[0.3em] text-gold/60">
+            {fa ? "تیرک: נֵס — از افتاده تا برافراشته" : "El asta: נֵס — del caído al sostenido"}
+          </h3>
+
+          <div className="flex flex-wrap items-end justify-center gap-2.5">
+            <Tile he="נ" sub={fa ? "نون · افتاده · ۵۰" : "Nun · el caído · 50"} color={C} size={44} />
+            <span className="font-cinzel text-2xl text-gold/40" style={{ paddingBottom: 14 }}>→</span>
+            <Tile he="ס" sub={fa ? "سامِخ · سُتون · ۶۰" : "Samej · el sostén · 60"} color="#c9a43e" size={44} />
+            <span className="font-cinzel text-2xl text-gold/40" style={{ paddingBottom: 14 }}>=</span>
+            <Tile he="נֵס" sub={fa ? "نِس · تیرک · ۱۱۰" : "Nes · asta · 110"} color={C} size={40} />
+          </div>
+
+          <div className="mt-7 space-y-4 text-sm leading-relaxed text-parchment/85" dir={fa ? "rtl" : "ltr"}>
+            <p>
+              {fa
+                ? "آن چوبی که مار را بر آن برافراشتند، در خودِ متن واژه‌ای دقیق دارد: נֵס (نِس، «تیرک، پرچم، بیرق»). «آن را بر یک נֵס برافراز» (اعداد ۲۱:۸)، و «آن را بر הַנֵּס (هَنِس، همان تیرک) نهاد» (اعداد ۲۱:۹). شفا نه فقط در مار، که در برافراشتنِ آن بر نِس بود — در بالا بردن."
+                : "El madero sobre el que se elevó la serpiente tiene en el texto una palabra precisa: נֵס (nes, «asta, estandarte, bandera»). «Elévalo sobre un נֵס» (Números 21:8), y «lo puso sobre el הַנֵּס (ha-nes, el asta)» (Números 21:9). La sanación no estaba solo en la serpiente, sino en su elevación sobre el nes — en alzarla."}
+            </p>
+            <p>
+              {fa
+                ? "و خودِ این واژه از دو حرفِ پیاپیِ الفبا ساخته شده است: נ (نون) و ס (سامِخ). حکیمان در این دو حرف، دو حالِ انسان را خواندند: נ (نون) از ریشهٔ נוֹפֵל (نوفِل، «افتادن») — انسانِ افتاده؛ و ס (سامِخ) از ریشهٔ סוֹמֵךְ (سومِخ، «نگاه‌داشتن، سُتون شدن») — آن که برمی‌دارد و نگاه می‌دارد."
+                : "Y la palabra misma está hecha de dos letras consecutivas del alfabeto: נ (Nun) y ס (Samej). Los sabios leyeron en estas dos letras dos estados del hombre: נ (Nun), de la raíz נוֹפֵל (nofel, «caer») — el hombre caído; y ס (Samej), de la raíz סוֹמֵךְ (somej, «sostener, apuntalar») — el que levanta y sostiene."}
+            </p>
+            <p>
+              {fa
+                ? "این آموزه را تَلمود آشکار می‌کند: سرودِ אַשְׁרֵי (اَشرِی، مزمور ۱۴۵) بر ترتیبِ الفباست — اما حرفِ נ (نون) در آن جا نیفتاده است. چرا؟ تَلمود می‌گوید: «زیرا در آن מַפַּלָה (مَپالا، «سقوط») اسرائیل نهفته است» — به یادِ آیهٔ «נָפְלָה (نافلا، افتاد) دختِ اسرائیل، دیگر برنخیزد» (تَلمود، بِراخوت ۴b)."
+                : "Esta enseñanza la revela el Talmud: el himno אַשְׁרֵי (Ashrei, Salmo 145) sigue el orden del alfabeto — pero la letra נ (Nun) no tiene allí su versículo. ¿Por qué? Dice el Talmud: «porque en ella está la מַפַּלָה (mapalá, «caída») de Israel» — aludiendo al versículo «נָפְלָה (naflá, cayó) la doncella de Israel, no volverá a levantarse» (Talmud, Berajot 4b)."}
+            </p>
+            <p>
+              {fa
+                ? "اما تَلمود همان‌جا می‌افزاید: «با این همه، داود بازگشت و آنان را با روحُ‌القُدُس سُتون شد (וּסְמָכָן، اوُسِماخان، از ریشهٔ سامِخ)» — و بی‌درنگ آیهٔ سامِخ می‌آید: «סוֹמֵךְ יְהוָה לְכָל הַנֹּפְלִים» (سومِخ اَدونای لِخُل هَنُفلیم، «خداوند همهٔ افتادگان را نگاه می‌دارد»، مزامیر ۱۴۵:۱۴). پس آنچه با נ افتاد، با ס برمی‌خیزد."
+                : "Pero el Talmud allí mismo añade: «aun así, David volvió y los sostuvo con rúaj hakódesh (וּסְמָכָן, u-smajan, de la raíz samej)» — y enseguida viene el versículo de la Samej: «סוֹמֵךְ יְהוָה לְכָל הַנֹּפְלִים» (somej Adonai l'jol ha-noflim, «Hashem sostiene a todos los caídos», Salmos 145:14). Así, lo que cayó con la נ, se levanta con la ס."}
+            </p>
+            <p>
+              {fa
+                ? "نِس همین است: حرفِ افتاده (נ) و حرفِ سُتون (ס)، در یک واژه. تیرک، انسانِ افتاده را برمی‌گیرد و نگاه می‌دارد. برافراشتنِ مار بر نِس، تصویرِ همین گذار است — از נ به ס، از افتادن به برخاستن."
+                : "El nes es justo eso: la letra del caído (נ) y la letra del sostén (ס), en una sola palabra. El asta toma al hombre caído y lo sostiene. Elevar la serpiente sobre el nes es la imagen de ese mismo tránsito — de נ a ס, de caer a ser levantado."}
+            </p>
+          </div>
+
+          <PullQuoteLite
+            es="Lo que cae con la Nun, se levanta con la Samej. El asta toma al caído y lo sostiene."
+            fa="آنچه با نون می‌افتد، با سامِخ برمی‌خیزد. تیرک، افتاده را برمی‌گیرد و نگاه می‌دارد."
+            source={fa ? "تَلمود، بِراخوت ۴b · مزامیر ۱۴۵:۱۴" : "Talmud, Berajot 4b · Salmos 145:14"} fa_active={fa} />
+        </Section>
+
+        {/* ── נֵס = 110: YOSEF, EL TZADIK, EL EJE ── */}
+        <Section>
+          <h3 className="mb-5 mt-12 text-center font-cinzel text-sm uppercase tracking-[0.3em] text-gold/60">
+            {fa ? "נֵס = ۱۱۰: یوسف، تْسَدیق، محورِ راست" : "נֵס = 110: Yosef, el Tzadik, el eje"}
+          </h3>
+
+          <div className="flex flex-wrap items-center justify-center gap-2.5">
+            <Tile he="נֵס" sub={fa ? "نِس · ۱۱۰" : "Nes · 110"} color={C} size={42} />
+            <span className="font-cinzel text-2xl text-gold/40">↔</span>
+            <Tile he="ק״י" sub={fa ? "۱۱۰ سالِ یوسف" : "110 años de Yosef"} color="#c9a43e" size={42} />
+          </div>
+
+          <div className="mt-7 space-y-4 text-sm leading-relaxed text-parchment/85" dir={fa ? "rtl" : "ltr"}>
+            <p>
+              {fa
+                ? "واژهٔ נֵס (نِس) حرف‌به‌حرف چنین جمع می‌شود: נ=۵۰ و ס=۶۰ — یعنی ۵۰+۶۰ = ۱۱۰. و درست همین عدد، در تورات یک عمرِ کامل است: «و یوسف در سنِّ صد و ده سالگی درگذشت» (بِن مِئا واعِسِر شانیم، پیدایش ۵۰:۲۶). یوسف ۱۱۰ سال زیست — به‌اندازهٔ عددِ נֵס."
+                : "La palabra נֵס (nes) se suma letra por letra así: נ=50 y ס=60 — es decir 50+60 = 110. Y exactamente ese número es, en la Torá, una vida entera: «Y Yosef murió a los ciento diez años» (ben mea va-éser shanim, Génesis 50:26). Yosef vivió 110 años — la cifra misma de נֵס."}
+            </p>
+            <p>
+              {fa
+                ? "اینجا باید دقیق بود: عددِ ۱۱۰، شمارِ سال‌هایِ زندگیِ یوسف است، نه گیماتریایِ نامِ او (نامِ יוֹסֵף برابرِ ۱۵۶ است). پیوند از راهِ این طولِ عمر است: عمری به‌بلندایِ נֵس، عمرِ کسی که خود همچون تیرکِ راست ایستاد."
+                : "Aquí hay que ser exactos: el número 110 es la cantidad de años de la vida de Yosef, no la gematría de su nombre (el nombre יוֹסֵף vale 156). El vínculo es por esa duración de vida: una vida tan larga como נֵס, la vida de quien él mismo se mantuvo en pie como un asta recta."}
+            </p>
+            <p>
+              {fa
+                ? "زیرا یوسف در کابالا יוֹסֵף הַצַּדִּיק (یوسِف هَتْسَدیق، «یوسفِ پارسا») است، و او نشانِ سِفیرایِ יְסוֹד (یِسود، «بنیاد») است — همان ستونِ میانه که حِسِد و گِبورا را در خود گرد می‌آورد و فرود می‌فرستد. آیه می‌گوید: «וְצַדִּיק יְסוֹד עוֹלָם» (وِتْسَدیق یِسود عولام، «و پارسا بنیادِ جهان است»، امثال ۱۰:۲۵)."
+                : "Pues Yosef en la Cabalá es יוֹסֵף הַצַּדִּיק (Yosef HaTzadik, «Yosef el Justo»), y es el signo de la sefirá יְסוֹד (Yesod, «fundamento») — la misma columna media que recoge en sí a Jésed y Guevurá y los hace descender. Dice el versículo: «וְצַדִּיק יְסוֹד עוֹלָם» (ve-tzadik yesod olam, «y el justo es fundamento del mundo», Proverbios 10:25)."}
+            </p>
+            <p>
+              {fa
+                ? "پس تصویر کامل می‌شود: تْسَدیق/یِسود، خطِّ میانه و راستِ درختِ زندگی است — همان נֵס، تیرکِ ایستاده. اوست که چرخه‌هایِ افتادهٔ پایین را برمی‌کشد و شفا را فرود می‌آورد. آن نِسی که مار را برافراشت، همان محورِ پارساست که قوم را نجات می‌دهد."
+                : "Así se completa la imagen: el Tzadik/Yesod es la línea media y recta del Árbol de la Vida — el נֵס mismo, el asta erguida. Es él quien eleva las chispas caídas de abajo y hace descender la cura. El nes que alzó la serpiente es el mismo eje del Justo que salva al pueblo."}
+            </p>
+            <p>
+              {fa
+                ? "و همین ریشهٔ נס بار دیگر در تورات می‌درخشد: پس از نبرد با عَمالِق، موشه قربانگاهی ساخت و آن را خواند «יְהוָה נִסִּי» (اَدونای نیسی، «خداوند، بیرقِ من است»، خروج ۱۷:۱۵). بیرقِ ما، آن تیرکِ راست، خودِ خداست — و نگاه به‌سویِ او، شفاست."
+                : "Y esa misma raíz נס vuelve a brillar en la Torá: tras la guerra contra Amalek, Moshé construyó un altar y lo llamó «יְהוָה נִסִּי» (Adonai Nisi, «Hashem es mi estandarte», Éxodo 17:15). Nuestro estandarte, esa asta recta, es Dios mismo — y la mirada hacia Él es la sanación."}
+            </p>
+          </div>
+
+          {/* ── EL JIDUSH DE MARDAN: el zigzag y la línea recta ── */}
+          <div className="mt-9 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6">
+            <p className="mb-3 text-center font-cinzel text-[10px] uppercase tracking-[0.3em] text-gold/50">
+              {fa ? "تأمّلی از مَردان" : "Una contemplación de Mardan"}
+            </p>
+            <div className="space-y-4 text-sm leading-relaxed text-parchment/85" dir={fa ? "rtl" : "ltr"}>
+              <p>
+                {fa
+                  ? "مار هرگز در خطِّ راست پیش نمی‌رود؛ پیوسته از راست به چپ موج می‌زند. این، تصویرِ انسانِ افتاده است که در میانِ احساساتِ خود نوسان می‌کند — نیک و بد، ایمان و تردید، راست و چپ. این همان עֵץ הַדַּעַת טוֹב וָרָע (عِتْص هَداعَت طوو واراع، «درختِ شناختِ نیک و بد») است: زیستن در رفت‌وآمد."
+                  : "La serpiente nunca avanza en línea recta; ondula sin cesar de derecha a izquierda. Esa es la imagen del hombre caído que oscila entre sus emociones — bien y mal, fe y duda, derecha e izquierda. Ese es el עֵץ הַדַּעַת טוֹב וָרָע (etz ha-dáat tov va-ra, «Árbol del Conocimiento del Bien y del Mal»): vivir en el vaivén."}
+              </p>
+              <p>
+                {fa
+                  ? "اما تیرکِ راست و ایستاده — همان נֵס (نِس) — עֵץ הַחַיִּים (عِتْص هَحَیّیم، «درختِ زندگی») است: خطِّ میانه، استوار و بی‌نوسان. شفا یعنی احساساتِ نوسانی را بر این محورِ میانه نشاندن: آنچه با נ (نون، افتاده) فروافتاد، در دایرهٔ ס (سامِخ) برمی‌خیزد — و شکلِ سامِخِ پایانی، دایره‌ای بسته و کامل است، چرخه‌ای که در خود آرام می‌گیرد."
+                  : "Pero el asta recta y erguida — el נֵס (nes) — es el עֵץ הַחַיִּים (etz ha-jaím, «Árbol de la Vida»): la línea media, firme y sin vaivén. Sanar es fijar las emociones oscilantes sobre ese eje central: lo que con la נ (Nun, el caído) se desplomó, en el círculo de la ס (Samej) se levanta — y la forma de la Samej es un círculo cerrado y completo, un ciclo que descansa en sí mismo."}
+              </p>
+              <p>
+                {fa
+                  ? "پس شفا یعنی گذار از زیگزاگ به ستونِ راست: از درختِ شناخت به درختِ زندگی، از موجِ مار به تیرکِ נֵس، از نوسانِ احساس به محورِ تْسَدیق. به مار نگاه می‌کنیم نه برایِ خودِ مار، بلکه برایِ آن خطِّ راستی که او بر آن برافراشته است."
+                  : "Sanar es, entonces, pasar del zigzag a la columna recta: del Árbol del Conocimiento al Árbol de la Vida, de la onda de la serpiente al asta del נֵס, del vaivén de la emoción al eje del Tzadik. Miramos a la serpiente no por la serpiente misma, sino por esa línea recta sobre la que ha sido alzada."}
+              </p>
+            </div>
+          </div>
+        </Section>
+
         {/* ── SÍNTESIS ── */}
         <Section>
           <div className="mt-16 rounded-2xl border border-gold/20 bg-gradient-to-b from-gold/[0.06] to-transparent p-8 text-center">
