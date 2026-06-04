@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ThemeToggle from "./ThemeToggle";
+import ReadingControls from "./ReadingControls";
 
 export default function SiteHeader() {
   const t = useTranslations();
@@ -15,7 +16,7 @@ export default function SiteHeader() {
           </span>
           <span className="hebrew text-sm text-muted">{t("site.hebrew")}</span>
         </Link>
-        <nav className="flex items-center gap-5 text-sm">
+        <nav className="flex flex-wrap items-center justify-end gap-x-5 gap-y-2 text-sm">
           <Link href="/estudio" className="text-muted transition-colors hover:text-parchment">
             {t("nav.study")}
           </Link>
@@ -40,6 +41,7 @@ export default function SiteHeader() {
           <Link href="/acerca" className="text-muted transition-colors hover:text-parchment">
             {t("nav.about")}
           </Link>
+          <ReadingControls />
           <LanguageSwitcher />
           <ThemeToggle />
         </nav>

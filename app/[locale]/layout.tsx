@@ -68,7 +68,7 @@ export default async function LocaleLayout({
         {/* Anti-parpadeo: aplica el tema guardado antes de pintar. Claro por defecto. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('jashmal-theme');if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`,
+            __html: `(function(){var d=document.documentElement;try{if(localStorage.getItem('jashmal-theme')==='dark')d.classList.add('dark');}catch(e){}try{var sz=localStorage.getItem('jashmal-textsize'),m={sm:'100%',md:'112.5%',lg:'128%',xl:'145%'};if(sz&&m[sz])d.style.fontSize=m[sz];}catch(e){}try{if(localStorage.getItem('jashmal-studymode')==='1')d.classList.add('study-mode');}catch(e){}})();`,
           }}
         />
       </head>

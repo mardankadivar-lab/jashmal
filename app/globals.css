@@ -246,3 +246,22 @@ body {
   outline-offset: 3px !important;
   border-radius: 6px !important;
 }
+
+/* ─── Brain v3 · Accesibilidad y Modo Estudio ─────────────────────────────
+   El tamaño de texto se controla escalando el font-size raíz (todo es rem/em):
+   lo aplica el script anti-parpadeo del layout (sm/md/lg/xl). Aquí va el
+   "Modo estudio profundo": lectura grande, alto contraste, sin distracciones. */
+html.study-mode .study-prose {
+  font-size: 1.32rem;
+  line-height: 2.05;
+  max-width: 44rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* más contraste en el cuerpo de estudio */
+html.study-mode { --c-prose: 18 14 9; }
+html.study-mode.dark { --c-prose: 246 242 233; }
+/* reducir distracciones: atenuar las partículas decorativas (Nitzotzot) */
+html.study-mode .nitzotzot { opacity: 0.12 !important; transition: opacity 0.5s ease; }
+/* en el cerebro, el modo estudio deja la mente de fondo (secundaria) */
+html.study-mode .always-dark canvas { opacity: 0.4; transition: opacity 0.5s ease; }
