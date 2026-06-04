@@ -26,6 +26,7 @@ import {
   ambientTissue,
   bfsDistances,
   shortestPath,
+  neighborsIn,
   type BNode,
 } from "@/lib/brainData";
 
@@ -275,6 +276,20 @@ function PathToTorah({ path, curves }: { path: string[]; curves: EdgeCurve[] }) 
   );
 }
 
+// ── Resalte de fibras (modo comparación: lo que comparten los nodos) ───────
+function FiberHighlight({ curves, color }: { curves: EdgeCurve[]; color: string }) {
+  const geom = useMemo(() => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(curvesToSegments(curves), 3));
+    return g;
+  }, [curves]);
+  return (
+    <lineSegments geometry={geom}>
+      <lineBasicMaterial color={color} transparent opacity={0.95} blending={THREE.AdditiveBlending} depthWrite={false} />
+    </lineSegments>
+  );
+}
+
 // ── Una sinapsis (nodo) ────────────────────────────────────────────────────
 function Synapse({
   node,
@@ -291,7 +306,7 @@ function Synapse({
   intensity: number; // 0..1.4 — cuánto está "despierta"
   showLabel: boolean;
   isFa: boolean;
-  onClick: () => void;
+  onClick: (additive: boolean) => void;
   onDouble: () => void;
   onHover: (h: boolean) => void;
 }) {
@@ -332,7 +347,11 @@ function Synapse({
       {/* área de clic invisible */}
       <sprite
         scale={[1.1 * BRAIN_SCALE * 0.34, 1.1 * BRAIN_SCALE * 0.34, 1]}
-        onClick={(e) => { e.stopPropagation(); onClick(); }}
+        onClick={(e) => {
+          e.stopPropagation();
+          const ne = e.nativeEvent as MouseEvent;
+          onClick(!!(ne.metaKey || ne.ctrlKey || ne.shiftKey));
+        }}
         onDoubleClick={(e) => { e.stopPropagation(); onDouble(); }}
         onPointerOver={(e) => { e.stopPropagation(); onHover(true); document.body.style.cursor = "pointer"; }}
         onPointerOut={() => { onHover(false); document.body.style.cursor = "default"; }}
@@ -384,6 +403,7 @@ function BrainScene({
   edges,
   selected,
   hovered,
+  compare,
   isFa,
   onSelect,
   onHover,
@@ -394,8 +414,9 @@ function BrainScene({
   edges: [string, string][];
   selected: string | null;
   hovered: string | null;
+  compare: string[];
   isFa: boolean;
-  onSelect: (id: string) => void;
+  onSelect: (id: string, additive: boolean) => void;
   onHover: (id: string | null) => void;
   onDouble: (n: BNode) => void;
   onBackground: () => void;
@@ -420,6 +441,36 @@ function BrainScene({
   const selectedPos = selected && positions[selected] ? new THREE.Vector3(...positions[selected]) : null;
   const focusColor = focusId ? (BRAIN_CATS[nodeMap.get(focusId)?.cat ?? ""]?.c ?? "#cfe6ff") : "#cfe6ff";
 
+  // ── Modo comparación (Cmd/Ctrl-clic 2+ nodos): qué COMPARTEN ──
+  const compareActive = compare.length >= 2;
+  const compareSet = useMemo(() => new Set(compare), [compare]);
+  const sharedSet = useMemo(() => {
+    if (!compareActive) return new Set<string>();
+    let acc: Set<string> | null = null;
+    for (const id of compare) {
+      const nb = neighborsIn(edges, id);
+      if (acc === null) acc = new Set(nb);
+      else { const next = new Set<string>(); for (const x of acc) if (nb.has(x)) next.add(x); acc = next; }
+    }
+    const s = acc ?? new Set<string>();
+    compare.forEach((id) => s.delete(id));
+    return s;
+  }, [compareActive, compare, edges]);
+  const sharedCurves = useMemo(() => {
+    if (!compareActive) return [] as EdgeCurve[];
+    return curves.filter(
+      (c) =>
+        (compareSet.has(c.a) && sharedSet.has(c.b)) ||
+        (compareSet.has(c.b) && sharedSet.has(c.a)),
+    );
+  }, [compareActive, curves, compareSet, sharedSet]);
+  const comparePos = useMemo(() => {
+    if (!compareActive) return null;
+    let x = 0, y = 0, z = 0, k = 0;
+    for (const id of compare) { const p = positions[id]; if (p) { x += p[0]; y += p[1]; z += p[2]; k++; } }
+    return k ? new THREE.Vector3(x / k, y / k, z / k) : null;
+  }, [compareActive, compare, positions]);
+
   // controles de mouse (girar / mover / zoom) con pausa de auto-giro al interactuar
   const controlsRef = useRef<any>(null);
   const [autoRot, setAutoRot] = useState(true);
@@ -442,6 +493,11 @@ function BrainScene({
   // intensidad por nodo según capa: primaria > secundaria > terciaria > lejana
   const intensityOf = (n: BNode): number => {
     const awakeBase = n.level <= 1 ? 0.55 : n.level === 2 ? 0.32 : 0.18; // latente
+    if (compareActive) {
+      if (compareSet.has(n.id)) return 1.4; // los nodos comparados
+      if (sharedSet.has(n.id)) return 1.15; // lo que COMPARTEN
+      return awakeBase * 0.12; // el resto se apaga (no desaparece)
+    }
     if (!focusId || !dist) return awakeBase;
     if (n.id === focusId) return 1.4;
     const d = dist.get(n.id);
@@ -452,6 +508,7 @@ function BrainScene({
     return awakeBase * 0.2; // lejano: muy tenue (no desaparece)
   };
   const showLabelOf = (n: BNode): boolean => {
+    if (compareActive) return compareSet.has(n.id) || sharedSet.has(n.id);
     if (n.id === focusId) return true;
     if (dist) {
       const d = dist.get(n.id);
@@ -475,12 +532,12 @@ function BrainScene({
         zoomSpeed={0.9}
         minDistance={6}
         maxDistance={42}
-        autoRotate={autoRot && !selected}
+        autoRotate={autoRot && !selected && !compareActive}
         autoRotateSpeed={0.3}
         onStart={pauseAuto}
         onEnd={resumeAuto}
       />
-      <FocusHelper selectedPos={selectedPos} controlsRef={controlsRef} />
+      <FocusHelper selectedPos={compareActive ? comparePos : selectedPos} controlsRef={controlsRef} />
       <ambientLight intensity={0.35} />
 
       {/* plano de fondo invisible → clic en vacío deselecciona */}
@@ -491,9 +548,10 @@ function BrainScene({
 
       <group ref={groupRef}>
         <AmbientTissue />
-        <BaseFibers segments={baseSegments} dimmed={focusId !== null} />
-        {focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} />}
-        {pathToTorah.length > 1 && <PathToTorah path={pathToTorah} curves={curves} />}
+        <BaseFibers segments={baseSegments} dimmed={focusId !== null || compareActive} />
+        {!compareActive && focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} />}
+        {!compareActive && pathToTorah.length > 1 && <PathToTorah path={pathToTorah} curves={curves} />}
+        {compareActive && sharedCurves.length > 0 && <FiberHighlight curves={sharedCurves} color="#ffe9a8" />}
 
         {nodes.map((n) => {
           const pos = positions[n.id];
@@ -506,7 +564,7 @@ function BrainScene({
               intensity={intensityOf(n)}
               showLabel={showLabelOf(n)}
               isFa={isFa}
-              onClick={() => onSelect(n.id)}
+              onClick={(additive) => onSelect(n.id, additive)}
               onDouble={() => onDouble(n)}
               onHover={(h) => onHover(h ? n.id : null)}
             />
@@ -527,6 +585,7 @@ export default function GrafoPage() {
   const [graph, setGraph] = useState<Graph>({ nodes: BNODES, edges: BEDGES });
   const [expanding, setExpanding] = useState(false);
   const [searchQ, setSearchQ] = useState("");
+  const [compare, setCompare] = useState<string[]>([]); // modo comparación (Cmd/Ctrl-clic)
 
   useEffect(() => {
     let alive = true;
@@ -570,12 +629,41 @@ export default function GrafoPage() {
   }, [searchQ, graph.nodes]);
 
   const pickNode = (id: string) => {
+    setCompare([]);
     setSelected(id);
     setSearchQ("");
   };
 
-  const handleSelect = (id: string) => setSelected((p) => (p === id ? null : id));
+  // clic normal = seleccionar uno; Cmd/Ctrl/Shift-clic = agregar a comparación
+  const handleSelect = (id: string, additive: boolean) => {
+    if (additive) {
+      setSelected(null);
+      setCompare((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+    } else {
+      setCompare([]);
+      setSelected((p) => (p === id ? null : id));
+    }
+  };
+  const clearAll = () => { setSelected(null); setCompare([]); };
   const handleDouble = (n: BNode) => { if (n.url) window.open("https://jashmal.org" + n.url, "_blank"); };
+
+  // qué COMPARTEN los nodos en comparación (vecinos comunes)
+  const compareShared = useMemo(() => {
+    if (compare.length < 2) return [] as string[];
+    let acc: Set<string> | null = null;
+    for (const id of compare) {
+      const nb = neighborsIn(graph.edges, id);
+      if (acc === null) acc = new Set(nb);
+      else { const next = new Set<string>(); for (const x of acc) if (nb.has(x)) next.add(x); acc = next; }
+    }
+    const s = acc ?? new Set<string>();
+    compare.forEach((id) => s.delete(id));
+    return [...s];
+  }, [compare, graph.edges]);
+  const labelOf = (id: string) => {
+    const n = graph.nodes.find((x) => x.id === id);
+    return n ? (isFa ? n.labelFa : n.label) : id;
+  };
 
   // Expansión recursiva: el Sofer del dominio investiga el nodo → el cerebro crece.
   function mergeGraph(prev: Graph, addNodes: BNode[], addEdges: [string, string][]): Graph {
@@ -629,11 +717,12 @@ export default function GrafoPage() {
             edges={graph.edges}
             selected={selected}
             hovered={hovered}
+            compare={compare}
             isFa={isFa}
             onSelect={handleSelect}
             onHover={setHovered}
             onDouble={handleDouble}
-            onBackground={() => setSelected(null)}
+            onBackground={clearAll}
           />
           <EffectComposer>
             <Bloom intensity={1.3} luminanceThreshold={0.12} luminanceSmoothing={0.7} mipmapBlur radius={0.75} />
@@ -728,7 +817,7 @@ export default function GrafoPage() {
           >
             {expanding ? T.expanding : T.expand}
           </button>
-          {selNode.url && (
+          {selNode.url ? (
             <a
               href={"https://jashmal.org" + selNode.url}
               target="_blank"
@@ -737,6 +826,71 @@ export default function GrafoPage() {
             >
               {T.study}
             </a>
+          ) : (
+            <Link
+              href={`/estudio?concept=${encodeURIComponent(selNode.label.replace(/\s*\([^)]*\)\s*/g, " ").trim())}`}
+              className="mt-2 block rounded-full border border-gold/30 bg-gold/[0.07] px-4 py-2 text-center font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold/60 hover:bg-gold/15"
+            >
+              {T.study}
+            </Link>
+          )}
+        </div>
+      )}
+
+      {/* Panel de comparación multi-nodo (intersección) */}
+      {compare.length > 0 && (
+        <div className="absolute bottom-4 end-4 z-10 w-[min(280px,84vw)] rounded-xl border border-cyan-300/30 bg-ink/90 p-4 backdrop-blur-md">
+          <div className="flex items-center justify-between">
+            <p className="font-cinzel text-sm uppercase tracking-wide text-cyan-200/90">
+              {isFa ? "مقایسه" : "Comparando"}
+            </p>
+            <button onClick={clearAll} className="text-[10px] uppercase tracking-wide text-muted/60 transition-colors hover:text-gold">
+              {isFa ? "پاک کردن" : "limpiar"}
+            </button>
+          </div>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {compare.map((id) => (
+              <span key={id} className="inline-flex items-center gap-1 rounded-full border border-gold/25 bg-gold/[0.06] px-2 py-0.5 text-[11px] text-parchment">
+                {labelOf(id)}
+                <button
+                  onClick={() => setCompare((p) => p.filter((x) => x !== id))}
+                  className="text-muted/60 transition-colors hover:text-rose-300"
+                  aria-label="quitar"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+          {compare.length < 2 ? (
+            <p className="mt-3 text-[11px] italic leading-snug text-muted/60">
+              {isFa
+                ? "با Cmd/Ctrl روی موضوع دیگری کلیک کن تا مقایسه شود"
+                : "Cmd/Ctrl + clic en otro tema para comparar"}
+            </p>
+          ) : (
+            <>
+              <p className="mb-1 mt-3 font-cinzel text-[10px] uppercase tracking-wide text-gold/60">
+                {isFa ? "مشترک" : "Comparten"}
+              </p>
+              {compareShared.length === 0 ? (
+                <p className="text-[11px] italic leading-snug text-muted/50">
+                  {isFa ? "اشتراک مستقیمی نیست (✦ گسترش بزن)" : "Sin coincidencia directa (toca ✦ Expandir para descubrir)"}
+                </p>
+              ) : (
+                <div className="flex flex-wrap gap-1.5">
+                  {compareShared.map((id) => (
+                    <button
+                      key={id}
+                      onClick={() => pickNode(id)}
+                      className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[11px] text-gold transition-colors hover:bg-gold/20"
+                    >
+                      {labelOf(id)}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       )}

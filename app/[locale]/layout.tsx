@@ -63,7 +63,7 @@ export default async function LocaleLayout({
   const baseFont = locale === "fa" ? "font-vazir" : "font-body";
 
   return (
-    <html lang={locale} dir={dir}>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
       <head>
         {/* Anti-parpadeo: aplica el tema guardado antes de pintar. Claro por defecto. */}
         <script
