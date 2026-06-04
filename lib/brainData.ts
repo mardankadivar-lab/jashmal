@@ -38,6 +38,8 @@ export const BRAIN_CATS: Record<string, { c: string; label: string; labelFa: str
   halakhah:   { c: "#cfe0ff", label: "Halajá",    labelFa: "هلاخا" },   // blanco-azul
   philosophy: { c: "#7fd488", label: "Filosofía", labelFa: "فلسفه" },   // verde suave
   science:    { c: "#a8c4e8", label: "Ciencia",   labelFa: "علم" },     // plata-azul
+  figure:     { c: "#e0795c", label: "Personajes", labelFa: "شخصیت‌ها" }, // personajes bíblicos (terracota)
+  tema:       { c: "#c98bd6", label: "Temas",     labelFa: "موضوعات" },   // dominios temáticos (lavanda)
   jashmal:    { c: "#f4cf5a", label: "Jashmal",   labelFa: "خَשمَل" },  // contenido propio (oro)
 };
 
@@ -95,6 +97,89 @@ export const MASEI_EDGES: MaseiEdge[] = [
   { a: "Ana BeKoaj", b: "Jésed", kind: "interp" },
   { a: "Masei", b: "Maljut", kind: "interp" },
   { a: "Nombre de 42", b: "Tiféret", kind: "interp" },
+];
+
+// ─── Brain v4 · Personajes bíblicos (figure) + Dominios temáticos (tema) ──
+// Verificado por el Sofer. Afinidades sefiróticas en SEFIRA_AFFINITY (arriba).
+export const V4_NODES: BNode[] = [
+  // Personajes
+  { id: "Noaj", label: "Nóaj", labelFa: "نوح", cat: "figure", level: 3 },
+  { id: "Avraham", label: "Avraham", labelFa: "اَوراهام", cat: "figure", level: 3 },
+  { id: "Sará", label: "Sará", labelFa: "سارا", cat: "figure", level: 3 },
+  { id: "Yitzjak", label: "Yitzjak", labelFa: "ییصحاق", cat: "figure", level: 3 },
+  { id: "Rivká", label: "Rivká", labelFa: "ربکا", cat: "figure", level: 3 },
+  { id: "Yaakov", label: "Yaakov", labelFa: "یعقوب", cat: "figure", level: 3 },
+  { id: "Rajel", label: "Rajel", labelFa: "راحیل", cat: "figure", level: 3 },
+  { id: "Leá", label: "Leá", labelFa: "لیه", cat: "figure", level: 3 },
+  { id: "Moshé", label: "Moshé", labelFa: "موشه", cat: "figure", level: 3 },
+  { id: "Aharón", label: "Aharón", labelFa: "اَهارون", cat: "figure", level: 3 },
+  { id: "Miriam", label: "Miriam", labelFa: "میریام", cat: "figure", level: 3 },
+  { id: "Yehoshúa", label: "Yehoshúa", labelFa: "یهوشع", cat: "figure", level: 3 },
+  { id: "David", label: "David", labelFa: "داوود", cat: "figure", level: 3 },
+  { id: "Shlomó", label: "Shlomó", labelFa: "شلومو", cat: "figure", level: 3 },
+  { id: "Eliyahu", label: "Eliyahu", labelFa: "الیاهو", cat: "figure", level: 3 },
+  { id: "Yeshayahu", label: "Yeshayahu", labelFa: "یشعیاهو", cat: "figure", level: 3 },
+  // Temas
+  { id: "Briá", label: "Creación (Briá)", labelFa: "آفرینش", cat: "tema", level: 3 },
+  { id: "Neshamá", label: "Alma (Neshamá)", labelFa: "روح", cat: "tema", level: 3 },
+  { id: "Nevuá", label: "Profecía (Nevuá)", labelFa: "نبوّت", cat: "tema", level: 3 },
+  { id: "Malajim", label: "Ángeles (Malajim)", labelFa: "فرشتگان", cat: "tema", level: 3 },
+  { id: "Gueulá", label: "Redención (Gueulá)", labelFa: "رستگاری", cat: "tema", level: 3 },
+  { id: "Galut", label: "Exilio (Galut)", labelFa: "تبعید", cat: "tema", level: 3 },
+  { id: "Eretz Israel", label: "Tierra de Israel", labelFa: "سرزمین اسرائیل", cat: "tema", level: 3 },
+  { id: "Bet HaMikdash", label: "Templo (Bet HaMikdash)", labelFa: "بیت‌المقدس", cat: "tema", level: 3 },
+  { id: "Tefilá", label: "Oración (Tefilá)", labelFa: "نیایش", cat: "tema", level: 3 },
+  { id: "Shabat", label: "Shabat", labelFa: "شَبات", cat: "tema", level: 3 },
+  { id: "Yirá", label: "Temor de Dios (Yirá)", labelFa: "ترس از خدا", cat: "tema", level: 3 },
+  { id: "Ahavá", label: "Amor de Dios (Ahavá)", labelFa: "عشق به خدا", cat: "tema", level: 3 },
+  { id: "Brit", label: "Pacto (Brit)", labelFa: "پیمان", cat: "tema", level: 3 },
+  { id: "Shejiná", label: "Shejiná", labelFa: "شخینا", cat: "tema", level: 3 },
+];
+
+export const V4_EDGES: MaseiEdge[] = [
+  // personaje ↔ libro/parashá
+  { a: "Noaj", b: "Bereshit", kind: "solid" }, { a: "Avraham", b: "Bereshit", kind: "solid" },
+  { a: "Sará", b: "Bereshit", kind: "solid" }, { a: "Yitzjak", b: "Bereshit", kind: "solid" },
+  { a: "Rivká", b: "Bereshit", kind: "solid" }, { a: "Yaakov", b: "Bereshit", kind: "solid" },
+  { a: "Rajel", b: "Bereshit", kind: "solid" }, { a: "Leá", b: "Bereshit", kind: "solid" },
+  { a: "Moshé", b: "Shemot", kind: "solid" }, { a: "Aharón", b: "Shemot", kind: "solid" },
+  { a: "Miriam", b: "Shemot", kind: "solid" }, { a: "Moshé", b: "Vayikrá", kind: "solid" },
+  { a: "Moshé", b: "Bamidbar", kind: "solid" }, { a: "Moshé", b: "Devarim", kind: "solid" },
+  { a: "Yehoshúa", b: "Neviim", kind: "solid" }, { a: "Eliyahu", b: "Neviim", kind: "solid" },
+  { a: "Yeshayahu", b: "Neviim", kind: "solid" }, { a: "David", b: "Tehilim", kind: "solid" },
+  { a: "David", b: "Ketuvim", kind: "solid" }, { a: "Shlomó", b: "Ketuvim", kind: "solid" },
+  // personaje ↔ personaje
+  { a: "Avraham", b: "Sará", kind: "solid" }, { a: "Avraham", b: "Yitzjak", kind: "solid" },
+  { a: "Sará", b: "Yitzjak", kind: "solid" }, { a: "Yitzjak", b: "Rivká", kind: "solid" },
+  { a: "Yitzjak", b: "Yaakov", kind: "solid" }, { a: "Rivká", b: "Yaakov", kind: "solid" },
+  { a: "Yaakov", b: "Rajel", kind: "solid" }, { a: "Yaakov", b: "Leá", kind: "solid" },
+  { a: "Rajel", b: "Yosef", kind: "solid" }, { a: "Moshé", b: "Aharón", kind: "solid" },
+  { a: "Moshé", b: "Miriam", kind: "solid" }, { a: "Aharón", b: "Miriam", kind: "solid" },
+  { a: "Moshé", b: "Yehoshúa", kind: "solid" }, { a: "David", b: "Shlomó", kind: "solid" },
+  // personaje ↔ concepto/evento
+  { a: "Avraham", b: "Akedá", kind: "solid" }, { a: "Yitzjak", b: "Akedá", kind: "solid" },
+  { a: "David", b: "Mashíaj", kind: "interp" }, { a: "Eliyahu", b: "Mashíaj", kind: "interp" },
+  { a: "Moshé", b: "Cabalá", kind: "interp" }, { a: "David", b: "Maljut", kind: "interp" },
+  { a: "Shlomó", b: "Bet HaMikdash", kind: "solid" },
+  // tema ↔ nodos existentes
+  { a: "Briá", b: "Bereshit", kind: "solid" }, { a: "Briá", b: "Tzimtzum", kind: "interp" },
+  { a: "Briá", b: "Álef", kind: "interp" }, { a: "Neshamá", b: "Adam HaRishon", kind: "interp" },
+  { a: "Neshamá", b: "Teshuvá", kind: "interp" }, { a: "Nevuá", b: "Moshé", kind: "solid" },
+  { a: "Nevuá", b: "Yeshayahu", kind: "solid" }, { a: "Nevuá", b: "Eliyahu", kind: "solid" },
+  { a: "Malajim", b: "Zohar", kind: "interp" }, { a: "Gueulá", b: "Mashíaj", kind: "solid" },
+  { a: "Gueulá", b: "Galut", kind: "solid" }, { a: "Galut", b: "Shejiná", kind: "interp" },
+  { a: "Eretz Israel", b: "Bet HaMikdash", kind: "solid" }, { a: "Bet HaMikdash", b: "Shejiná", kind: "interp" },
+  { a: "Tefilá", b: "Tehilim", kind: "solid" }, { a: "Tefilá", b: "Maljut", kind: "interp" },
+  { a: "Shabat", b: "Briá", kind: "solid" }, { a: "Shabat", b: "Maljut", kind: "interp" },
+  { a: "Shabat", b: "Shejiná", kind: "interp" }, { a: "Yirá", b: "Ahavá", kind: "solid" },
+  { a: "Ahavá", b: "Jésed", kind: "interp" }, { a: "Yirá", b: "Guevurá", kind: "interp" },
+  { a: "Brit", b: "Avraham", kind: "solid" }, { a: "Brit", b: "Yesod", kind: "interp" },
+  { a: "Brit", b: "Yosef", kind: "interp" }, { a: "Shejiná", b: "Maljut", kind: "interp" },
+  { a: "Shejiná", b: "Cabalá", kind: "interp" },
+  // tema ↔ tema
+  { a: "Briá", b: "Neshamá", kind: "interp" }, { a: "Nevuá", b: "Gueulá", kind: "interp" },
+  { a: "Galut", b: "Eretz Israel", kind: "solid" }, { a: "Gueulá", b: "Bet HaMikdash", kind: "interp" },
+  { a: "Tefilá", b: "Bet HaMikdash", kind: "solid" }, { a: "Brit", b: "Eretz Israel", kind: "solid" },
 ];
 
 // ─── Nodos ───────────────────────────────────────────────────────────────
@@ -185,6 +270,8 @@ export const BNODES: BNode[] = [
 
   // ── Estudio Mas'ei / Nombre de 42 / Ana BeKoaj (verificado por el Sofer) ──
   ...MASEI_NODES,
+  // ── Brain v4: personajes bíblicos + dominios temáticos ──
+  ...V4_NODES,
 ];
 
 // ─── Aristas (relaciones reales, NO dirigidas). Se deduplican antes de render ─
@@ -235,6 +322,8 @@ const RAW_EDGES: [string, string][] = [
   ["Sanador", "Mishné Torá"], ["Linaje", "Mashíaj"], ["Linaje", "Yosef"], ["Bilaam", "Najash"], ["Bilaam", "Bamidbar"],
   // Estudio Mas'ei / Nombre de 42 / Ana BeKoaj (sólidas + interpretativas)
   ...MASEI_EDGES.map((e) => [e.a, e.b] as [string, string]),
+  // Brain v4: personajes + temas
+  ...V4_EDGES.map((e) => [e.a, e.b] as [string, string]),
 ];
 
 // dedup + descarta aristas a nodos inexistentes (p.ej. placeholders)
@@ -296,6 +385,8 @@ export const CAT_REGION: Record<string, string> = {
   kabbalah: "occipital",
   science: "occipital",
   jashmal: "frontal",
+  figure: "frontal",
+  tema: "parietal",
 };
 
 // ─── Brain v4 · Arquitectura cognitiva sefirótica (coordenadas OCULTAS) ────
@@ -328,6 +419,16 @@ export const SEFIRA_AFFINITY: Record<string, string[]> = {
   Yosef: ["Yesod"], "Akedá": ["Guevurá"], "Gan Edén": ["Tiféret"], Najash: ["Guevurá"],
   Shevirá: ["Guevurá"], "Nombre de 42": ["Tiféret"], "Ana BeKoaj": ["Tiféret"],
   Tikún: ["Tiféret"], "Arvot Moav": ["Maljut"], Birur: ["Yesod"],
+  // Brain v4 — personajes (siete pastores, Pataj Eliyahu / Tikunei Zohar 17a)
+  Noaj: ["Yesod"], Avraham: ["Jésed"], "Sará": ["Maljut"], Yitzjak: ["Guevurá"],
+  "Rivká": ["Guevurá"], Yaakov: ["Tiféret"], Rajel: ["Maljut"], "Leá": ["Biná"],
+  "Moshé": ["Netzaj"], "Aharón": ["Hod"], Miriam: ["Netzaj"], "Yehoshúa": ["Hod"],
+  David: ["Maljut"], "Shlomó": ["Maljut"], Eliyahu: ["Yesod"], Yeshayahu: ["Tiféret"],
+  // Brain v4 — temas
+  "Briá": ["Jojmá"], "Neshamá": ["Tiféret"], "Nevuá": ["Netzaj", "Hod"], Malajim: ["Hod"],
+  "Gueulá": ["Yesod", "Maljut"], Galut: ["Maljut"], "Eretz Israel": ["Maljut"],
+  "Bet HaMikdash": ["Maljut"], "Tefilá": ["Maljut"], Shabat: ["Maljut"],
+  "Yirá": ["Guevurá"], "Ahavá": ["Jésed"], Brit: ["Yesod"], "Shejiná": ["Maljut"],
 };
 const SEFIRA_PULL = 0.45; // fuerza del jalón hacia el ancla (suave)
 

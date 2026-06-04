@@ -9,7 +9,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 import { getSql } from "./db";
-import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, type BNode } from "./brainData";
+import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, type BNode } from "./brainData";
 
 export type BrainGraph = { nodes: BNode[]; edges: [string, string][] };
 
@@ -156,6 +156,31 @@ export async function addMaseiStudy(): Promise<void> {
       `;
     }
     for (const e of MASEI_EDGES) {
+      await sql`
+        INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
+        VALUES (${edgeKey(e.a, e.b)}, ${e.a}, ${e.b}, ${e.kind}, 1, 'approved', 'sofer')
+        ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, status = 'approved'
+      `;
+    }
+  } catch {
+    /* nunca romper la lectura del cerebro */
+  }
+}
+
+// ── Brain v4: personajes bíblicos + dominios temáticos (verificado por el Sofer) ──
+export async function addV4Content(): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  try {
+    for (const n of V4_NODES) {
+      await sql`
+        INSERT INTO brain_nodes (id, label, label_fa, cat, level, url, region, status, source)
+        VALUES (${n.id}, ${n.label}, ${n.labelFa}, ${n.cat}, ${n.level},
+                ${n.url ?? null}, ${n.region ?? null}, 'approved', 'sofer')
+        ON CONFLICT (id) DO NOTHING
+      `;
+    }
+    for (const e of V4_EDGES) {
       await sql`
         INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
         VALUES (${edgeKey(e.a, e.b)}, ${e.a}, ${e.b}, ${e.kind}, 1, 'approved', 'sofer')

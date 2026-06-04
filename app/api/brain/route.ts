@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured, getSql } from "@/lib/db";
-import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy } from "@/lib/brainStore";
+import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy, addV4Content } from "@/lib/brainStore";
 import { BNODES, BEDGES } from "@/lib/brainData";
 
 export const runtime = "nodejs";
@@ -23,6 +23,8 @@ function ensureInit(): Promise<void> {
       await unifyTanakh();
       // estudio verificado del Sofer: 42 estaciones / Nombre de 42 / Ana BeKoaj
       await addMaseiStudy();
+      // Brain v4: personajes bíblicos + dominios temáticos (verificado por el Sofer)
+      await addV4Content();
     })().catch((e) => {
       initPromise = null; // permite reintentar en la próxima llamada
       throw e;
