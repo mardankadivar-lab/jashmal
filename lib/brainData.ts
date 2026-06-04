@@ -298,9 +298,42 @@ export const CAT_REGION: Record<string, string> = {
   jashmal: "frontal",
 };
 
-// Gravedad conceptual: cuánto se acerca al centro según el nivel
-// (nivel bajo = más cerca de la Torá)
-const LEVEL_GRAVITY: Record<number, number> = { 0: 1.0, 1: 0.55, 2: 0.34, 3: 0.16, 4: 0.07 };
+// ─── Brain v4 · Arquitectura cognitiva sefirótica (coordenadas OCULTAS) ────
+// Las sefirot NO se dibujan (el cerebro sigue siendo cerebro). Son anclas de
+// "gravedad blanda": un concepto con afinidad sefirótica se acerca a su ancla,
+// así los de cualidad parecida se agrupan — emergencia con sentido, sin Árbol.
+// Anclas en espacio normalizado (×BRAIN_SCALE), repartidas en 3D con variación
+// de profundidad (X) para que NUNCA formen un árbol plano visible.
+export const SEFIRA_ANCHORS: Record<string, [number, number, number]> = {
+  Keter:     [0.35, 1.45, 0.05],
+  "Jojmá":   [1.25, 0.95, 0.85],
+  "Biná":    [0.95, 0.95, -0.9],
+  Daat:      [0.25, 0.55, 0.1],
+  "Jésed":   [0.55, 0.15, 1.15],
+  "Guevurá": [0.4, 0.15, -1.15],
+  "Tiféret": [0.6, 0.05, 0.0],
+  Netzaj:    [-1.15, -0.35, 0.95],
+  Hod:       [-1.25, -0.35, -0.95],
+  Yesod:     [-0.35, -0.85, 0.1],
+  "Maljut":  [-1.75, -1.1, 0.25],
+};
+
+// Afinidad sefirótica por nodo (1+). Lo demás queda en su región (neutral).
+export const SEFIRA_AFFINITY: Record<string, string[]> = {
+  Keter: ["Keter"], "Jojmá": ["Jojmá"], "Biná": ["Biná"], "Jésed": ["Jésed"],
+  "Guevurá": ["Guevurá"], "Tiféret": ["Tiféret"], Yesod: ["Yesod"], "Maljut": ["Maljut"],
+  Tzimtzum: ["Keter"], "Mashíaj": ["Yesod", "Maljut"], "Teshuvá": ["Biná"],
+  Zohar: ["Tiféret"], "Etz Jaim": ["Jojmá"], Tania: ["Daat"],
+  "Mishné Torá": ["Guevurá", "Tiféret"], "Moré Nevujim": ["Biná"],
+  Yosef: ["Yesod"], "Akedá": ["Guevurá"], "Gan Edén": ["Tiféret"], Najash: ["Guevurá"],
+  Shevirá: ["Guevurá"], "Nombre de 42": ["Tiféret"], "Ana BeKoaj": ["Tiféret"],
+  Tikún: ["Tiféret"], "Arvot Moav": ["Maljut"], Birur: ["Yesod"],
+};
+const SEFIRA_PULL = 0.45; // fuerza del jalón hacia el ancla (suave)
+
+// Gravedad conceptual hacia el centro, por nivel. REDUCIDA (Brain v4): antes
+// amontonaba todo al centro; ahora los conceptos se reparten por el volumen.
+const LEVEL_GRAVITY: Record<number, number> = { 0: 1.0, 1: 0.4, 2: 0.18, 3: 0.07, 4: 0.04 };
 
 // muestrea un punto dentro de un elipsoide (sesgado hacia la corteza/superficie)
 function sampleInRegion(reg: Region, rng: () => number, hemiSign: number): [number, number, number] {
@@ -331,12 +364,28 @@ export function layoutNodes(nodes: BNode[]): Record<string, [number, number, num
     const rng = mulberry32(seed);
     const hemiSign = (hashStr(n.id) & 1) ? 1 : -1;
     const p = sampleInRegion(reg, rng, hemiSign);
-    // gravedad conceptual: acerca al centro según nivel
-    const g = LEVEL_GRAVITY[n.level] ?? 0.1;
+    // afinidad sefirótica: jala suavemente hacia el ancla oculta (sin Árbol visible)
+    let bx = p[0], by = p[1], bz = p[2];
+    const affs = SEFIRA_AFFINITY[n.id];
+    if (affs && affs.length) {
+      let ax = 0, ay = 0, az = 0, k = 0;
+      for (const s of affs) {
+        const a = SEFIRA_ANCHORS[s];
+        if (a) { ax += a[0]; ay += a[1]; az += a[2]; k++; }
+      }
+      if (k > 0) {
+        const sx = (ax / k) * BRAIN_SCALE, sy = (ay / k) * BRAIN_SCALE, sz = (az / k) * BRAIN_SCALE;
+        bx += (sx - bx) * SEFIRA_PULL;
+        by += (sy - by) * SEFIRA_PULL;
+        bz += (sz - bz) * SEFIRA_PULL;
+      }
+    }
+    // gravedad conceptual hacia el centro (reducida → reparte por el volumen)
+    const g = LEVEL_GRAVITY[n.level] ?? 0.05;
     out[n.id] = [
-      p[0] + (center[0] - p[0]) * g,
-      p[1] + (center[1] - p[1]) * g,
-      p[2] + (center[2] - p[2]) * g,
+      bx + (center[0] - bx) * g,
+      by + (center[1] - by) * g,
+      bz + (center[2] - bz) * g,
     ];
   });
   return out;
