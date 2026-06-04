@@ -293,31 +293,29 @@ function FiberHighlight({ curves, color }: { curves: EdgeCurve[]; color: string 
 
 // ── Las 22 letras sobre los senderos del Árbol (entre sefirot), clickeables ─
 function TreePathLetters({
-  positions,
   curves,
   locale,
+  selected,
 }: {
-  positions: Record<string, [number, number, number]>;
   curves: EdgeCurve[];
   locale: string;
+  selected: string | null;
 }) {
+  // Solo se muestran al hacer CLIC sobre una sefirá: aparecen las letras de SUS
+  // senderos, posicionadas SOBRE la línea de conexión (punto medio de la curva).
   const items = useMemo(() => {
-    return TREE_PATHS.map((p) => {
-      const c = curves.find(
-        (c) => (c.a === p.from && c.b === p.to) || (c.a === p.to && c.b === p.from),
-      );
-      let mid: [number, number, number] | null = null;
-      if (c && c.pts.length) {
+    if (!selected) return [];
+    return TREE_PATHS.filter((p) => p.from === selected || p.to === selected)
+      .map((p) => {
+        const c = curves.find(
+          (c) => (c.a === p.from && c.b === p.to) || (c.a === p.to && c.b === p.from),
+        );
+        if (!c || !c.pts.length) return null;
         const m = c.pts[Math.floor(c.pts.length / 2)];
-        mid = [m.x, m.y, m.z];
-      } else {
-        const a = positions[p.from];
-        const b = positions[p.to];
-        if (a && b) mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2];
-      }
-      return mid ? { ...p, mid } : null;
-    }).filter(Boolean) as Array<(typeof TREE_PATHS)[number] & { mid: [number, number, number] }>;
-  }, [positions, curves]);
+        return { ...p, mid: [m.x, m.y, m.z] as [number, number, number] };
+      })
+      .filter(Boolean) as Array<(typeof TREE_PATHS)[number] & { mid: [number, number, number] }>;
+  }, [curves, selected]);
 
   return (
     <>
@@ -333,7 +331,7 @@ function TreePathLetters({
               color: "#ffe9a8",
               textShadow: "0 0 9px #c9a43e, 0 0 3px #000",
               textDecoration: "none",
-              opacity: 0.8,
+              opacity: 0.95,
               display: "inline-block",
               padding: "3px",
             }}
@@ -629,8 +627,8 @@ function BrainScene({
           );
         })}
 
-        {/* las 22 letras hebreas sobre los senderos del Árbol (clickeables → estudio) */}
-        <TreePathLetters positions={positions} curves={curves} locale={locale} />
+        {/* las letras hebreas aparecen SOBRE los senderos al hacer clic en una sefirá */}
+        <TreePathLetters curves={curves} locale={locale} selected={selected} />
       </group>
     </>
   );
