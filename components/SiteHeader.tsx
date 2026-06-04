@@ -34,6 +34,9 @@ export default function SiteHeader() {
           <Link href="/arbol" className="text-muted transition-colors hover:text-parchment">
             {t("nav.tree")}
           </Link>
+          <Link href="/grafo" className="text-muted transition-colors hover:text-parchment">
+            {t("nav.brain")}
+          </Link>
           <Link href="/acerca" className="text-muted transition-colors hover:text-parchment">
             {t("nav.about")}
           </Link>

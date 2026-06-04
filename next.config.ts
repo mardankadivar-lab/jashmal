@@ -20,6 +20,8 @@ const nextConfig: NextConfig = {
       { source: "/refael", destination: "/es/misterio/refael" },
       { source: "/serpiente-de-cobre", destination: "/es/misterio/serpiente-de-cobre" },
       { source: "/refua", destination: "/es/misterio/refua" },
+      { source: "/cerebro", destination: "/es/grafo" },
+      { source: "/grafo", destination: "/es/grafo" },
     ];
   },
 };
