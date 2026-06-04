@@ -237,6 +237,52 @@ export default function PageSerpienteDeCobre() {
           </div>
         </Section>
 
+        {/* ── ¿POR QUÉ BRONCE? LOS TRES METALES = LAS TRES COLUMNAS ── */}
+        <Section>
+          <h3 className="mb-5 mt-12 text-center font-cinzel text-sm uppercase tracking-[0.3em] text-gold/60">
+            {fa ? "چرا مفرغ؟ سه فلز، سه ستون" : "¿Por qué bronce? Los tres metales"}
+          </h3>
+
+          <div className="flex flex-wrap items-end justify-center gap-2.5">
+            <Tile he="כֶּסֶף" sub={fa ? "نقره · حِسِد" : "Plata · Jésed"} color="#7fb0e0" size={36} />
+            <Tile he="זָהָב" sub={fa ? "طلا · گِبورا" : "Oro · Guevurá"} color="#c9a43e" size={36} />
+            <Tile he="נְחֹשֶׁת" sub={fa ? "مفرغ · تیفئرت" : "Bronce · Tiféret"} color={C} size={36} />
+          </div>
+
+          <div className="mt-7 space-y-4 text-sm leading-relaxed text-parchment/85" dir={fa ? "rtl" : "ltr"}>
+            <p>
+              {fa
+                ? "تورات سه فلز را برایِ ساختِ مِشکان (خیمهٔ مقدس) کنارِ هم می‌نهد: «זָהָב וָכֶסֶף וּנְחֹשֶׁת» (زاهاو وَخِسِف اوُنِحُشِت، «طلا و نقره و مفرغ») (خروج ۲۵:۳). در کابالا این سه، سه ستونِ עֵץ הַחַיִּים (عِتْص هَحَیّیم، «درختِ زندگی») هستند: راست، چپ و میانه."
+                : "La Torá pone los tres metales juntos para construir el Mishkán (el Tabernáculo): «זָהָב וָכֶסֶף וּנְחֹשֶׁת» (zahav va-kesef u-nejóshet, «oro y plata y bronce») (Éxodo 25:3). En la Cabalá, estos tres son las tres columnas del עֵץ הַחַיִּים (etz ha-jaím, «Árbol de la Vida»): derecha, izquierda y medio."}
+            </p>
+            <p>
+              {fa
+                ? "כֶּסֶף (خِسِف، «نقره») سفید است، و در کابالا نشانِ חֶסֶד (حِسِد، «مهر و بخشش») است — ستونِ راست. זָהָב (زاهاو، «طلا») سرخ‌فام است، و نشانِ גְּבוּרָה (گِبورا، «صلابت و داوری») است — ستونِ چپ. این دو، دو بازویِ آفرینش‌اند: یکی نزدیک می‌آورد، دیگری حد می‌نهد."
+                : "כֶּסֶף (kesef, «plata») es blanca, y en la Cabalá es el signo de חֶסֶד (jésed, «bondad y amor») — la columna derecha. זָהָב (zahav, «oro») es rojizo, y es el signo de גְּבוּרָה (guevurá, «rigor y juicio») — la columna izquierda. Son los dos brazos de la creación: uno acerca, el otro pone límite."}
+            </p>
+            <p>
+              {fa
+                ? "و میان این دو، ستونِ سوم: תִּפְאֶרֶת (تیفئرت، «هماهنگی و زیبایی»)، خطِّ میانه که حِسِد و گِبورا را آشتی می‌دهد. تیفئرت همان رَحَمیم (مِهرِ متعادل) است — نه مهرِ بی‌مرز، نه داوریِ بی‌رحم، بلکه آمیزهٔ درست."
+                : "Y entre los dos, la tercera columna: תִּפְאֶרֶת (tiféret, «armonía y belleza»), la línea media que reconcilia a Jésed y Guevurá. Tiféret es rajamim (la misericordia equilibrada) — ni bondad sin límite, ni juicio sin piedad, sino la mezcla justa."}
+            </p>
+            <p>
+              {fa
+                ? "اکنون رازِ خودِ فلز آشکار می‌شود. واژهٔ נְחֹשֶׁת (نِحُشِت، «مفرغ/مس») از همان ریشهٔ נָחָשׁ (نَحَش، «مار») است. و در آموزهٔ کابالا، נָחָשׁ — همان واژه‌ای که در آیهٔ ۲۱:۹ به‌کار رفته — به תִּפְאֶרֶת، ستونِ میانه، می‌پیوندد؛ حال‌آنکه שָׂרָף (ساراف، «مارِ آتشین») — واژهٔ آیهٔ ۲۱:۸ — به גְּבוּרָה، ستونِ داوری، تعلق دارد."
+                : "Ahora se revela el secreto del metal mismo. La palabra נְחֹשֶׁת (nejóshet, «bronce/cobre») viene de la misma raíz que נָחָשׁ (nájash, «serpiente»). Y en la enseñanza cabalística, el נָחָשׁ — la misma palabra usada en el versículo 21:9 — se vincula a תִּפְאֶרֶת, la columna media; mientras que el שָׂרָף (saraf, «serpiente ardiente») — la palabra del versículo 21:8 — pertenece a גְּבוּרָה, la columna del juicio."}
+            </p>
+            <p>
+              {fa
+                ? "و درست همین جابه‌جایی، در خودِ متن رخ می‌دهد: خدا فرمان می‌دهد یک שָׂרָף (ساراف · گِبورا · زهر) ساخته شود — اما موشه یک נָחָשׁ نِحُشِت (نَحَش · تیفئرت · شفا) می‌سازد. زهرِ گِبورا، چون برافراشته شود، به هماهنگیِ تیفئرت بازآفریده می‌شود. شفا یعنی بازگشتِ تعادل: نیرویِ داوری، نه نابود، بلکه به خطِّ میانه برکشیده و درمان‌شده."
+                : "Y exactamente ese cambio ocurre en el texto mismo: Dios ordena hacer un שָׂרָף (saraf · Guevurá · veneno) — pero Moshé hace un נָחָשׁ de nejóshet (nájash · Tiféret · cura). El veneno de Guevurá, al ser elevado, se recrea en la armonía de Tiféret. Sanar es el retorno del equilibrio: la fuerza del juicio, no destruida, sino levantada a la línea media y curada."}
+            </p>
+            <p>
+              {fa
+                ? "از این روست که مارِ شفابخش از مفرغ است، نه از طلا و نه از نقره: نه مهرِ محض، نه داوریِ محض، بلکه ستونِ میانه — همان‌جا که تضاد آشتی می‌یابد و درمان فرود می‌آید."
+                : "Por eso la serpiente sanadora es de bronce, y no de oro ni de plata: ni bondad pura, ni juicio puro, sino la columna del medio — el lugar donde el conflicto se reconcilia y desciende la cura."}
+            </p>
+          </div>
+        </Section>
+
         {/* ── SÍNTESIS ── */}
         <Section>
           <div className="mt-16 rounded-2xl border border-gold/20 bg-gradient-to-b from-gold/[0.06] to-transparent p-8 text-center">
