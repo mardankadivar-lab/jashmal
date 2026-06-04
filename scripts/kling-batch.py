@@ -44,17 +44,21 @@ OUTPUT_DIR = os.path.expanduser("~/Desktop/jashmal-videos")
 
 CONCEPTOS = [
     {
-        "nombre": "ejad_ahava_yhvh",
+        "nombre": "alef_fondo",
         "prompt": (
-            "Cinematic photorealistic dark cosmic void, two luminous golden spheres "
-            "slowly floating toward each other across infinite darkness, each surrounded "
-            "by softly glowing golden particles and sacred light. As they approach, "
-            "golden light threads connect them. The atmosphere is deeply contemplative "
-            "and divine, like witnessing a cosmic truth. Warm amber and gold tones, "
-            "slight lens flare, slow cinematic push-in camera movement, mystical and "
-            "sacred mood, no text, no people."
+            "Cinematic photorealistic deep black cosmic void with very subtle slow-drifting "
+            "golden dust particles and faint nebula glow in the center. Minimal, dark, "
+            "contemplative, sacred emptiness — like the void before creation. Soft warm "
+            "amber light pooling gently in the middle of the frame, the rest deep black. "
+            "Extremely subtle slow camera drift, no text, no people, no objects. "
+            "A quiet mystical background for a single sacred letter to appear over."
         ),
     },
+    # ─── Conceptos anteriores (comentados para no regenerar) ───
+    # {
+    #     "nombre": "ejad_ahava_yhvh",
+    #     "prompt": "...",
+    # },
     # ─── Conceptos anteriores (comentados para no regenerar) ───
     # {
     #     "nombre": "358_mashiaj_najash",

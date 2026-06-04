@@ -1,7 +1,7 @@
 "use client";
 
 // ─────────────────────────────────────────────────────────────────────────
-// /grafo — "El cerebro vivo de Jashmal"
+// /cerebro — "El cerebro vivo de Jashmal"
 // El grafo MISMO es el cerebro: nodos = sinapsis luminosas, aristas = fibras
 // neuronales curvas. Torá = corazón central. Forma cerebral 3D (lóbulos) desde
 // cualquier ángulo. Bloom + additive blending. Cámara cinematográfica con
