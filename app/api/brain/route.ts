@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured, getSql } from "@/lib/db";
-import { ensureBrainTables, seedBrain, getBrainGraph } from "@/lib/brainStore";
+import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh } from "@/lib/brainStore";
 import { BNODES, BEDGES } from "@/lib/brainData";
 
 export const runtime = "nodejs";
@@ -19,6 +19,8 @@ function ensureInit(): Promise<void> {
         const rows = (await sql`SELECT count(*)::int AS n FROM brain_nodes`) as Array<{ n: number }>;
         if ((rows?.[0]?.n ?? 0) === 0) await seedBrain();
       }
+      // migración Brain v2: unificar Torá/Tanaj (idempotente)
+      await unifyTanakh();
     })().catch((e) => {
       initPromise = null; // permite reintentar en la próxima llamada
       throw e;

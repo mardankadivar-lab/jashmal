@@ -92,6 +92,54 @@ export async function seedBrain(): Promise<{ nodes: number; edges: number }> {
   return { nodes: BNODES.length, edges: BEDGES.length };
 }
 
+// ── Migración: unificar Torá y Tanaj en un solo núcleo (Brain v2) ─────────
+// Idempotente. Fusiona el nodo duplicado 'Tanaj' dentro de 'Torá' (re-apunta
+// sus conexiones como aristas canónicas Torá↔vecino), lo elimina, renombra el
+// núcleo y añade Neviim/Ketuvim como las otras divisiones del Tanaj.
+export async function unifyTanakh(): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  try {
+    // núcleo unificado + divisiones (idempotente)
+    await sql`UPDATE brain_nodes SET label = 'Torá · Tanaj', label_fa = 'تورات · تنخ' WHERE id = 'Torá'`;
+    await sql`INSERT INTO brain_nodes (id,label,label_fa,cat,level,status,source)
+      VALUES ('Neviim','Neviim','نِویئیم (انبیا)','tanakh',1,'approved','seed') ON CONFLICT (id) DO NOTHING`;
+    await sql`INSERT INTO brain_nodes (id,label,label_fa,cat,level,status,source)
+      VALUES ('Ketuvim','Ketuvim','کتوویم (مکتوبات)','tanakh',1,'approved','seed') ON CONFLICT (id) DO NOTHING`;
+
+    // ¿existe el nodo duplicado 'Tanaj'? → fusionarlo en 'Torá'
+    const dup = (await sql`SELECT 1 FROM brain_nodes WHERE id = 'Tanaj' LIMIT 1`) as unknown[];
+    if (dup.length > 0) {
+      const nbrs = (await sql`
+        SELECT DISTINCT CASE WHEN source_id = 'Tanaj' THEN target_id ELSE source_id END AS x
+        FROM brain_edges WHERE source_id = 'Tanaj' OR target_id = 'Tanaj'
+      `) as Array<{ x: string }>;
+      for (const { x } of nbrs) {
+        if (!x || x === "Tanaj" || x === "Torá") continue;
+        await sql`
+          INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
+          VALUES (${edgeKey("Torá", x)}, 'Torá', ${x}, 'rel', 1, 'approved', 'seed')
+          ON CONFLICT (id) DO NOTHING
+        `;
+      }
+      await sql`DELETE FROM brain_edges WHERE source_id = 'Tanaj' OR target_id = 'Tanaj'`;
+      await sql`DELETE FROM brain_nodes WHERE id = 'Tanaj'`;
+    }
+
+    // conectar el núcleo con Neviim/Ketuvim y Ketuvim↔Tehilim (idempotente)
+    const links: [string, string][] = [["Torá", "Neviim"], ["Torá", "Ketuvim"], ["Ketuvim", "Tehilim"]];
+    for (const [a, b] of links) {
+      await sql`
+        INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
+        VALUES (${edgeKey(a, b)}, ${a}, ${b}, 'rel', 1, 'approved', 'seed')
+        ON CONFLICT (id) DO NOTHING
+      `;
+    }
+  } catch {
+    /* nunca romper la lectura del cerebro */
+  }
+}
+
 // ── Leer el grafo aprobado (lo que el cerebro enciende) ───────────────────
 // Devuelve null si la BD no está configurada → el front usa la semilla estática.
 export async function getBrainGraph(includePending = false): Promise<BrainGraph | null> {

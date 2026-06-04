@@ -43,11 +43,14 @@ export const BRAIN_CATS: Record<string, { c: string; label: string; labelFa: str
 
 // ─── Nodos ───────────────────────────────────────────────────────────────
 export const BNODES: BNode[] = [
-  // ── Nivel 0 — corazón ──
-  { id: "Torá", label: "Torá", labelFa: "تورات", cat: "torah", level: 0 },
+  // ── Nivel 0 — corazón (Torá y Tanaj UNIFICADOS: la Torá es el núcleo del Tanaj) ──
+  { id: "Torá", label: "Torá · Tanaj", labelFa: "تورات · تنخ", cat: "torah", level: 0 },
 
   // ── Nivel 1 — dominios ──
-  { id: "Tanaj",     label: "Tanaj",     labelFa: "تنخ",    cat: "tanakh",     level: 1 },
+  // Neviim (Profetas) y Ketuvim (Escritos): las otras dos divisiones del Tanaj,
+  // alrededor del núcleo Torá. Los 5 libros de la Torá cuelgan directo del núcleo.
+  { id: "Neviim",    label: "Neviim",    labelFa: "نِویئیم (انبیا)",   cat: "tanakh", level: 1 },
+  { id: "Ketuvim",   label: "Ketuvim",   labelFa: "کتوویم (مکتوبات)", cat: "tanakh", level: 1 },
   { id: "Mishná",    label: "Mishná",    labelFa: "میشنا",  cat: "mishnah",    level: 1 },
   { id: "Talmud",    label: "Talmud",    labelFa: "تلمود",  cat: "talmud",     level: 1 },
   { id: "Midrash",   label: "Midrash",   labelFa: "میدراش", cat: "midrash",    level: 1 },
@@ -127,13 +130,13 @@ export const BNODES: BNode[] = [
 
 // ─── Aristas (relaciones reales, NO dirigidas). Se deduplican antes de render ─
 const RAW_EDGES: [string, string][] = [
-  // Torá → dominios (el corazón irriga todo)
-  ["Torá", "Tanaj"], ["Torá", "Mishná"], ["Torá", "Talmud"], ["Torá", "Midrash"],
+  // Torá (núcleo) → dominios (el corazón irriga todo)
+  ["Torá", "Neviim"], ["Torá", "Ketuvim"], ["Torá", "Mishná"], ["Torá", "Talmud"], ["Torá", "Midrash"],
   ["Torá", "Cabalá"], ["Torá", "Jasidut"], ["Torá", "Halajá"], ["Torá", "Filosofía"], ["Torá", "Ciencia"],
-  // Torá → 5 libros
+  // Torá (núcleo) → sus 5 libros
   ["Torá", "Bereshit"], ["Torá", "Shemot"], ["Torá", "Vayikrá"], ["Torá", "Bamidbar"], ["Torá", "Devarim"],
-  // Tanaj ↔ libros
-  ["Tanaj", "Bereshit"], ["Tanaj", "Shemot"], ["Tanaj", "Vayikrá"], ["Tanaj", "Bamidbar"], ["Tanaj", "Devarim"], ["Tanaj", "Tehilim"],
+  // Ketuvim → Tehilim (Salmos); Neviim/Ketuvim crecerán al expandirlos
+  ["Ketuvim", "Tehilim"],
   // Bereshit → temas
   ["Bereshit", "Adam HaRishon"], ["Bereshit", "Javá"], ["Bereshit", "Najash"], ["Bereshit", "Gan Edén"],
   ["Bereshit", "Tzelem Elohim"], ["Bereshit", "Teshuvá"], ["Bereshit", "Akedá"], ["Bereshit", "Yosef"],
