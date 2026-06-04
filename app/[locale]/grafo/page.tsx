@@ -9,7 +9,7 @@
 // y vecinos (sin cambiar el color de categoría); el resto baja de opacidad.
 // ─────────────────────────────────────────────────────────────────────────
 
-import { useMemo, useRef, useState, Suspense } from "react";
+import { useMemo, useRef, useState, useEffect, Suspense } from "react";
 import dynamic from "next/dynamic";
 import { useFrame } from "@react-three/fiber";
 import { Html, OrbitControls } from "@react-three/drei";
@@ -22,12 +22,13 @@ import {
   BEDGES,
   BRAIN_CATS,
   BRAIN_SCALE,
-  brainLayout,
+  layoutNodes,
   ambientTissue,
-  neighborsOf,
-  nodeById,
+  neighborsIn,
   type BNode,
 } from "@/lib/brainData";
+
+type Graph = { nodes: BNode[]; edges: [string, string][] };
 
 const Canvas = dynamic(() => import("@react-three/fiber").then((m) => m.Canvas), { ssr: false });
 
@@ -74,9 +75,12 @@ function glowTexture(): THREE.Texture {
 // ── Curvas (fibras) precomputadas por arista ──────────────────────────────
 type EdgeCurve = { a: string; b: string; pts: THREE.Vector3[] };
 
-function buildCurves(positions: Record<string, [number, number, number]>): EdgeCurve[] {
+function buildCurves(
+  positions: Record<string, [number, number, number]>,
+  edges: [string, string][],
+): EdgeCurve[] {
   const curves: EdgeCurve[] = [];
-  for (const [a, b] of BEDGES) {
+  for (const [a, b] of edges) {
     const pa = positions[a], pb = positions[b];
     if (!pa || !pb) continue;
     const va = new THREE.Vector3(...pa);
@@ -336,6 +340,8 @@ function FocusHelper({
 
 // ── Escena ─────────────────────────────────────────────────────────────────
 function BrainScene({
+  nodes,
+  edges,
   selected,
   hovered,
   isFa,
@@ -344,6 +350,8 @@ function BrainScene({
   onDouble,
   onBackground,
 }: {
+  nodes: BNode[];
+  edges: [string, string][];
   selected: string | null;
   hovered: string | null;
   isFa: boolean;
@@ -352,17 +360,18 @@ function BrainScene({
   onDouble: (n: BNode) => void;
   onBackground: () => void;
 }) {
-  const positions = useMemo(() => brainLayout(), []);
-  const curves = useMemo(() => buildCurves(positions), [positions]);
+  const positions = useMemo(() => layoutNodes(nodes), [nodes]);
+  const curves = useMemo(() => buildCurves(positions, edges), [positions, edges]);
   const baseSegments = useMemo(() => curvesToSegments(curves), [curves]);
+  const nodeMap = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
 
   const focusId = selected ?? hovered;
   const neighbors = useMemo(
-    () => (focusId ? neighborsOf(focusId) : new Set<string>()),
-    [focusId],
+    () => (focusId ? neighborsIn(edges, focusId) : new Set<string>()),
+    [edges, focusId],
   );
   const selectedPos = selected && positions[selected] ? new THREE.Vector3(...positions[selected]) : null;
-  const focusColor = focusId ? (BRAIN_CATS[nodeById(focusId)?.cat ?? ""]?.c ?? "#cfe6ff") : "#cfe6ff";
+  const focusColor = focusId ? (BRAIN_CATS[nodeMap.get(focusId)?.cat ?? ""]?.c ?? "#cfe6ff") : "#cfe6ff";
 
   // controles de mouse (girar / mover / zoom) con pausa de auto-giro al interactuar
   const controlsRef = useRef<any>(null);
@@ -430,7 +439,7 @@ function BrainScene({
         <BaseFibers segments={baseSegments} dimmed={focusId !== null} />
         {focusId && <ActiveFibers curves={curves} focusId={focusId} color={focusColor} />}
 
-        {BNODES.map((n) => {
+        {nodes.map((n) => {
           const pos = positions[n.id];
           if (!pos) return null;
           return (
@@ -458,8 +467,25 @@ export default function GrafoPage() {
   const isFa = locale === "fa";
   const [selected, setSelected] = useState<string | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
+  // el cerebro lee sus sinapsis/conexiones de /api/brain (BD); semilla como respaldo
+  const [graph, setGraph] = useState<Graph>({ nodes: BNODES, edges: BEDGES });
 
-  const selNode = selected ? nodeById(selected) : null;
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/brain")
+      .then((r) => r.json())
+      .then((d) => {
+        if (alive && d && Array.isArray(d.nodes) && d.nodes.length && Array.isArray(d.edges)) {
+          setGraph({ nodes: d.nodes as BNode[], edges: d.edges as [string, string][] });
+        }
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const selNode = selected ? graph.nodes.find((n) => n.id === selected) ?? null : null;
 
   const T = {
     title: "חַשְׁמַל",
@@ -492,6 +518,8 @@ export default function GrafoPage() {
           <color attach="background" args={["#03040a"]} />
           <fogExp2 attach="fog" args={["#03040a", 0.018]} />
           <BrainScene
+            nodes={graph.nodes}
+            edges={graph.edges}
             selected={selected}
             hovered={hovered}
             isFa={isFa}

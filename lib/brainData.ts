@@ -254,10 +254,12 @@ function sampleInRegion(reg: Region, rng: () => number, hemiSign: number): [numb
 }
 
 // ─── Layout de los nodos semánticos (determinista por id) ───────────────
-export function brainLayout(): Record<string, [number, number, number]> {
+// Acepta CUALQUIER lista de nodos (estática o traída de la BD) → así el
+// cerebro puede crecer y los nodos nuevos se ubican automáticamente.
+export function layoutNodes(nodes: BNode[]): Record<string, [number, number, number]> {
   const out: Record<string, [number, number, number]> = {};
   const center: [number, number, number] = [0.1 * BRAIN_SCALE, 0.1 * BRAIN_SCALE, 0];
-  BNODES.forEach((n, i) => {
+  nodes.forEach((n, i) => {
     if (n.level === 0) { out[n.id] = center; return; }
     const regKey = n.region ?? CAT_REGION[n.cat] ?? "frontal";
     const reg = REGIONS[regKey] ?? REGIONS.frontal;
@@ -274,6 +276,30 @@ export function brainLayout(): Record<string, [number, number, number]> {
     ];
   });
   return out;
+}
+
+// Back-compat: layout de la semilla estática.
+export function brainLayout(): Record<string, [number, number, number]> {
+  return layoutNodes(BNODES);
+}
+
+// Vecinos / grados a partir de una lista de aristas arbitraria (dinámica).
+export function neighborsIn(edges: [string, string][], id: string): Set<string> {
+  const s = new Set<string>();
+  for (const [a, b] of edges) {
+    if (a === id) s.add(b);
+    if (b === id) s.add(a);
+  }
+  return s;
+}
+export function degreesIn(nodes: BNode[], edges: [string, string][]): Record<string, number> {
+  const deg: Record<string, number> = {};
+  nodes.forEach((n) => (deg[n.id] = 0));
+  edges.forEach(([a, b]) => {
+    if (deg[a] !== undefined) deg[a]++;
+    if (deg[b] !== undefined) deg[b]++;
+  });
+  return deg;
 }
 
 // ─── Tejido ambiental: sinapsis decorativas que dan masa/forma al cerebro ──
