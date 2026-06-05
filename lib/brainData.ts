@@ -104,7 +104,7 @@ export const MASEI_EDGES: MaseiEdge[] = [
 export const V4_NODES: BNode[] = [
   // Personajes
   { id: "Noaj", label: "Nóaj", labelFa: "نوح", cat: "figure", level: 3 },
-  { id: "Avraham", label: "Avraham", labelFa: "اَوراهام", cat: "figure", level: 3 },
+  { id: "Avraham", label: "Abraham", labelFa: "ابراهیم", cat: "figure", level: 3 },
   { id: "Sará", label: "Sará", labelFa: "سارا", cat: "figure", level: 3 },
   { id: "Yitzjak", label: "Yitzjak", labelFa: "ییصحاق", cat: "figure", level: 3 },
   { id: "Rivká", label: "Rivká", labelFa: "ربکا", cat: "figure", level: 3 },
@@ -466,6 +466,49 @@ export const TOHU_EDGES: MaseiEdge[] = [
   { a: "Tohu", b: "Bereshit", kind: "solid" },
 ];
 
+// ─── Estudio: Abraham en la Cabalá (verificado por el Sofer en Sefaria) ───
+// Ancla a Abraham en la dimensión cabalística con AUTORIDAD clásica (Zohar,
+// Sefer Yetzirá, midrash). La fuente exacta va en el comentario de cada arista.
+// Gematrías verificadas: אברם=243 · אברהם=248 (+ה=5) · חסד=72.
+export const AVRAHAM_KAB_NODES: BNode[] = [
+  { id: "Sefer Yetzirá",  label: "Sefer Yetzirá (Libro de la Formación)", labelFa: "سفر یِتسیرا (کتاب آفرینش)", cat: "kabbalah", level: 2 },
+  { id: "22 Letras",      label: "Las 22 letras",                          labelFa: "بیست‌ودو حرف",            cat: "kabbalah", level: 3 },
+  { id: "10 Pruebas",     label: "Las 10 pruebas de Abraham",              labelFa: "ده آزمایش ابراهیم",       cat: "tema",     level: 3 },
+  { id: "Birá Doleket",   label: "El palacio iluminado (Birá Doleket)",    labelFa: "کاخ روشن (بیرا دولِقِت)", cat: "tema",     level: 3 },
+  { id: "Hajnasat Orjim", label: "Hospitalidad (Hajnasat Orjim)",          labelFa: "مهمان‌نوازی",            cat: "tema",     level: 3 },
+  { id: "Malki-Tzedek",   label: "Malki-Tzedek",                           labelFa: "مَلכی‌صِدِق",             cat: "figure",   level: 3 },
+  { id: "Merkavá",        label: "Merkavá (la Carroza)",                   labelFa: "مرکبه (ارابه)",          cat: "kabbalah", level: 3 },
+  { id: "Nombre de 72",   label: "Nombre de 72 (Shem HaMforash)",          labelFa: "نام ۷۲ (شِم هَمفوراش)",   cat: "kabbalah", level: 3 },
+];
+export const AVRAHAM_KAB_EDGES: MaseiEdge[] = [
+  // ── PRINCIPALES — autoridad clásica (estas son las aristas primarias) ──
+  { a: "Avraham", b: "Jésed",          kind: "solid" },  // Miqueas 7:20 "jésed le-Avraham" + Pataj Eliyahu (Tikkunei Zohar 17)
+  { a: "Avraham", b: "Sefer Yetzirá",  kind: "solid" },  // Sefer Yetzirá 6:4 (autoría = atribución tradicional)
+  { a: "Avraham", b: "22 Letras",      kind: "solid" },  // Sefer Yetzirá 6:4 "22 letras atadas a su lengua"
+  { a: "Avraham", b: "Brit Milá",      kind: "solid" },  // Génesis 17:11 (signo del pacto)
+  { a: "Brit Milá", b: "Yesod",        kind: "solid" },  // Pataj Eliyahu (Tikkunei Zohar 17): "ot brit kódesh"
+  { a: "Avraham", b: "Merkavá",        kind: "solid" },  // Bereshit Rabbah 82:6 "los patriarcas son la Merkavá"
+  { a: "Yitzjak", b: "Merkavá",        kind: "solid" },  // Bereshit Rabbah 82:6
+  { a: "Yaakov",  b: "Merkavá",        kind: "solid" },  // Bereshit Rabbah 82:6
+  { a: "Avraham", b: "Birá Doleket",   kind: "solid" },  // Bereshit Rabbah 39:1 (el palacio iluminado)
+  { a: "Avraham", b: "Neshamá",        kind: "solid" },  // Génesis 12:5 + Bereshit Rabbah 39:14 (almas de Jarán)
+  { a: "Sará",    b: "Neshamá",        kind: "solid" },  // Bereshit Rabbah 39:14
+  { a: "Avraham", b: "Zohar",          kind: "solid" },  // Zohar, Lej Lejá (apertura 1:1)
+  { a: "Sefer Yetzirá", b: "22 Letras", kind: "solid" }, // Sefer Yetzirá (las letras como bloques de la creación)
+  { a: "Sefer Yetzirá", b: "Cabalá",    kind: "solid" }, // obra primaria de la Cabalá
+  { a: "Merkavá",       b: "Cabalá",    kind: "solid" }, // Maaseh Merkavá = raíz de la mística
+  // ── SECUNDARIAS — interpretativas ──
+  { a: "Avraham", b: "10 Pruebas",      kind: "solid" },  // Pirkei Avot 5:3 (las 10 pruebas)
+  { a: "10 Pruebas", b: "Cabalá",       kind: "interp" }, // paralelo 10 pruebas ↔ 10 sefirot
+  { a: "Avraham", b: "Hajnasat Orjim",  kind: "solid" },  // Génesis 18 (los tres ángeles)
+  { a: "Hajnasat Orjim", b: "Jésed",    kind: "interp" }, // hospitalidad = expresión del jésed
+  { a: "Avraham", b: "Guevurá",         kind: "interp" }, // Akedá: Guevurá endulzada en el jésed
+  { a: "Malki-Tzedek", b: "Avraham",    kind: "solid" },  // Génesis 14:18 (pan y vino)
+  { a: "Malki-Tzedek", b: "Jésed",      kind: "interp" }, // sacerdocio del jésed
+  { a: "Jésed",   b: "Nombre de 72",    kind: "interp" }, // gematría חסד = 72
+  { a: "Nombre de 72", b: "Cabalá",     kind: "interp" }, // Shem HaMforash
+];
+
 // ─── Nodos ───────────────────────────────────────────────────────────────
 export const BNODES: BNode[] = [
   // ── Nivel 0 — corazón (Torá y Tanaj UNIFICADOS: la Torá es el núcleo del Tanaj) ──
@@ -568,6 +611,7 @@ export const BNODES: BNode[] = [
   ...MADRES_NODES,
   // ── Estudio Tamar, Tohu y Tikún (las tres prendas → תֹהוּ) ──
   ...TOHU_NODES,
+  ...AVRAHAM_KAB_NODES,
 ];
 
 // ─── Aristas (relaciones reales, NO dirigidas). Se deduplican antes de render ─
@@ -632,6 +676,7 @@ const RAW_EDGES: [string, string][] = [
   ...MADRES_EDGES.map((e) => [e.a, e.b] as [string, string]),
   // Estudio Tamar, Tohu y Tikún (las tres prendas → תֹהוּ)
   ...TOHU_EDGES.map((e) => [e.a, e.b] as [string, string]),
+  ...AVRAHAM_KAB_EDGES.map((e) => [e.a, e.b] as [string, string]),
 ];
 
 // dedup + descarta aristas a nodos inexistentes (p.ej. placeholders)
@@ -649,6 +694,25 @@ export const BEDGES: [string, string][] = (() => {
   }
   return out;
 })();
+
+// kind por arista (solid = fuente clásica / interp = lectura interpretativa).
+// Permite distinguir AUTORIDAD de INTERPRETACIÓN en el render. Si una arista
+// aparece como "solid" en cualquier estudio, gana solid. Las aristas crudas sin
+// marca (RAW_EDGES estructurales) se consideran solid por defecto.
+const _KINDED_EDGES: MaseiEdge[] = [
+  ...MASEI_EDGES, ...V4_EDGES, ...STUDY2_EDGES, ...STUDY3_EDGES,
+  ...BRIT21_EDGES, ...MADRES_EDGES, ...TOHU_EDGES, ...AVRAHAM_KAB_EDGES,
+];
+const EDGE_KIND = new Map<string, "solid" | "interp">();
+for (const e of _KINDED_EDGES) {
+  const k = e.a < e.b ? `${e.a}|${e.b}` : `${e.b}|${e.a}`;
+  if (e.kind === "solid") EDGE_KIND.set(k, "solid");
+  else if (!EDGE_KIND.has(k)) EDGE_KIND.set(k, "interp");
+}
+export function edgeKind(a: string, b: string): "solid" | "interp" {
+  const k = a < b ? `${a}|${b}` : `${b}|${a}`;
+  return EDGE_KIND.get(k) ?? "solid";
+}
 
 // ─── PRNG determinista ──────────────────────────────────────────────────
 function mulberry32(seed: number): () => number {
@@ -670,6 +734,82 @@ function hashStr(s: string): number {
 // Brain mira hacia +X (frontal adelante). Hemisferios en ±Z. La UNIÓN de
 // estos elipsoides (espejados en Z) forma la silueta del cerebro en 3D.
 export const BRAIN_SCALE = 3.5;
+
+// ─────────────────────────────────────────────────────────────────────────
+// UNIVERSO DEL CONOCIMIENTO — cada disciplina es una GALAXIA espiral.
+// Torá = corazón en el origen; Tanaj = raíz/principio al centro-fondo; las
+// demás disciplinas emanan a su alrededor (cuanto más lejos de la Torá, más
+// afuera). layoutNodes coloca cada nodo en el disco de la galaxia de su
+// categoría → cambia DÓNDE quedan los puntos (el look), pero las aristas, el
+// foco, la búsqueda y todo lo demás siguen funcionando exactamente igual.
+// ─────────────────────────────────────────────────────────────────────────
+function hexToRgb01(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  return [parseInt(h.slice(0, 2), 16) / 255, parseInt(h.slice(2, 4), 16) / 255, parseInt(h.slice(4, 6), 16) / 255];
+}
+// dirección normalizada del centro de cada galaxia (≈radio 0..1) — emanación 3D
+const GALAXY_DIR: Record<string, [number, number, number]> = {
+  torah:      [0, 0.04, -0.38],    // Torá comparte la MISMA galaxia que Tanaj (su núcleo)
+  tanakh:     [0, 0.04, -0.38],    // raíz / principio: la galaxia central (Torá en su núcleo)
+  figure:     [0.92, 0.12, 0.28],  // las demás, repartidas parejo en una esfera
+  tema:       [-0.88, 0.18, 0.30],
+  talmud:     [0.58, 0.62, -0.52],
+  mishnah:    [0.22, 0.78, 0.55],
+  midrash:    [-0.55, 0.55, -0.62],
+  halakhah:   [-0.42, 0.82, 0.30],
+  kabbalah:   [0.95, -0.32, -0.22],
+  chasidut:   [-0.92, -0.38, -0.20],
+  philosophy: [0.38, -0.62, 0.70],
+  science:    [-0.34, -0.70, -0.58],
+  jashmal:    [0.52, -0.28, 0.82],
+};
+export const GALAXY_CATS = Object.keys(GALAXY_DIR).filter((c) => c !== "torah");
+const GALAXY_SPREAD = 6.4 * BRAIN_SCALE;   // separación entre galaxias (bien apartadas)
+export const GALAXY_DISK = 1.45 * BRAIN_SCALE; // radio del disco (estrellas con MÁS aire para clicar)
+const GALAXY_TWIST = 2.4;                   // vueltas de la espiral
+
+export function galaxyCenter(cat: string): [number, number, number] {
+  const d = GALAXY_DIR[cat] ?? GALAXY_DIR.tema;
+  return [d[0] * GALAXY_SPREAD, d[1] * GALAXY_SPREAD, d[2] * GALAXY_SPREAD];
+}
+export function galaxyColor(cat: string): [number, number, number] {
+  return hexToRgb01(BRAIN_CATS[cat]?.c ?? "#9a9aae");
+}
+// base ortonormal (u,v) + normal del disco de cada galaxia → inclinación 3D determinista
+function galaxyBasis(cat: string): { u: [number, number, number]; v: [number, number, number]; n: [number, number, number] } {
+  const h = hashStr(cat) >>> 0;
+  const a = ((h % 1000) / 1000) * Math.PI * 2;
+  const b = (((h >>> 10) % 1000) / 1000) * Math.PI;
+  let nx = Math.sin(b) * Math.cos(a), ny = Math.cos(b), nz = Math.sin(b) * Math.sin(a);
+  const nl = Math.hypot(nx, ny, nz) || 1; nx /= nl; ny /= nl; nz /= nl;
+  const up: [number, number, number] = Math.abs(ny) > 0.9 ? [1, 0, 0] : [0, 1, 0];
+  let ux = ny * up[2] - nz * up[1], uy = nz * up[0] - nx * up[2], uz = nx * up[1] - ny * up[0];
+  const ul = Math.hypot(ux, uy, uz) || 1; ux /= ul; uy /= ul; uz /= ul;
+  const vx = ny * uz - nz * uy, vy = nz * ux - nx * uz, vz = nx * uy - ny * ux;
+  return { u: [ux, uy, uz], v: [vx, vy, vz], n: [nx, ny, nz] };
+}
+// un punto en el disco espiral de una galaxia (rng determinista por nodo/polvo)
+function galaxyPoint(cat: string, rng: () => number, radPow = 0.62, radScale = 1, thickK = 0.12): [number, number, number] {
+  const c = galaxyCenter(cat);
+  const { u, v, n } = galaxyBasis(cat);
+  const arms = 2 + (hashStr(cat) % 2); // 2 o 3 brazos
+  const radN = 0.10 + Math.pow(rng(), radPow) * 0.98;
+  const rad = GALAXY_DISK * radN * radScale;
+  const arm = Math.floor(rng() * arms);
+  const theta = radN * GALAXY_TWIST * Math.PI + arm * ((Math.PI * 2) / arms) + (rng() - 0.5) * 0.7;
+  const cs = Math.cos(theta), sn = Math.sin(theta);
+  // VOLUMEN: bulbo 3D al centro + disco esponjoso (campana vertical, no plano).
+  // El grosor crece hacia el núcleo (bulbo) y se afina en los brazos.
+  const bulge = (1 - Math.min(radN, 1)) * (1 - Math.min(radN, 1));
+  const vmax = GALAXY_DISK * (thickK + 0.55 * bulge);
+  const thick = (rng() + rng() - 1) * vmax; // ~gaussiana: mucho al centro, poco al borde
+  return [
+    c[0] + (u[0] * cs + v[0] * sn) * rad + n[0] * thick,
+    c[1] + (u[1] * cs + v[1] * sn) * rad + n[1] * thick,
+    c[2] + (u[2] * cs + v[2] * sn) * rad + n[2] * thick,
+  ];
+}
+
 type Region = { c: [number, number, number]; r: [number, number, number]; hemi: boolean };
 // Una sola ESFERA limpia (decisión de Mardan: olvidar la forma de cerebro).
 // Todas las "regiones" son la misma esfera centrada en el origen → la unión es
@@ -797,45 +937,14 @@ function sampleInRegion(
 // cerebro puede crecer y los nodos nuevos se ubican automáticamente.
 export function layoutNodes(nodes: BNode[]): Record<string, [number, number, number]> {
   const out: Record<string, [number, number, number]> = {};
-  const center: [number, number, number] = [0, 0, 0]; // centro de la esfera
   nodes.forEach((n, i) => {
-    if (n.level === 0) { out[n.id] = center; return; }
-    const regKey = n.region ?? CAT_REGION[n.cat] ?? "frontal";
-    const reg = REGIONS[regKey] ?? REGIONS.frontal;
+    if (n.level === 0) { out[n.id] = galaxyCenter("tanakh"); return; } // Torá = núcleo de la galaxia Tanaj
+    const cat = GALAXY_DIR[n.cat] ? n.cat : "tema";
     const seed = (hashStr(n.id) ^ ((i + 1) * 0x9e3779b1)) >>> 0;
     const rng = mulberry32(seed);
-    const hemiSign = (hashStr(n.id) & 1) ? 1 : -1;
-    // Brain v4.2: empuja los nodos CON NOMBRE hacia la corteza (los bordes) para
-    // que no se amontonen y las etiquetas sean legibles. El tejido latente sigue igual.
-    const p = sampleInRegion(reg, rng, hemiSign, 0.72, 0.5, 0.45);
-    // afinidad sefirótica: jala suavemente hacia el ancla oculta (sin Árbol visible)
-    let bx = p[0], by = p[1], bz = p[2];
-    const affs = SEFIRA_AFFINITY[n.id];
-    if (affs && affs.length) {
-      let ax = 0, ay = 0, az = 0, k = 0;
-      for (const s of affs) {
-        const a = SEFIRA_ANCHORS[s];
-        if (a) { ax += a[0]; ay += a[1]; az += a[2]; k++; }
-      }
-      if (k > 0) {
-        const sx = (ax / k) * BRAIN_SCALE, sy = (ay / k) * BRAIN_SCALE, sz = (az / k) * BRAIN_SCALE;
-        bx += (sx - bx) * SEFIRA_PULL;
-        by += (sy - by) * SEFIRA_PULL;
-        bz += (sz - bz) * SEFIRA_PULL;
-      }
-    }
-    // gravedad conceptual hacia el centro (reducida → reparte por el volumen)
-    const g = LEVEL_GRAVITY[n.level] ?? 0.05;
-    let fx = bx + (center[0] - bx) * g;
-    let fy = by + (center[1] - by) * g;
-    let fz = bz + (center[2] - bz) * g;
-    // recorte: mantener TODO dentro de la esfera (que ningún nodo se salga).
-    // Esfera agrandada (1.8→2.1) para que los nodos reales respiren y queden
-    // zonas oscuras con potencial entre ellos.
-    const maxR = 2.1 * BRAIN_SCALE;
-    const dd = Math.hypot(fx, fy, fz) || 1;
-    if (dd > maxR) { const s = maxR / dd; fx *= s; fy *= s; fz *= s; }
-    out[n.id] = [fx, fy, fz];
+    // nivel: los hubs (nivel 1) cerca del núcleo de su galaxia; los conceptos hacia afuera
+    const radScale = n.level <= 1 ? 0.30 : n.level === 2 ? 0.62 : n.level === 3 ? 0.85 : 1.0;
+    out[n.id] = galaxyPoint(cat, rng, 0.62, radScale, 0.34);
   });
   return out;
 }
@@ -924,20 +1033,20 @@ export function ambientTissue(count: number, seed = 7): { positions: Float32Arra
   const rng = mulberry32(seed >>> 0);
   const positions = new Float32Array(count * 3);
   const colors = new Float32Array(count * 3);
-  const regKeys = Object.keys(REGIONS).filter((k) => k !== "core");
-  // color base tenue del tejido (azul-cian frío)
+  const cats = GALAXY_CATS;
+  // El polvo dibuja las galaxias mismas: cada punto cae en el disco espiral de
+  // una galaxia y toma el color (atenuado) de su dominio → nebulosas vivas.
   for (let i = 0; i < count; i++) {
-    const reg = REGIONS[regKeys[Math.floor(rng() * regKeys.length)]];
-    const hemiSign = rng() < 0.5 ? 1 : -1;
-    const p = sampleInRegion(reg, rng, hemiSign);
+    const cat = cats[Math.floor(rng() * cats.length)];
+    const p = galaxyPoint(cat, rng, 0.55, 1.08, 0.40); // polvo: más volumen que los nodos
     positions[i * 3] = p[0];
     positions[i * 3 + 1] = p[1];
     positions[i * 3 + 2] = p[2];
-    // tinte frío con leve variación
-    const t = rng();
-    colors[i * 3] = 0.18 + t * 0.10;       // R
-    colors[i * 3 + 1] = 0.34 + t * 0.16;   // G
-    colors[i * 3 + 2] = 0.60 + t * 0.30;   // B
+    const col = galaxyColor(cat);
+    const b = 0.30 + rng() * 0.55; // brillo variable del polvo
+    colors[i * 3] = col[0] * b;
+    colors[i * 3 + 1] = col[1] * b;
+    colors[i * 3 + 2] = col[2] * b;
   }
   return { positions, colors };
 }
@@ -950,8 +1059,8 @@ export function ambientTissue(count: number, seed = 7): { positions: Float32Arra
 export function potentialNodes(count: number, seed = 23): Float32Array {
   const rng = mulberry32(seed >>> 0);
   const positions = new Float32Array(count * 3);
-  const rMin = 0.8 * BRAIN_SCALE;  // entra entre los nodos reales (rellena huecos)
-  const rMax = 4.6 * BRAIN_SCALE;  // esfera MUCHO más grande que el cloud real → lugar para crecer
+  const rMin = 1.6 * BRAIN_SCALE;  // empieza fuera del centro (espacio entre galaxias)
+  const rMax = 7.2 * BRAIN_SCALE;  // llena el espacio profundo alrededor de las galaxias
   for (let i = 0; i < count; i++) {
     // dirección uniforme en la esfera
     const u = rng() * 2 - 1;          // cos(theta)

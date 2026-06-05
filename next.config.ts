@@ -22,17 +22,21 @@ const nextConfig: NextConfig = {
       { source: "/serpiente-de-cobre", destination: "/es/misterio/serpiente-de-cobre" },
       { source: "/refua", destination: "/es/misterio/refua" },
       { source: "/21-pactos", destination: "/es/misterio/21-pactos" },
-      { source: "/cerebro", destination: "/es/cerebro" },
+      { source: "/universo", destination: "/es/universo" },
     ];
   },
   async redirects() {
-    // "grafo" era el nombre técnico viejo del cerebro. Redirige (301) al nuevo
-    // /cerebro para no romper enlaces compartidos ni el SEO.
+    // "/cerebro" y "/grafo" eran nombres viejos del universo. Redirigen (301) a
+    // /universo para no romper enlaces compartidos ni el SEO.
     return [
-      { source: "/grafo", destination: "/cerebro", permanent: true },
-      { source: "/es/grafo", destination: "/es/cerebro", permanent: true },
-      { source: "/fa/grafo", destination: "/fa/cerebro", permanent: true },
-      { source: "/en/grafo", destination: "/en/cerebro", permanent: true },
+      { source: "/grafo", destination: "/universo", permanent: true },
+      { source: "/es/grafo", destination: "/es/universo", permanent: true },
+      { source: "/fa/grafo", destination: "/fa/universo", permanent: true },
+      { source: "/en/grafo", destination: "/en/universo", permanent: true },
+      { source: "/cerebro", destination: "/universo", permanent: true },
+      { source: "/es/cerebro", destination: "/es/universo", permanent: true },
+      { source: "/fa/cerebro", destination: "/fa/universo", permanent: true },
+      { source: "/en/cerebro", destination: "/en/universo", permanent: true },
     ];
   },
 };

@@ -435,7 +435,7 @@ export default function VeintiunPactosPage() {
             </button>
 
             <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 font-cinzel text-[11px] uppercase tracking-widest text-gold/50">
-              <Link href="/cerebro" className="hover:text-gold">Verlo en el cerebro de Jashmal →</Link>
+              <Link href="/universo" className="hover:text-gold">Verlo en el cerebro de Jashmal →</Link>
               <Link href="/misterios" className="hover:text-gold">Más misterios →</Link>
             </div>
           </div>

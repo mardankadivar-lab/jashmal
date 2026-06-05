@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured, getSql } from "@/lib/db";
-import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu } from "@/lib/brainStore";
+import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab } from "@/lib/brainStore";
 import { BNODES, BEDGES } from "@/lib/brainData";
 
 export const runtime = "nodejs";
@@ -37,6 +37,8 @@ function ensureInit(): Promise<void> {
       await addMadres();
       // Estudio verificado: Tamar, Tohu y Tikún (las tres prendas → תֹהוּ)
       await addTohu();
+      // Estudio verificado: Abraham en la Cabalá (+ Avraham→Abraham)
+      await addAvrahamKab();
     })().catch((e) => {
       initPromise = null; // permite reintentar en la próxima llamada
       throw e;

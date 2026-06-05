@@ -9,7 +9,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 import { getSql } from "./db";
-import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, STUDY2_NODES, STUDY2_EDGES, STUDY3_NODES, STUDY3_EDGES, BRIT21_NODES, BRIT21_EDGES, MADRES_NODES, MADRES_EDGES, TOHU_NODES, TOHU_EDGES, type BNode } from "./brainData";
+import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, STUDY2_NODES, STUDY2_EDGES, STUDY3_NODES, STUDY3_EDGES, BRIT21_NODES, BRIT21_EDGES, MADRES_NODES, MADRES_EDGES, TOHU_NODES, TOHU_EDGES, AVRAHAM_KAB_NODES, AVRAHAM_KAB_EDGES, type BNode } from "./brainData";
 
 export type BrainGraph = { nodes: BNode[]; edges: [string, string][] };
 
@@ -373,6 +373,39 @@ export async function addTohu(): Promise<void> {
         ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, status = 'approved'
       `;
     }
+  } catch {
+    /* nunca romper la lectura del cerebro */
+  }
+}
+
+// ── Estudio: Abraham en la Cabalá (Sofer, verificado en Sefaria) ──────────
+// Ancla a Abraham en la dimensión cabalística con AUTORIDAD clásica (Zohar,
+// Sefer Yetzirá, midrash). UPSERT idempotente; corrige el label Avraham→Abraham.
+export async function addAvrahamKab(): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  try {
+    for (const n of AVRAHAM_KAB_NODES) {
+      await sql`
+        INSERT INTO brain_nodes (id, label, label_fa, cat, level, url, region, status, source)
+        VALUES (${n.id}, ${n.label}, ${n.labelFa}, ${n.cat}, ${n.level},
+                ${n.url ?? null}, ${n.region ?? null}, 'approved', 'sofer')
+        ON CONFLICT (id) DO UPDATE SET
+          label = EXCLUDED.label, label_fa = EXCLUDED.label_fa,
+          cat = EXCLUDED.cat, level = EXCLUDED.level,
+          url = COALESCE(EXCLUDED.url, brain_nodes.url),
+          status = 'approved', source = 'sofer'
+      `;
+    }
+    for (const e of AVRAHAM_KAB_EDGES) {
+      await sql`
+        INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
+        VALUES (${edgeKey(e.a, e.b)}, ${e.a}, ${e.b}, ${e.kind}, 1, 'approved', 'sofer')
+        ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, status = 'approved'
+      `;
+    }
+    // corrige el nombre del patriarca en la BD: Avraham → Abraham (id intacto)
+    await sql`UPDATE brain_nodes SET label = 'Abraham', label_fa = 'ابراهیم' WHERE id = 'Avraham'`;
   } catch {
     /* nunca romper la lectura del cerebro */
   }

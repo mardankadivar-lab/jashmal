@@ -14,7 +14,7 @@ const NAV: [string, string][] = [
   ["/gematrias", "nav.gematria"],
   ["/creacion", "nav.creation"],
   ["/arbol", "nav.tree"],
-  ["/cerebro", "nav.brain"],
+  ["/universo", "nav.brain"],
   ["/atlas", "nav.atlas"],
   ["/acerca", "nav.about"],
 ];

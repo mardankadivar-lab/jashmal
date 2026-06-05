@@ -130,7 +130,7 @@ export default function CerebroAdminPage() {
         <h1 className="mb-1 font-cinzel text-2xl text-[#c9a43e]">Panel del Sofer · Cerebro</h1>
         <p className="mb-6 text-sm text-[#9a958a]">
           Aprueba o rechaza lo que el cerebro aprendió de los estudios. Lo aprobado se enciende en{" "}
-          <a href="/cerebro" className="text-[#c9a43e] underline">el cerebro</a>.
+          <a href="/universo" className="text-[#c9a43e] underline">el cerebro</a>.
         </p>
 
         {!loaded ? (
