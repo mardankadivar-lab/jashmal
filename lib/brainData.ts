@@ -591,20 +591,29 @@ export const SEFIRA_AFFINITY: Record<string, string[]> = {
   Itaruta: ["Yesod"], "Tres oraciones": ["Tiféret"], "Sansón": ["Guevurá"],
   "Descensos de la Shejiná": ["Maljut"],
 };
-const SEFIRA_PULL = 0.45; // fuerza del jalón hacia el ancla (suave)
+const SEFIRA_PULL = 0.25; // jalón hacia el ancla (suavizado: agrupa sin amontonar)
 
 // Gravedad conceptual hacia el centro, por nivel. REDUCIDA (Brain v4): antes
 // amontonaba todo al centro; ahora los conceptos se reparten por el volumen.
-const LEVEL_GRAVITY: Record<number, number> = { 0: 1.0, 1: 0.4, 2: 0.18, 3: 0.07, 4: 0.04 };
+const LEVEL_GRAVITY: Record<number, number> = { 0: 1.0, 1: 0.34, 2: 0.12, 3: 0.05, 4: 0.03 };
 
 // muestrea un punto dentro de un elipsoide (sesgado hacia la corteza/superficie)
-function sampleInRegion(reg: Region, rng: () => number, hemiSign: number): [number, number, number] {
+// radMin/radSpread/radPow permiten empujar los nodos con nombre hacia los bordes
+// (más legibles) SIN tocar el tejido latente, que llama con los valores por defecto.
+function sampleInRegion(
+  reg: Region,
+  rng: () => number,
+  hemiSign: number,
+  radMin = 0.42,
+  radSpread = 0.7,
+  radPow = 0.5,
+): [number, number, number] {
   // dirección aleatoria uniforme en la esfera
   let dx = rng() * 2 - 1, dy = rng() * 2 - 1, dz = rng() * 2 - 1;
   const dl = Math.hypot(dx, dy, dz) || 1; dx /= dl; dy /= dl; dz /= dl;
   // radio: llena desde el interior medio hasta un poco más allá de la corteza
   // (Brain v4.1: rellenar más volumen y los alrededores con tejido latente)
-  const rad = 0.42 + Math.pow(rng(), 0.5) * 0.7;
+  const rad = radMin + Math.pow(rng(), radPow) * radSpread;
   const cz = reg.hemi ? reg.c[2] * hemiSign : reg.c[2];
   return [
     (reg.c[0] + dx * reg.r[0] * rad) * BRAIN_SCALE,
@@ -626,7 +635,9 @@ export function layoutNodes(nodes: BNode[]): Record<string, [number, number, num
     const seed = (hashStr(n.id) ^ ((i + 1) * 0x9e3779b1)) >>> 0;
     const rng = mulberry32(seed);
     const hemiSign = (hashStr(n.id) & 1) ? 1 : -1;
-    const p = sampleInRegion(reg, rng, hemiSign);
+    // Brain v4.2: empuja los nodos CON NOMBRE hacia la corteza (los bordes) para
+    // que no se amontonen y las etiquetas sean legibles. El tejido latente sigue igual.
+    const p = sampleInRegion(reg, rng, hemiSign, 0.72, 0.5, 0.45);
     // afinidad sefirótica: jala suavemente hacia el ancla oculta (sin Árbol visible)
     let bx = p[0], by = p[1], bz = p[2];
     const affs = SEFIRA_AFFINITY[n.id];
