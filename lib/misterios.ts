@@ -41,6 +41,17 @@ export const MISTERIOS: Misterio[] = [
     orden: 2,
   },
   {
+    slug: "tamar",
+    he: "תָּמָר",
+    titulo: "El velo que escondía al Mesías",
+    tituloFa: "تامار — حجابی که ماشیح را پنهان می‌کرد",
+    gancho: "El mayor escándalo de la Torá esconde el nacimiento de la línea del Mashíaj. Mientras los hombres veían vergüenza, el Cielo encendía la luz del Redentor.",
+    ganchoFa: "بزرگ‌ترین رسواییِ تورات، تولدِ تبارِ ماشیح را پنهان می‌کند. آنچه جهان می‌پوشاند، خدا تاج می‌بخشد.",
+    serie: "dos-filos",
+    color: "#c9a43e",
+    orden: 3,
+  },
+  {
     slug: "linaje",
     he: "עֲבֵרָה לִשְׁמָהּ",
     titulo: "El linaje prohibido del Mashíaj",
@@ -49,7 +60,7 @@ export const MISTERIOS: Misterio[] = [
     ganchoFa: "ماشیح از فروافتاده‌ترین جاها فرود می‌آید. سایه، وارونه، نور است.",
     serie: "dos-filos",
     color: "#e0a850",
-    orden: 3,
+    orden: 4,
   },
   {
     slug: "habakuk",
@@ -61,7 +72,7 @@ export const MISTERIOS: Misterio[] = [
     ganchoFa: "شیگیونوت: خطاها یا سازها؟ حَبَقّوق: یک آغوش یا دو؟ یک واژه با دو لبه.",
     serie: "dos-filos",
     color: "#b89a4e",
-    orden: 4,
+    orden: 5,
   },
   {
     slug: "bilaam",
@@ -72,7 +83,7 @@ export const MISTERIOS: Misterio[] = [
     ganchoFa: "جادوگری با روحِ سَمائل آمد تا نفرین کند — و از دهانش ژرف‌ترین پیشگوییِ مسیحایی برآمد.",
     serie: "dos-filos",
     color: "#9a6a8e",
-    orden: 5,
+    orden: 6,
   },
   {
     slug: "137",
@@ -84,7 +95,7 @@ export const MISTERIOS: Misterio[] = [
     ganchoFa: "قبالا = ۱۳۷. و ثابتِ ساختارِ ریز α ≈ ۱/۱۳۷ که نور را حکم می‌راند. عددی که کابالا را با فیزیک می‌پیوندد.",
     serie: "gematria",
     color: "#9a6a8e",
-    orden: 6,
+    orden: 7,
   },
   {
     slug: "entrelazamiento",
@@ -96,7 +107,7 @@ export const MISTERIOS: Misterio[] = [
     ganchoFa: "عشق (۴۲ بار) + ترس (۹۵ بار) = ۱۳۷. در بستنِ اسحاق، عشق و ترس درهم‌تنیده می‌شوند — چون دو ذرّه که چون یکی رفتار می‌کنند. و کابالا (=۱۳۷) ثابتی است که جان را به خدا می‌پیوندد.",
     serie: "gematria",
     color: "#b5557a",
-    orden: 7,
+    orden: 8,
   },
   {
     slug: "sanador",
@@ -107,7 +118,7 @@ export const MISTERIOS: Misterio[] = [
     ganchoFa: "«من خداوند، شفادهندهٔ توام» (خروج ۱۵:۲۶). شفا چیزی نیست که خدا بفرستد — یکی از نام‌های اوست. و نخستین شفا، آمرزش است (مزامیر ۱۰۳:۳).",
     serie: "sanidad",
     color: "#3fa68a",
-    orden: 8,
+    orden: 9,
   },
   {
     slug: "refael",
@@ -119,7 +130,7 @@ export const MISTERIOS: Misterio[] = [
     ganchoFa: "رفائل (=۳۱۱) فرشته‌ای است که نامش می‌گوید «خدا شفا می‌دهد». ابراهام را پس از ختنه شفا داد — و همان فرشته که شفا می‌دهد، همان است که می‌رهاند.",
     serie: "sanidad",
     color: "#5b8fd6",
-    orden: 9,
+    orden: 10,
   },
   {
     slug: "serpiente-de-cobre",
@@ -131,7 +142,7 @@ export const MISTERIOS: Misterio[] = [
     ganchoFa: "درمان درست به شکلِ بیماری بود. مار (نَحَش) = ماشیح = ۳۵۸: نیرویی که زهر می‌ریزد، برافراشته به سویِ بالا، شفا می‌شود.",
     serie: "sanidad",
     color: "#b06a3c",
-    orden: 10,
+    orden: 11,
   },
   {
     slug: "refua",
@@ -142,7 +153,7 @@ export const MISTERIOS: Misterio[] = [
     ganchoFa: "نخست جان، آنگاه تن. وعده نمی‌دهیم که تن همیشه شفا یابد — اما جان همیشه می‌تواند به خانه برگردد.",
     serie: "sanidad",
     color: "#7d9b8a",
-    orden: 11,
+    orden: 12,
   },
 ];
 

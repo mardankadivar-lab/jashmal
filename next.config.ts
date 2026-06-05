@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
       { source: "/358", destination: "/es/misterio/358" },
       { source: "/26",  destination: "/es/misterio/26"  },
       { source: "/linaje", destination: "/es/misterio/linaje" },
+      { source: "/tamar", destination: "/es/misterio/tamar" },
       { source: "/habakuk", destination: "/es/misterio/habakuk" },
       { source: "/bilaam", destination: "/es/misterio/bilaam" },
       { source: "/137", destination: "/es/misterio/137" },
