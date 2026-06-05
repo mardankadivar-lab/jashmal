@@ -155,6 +155,18 @@ export const MISTERIOS: Misterio[] = [
     color: "#7d9b8a",
     orden: 12,
   },
+  {
+    slug: "21-pactos",
+    numero: "21",
+    he: "אֶהְיֶה",
+    titulo: "El Nombre que vale 21",
+    tituloFa: "نامی که ۲۱ است",
+    gancho: "Ehyé (אהיה), «Yo Seré» (Éx 3:14), suma 21 — y la Torá guarda 21 pactos que sostienen toda la realidad. En clave de sod, esos 21 son Ehyé hecho estructura: Biná, la octava sefirá.",
+    ganchoFa: "اَهیه (אהיה)، «خواهم بود» (خروج ۳:۱۴)، برابر ۲۱ است — و تورات ۲۱ پیمان را نگاه می‌دارد که تمامِ هستی را برپا می‌دارند. در کلیدِ سود، این ۲۱ همان اَهیه است که ساختار شده: بینا.",
+    serie: "gematria",
+    color: "#1fd8e0",
+    orden: 13,
+  },
 ];
 
 export function getMisterio(slug: string): Misterio | undefined {

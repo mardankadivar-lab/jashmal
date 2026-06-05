@@ -329,7 +329,7 @@ export const STUDY3_EDGES: MaseiEdge[] = [
 // Aristas SÓLIDAS = fuente clásica directa; INTERPRETATIVAS = lectura meditativa.
 // NOTA: el nodo "Brit" (Pacto) y el núcleo "Torá" YA existen — se usan como destino.
 export const BRIT21_NODES: BNode[] = [
-  { id: "21 Pactos",        label: "21 Pactos (Britot)",        labelFa: "۲۱ پیمان",                  cat: "jashmal",  level: 4 },
+  { id: "21 Pactos",        label: "21 Pactos (Britot)",        labelFa: "۲۱ پیمان",                  cat: "jashmal",  level: 4, url: "/21-pactos" },
   { id: "Ehyé",             label: "Ehyé (Yo Seré) · 21",       labelFa: "اَهیه (خواهم بود) · ۲۱",     cat: "kabbalah", level: 3 },
   { id: "Ehyé Asher Ehyé",  label: "Ehyé Asher Ehyé",           labelFa: "اَهیه اَشِر اَهیه",           cat: "tanakh",   level: 3 },
   { id: "YHVH",             label: "YHVH · 26",                 labelFa: "یهوه · ۲۶",                  cat: "kabbalah", level: 3 },
@@ -392,12 +392,12 @@ export const BRIT21_EDGES: MaseiEdge[] = [
 // Aristas SÓLIDAS = fuente clásica directa; INTERPRETATIVAS = lectura meditativa.
 export const MADRES_NODES: BNode[] = [
   { id: "Tamar",          label: "Tamar",                                  labelFa: "تامار",                          cat: "figure", level: 4, url: "/tamar" },
-  { id: "Rut",            label: "Rut (la moabita)",                       labelFa: "روت (موآبی)",                    cat: "figure", level: 3 },
-  { id: "Betsabé",        label: "Betsabé (Bat-Sheva)",                    labelFa: "بَت‌شِبَع",                       cat: "figure", level: 3 },
-  { id: "Naamá",          label: "Naamá (la amonita)",                     labelFa: "نَعَما (عَمّونی)",                cat: "figure", level: 3 },
-  { id: "Yehudá",         label: "Yehudá",                                 labelFa: "یهودا",                          cat: "figure", level: 3 },
-  { id: "Fares",          label: "Fares (Péretz · brecha)",                labelFa: "پِرِص (شکاف)",                    cat: "figure", level: 3 },
-  { id: "Averá Lishmah",  label: "Averá Lishmah (transgresión por el Cielo)", labelFa: "عَوِرا لِشماه (گناه برای آسمان)", cat: "tema",   level: 3 },
+  { id: "Rut",            label: "Rut (la moabita)",                       labelFa: "روت (موآبی)",                    cat: "figure", level: 3, url: "/linaje" },
+  { id: "Betsabé",        label: "Betsabé (Bat-Sheva)",                    labelFa: "بَت‌شِبَع",                       cat: "figure", level: 3, url: "/linaje" },
+  { id: "Naamá",          label: "Naamá (la amonita)",                     labelFa: "نَعَما (عَمّونی)",                cat: "figure", level: 3, url: "/linaje" },
+  { id: "Yehudá",         label: "Yehudá",                                 labelFa: "یهودا",                          cat: "figure", level: 3, url: "/tamar" },
+  { id: "Fares",          label: "Fares (Péretz · brecha)",                labelFa: "پِرِص (شکاف)",                    cat: "figure", level: 3, url: "/tamar" },
+  { id: "Averá Lishmah",  label: "Averá Lishmah (transgresión por el Cielo)", labelFa: "عَوِرا لِشماه (گناه برای آسمان)", cat: "tema",   level: 3, url: "/linaje" },
 ];
 
 export const MADRES_EDGES: MaseiEdge[] = [

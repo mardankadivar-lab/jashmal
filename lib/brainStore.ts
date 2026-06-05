@@ -182,6 +182,7 @@ export async function addV4Content(): Promise<void> {
         ON CONFLICT (id) DO UPDATE SET
           label = EXCLUDED.label, label_fa = EXCLUDED.label_fa,
           cat = EXCLUDED.cat, level = EXCLUDED.level,
+          url = COALESCE(EXCLUDED.url, brain_nodes.url),
           status = 'approved', source = 'sofer'
       `;
     }
@@ -234,6 +235,7 @@ export async function addStudies2(): Promise<void> {
         ON CONFLICT (id) DO UPDATE SET
           label = EXCLUDED.label, label_fa = EXCLUDED.label_fa,
           cat = EXCLUDED.cat, level = EXCLUDED.level,
+          url = COALESCE(EXCLUDED.url, brain_nodes.url),
           status = 'approved', source = 'sofer'
       `;
     }
@@ -262,6 +264,7 @@ export async function addStudies3(): Promise<void> {
         ON CONFLICT (id) DO UPDATE SET
           label = EXCLUDED.label, label_fa = EXCLUDED.label_fa,
           cat = EXCLUDED.cat, level = EXCLUDED.level,
+          url = COALESCE(EXCLUDED.url, brain_nodes.url),
           status = 'approved', source = 'sofer'
       `;
     }
@@ -290,6 +293,7 @@ export async function addBrit21(): Promise<void> {
         ON CONFLICT (id) DO UPDATE SET
           label = EXCLUDED.label, label_fa = EXCLUDED.label_fa,
           cat = EXCLUDED.cat, level = EXCLUDED.level,
+          url = COALESCE(EXCLUDED.url, brain_nodes.url),
           status = 'approved', source = 'sofer'
       `;
     }
@@ -326,6 +330,7 @@ export async function addMadres(): Promise<void> {
         ON CONFLICT (id) DO UPDATE SET
           label = EXCLUDED.label, label_fa = EXCLUDED.label_fa,
           cat = EXCLUDED.cat, level = EXCLUDED.level,
+          url = COALESCE(EXCLUDED.url, brain_nodes.url),
           status = 'approved', source = 'sofer'
       `;
     }
