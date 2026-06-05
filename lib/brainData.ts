@@ -829,8 +829,10 @@ export function layoutNodes(nodes: BNode[]): Record<string, [number, number, num
     let fx = bx + (center[0] - bx) * g;
     let fy = by + (center[1] - by) * g;
     let fz = bz + (center[2] - bz) * g;
-    // recorte: mantener TODO dentro de la esfera (que ningún nodo se salga)
-    const maxR = 1.8 * BRAIN_SCALE;
+    // recorte: mantener TODO dentro de la esfera (que ningún nodo se salga).
+    // Esfera agrandada (1.8→2.1) para que los nodos reales respiren y queden
+    // zonas oscuras con potencial entre ellos.
+    const maxR = 2.1 * BRAIN_SCALE;
     const dd = Math.hypot(fx, fy, fz) || 1;
     if (dd > maxR) { const s = maxR / dd; fx *= s; fy *= s; fz *= s; }
     out[n.id] = [fx, fy, fz];
@@ -938,6 +940,30 @@ export function ambientTissue(count: number, seed = 7): { positions: Float32Arra
     colors[i * 3 + 2] = 0.60 + t * 0.30;   // B
   }
   return { positions, colors };
+}
+
+// ─── Nodos POTENCIALES: chispas aún no realizadas (Tikún incompleto) ──────
+// Llenan una esfera MÁS GRANDE que los nodos reales, dejando zonas oscuras
+// con potencial entre ellas. No son interactivos: sugieren "hay lugar para
+// crecer" — la luz que aún no se ha recogido. Distribución de volumen
+// (cbrt → densidad pareja) en una cáscara desde el cloud real hacia afuera.
+export function potentialNodes(count: number, seed = 23): Float32Array {
+  const rng = mulberry32(seed >>> 0);
+  const positions = new Float32Array(count * 3);
+  const rMin = 0.8 * BRAIN_SCALE;  // entra entre los nodos reales (rellena huecos)
+  const rMax = 4.6 * BRAIN_SCALE;  // esfera MUCHO más grande que el cloud real → lugar para crecer
+  for (let i = 0; i < count; i++) {
+    // dirección uniforme en la esfera
+    const u = rng() * 2 - 1;          // cos(theta)
+    const phi = rng() * Math.PI * 2;
+    const s = Math.sqrt(1 - u * u);
+    // radio sesgado por volumen para repartir parejo (más afuera = más espacio)
+    const r = rMin + (rMax - rMin) * Math.cbrt(rng());
+    positions[i * 3]     = s * Math.cos(phi) * r;
+    positions[i * 3 + 1] = s * Math.sin(phi) * r;
+    positions[i * 3 + 2] = u * r;
+  }
+  return positions;
 }
 
 // ─── Utilidades de grafo ────────────────────────────────────────────────

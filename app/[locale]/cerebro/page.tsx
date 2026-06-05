@@ -24,6 +24,7 @@ import {
   BRAIN_SCALE,
   layoutNodes,
   ambientTissue,
+  potentialNodes,
   bfsDistances,
   shortestPath,
   neighborsIn,
@@ -45,11 +46,14 @@ const CFG = {
   ambientCount: 12000,      // sinapsis latentes (tejido del cerebro) — más denso/lleno
   ambientSize: 0.045,
   ambientOpacity: 0.6,
-  haloBase: 0.55,           // tamaño del halo de una sinapsis
+  potentialCount: 1100,     // nodos POTENCIALES (chispas por recoger, Tikún incompleto)
+  potentialSize: 0.07,      // un poco más grandes que el tejido, para leerse como "nodos"
+  potentialOpacity: 0.22,   // muy tenues: insinúan, no compiten con los reales
+  haloBase: 0.30,           // halo más chico: no lava las letras alrededor
   coreBase: 0.16,           // tamaño del núcleo brillante
   driftSpeed: 0.045,        // deriva lenta de cámara
-  radiusIdle: 24,
-  radiusFocus: 15,
+  radiusIdle: 40,           // cámara más lejos: la esfera potencial es mucho más vasta
+  radiusFocus: 17,
 };
 
 const CENTER = new THREE.Vector3(0.1 * BRAIN_SCALE, 0.1 * BRAIN_SCALE, 0);
@@ -151,6 +155,42 @@ function AmbientTissue() {
   );
 }
 
+// ── Nodos POTENCIALES: chispas tenues por recoger (Tikún incompleto) ───────
+// Llenan una esfera más grande que los nodos reales → zonas oscuras con
+// potencial. Tinte dorado frío, muy tenue, con un parpadeo lento desfasado.
+function PotentialNodes() {
+  const tex = useMemo(() => glowTexture(), []);
+  const positions = useMemo(() => potentialNodes(CFG.potentialCount), []);
+  const geom = useMemo(() => {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    return g;
+  }, [positions]);
+  const matRef = useRef<THREE.PointsMaterial>(null);
+  useFrame(({ clock }) => {
+    if (matRef.current) {
+      // respiración lenta y desfasada del tejido: las chispas "laten" suave
+      matRef.current.opacity =
+        CFG.potentialOpacity * (0.7 + Math.sin(clock.elapsedTime * 0.35 + 1.7) * 0.3);
+    }
+  });
+  return (
+    <points geometry={geom}>
+      <pointsMaterial
+        ref={matRef}
+        map={tex}
+        size={CFG.potentialSize * BRAIN_SCALE}
+        color={"#d8b45a"}
+        transparent
+        opacity={CFG.potentialOpacity}
+        blending={THREE.AdditiveBlending}
+        depthWrite={false}
+        sizeAttenuation
+      />
+    </points>
+  );
+}
+
 // ── Fibras base (todas, casi invisibles) ──────────────────────────────────
 function BaseFibers({ segments, dimmed }: { segments: Float32Array; dimmed: boolean }) {
   const geom = useMemo(() => {
@@ -228,7 +268,8 @@ function LayeredFibers({
       const idx = Math.min(c.pts.length - 1, Math.max(0, Math.floor(u * (c.pts.length - 1))));
       const p = c.pts[idx];
       spr.position.set(p.x, p.y, p.z);
-      const s = (0.18 + Math.sin((t + i) * 3) * 0.04) * BRAIN_SCALE;
+      // electrón pequeño y sutil que viaja por la fibra (no una bola de luz)
+      const s = (0.045 + Math.sin((t + i) * 3) * 0.012) * BRAIN_SCALE;
       spr.scale.set(s, s, 1);
     });
   });
@@ -248,7 +289,7 @@ function LayeredFibers({
       ))}
       {primary.map((c, i) => (
         <sprite key={c.a + c.b} ref={(el) => { pulseRefs.current[i] = el; }}>
-          <spriteMaterial map={tex} color={col} transparent opacity={0.95} blending={THREE.AdditiveBlending} depthWrite={false} />
+          <spriteMaterial map={tex} color={col} transparent opacity={0.7} blending={THREE.AdditiveBlending} depthWrite={false} />
         </sprite>
       ))}
     </group>
@@ -619,8 +660,8 @@ function BrainScene({
         panSpeed={0.5}
         rotateSpeed={0.55}
         zoomSpeed={0.9}
-        minDistance={5}
-        maxDistance={54}
+        minDistance={0.5}
+        maxDistance={90}
         autoRotate={autoRot && !selected && !compareActive && !catActive}
         autoRotateSpeed={0.3}
         onStart={() => { interacting.current = true; pauseAuto(); }}
@@ -646,6 +687,7 @@ function BrainScene({
 
       <group ref={groupRef}>
         <AmbientTissue />
+        <PotentialNodes />
         <BaseFibers segments={baseSegments} dimmed={focusId !== null || compareActive || catActive} />
         {!compareActive && !catActive && focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} />}
         {!compareActive && !catActive && pathToTorah.length > 1 && <PathToTorah path={pathToTorah} curves={curves} />}
@@ -857,7 +899,7 @@ export default function GrafoPage() {
             onBackground={clearAll}
           />
           <EffectComposer>
-            <Bloom intensity={1.3} luminanceThreshold={0.12} luminanceSmoothing={0.7} mipmapBlur radius={0.75} />
+            <Bloom intensity={0.7} luminanceThreshold={0.22} luminanceSmoothing={0.7} mipmapBlur radius={0.5} />
           </EffectComposer>
         </Canvas>
       </Suspense>
