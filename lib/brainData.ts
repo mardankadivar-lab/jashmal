@@ -509,6 +509,73 @@ export const AVRAHAM_KAB_EDGES: MaseiEdge[] = [
   { a: "Nombre de 72", b: "Cabalá",     kind: "interp" }, // Shem HaMforash
 ];
 
+// ─── Gilgulim de Caín y Abel · escuela del Arí z"l (verificado por el Sofer) ─
+// Tradición esotérica luriana (NO pshat); las listas VARÍAN entre fuentes.
+// Verificado DIRECTO en Sha'ar HaGilgulim por Hakdamá:párrafo. `solid` = explícito
+// y localizado en la fuente; `interp` = lectura/asociación. Correcciones del Sofer:
+// Elazar ben Araj NO es raíz de Abel (es raíz de Najor); Rabí Meir NO localizable
+// en el Arí (excluido); Naval cuelga del lado MALO de Abel, no de Caín.
+// Gematrías: נח=חן=58 · הלל=אדני=65 · משה=345 · שם=340.
+export const GILGUL_CAIN_HEVEL_NODES: BNode[] = [
+  { id: "Caín",             label: "Caín (Kayin)",            labelFa: "قائن (قابیل)",         cat: "figure",   level: 3 },
+  { id: "Abel",             label: "Abel (Hevel)",            labelFa: "هابیل (هِوِل)",        cat: "figure",   level: 3 },
+  { id: "Shet",             label: "Shet (Set)",              labelFa: "شیت (شِث)",            cat: "figure",   level: 3 },
+  { id: "Yitró",            label: "Yitró (Jetró)",           labelFa: "یِترو (یَترون)",       cat: "figure",   level: 3 },
+  { id: "Kóraj",            label: "Kóraj",                   labelFa: "قورَح",                cat: "figure",   level: 3 },
+  { id: "Rabí Akiva",       label: "Rabí Akiva",              labelFa: "ربی عَقیوا",           cat: "figure",   level: 3 },
+  { id: "Shmuel HaNavi",    label: "Shmuel HaNaví",           labelFa: "شموئل نبی",            cat: "figure",   level: 3 },
+  { id: "Jizkiyahu",        label: "Jizkiyahu (Ezequías)",    labelFa: "حِزقیاهو",             cat: "figure",   level: 3 },
+  { id: "Yejezkel",         label: "Yejezkel (Ezequiel)",     labelFa: "یِحِزقیئل",            cat: "figure",   level: 3 },
+  { id: "Nadav-Avihu",      label: "Nadav y Avihú",           labelFa: "نَداو و اَبیهو",       cat: "figure",   level: 3 },
+  { id: "Pinjás",           label: "Pinjás",                  labelFa: "پینحاس",               cat: "figure",   level: 3 },
+  { id: "Naval",            label: "Naval HaKarmelí",         labelFa: "ناوال کَرمِلی",        cat: "figure",   level: 3 },
+  { id: "Egipcio Ex2",      label: "El egipcio (Éx 2:12)",    labelFa: "مرد مصری (خروج ۲:۱۲)", cat: "figure",   level: 3 },
+  { id: "Gilgul",           label: "Gilgul (transmigración)", labelFa: "گیلگول (تناسخ)",       cat: "kabbalah", level: 3 },
+  { id: "Raíz de Caín",     label: "Raíz de Caín (guevurot)", labelFa: "ریشهٔ قائن (گبورا)",   cat: "kabbalah", level: 3 },
+  { id: "Raíz de Abel",     label: "Raíz de Abel (jasadim)",  labelFa: "ریشهٔ هابیل (خِسِد)",  cat: "kabbalah", level: 3 },
+  { id: "Shaar HaGilgulim", label: "Sha'ar HaGilgulim",       labelFa: "شَعَر هَگیلگولیم",      cat: "kabbalah", level: 2 },
+  { id: "Arí",              label: "Arí z\"l (Lurianismo)",   labelFa: "آری (لوریانی)",        cat: "kabbalah", level: 2 },
+];
+export const GILGUL_CAIN_HEVEL_EDGES: MaseiEdge[] = [
+  // ── AUTORIDAD — explícito y localizado en Sha'ar HaGilgulim (ShG) ──
+  { a: "Abel", b: "Adam HaRishon",  kind: "solid" },  // ShG Hakdamá 34:1 (Hevel = hombro derecho de Adam)
+  { a: "Caín", b: "Adam HaRishon",  kind: "solid" },  // ShG 31:4 (hombro izquierdo = raíz de Caín)
+  { a: "Abel", b: "Raíz de Abel",   kind: "solid" },  // ShG 34:1 (atará de-jésed)
+  { a: "Caín", b: "Raíz de Caín",   kind: "solid" },  // ShG 31:4 / 34:7 (atará de-guevurá)
+  { a: "Raíz de Abel", b: "Jésed",  kind: "solid" },  // ShG 34:1
+  { a: "Raíz de Caín", b: "Guevurá", kind: "solid" }, // ShG 34:7
+  { a: "Abel", b: "Shet",           kind: "solid" },  // ShG 34:0 + 29:8
+  { a: "Shet", b: "Noaj",           kind: "solid" },  // ShG 34:0
+  { a: "Noaj", b: "Moshé",          kind: "solid" },  // ShG 34:0 (Hevel→Shet→Nóaj→Shem→Moshé); נח=חן=58
+  { a: "Moshé", b: "Raíz de Abel",  kind: "solid" },  // ShG 34:0
+  { a: "Rabí Akiva", b: "Caín",     kind: "solid" },  // ShG 34:7 (endulzó la guevurá → jésed)
+  { a: "Yitró", b: "Caín",          kind: "solid" },  // ShG 33:7 (lado bueno de Caín)
+  { a: "Kóraj", b: "Caín",          kind: "solid" },  // ShG 33:7 (lado malo de Caín)
+  { a: "Shmuel HaNavi", b: "Caín",  kind: "solid" },  // ShG 33:7 (rectificación de Caín)
+  { a: "Jizkiyahu", b: "Caín",      kind: "solid" },  // ShG 31:4 + 31:10
+  { a: "Yejezkel", b: "Caín",       kind: "solid" },  // ShG 35:11
+  { a: "Egipcio Ex2", b: "Caín",    kind: "solid" },  // ShG 32:18 (nefesh de Caín, lado del mal)
+  { a: "Nadav-Avihu", b: "Caín",    kind: "solid" },  // ShG 33:2-3 / 32:1
+  { a: "Rabí Akiva", b: "Tikún",    kind: "solid" },  // ShG 34:7 (himtik et ha-guevurá)
+  { a: "Yitró", b: "Moshé",         kind: "solid" },  // ShG 33:7 (Caín coopera con Hevel)
+  { a: "Egipcio Ex2", b: "Moshé",   kind: "solid" },  // ShG 32:18 (Hevel mata con el Nombre de 42)
+  { a: "Naval", b: "Abel",          kind: "solid" },  // ShG 29:7-8 (lado MALO de Hevel, vía Bilaam); נבל⊃בל
+  { a: "Pinjás", b: "Eliyahu",      kind: "solid" },  // ShG 33:6 (Eliyahu = Pinjás)
+  { a: "Nadav-Avihu", b: "Pinjás",  kind: "solid" },  // ShG 33:6 (ibur en Pinjás)
+  { a: "Pinjás", b: "Shmuel HaNavi", kind: "solid" }, // ShG 33:6
+  { a: "Shaar HaGilgulim", b: "Arí",      kind: "solid" }, // enseñanzas del Arí (R. Jaim Vital)
+  { a: "Shaar HaGilgulim", b: "Gilgul",   kind: "solid" }, // tratado luriano del gilgul
+  { a: "Shaar HaGilgulim", b: "Etz Jaim", kind: "solid" }, // corpus del Arí / Jaim Vital
+  { a: "Arí", b: "Cabalá",                kind: "solid" }, // Lurianismo = cima de la Cabalá
+  // ── SECUNDARIAS — interpretativas / asociación ──
+  { a: "Gilgul", b: "Nitzotzot",    kind: "interp" }, // el alma se astilla en nitzotzot (ShG 31:4)
+  { a: "Gilgul", b: "Gilgulim",     kind: "interp" }, // vincula al nodo Gilgulim existente
+  { a: "Raíz de Caín", b: "Mashíaj", kind: "interp" }, // ShG 35:11 (Caín→kohanim): lectura mesiánica
+  { a: "Rabí Akiva", b: "Torá",     kind: "interp" }, // Akiva[Caín] transmite la Torá de la línea de Moshé[Abel]
+  { a: "Kóraj", b: "Guevurá",       kind: "interp" }, // din no rectificado (doble filo)
+  { a: "Abel", b: "Caín",           kind: "interp" }, // las dos raíces como par complementario
+];
+
 // ─── Nodos ───────────────────────────────────────────────────────────────
 export const BNODES: BNode[] = [
   // ── Nivel 0 — corazón (Torá y Tanaj UNIFICADOS: la Torá es el núcleo del Tanaj) ──
@@ -612,6 +679,7 @@ export const BNODES: BNode[] = [
   // ── Estudio Tamar, Tohu y Tikún (las tres prendas → תֹהוּ) ──
   ...TOHU_NODES,
   ...AVRAHAM_KAB_NODES,
+  ...GILGUL_CAIN_HEVEL_NODES,
 ];
 
 // ─── Aristas (relaciones reales, NO dirigidas). Se deduplican antes de render ─
@@ -677,6 +745,7 @@ const RAW_EDGES: [string, string][] = [
   // Estudio Tamar, Tohu y Tikún (las tres prendas → תֹהוּ)
   ...TOHU_EDGES.map((e) => [e.a, e.b] as [string, string]),
   ...AVRAHAM_KAB_EDGES.map((e) => [e.a, e.b] as [string, string]),
+  ...GILGUL_CAIN_HEVEL_EDGES.map((e) => [e.a, e.b] as [string, string]),
 ];
 
 // dedup + descarta aristas a nodos inexistentes (p.ej. placeholders)
@@ -702,6 +771,7 @@ export const BEDGES: [string, string][] = (() => {
 const _KINDED_EDGES: MaseiEdge[] = [
   ...MASEI_EDGES, ...V4_EDGES, ...STUDY2_EDGES, ...STUDY3_EDGES,
   ...BRIT21_EDGES, ...MADRES_EDGES, ...TOHU_EDGES, ...AVRAHAM_KAB_EDGES,
+  ...GILGUL_CAIN_HEVEL_EDGES,
 ];
 const EDGE_KIND = new Map<string, "solid" | "interp">();
 for (const e of _KINDED_EDGES) {
