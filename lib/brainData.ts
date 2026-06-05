@@ -323,6 +323,66 @@ export const STUDY3_EDGES: MaseiEdge[] = [
   { a: "Sansón", b: "Descensos de la Shejiná", kind: "interp" },
 ];
 
+// ─── Estudio: Los 21 Pactos (Britot) + Ehyé (אהיה = 21) → Biná ─────────────
+// Verificado por el Sofer. El Nombre Ehyé ("Yo Seré", Shemot 3:14) tiene gematría
+// 21 y se asocia a Keter/Biná; los pactos de la Torá se leen como su despliegue.
+// Aristas SÓLIDAS = fuente clásica directa; INTERPRETATIVAS = lectura meditativa.
+// NOTA: el nodo "Brit" (Pacto) y el núcleo "Torá" YA existen — se usan como destino.
+export const BRIT21_NODES: BNode[] = [
+  { id: "21 Pactos",        label: "21 Pactos (Britot)",        labelFa: "۲۱ پیمان",                  cat: "jashmal",  level: 4 },
+  { id: "Ehyé",             label: "Ehyé (Yo Seré) · 21",       labelFa: "اَهیه (خواهم بود) · ۲۱",     cat: "kabbalah", level: 3 },
+  { id: "Ehyé Asher Ehyé",  label: "Ehyé Asher Ehyé",           labelFa: "اَهیه اَشِر اَهیه",           cat: "tanakh",   level: 3 },
+  { id: "YHVH",             label: "YHVH · 26",                 labelFa: "یهوه · ۲۶",                  cat: "kabbalah", level: 3 },
+  { id: "Adonai",           label: "Adonai · 65",               labelFa: "اَدونای · ۶۵",                cat: "kabbalah", level: 3 },
+  { id: "Brit Milá",        label: "Brit Milá (circuncisión)",  labelFa: "بریت میلا (ختنه)",           cat: "tema",     level: 3 },
+  { id: "Pacto de Noé",     label: "Pacto de Noé (arcoíris)",   labelFa: "پیمان نوح (رنگین‌کمان)",      cat: "tema",     level: 3 },
+  { id: "Pacto davídico",   label: "Pacto davídico",            labelFa: "پیمان داوودی",                cat: "tema",     level: 3 },
+  { id: "Nuevo Pacto",      label: "Nuevo Pacto (en el corazón)", labelFa: "پیمان نو (در قلب)",         cat: "tema",     level: 3 },
+  { id: "Pacto de sal",     label: "Pacto de sal",              labelFa: "پیمان نمک",                  cat: "tema",     level: 3 },
+  { id: "Brit Shalom",      label: "Brit Shalom (Pinjás)",      labelFa: "بریت شالوم (پینحاس)",         cat: "tema",     level: 3 },
+  { id: "Arcoíris",         label: "Arcoíris (Késhet)",         labelFa: "رنگین‌کمان (قِشِت)",          cat: "tanakh",   level: 3 },
+];
+
+export const BRIT21_EDGES: MaseiEdge[] = [
+  // Núcleo del estudio: 21 Pactos ↔ Ehyé (21) ↔ Biná / Keter / Tikún
+  { a: "21 Pactos", b: "Brit", kind: "solid" }, { a: "21 Pactos", b: "Ehyé", kind: "interp" },
+  { a: "Ehyé", b: "Biná", kind: "interp" }, { a: "Ehyé", b: "Keter", kind: "interp" },
+  { a: "21 Pactos", b: "Biná", kind: "interp" }, { a: "21 Pactos", b: "Tikún", kind: "interp" },
+  // Ehyé Asher Ehyé (Shemot 3:14, Moshé) + Nombres divinos
+  { a: "Ehyé", b: "Ehyé Asher Ehyé", kind: "solid" }, { a: "Ehyé Asher Ehyé", b: "Shemot", kind: "solid" },
+  { a: "Ehyé Asher Ehyé", b: "Moshé", kind: "solid" }, { a: "Ehyé", b: "YHVH", kind: "interp" },
+  { a: "YHVH", b: "Adonai", kind: "interp" }, { a: "YHVH", b: "Tiféret", kind: "interp" },
+  { a: "Adonai", b: "Maljut", kind: "interp" },
+  // Pacto de Noé (arcoíris)
+  { a: "Pacto de Noé", b: "21 Pactos", kind: "solid" }, { a: "Pacto de Noé", b: "Noaj", kind: "solid" },
+  { a: "Pacto de Noé", b: "Arcoíris", kind: "solid" }, { a: "Pacto de Noé", b: "Maljut", kind: "interp" },
+  { a: "Arcoíris", b: "Noaj", kind: "solid" }, { a: "Arcoíris", b: "Bereshit", kind: "solid" },
+  { a: "Arcoíris", b: "Maljut", kind: "interp" },
+  // Brit Milá (Avraham, Bereshit 17)
+  { a: "Brit Milá", b: "21 Pactos", kind: "solid" }, { a: "Brit Milá", b: "Avraham", kind: "solid" },
+  { a: "Brit Milá", b: "Brit", kind: "solid" }, { a: "Brit Milá", b: "Bereshit", kind: "solid" },
+  { a: "Brit Milá", b: "Yesod", kind: "interp" }, { a: "Brit Milá", b: "Jésed", kind: "interp" },
+  // Pacto davídico (David, Tehilim, reino eterno)
+  { a: "Pacto davídico", b: "21 Pactos", kind: "solid" }, { a: "Pacto davídico", b: "David", kind: "solid" },
+  { a: "Pacto davídico", b: "Tehilim", kind: "solid" }, { a: "Pacto davídico", b: "Maljut", kind: "interp" },
+  { a: "Pacto davídico", b: "Mashíaj", kind: "interp" }, { a: "Pacto davídico", b: "Pacto de sal", kind: "solid" },
+  // Pacto de sal (Vayikrá 2:13, Bamidbar 18:19)
+  { a: "Pacto de sal", b: "21 Pactos", kind: "solid" }, { a: "Pacto de sal", b: "Vayikrá", kind: "solid" },
+  { a: "Pacto de sal", b: "Brit", kind: "solid" }, { a: "Pacto de sal", b: "Guevurá", kind: "interp" },
+  // Brit Shalom (Pinjás, Bamidbar 25:12)
+  { a: "Brit Shalom", b: "21 Pactos", kind: "solid" }, { a: "Brit Shalom", b: "Bamidbar", kind: "solid" },
+  { a: "Brit Shalom", b: "Brit", kind: "solid" }, { a: "Brit Shalom", b: "Guevurá", kind: "interp" },
+  { a: "Brit Shalom", b: "Tikún", kind: "interp" },
+  // Nuevo Pacto (Yirmiyahu 31:30, en el corazón)
+  { a: "Nuevo Pacto", b: "21 Pactos", kind: "solid" }, { a: "Nuevo Pacto", b: "Neviim", kind: "solid" },
+  { a: "Nuevo Pacto", b: "Brit", kind: "solid" }, { a: "Nuevo Pacto", b: "Teshuvá", kind: "interp" },
+  { a: "Nuevo Pacto", b: "Biná", kind: "interp" }, { a: "Nuevo Pacto", b: "Gueulá", kind: "interp" },
+  // Pactos del Sinaí / Shabat / Torá (el gran marco)
+  { a: "21 Pactos", b: "Shabat", kind: "solid" }, { a: "21 Pactos", b: "Sinaí", kind: "solid" },
+  { a: "21 Pactos", b: "Moshé", kind: "solid" }, { a: "Shabat", b: "Brit", kind: "interp" },
+  { a: "21 Pactos", b: "Torá", kind: "solid" },
+];
+
 // ─── Nodos ───────────────────────────────────────────────────────────────
 export const BNODES: BNode[] = [
   // ── Nivel 0 — corazón (Torá y Tanaj UNIFICADOS: la Torá es el núcleo del Tanaj) ──
@@ -419,6 +479,8 @@ export const BNODES: BNode[] = [
   ...STUDY2_NODES,
   // ── Estudios 3 oraciones · Sansón · Descensos de la Shejiná ──
   ...STUDY3_NODES,
+  // ── Estudio 21 Pactos + Ehyé (21) → Biná (verificado por el Sofer) ──
+  ...BRIT21_NODES,
 ];
 
 // ─── Aristas (relaciones reales, NO dirigidas). Se deduplican antes de render ─
@@ -477,6 +539,8 @@ const RAW_EDGES: [string, string][] = [
   ...STUDY2_EDGES.map((e) => [e.a, e.b] as [string, string]),
   // Estudios 3 oraciones · Sansón · Descensos de la Shejiná
   ...STUDY3_EDGES.map((e) => [e.a, e.b] as [string, string]),
+  // Estudio 21 Pactos + Ehyé (21) → Biná
+  ...BRIT21_EDGES.map((e) => [e.a, e.b] as [string, string]),
 ];
 
 // dedup + descarta aristas a nodos inexistentes (p.ej. placeholders)
@@ -590,6 +654,11 @@ export const SEFIRA_AFFINITY: Record<string, string[]> = {
   Shimshon: ["Guevurá"], Ester: ["Maljut"], "Dagón": ["Guevurá"], "Sinaí": ["Tiféret"],
   Itaruta: ["Yesod"], "Tres oraciones": ["Tiféret"], "Sansón": ["Guevurá"],
   "Descensos de la Shejiná": ["Maljut"],
+  // Brain — estudio 21 Pactos + Ehyé (21) → Biná
+  "21 Pactos": ["Biná"], "Ehyé": ["Biná", "Keter"], "Ehyé Asher Ehyé": ["Keter"],
+  YHVH: ["Tiféret"], Adonai: ["Maljut"], "Brit Milá": ["Yesod"], "Pacto de Noé": ["Maljut"],
+  "Pacto davídico": ["Maljut"], "Nuevo Pacto": ["Biná"], "Pacto de sal": ["Guevurá"],
+  "Brit Shalom": ["Guevurá", "Tiféret"], "Arcoíris": ["Maljut"],
 };
 const SEFIRA_PULL = 0.25; // jalón hacia el ancla (suavizado: agrupa sin amontonar)
 
