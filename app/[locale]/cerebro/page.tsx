@@ -476,6 +476,7 @@ function BrainScene({
   isFa,
   locale,
   flyToId,
+  activeCat,
   onFlewTo,
   onSelect,
   onHover,
@@ -490,6 +491,7 @@ function BrainScene({
   isFa: boolean;
   locale: string;
   flyToId: string | null;
+  activeCat: string | null;
   onFlewTo: () => void;
   onSelect: (id: string, additive: boolean) => void;
   onHover: (id: string | null) => void;
@@ -539,6 +541,16 @@ function BrainScene({
         (compareSet.has(c.b) && sharedSet.has(c.a)),
     );
   }, [compareActive, curves, compareSet, sharedSet]);
+
+  // ── Resaltado de dominio (clic en la leyenda): enciende TODA una categoría ──
+  const catActive = !!activeCat;
+  const catCurves = useMemo(() => {
+    if (!activeCat) return [] as EdgeCurve[];
+    return curves.filter(
+      (c) => nodeMap.get(c.a)?.cat === activeCat || nodeMap.get(c.b)?.cat === activeCat,
+    );
+  }, [activeCat, curves, nodeMap]);
+
   // controles de mouse (girar / mover / zoom) con pausa de auto-giro al interactuar
   const controlsRef = useRef<any>(null);
   // marca de tiempo del último movimiento real de cámara (girar/zoom/pinch):
@@ -571,6 +583,9 @@ function BrainScene({
       if (sharedSet.has(n.id)) return 1.15; // lo que COMPARTEN
       return awakeBase * 0.12; // el resto se apaga (no desaparece)
     }
+    if (catActive) {
+      return n.cat === activeCat ? 1.25 : awakeBase * 0.1; // dominio encendido, resto apagado
+    }
     if (!focusId || !dist) return awakeBase;
     if (n.id === focusId) return 1.4;
     const d = dist.get(n.id);
@@ -582,6 +597,7 @@ function BrainScene({
   };
   const showLabelOf = (n: BNode): boolean => {
     if (compareActive) return compareSet.has(n.id) || sharedSet.has(n.id);
+    if (catActive) return n.cat === activeCat && n.level <= 3; // rotula los nodos del dominio
     if (n.id === focusId) return true;
     if (dist) {
       const d = dist.get(n.id);
@@ -605,7 +621,7 @@ function BrainScene({
         zoomSpeed={0.9}
         minDistance={5}
         maxDistance={54}
-        autoRotate={autoRot && !selected && !compareActive}
+        autoRotate={autoRot && !selected && !compareActive && !catActive}
         autoRotateSpeed={0.3}
         onStart={() => { interacting.current = true; pauseAuto(); }}
         onEnd={() => { interacting.current = false; resumeAuto(); }}
@@ -630,10 +646,11 @@ function BrainScene({
 
       <group ref={groupRef}>
         <AmbientTissue />
-        <BaseFibers segments={baseSegments} dimmed={focusId !== null || compareActive} />
-        {!compareActive && focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} />}
-        {!compareActive && pathToTorah.length > 1 && <PathToTorah path={pathToTorah} curves={curves} />}
+        <BaseFibers segments={baseSegments} dimmed={focusId !== null || compareActive || catActive} />
+        {!compareActive && !catActive && focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} />}
+        {!compareActive && !catActive && pathToTorah.length > 1 && <PathToTorah path={pathToTorah} curves={curves} />}
         {compareActive && sharedCurves.length > 0 && <FiberHighlight curves={sharedCurves} color="#ffe9a8" />}
+        {catActive && catCurves.length > 0 && <FiberHighlight curves={catCurves} color={BRAIN_CATS[activeCat ?? ""]?.c ?? "#c9a43e"} />}
 
         {nodes.map((n) => {
           const pos = positions[n.id];
@@ -672,6 +689,7 @@ export default function GrafoPage() {
   const [searchQ, setSearchQ] = useState("");
   const [compare, setCompare] = useState<string[]>([]); // modo comparación (Cmd/Ctrl-clic)
   const [flyToId, setFlyToId] = useState<string | null>(null); // SOLO al buscar: vuela al nodo
+  const [activeCat, setActiveCat] = useState<string | null>(null); // dominio resaltado (leyenda)
 
   useEffect(() => {
     let alive = true;
@@ -717,6 +735,7 @@ export default function GrafoPage() {
   // Buscar = seleccionar + VOLAR hacia el nodo (porque no se ve en pantalla).
   const pickNode = (id: string) => {
     setCompare([]);
+    setActiveCat(null);
     setSelected(id);
     setSearchQ("");
     setFlyToId(id);
@@ -726,6 +745,7 @@ export default function GrafoPage() {
   // Al hacer clic NO se vuela (la cámara se queda quieta y no se pierde el punto).
   const handleSelect = (id: string, additive: boolean) => {
     setFlyToId(null); // cancela cualquier vuelo en curso si el usuario toca algo
+    setActiveCat(null); // tocar un nodo apaga el resaltado de dominio
     if (additive) {
       setSelected(null);
       setCompare((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
@@ -734,7 +754,12 @@ export default function GrafoPage() {
       setSelected((p) => (p === id ? null : id));
     }
   };
-  const clearAll = () => { setSelected(null); setCompare([]); setFlyToId(null); };
+  const clearAll = () => { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); };
+  // clic en un dominio de la leyenda → enciende toda esa parte del cerebro (toggle)
+  const toggleCat = (key: string) => {
+    setSelected(null); setCompare([]); setFlyToId(null);
+    setActiveCat((p) => (p === key ? null : key));
+  };
   const handleDouble = (n: BNode) => { if (n.url) window.open("https://jashmal.org" + n.url, "_blank"); };
 
   // qué COMPARTEN los nodos en comparación (vecinos comunes)
@@ -811,6 +836,7 @@ export default function GrafoPage() {
             isFa={isFa}
             locale={locale}
             flyToId={flyToId}
+            activeCat={activeCat}
             onFlewTo={() => setFlyToId(null)}
             onSelect={handleSelect}
             onHover={setHovered}
@@ -877,16 +903,24 @@ export default function GrafoPage() {
         </div>
       </div>
 
-      {/* Leyenda */}
-      <div className="absolute bottom-4 start-4 z-10 rounded-xl border border-gold/15 bg-ink/80 p-3 backdrop-blur-md">
-        <p className="mb-2 font-cinzel text-[9px] uppercase tracking-[0.2em] text-gold/40">{T.legend}</p>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-          {Object.entries(BRAIN_CATS).filter(([k]) => k !== "jashmal").map(([key, v]) => (
-            <div key={key} className="flex items-center gap-1.5">
-              <span className="inline-block h-2 w-2 rounded-full" style={{ background: v.c, boxShadow: `0 0 8px ${v.c}` }} />
-              <span className="text-[10px] text-muted/80">{isFa ? v.labelFa : v.label}</span>
-            </div>
-          ))}
+      {/* Leyenda — clic en un dominio enciende toda esa parte del cerebro */}
+      <div className="absolute bottom-4 start-4 z-10 rounded-xl border border-gold/15 bg-ink/85 p-3 backdrop-blur-md">
+        <p className="mb-1.5 font-cinzel text-[10px] uppercase tracking-[0.2em] text-gold/45">{T.legend}</p>
+        <div className="grid grid-cols-2 gap-x-1.5 gap-y-0.5">
+          {Object.entries(BRAIN_CATS).filter(([k]) => k !== "jashmal").map(([key, v]) => {
+            const on = activeCat === key;
+            return (
+              <button
+                key={key}
+                onClick={() => toggleCat(key)}
+                aria-pressed={on}
+                className={`flex items-center gap-2 rounded-md px-2 py-1 text-start transition-colors ${on ? "bg-gold/15" : "hover:bg-gold/10"}`}
+              >
+                <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: v.c, boxShadow: `0 0 8px ${v.c}` }} />
+                <span className={`text-[13px] leading-tight ${on ? "font-medium text-parchment" : "text-muted/85"}`}>{isFa ? v.labelFa : v.label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
