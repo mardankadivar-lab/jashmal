@@ -16,6 +16,19 @@ function titleCase(s: string): string {
   return t ? t[0].toUpperCase() + t.slice(1) : t;
 }
 
+// Limpia el término de un hyperlink a un CONCEPTO corto y usable como sinapsis.
+// Descarta los "teasers" (preguntas o frases largas) devolviendo "" para que NO
+// se cosechen nodos feos tipo "¿Qué es exactamente el Trono de la Gloria…?".
+function cleanConcept(s: string): string {
+  let t = (s || "").split("|")[0].trim();
+  t = t.replace(/^[¿¡"'«»\s]+/, "").replace(/["'«».,;:!?\s]+$/, "").trim();
+  if (!t) return "";
+  if (t.length > 42) return ""; // demasiado largo → es un teaser, no un concepto
+  if (t.includes("?") || t.includes("¿")) return ""; // pregunta → teaser
+  if (t.split(/\s+/).length > 6) return ""; // un concepto rara vez pasa de 6 palabras
+  return titleCase(t);
+}
+
 export type HarvestInput = {
   subjectId: string;
   subjectLabel: string;
@@ -68,7 +81,8 @@ export async function harvestFromStudy(
       // slug de letra → glifo/nombre hebreo si se puede resolver
       rawId = titleCase(resolveHebrewLetter(t.key) || t.key);
     } else {
-      rawId = titleCase(t.label || t.term);
+      // usar el CONCEPTO (término), no el texto-teaser; descartar si es basura
+      rawId = cleanConcept(t.term) || cleanConcept(t.label);
     }
     if (!rawId) continue;
     const id = canonical(rawId);
