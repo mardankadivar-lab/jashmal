@@ -158,7 +158,7 @@ function PlaceNode({
 }) {
   const tex = useMemo(glowTexture, []);
   const col = REGION_COLORS[place.region] ?? "#c9a43e";
-  const base = place.importance === 3 ? 0.5 : place.importance === 2 ? 0.36 : 0.28;
+  const base = place.importance === 3 ? 0.28 : place.importance === 2 ? 0.2 : 0.14;
   const haloRef = useRef<THREE.Sprite>(null);
   const coreRef = useRef<THREE.Sprite>(null);
   const [hover, setHover] = useState(false);
@@ -172,8 +172,8 @@ function PlaceNode({
   useFrame(({ clock }) => {
     const pulse = 1 + Math.sin(clock.elapsedTime * 1.5 + pos[0] * 2) * 0.12;
     const k = selected ? 1.7 : dimmed ? 0.5 : 1;
-    if (haloRef.current) haloRef.current.scale.setScalar(base * 2.0 * pulse * k);
-    if (coreRef.current) coreRef.current.scale.setScalar(base * 0.7 * pulse * k);
+    if (haloRef.current) haloRef.current.scale.setScalar(base * 1.8 * pulse * k);
+    if (coreRef.current) coreRef.current.scale.setScalar(base * 0.6 * pulse * k);
   });
 
   return (
@@ -186,7 +186,7 @@ function PlaceNode({
       </sprite>
       {/* área de clic */}
       <sprite
-        scale={[base * 1.6, base * 1.6, 1]}
+        scale={[base * 2.6, base * 2.6, 1]}
         onClick={(e) => { e.stopPropagation(); onClick(); }}
         onPointerOver={(e) => { e.stopPropagation(); setHover(true); onHover(true); document.body.style.cursor = "pointer"; }}
         onPointerOut={() => { setHover(false); onHover(false); document.body.style.cursor = "default"; }}
