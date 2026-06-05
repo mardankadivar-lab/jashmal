@@ -671,18 +671,18 @@ function hashStr(s: string): number {
 // estos elipsoides (espejados en Z) forma la silueta del cerebro en 3D.
 export const BRAIN_SCALE = 3.5;
 type Region = { c: [number, number, number]; r: [number, number, number]; hemi: boolean };
-// Silueta de CEREBRO real (vista de perfil): bóveda redondeada arriba, lóbulo
-// frontal adelante, temporal abajo, occipital atrás, cerebelo metido atrás-abajo
-// y tronco encefálico bajando. Hemisferios en ±Z (cz = c[2]·hemiSign) con fisura
-// en el medio. Menos estirado en X para que no parezca zapato.
+// Una sola ESFERA limpia (decisión de Mardan: olvidar la forma de cerebro).
+// Todas las "regiones" son la misma esfera centrada en el origen → la unión es
+// una esfera uniforme. El núcleo (Torá) es una esfera interior más pequeña.
+const SPHERE_R = 1.45;
 export const REGIONS: Record<string, Region> = {
-  core:       { c: [0.05, 0.15, 0.0],  r: [0.5, 0.45, 0.4],   hemi: false }, // Torá (centro)
-  frontal:    { c: [1.2, 0.35, 0.42],  r: [0.78, 0.85, 0.5],  hemi: true },  // lóbulo frontal (adelante)
-  parietal:   { c: [-0.05, 1.0, 0.42], r: [1.25, 0.6, 0.5],   hemi: true },  // bóveda superior
-  temporal:   { c: [0.7, -0.55, 0.46], r: [0.95, 0.5, 0.42],  hemi: true },  // lóbulo temporal (abajo)
-  occipital:  { c: [-1.25, 0.45, 0.42],r: [0.82, 0.85, 0.5],  hemi: true },  // lóbulo occipital (atrás)
-  cerebellum: { c: [-1.05, -0.62, 0.34],r: [0.58, 0.48, 0.44], hemi: true }, // cerebelo (metido atrás-abajo)
-  stem:       { c: [-0.55, -0.92, 0.0], r: [0.18, 0.3, 0.18],  hemi: false }, // tronco encefálico (corto, baja)
+  core:       { c: [0, 0, 0], r: [0.42, 0.42, 0.42], hemi: false }, // Torá (corazón interior)
+  frontal:    { c: [0, 0, 0], r: [SPHERE_R, SPHERE_R, SPHERE_R], hemi: false },
+  parietal:   { c: [0, 0, 0], r: [SPHERE_R, SPHERE_R, SPHERE_R], hemi: false },
+  temporal:   { c: [0, 0, 0], r: [SPHERE_R, SPHERE_R, SPHERE_R], hemi: false },
+  occipital:  { c: [0, 0, 0], r: [SPHERE_R, SPHERE_R, SPHERE_R], hemi: false },
+  cerebellum: { c: [0, 0, 0], r: [SPHERE_R, SPHERE_R, SPHERE_R], hemi: false },
+  stem:       { c: [0, 0, 0], r: [SPHERE_R, SPHERE_R, SPHERE_R], hemi: false },
 };
 
 // Categoría → región primaria
@@ -797,7 +797,7 @@ function sampleInRegion(
 // cerebro puede crecer y los nodos nuevos se ubican automáticamente.
 export function layoutNodes(nodes: BNode[]): Record<string, [number, number, number]> {
   const out: Record<string, [number, number, number]> = {};
-  const center: [number, number, number] = [0.1 * BRAIN_SCALE, 0.1 * BRAIN_SCALE, 0];
+  const center: [number, number, number] = [0, 0, 0]; // centro de la esfera
   nodes.forEach((n, i) => {
     if (n.level === 0) { out[n.id] = center; return; }
     const regKey = n.region ?? CAT_REGION[n.cat] ?? "frontal";
@@ -826,11 +826,14 @@ export function layoutNodes(nodes: BNode[]): Record<string, [number, number, num
     }
     // gravedad conceptual hacia el centro (reducida → reparte por el volumen)
     const g = LEVEL_GRAVITY[n.level] ?? 0.05;
-    out[n.id] = [
-      bx + (center[0] - bx) * g,
-      by + (center[1] - by) * g,
-      bz + (center[2] - bz) * g,
-    ];
+    let fx = bx + (center[0] - bx) * g;
+    let fy = by + (center[1] - by) * g;
+    let fz = bz + (center[2] - bz) * g;
+    // recorte: mantener TODO dentro de la esfera (que ningún nodo se salga)
+    const maxR = 1.8 * BRAIN_SCALE;
+    const dd = Math.hypot(fx, fy, fz) || 1;
+    if (dd > maxR) { const s = maxR / dd; fx *= s; fy *= s; fz *= s; }
+    out[n.id] = [fx, fy, fz];
   });
   return out;
 }
