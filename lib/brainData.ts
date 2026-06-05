@@ -671,13 +671,18 @@ function hashStr(s: string): number {
 // estos elipsoides (espejados en Z) forma la silueta del cerebro en 3D.
 export const BRAIN_SCALE = 3.5;
 type Region = { c: [number, number, number]; r: [number, number, number]; hemi: boolean };
+// Silueta de CEREBRO real (vista de perfil): bóveda redondeada arriba, lóbulo
+// frontal adelante, temporal abajo, occipital atrás, cerebelo metido atrás-abajo
+// y tronco encefálico bajando. Hemisferios en ±Z (cz = c[2]·hemiSign) con fisura
+// en el medio. Menos estirado en X para que no parezca zapato.
 export const REGIONS: Record<string, Region> = {
-  core:       { c: [0.1, 0.1, 0.0],   r: [0.55, 0.5, 0.5],  hemi: false }, // Torá (centro profundo)
-  frontal:    { c: [1.7, 0.45, 0.7],  r: [1.05, 0.95, 0.6], hemi: true },  // adelante-arriba
-  parietal:   { c: [-0.1, 1.05, 0.65],r: [1.0, 0.78, 0.6],  hemi: true },  // arriba-atrás
-  temporal:   { c: [0.7, -0.6, 1.0],  r: [1.1, 0.55, 0.5],  hemi: true },  // costado-abajo
-  occipital:  { c: [-1.75, 0.35, 0.6],r: [0.85, 0.85, 0.6], hemi: true },  // atrás
-  cerebellum: { c: [-1.85, -0.95, 0.5],r: [0.72, 0.5, 0.48],hemi: true },  // atrás-abajo
+  core:       { c: [0.05, 0.15, 0.0],  r: [0.5, 0.45, 0.4],   hemi: false }, // Torá (centro)
+  frontal:    { c: [1.2, 0.35, 0.42],  r: [0.78, 0.85, 0.5],  hemi: true },  // lóbulo frontal (adelante)
+  parietal:   { c: [-0.05, 1.0, 0.42], r: [1.25, 0.6, 0.5],   hemi: true },  // bóveda superior
+  temporal:   { c: [0.7, -0.55, 0.46], r: [0.95, 0.5, 0.42],  hemi: true },  // lóbulo temporal (abajo)
+  occipital:  { c: [-1.25, 0.45, 0.42],r: [0.82, 0.85, 0.5],  hemi: true },  // lóbulo occipital (atrás)
+  cerebellum: { c: [-1.05, -0.62, 0.34],r: [0.58, 0.48, 0.44], hemi: true }, // cerebelo (metido atrás-abajo)
+  stem:       { c: [-0.55, -0.92, 0.0], r: [0.18, 0.3, 0.18],  hemi: false }, // tronco encefálico (corto, baja)
 };
 
 // Categoría → región primaria
