@@ -430,6 +430,42 @@ export const MADRES_EDGES: MaseiEdge[] = [
   { a: "Averá Lishmah", b: "Mashíaj", kind: "interp" }, { a: "Averá Lishmah", b: "Shejiná", kind: "interp" },
 ];
 
+// ─── Estudio: Tamar, Tohu y Tikún (las tres prendas → תֹהוּ) ───────────────
+// Verificado por el Sofer. LECTURA DE DERASH/SOD — un jidush simbólico, NO fuente
+// explícita del Zóhar ni del Arí: las tres prendas que Tamar pide (Bereshit 38:18)
+// —Sello (חותם→ת), Cordón (פתיל→ה), Bastón (מטה→ו)— deletrean תֹהוּ (Tohu, el caos
+// primordial, gematría 411). El arco: Tamar toma el Tohu en sus manos → custodia
+// las chispas caídas (Shevirat HaKelim) → "Tzadká mimeni" (Gn 38:26) es el Tikún →
+// nace Péretz/Fares, la brecha por donde irrumpe la luz. Casi todas las aristas
+// son INTERPRETATIVAS (lectura meditativa); las del eje Tohu→Cabalá/Shevirá/
+// Nitzotzot/Tikún son sólidas porque ese es vocabulario cabalístico establecido.
+export const TOHU_NODES: BNode[] = [
+  { id: "Tohu",   label: "Tohu (caos primordial · תֹהוּ)", labelFa: "توهو (آشوب آغازین · תֹהוּ)", cat: "kabbalah", level: 4, url: "/tamar" },
+  { id: "Sello",  label: "Sello (Jotam · חותם → ת)",       labelFa: "مُهر (خوتام · חותם ← ת)",     cat: "tema",     level: 4, url: "/tamar" },
+  { id: "Cordón", label: "Cordón (Petil · פתיל → ה)",      labelFa: "بند (پتیل · פתיל ← ה)",       cat: "tema",     level: 4, url: "/tamar" },
+  { id: "Bastón", label: "Bastón (Maté · מטה → ו)",        labelFa: "عصا (مَطه · מטה ← ו)",        cat: "tema",     level: 4, url: "/tamar" },
+];
+
+export const TOHU_EDGES: MaseiEdge[] = [
+  // Las tres prendas deletrean el Tohu (lectura simbólica)
+  { a: "Sello", b: "Tohu", kind: "interp" }, { a: "Cordón", b: "Tohu", kind: "interp" },
+  { a: "Bastón", b: "Tohu", kind: "interp" },
+  // Tamar las tiene en sus manos
+  { a: "Tamar", b: "Sello", kind: "solid" }, { a: "Tamar", b: "Cordón", kind: "solid" },
+  { a: "Tamar", b: "Bastón", kind: "solid" }, { a: "Tamar", b: "Tohu", kind: "interp" },
+  // cada prenda ↔ su sefirá (por su letra: ת=Maljut, ה=Biná, ו=Tiféret)
+  { a: "Sello", b: "Maljut", kind: "interp" }, { a: "Cordón", b: "Biná", kind: "interp" },
+  { a: "Bastón", b: "Tiféret", kind: "interp" },
+  // Tohu ↔ el vocabulario cabalístico establecido (caos → quiebre → chispas → reparación)
+  { a: "Tohu", b: "Shevirá", kind: "solid" }, { a: "Tohu", b: "Nitzotzot", kind: "solid" },
+  { a: "Tohu", b: "Tikún", kind: "solid" }, { a: "Tohu", b: "Cabalá", kind: "solid" },
+  // el despertar / la brecha (Fares) por donde irrumpe la luz tras el Tikún
+  { a: "Tamar", b: "Itaruta", kind: "interp" }, { a: "Fares", b: "Tohu", kind: "interp" },
+  { a: "Fares", b: "Tikún", kind: "interp" },
+  // Tohu va-vohu (Bereshit 1:2)
+  { a: "Tohu", b: "Bereshit", kind: "solid" },
+];
+
 // ─── Nodos ───────────────────────────────────────────────────────────────
 export const BNODES: BNode[] = [
   // ── Nivel 0 — corazón (Torá y Tanaj UNIFICADOS: la Torá es el núcleo del Tanaj) ──
@@ -530,6 +566,8 @@ export const BNODES: BNode[] = [
   ...BRIT21_NODES,
   // ── Estudio Las Madres del Mashíaj (Tamar + Rut) (verificado por el Sofer) ──
   ...MADRES_NODES,
+  // ── Estudio Tamar, Tohu y Tikún (las tres prendas → תֹהוּ) ──
+  ...TOHU_NODES,
 ];
 
 // ─── Aristas (relaciones reales, NO dirigidas). Se deduplican antes de render ─
@@ -592,6 +630,8 @@ const RAW_EDGES: [string, string][] = [
   ...BRIT21_EDGES.map((e) => [e.a, e.b] as [string, string]),
   // Estudio Las Madres del Mashíaj (Tamar + Rut)
   ...MADRES_EDGES.map((e) => [e.a, e.b] as [string, string]),
+  // Estudio Tamar, Tohu y Tikún (las tres prendas → תֹהוּ)
+  ...TOHU_EDGES.map((e) => [e.a, e.b] as [string, string]),
 ];
 
 // dedup + descarta aristas a nodos inexistentes (p.ej. placeholders)
@@ -713,6 +753,8 @@ export const SEFIRA_AFFINITY: Record<string, string[]> = {
   // Brain — estudio Las Madres del Mashíaj (Tamar + Rut)
   Tamar: ["Yesod", "Maljut"], Rut: ["Maljut"], "Betsabé": ["Maljut"], "Naamá": ["Maljut"],
   "Yehudá": ["Maljut"], Fares: ["Yesod"], "Averá Lishmah": ["Daat"],
+  // Brain — estudio Tamar, Tohu y Tikún (las tres prendas → תֹהוּ)
+  Tohu: ["Guevurá"], Sello: ["Maljut"], "Cordón": ["Biná"], "Bastón": ["Tiféret"],
 };
 const SEFIRA_PULL = 0.25; // jalón hacia el ancla (suavizado: agrupa sin amontonar)
 

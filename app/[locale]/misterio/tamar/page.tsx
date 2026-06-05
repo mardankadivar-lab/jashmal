@@ -359,6 +359,110 @@ export default function TamarPage() {
           </div>
         </Section>
 
+        {/* ── Tohu → Tikún ── */}
+        <Section>
+          <h3 className="mb-4 mt-16 font-cinzel text-sm uppercase tracking-[0.3em] text-gold/60">
+            תֹהוּ · Tohu → Tikún
+          </h3>
+
+          {/* Sello de honestidad — lectura de derash/sod, NO fuente explícita */}
+          <div className="mb-8 rounded-xl border border-gold/20 bg-gold/[0.04] px-5 py-4">
+            <p className="font-cinzel text-[10px] uppercase tracking-widest text-gold/55">
+              Nota de honestidad
+            </p>
+            <p className="mt-1.5 text-sm leading-relaxed text-parchment/75">
+              Lectura de <span className="text-gold/85">derash/sod</span> — un jidush
+              (innovación) simbólico, no fuente explícita del Zóhar ni del Arí. Se ofrece
+              como meditación sobre el texto, no como cita de los maestros.
+            </p>
+          </div>
+
+          <div className="space-y-4 text-sm leading-relaxed text-parchment/85">
+            <p>
+              Mira de nuevo las tres prendas que Tamar pide en su mano. Cada una se abre
+              a una letra, y las tres juntas deletrean una sola palabra:
+            </p>
+          </div>
+
+          {/* Tabla: objeto → letra → función */}
+          <div className="my-8 overflow-hidden rounded-2xl border border-gold/20">
+            {[
+              { he: "חוֹתָם · Sello", letra: "ת", letraName: "Tav", fn: "sellar la realidad" },
+              { he: "פְּתִיל · Cordón", letra: "ה", letraName: "Hei", fn: "formar y organizar" },
+              { he: "מַטֶּה · Bastón", letra: "ו", letraName: "Vav", fn: "conectar y conducir" },
+            ].map((r, i) => (
+              <div
+                key={r.letra}
+                className="flex items-center gap-4 px-5 py-4"
+                style={{
+                  background: i % 2 === 0 ? "rgba(255,255,255,0.02)" : "transparent",
+                  borderTop: i === 0 ? "none" : "1px solid rgba(201,164,62,0.12)",
+                }}
+              >
+                <span className="hebrew shrink-0 font-bold leading-none"
+                  style={{ fontSize: "clamp(34px, 9vw, 44px)", color: "#fff6e0", textShadow: "0 0 14px #c9a43e" }}>
+                  {r.letra}
+                </span>
+                <div className="flex-1">
+                  <p className="hebrew text-base text-gold/90" dir="rtl">{r.he}</p>
+                  <p className="mt-1 text-sm text-parchment/80">
+                    <span className="font-cinzel text-xs uppercase tracking-wider text-gold/60">{r.letraName}</span>
+                    {" — "}{r.fn}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* El remate: las tres letras forman Tohu */}
+          <div className="my-8 rounded-2xl border-2 border-gold/30 bg-gold/[0.05] p-6 text-center">
+            <p className="hebrew font-bold leading-none"
+              style={{ fontSize: "clamp(40px, 12vw, 64px)", color: "#fff6e0", textShadow: "0 0 22px #c9a43e" }}>
+              ת־ה־ו = תֹהוּ
+            </p>
+            <p className="mt-3 font-cinzel text-sm font-bold uppercase tracking-widest text-gold/80">
+              Tohu — el caos primordial
+            </p>
+            <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-muted">
+              Es el mismo תֹהוּ de Génesis 1:2, «la tierra estaba <span className="text-gold/80">tohu</span>
+              {" "}va-vohu» — el desorden de antes de la luz.
+            </p>
+          </div>
+
+          <div className="space-y-4 text-sm leading-relaxed text-parchment/85">
+            <p>
+              Y aquí se cierra el arco. <span className="text-gold/90">Tamar toma el Tohu
+              en sus manos</span>: sostiene, literalmente, las prendas que deletrean el caos.
+              No huye de él — lo custodia. Son las <span className="text-gold/90">chispas
+              caídas</span> (las nitzotzot del quiebre, <span className="hebrew" dir="rtl">שְׁבִירַת הַכֵּלִים</span>),
+              la luz santa atrapada en lo que el mundo llama escándalo.
+            </p>
+            <p>
+              El reconocimiento de Yehudá —<span className="hebrew text-gold/90" dir="rtl">צָדְקָה מִמֶּנִּי</span>,
+              «ella es más justa que yo» (Génesis 38:26)— es el momento del{" "}
+              <span className="text-gold/90">Tikún</span>: el instante en que el caos se
+              repara, en que la verdad se nombra y la luz se libera del desorden.
+            </p>
+            <p>
+              Y del Tikún brota <span className="text-gold/90">Péretz</span> (Fares),
+              «la brecha» — la grieta por donde la luz, antes prisionera del Tohu, por fin
+              irrumpe en el mundo. Del caos sostenido nace la realeza.
+            </p>
+            <p className="font-cinzel text-base text-gold/90">
+              Tohu (el caos) → Tikún (la reparación) → Péretz (la brecha por donde entra la luz).
+            </p>
+          </div>
+
+          {/* Dato fino de gematría */}
+          <div className="mt-8 rounded-xl border border-gold/15 bg-gold/[0.03] px-5 py-4 text-center">
+            <p className="font-cinzel text-[10px] uppercase tracking-widest text-gold/50">Dato fino</p>
+            <p className="mt-1.5 text-sm text-parchment/80">
+              <span className="hebrew text-gold/90" dir="rtl">תֹהוּ</span> = <span className="text-gold/90">411</span>
+              {" = "}ת(400) + ה(5) + ו(6).
+            </p>
+          </div>
+        </Section>
+
         {/* ── Síntesis ── */}
         <Section>
           <div className="mt-16 rounded-2xl border border-gold/20 bg-gradient-to-b from-gold/[0.06] to-transparent p-8 text-center">
