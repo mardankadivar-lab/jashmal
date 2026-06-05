@@ -383,6 +383,53 @@ export const BRIT21_EDGES: MaseiEdge[] = [
   { a: "21 Pactos", b: "Torá", kind: "solid" },
 ];
 
+// ─── Estudio: Las Madres del Mashíaj (Tamar + Rut) ─────────────────────────
+// Verificado por el Sofer. Cuatro mujeres en la genealogía real (Tamar, Rut,
+// Betsabé, Naamá) por las que pasa el linaje de David → Mashíaj; el motivo de la
+// "averá lishmah" (transgresión por el Cielo, Nazir 23b) abre la brecha (Péretz)
+// de donde brota la realeza. HUB = el nodo EXISTENTE "Linaje" (renombrado a
+// "Linaje · Madres del Mashíaj"): NO se duplica aquí; solo se le tienden aristas.
+// Aristas SÓLIDAS = fuente clásica directa; INTERPRETATIVAS = lectura meditativa.
+export const MADRES_NODES: BNode[] = [
+  { id: "Tamar",          label: "Tamar",                                  labelFa: "تامار",                          cat: "figure", level: 4, url: "/tamar" },
+  { id: "Rut",            label: "Rut (la moabita)",                       labelFa: "روت (موآبی)",                    cat: "figure", level: 3 },
+  { id: "Betsabé",        label: "Betsabé (Bat-Sheva)",                    labelFa: "بَت‌شِبَع",                       cat: "figure", level: 3 },
+  { id: "Naamá",          label: "Naamá (la amonita)",                     labelFa: "نَعَما (عَمّونی)",                cat: "figure", level: 3 },
+  { id: "Yehudá",         label: "Yehudá",                                 labelFa: "یهودا",                          cat: "figure", level: 3 },
+  { id: "Fares",          label: "Fares (Péretz · brecha)",                labelFa: "پِرِص (شکاف)",                    cat: "figure", level: 3 },
+  { id: "Averá Lishmah",  label: "Averá Lishmah (transgresión por el Cielo)", labelFa: "عَوِرا لِشماه (گناه برای آسمان)", cat: "tema",   level: 3 },
+];
+
+export const MADRES_EDGES: MaseiEdge[] = [
+  // Las cuatro madres + el motivo → el linaje (hub)
+  { a: "Tamar", b: "Linaje", kind: "solid" }, { a: "Rut", b: "Linaje", kind: "solid" },
+  { a: "Betsabé", b: "Linaje", kind: "solid" }, { a: "Naamá", b: "Linaje", kind: "solid" },
+  { a: "Averá Lishmah", b: "Linaje", kind: "interp" },
+  // Tamar (Bereshit 38): Yehudá, Péretz, la brecha, la averá lishmah
+  { a: "Tamar", b: "Yehudá", kind: "solid" }, { a: "Tamar", b: "Bereshit", kind: "solid" },
+  { a: "Tamar", b: "Fares", kind: "solid" }, { a: "Tamar", b: "Averá Lishmah", kind: "interp" },
+  { a: "Tamar", b: "Najash", kind: "interp" }, { a: "Tamar", b: "Mashíaj", kind: "interp" },
+  { a: "Tamar", b: "Maljut", kind: "interp" },
+  // Yehudá (hijo de Yaakov, padre de la realeza)
+  { a: "Yehudá", b: "Yaakov", kind: "solid" }, { a: "Yehudá", b: "Bereshit", kind: "solid" },
+  { a: "Yehudá", b: "David", kind: "interp" }, { a: "Yehudá", b: "Maljut", kind: "interp" },
+  // Fares / Péretz (la brecha → David)
+  { a: "Fares", b: "David", kind: "solid" }, { a: "Fares", b: "Mashíaj", kind: "interp" },
+  { a: "Fares", b: "Yesod", kind: "interp" },
+  // Rut (la moabita → David; redención de Boaz)
+  { a: "Rut", b: "David", kind: "solid" }, { a: "Rut", b: "Ketuvim", kind: "solid" },
+  { a: "Rut", b: "Averá Lishmah", kind: "interp" }, { a: "Rut", b: "Gueulá", kind: "interp" },
+  { a: "Rut", b: "Maljut", kind: "interp" },
+  // Betsabé (Bat-Sheva → Shlomó)
+  { a: "Betsabé", b: "David", kind: "solid" }, { a: "Betsabé", b: "Shlomó", kind: "solid" },
+  { a: "Betsabé", b: "Maljut", kind: "interp" },
+  // Naamá (la amonita, madre de Rejavam por Shlomó)
+  { a: "Naamá", b: "Shlomó", kind: "solid" }, { a: "Naamá", b: "Maljut", kind: "interp" },
+  // Averá Lishmah (Nazir 23b: "grande es la transgresión por el Cielo")
+  { a: "Averá Lishmah", b: "Talmud", kind: "solid" }, { a: "Averá Lishmah", b: "Tikún", kind: "interp" },
+  { a: "Averá Lishmah", b: "Mashíaj", kind: "interp" }, { a: "Averá Lishmah", b: "Shejiná", kind: "interp" },
+];
+
 // ─── Nodos ───────────────────────────────────────────────────────────────
 export const BNODES: BNode[] = [
   // ── Nivel 0 — corazón (Torá y Tanaj UNIFICADOS: la Torá es el núcleo del Tanaj) ──
@@ -466,7 +513,7 @@ export const BNODES: BNode[] = [
   { id: "Sanador",            label: "Sanador",            labelFa: "شفادهنده",    cat: "jashmal", level: 4, url: "/sanador",            region: "tanakh" },
   { id: "Refael",             label: "Refael",             labelFa: "رِفائل",      cat: "jashmal", level: 4, url: "/refael",             region: "kabbalah" },
   { id: "Refuá",              label: "Refuá",              labelFa: "رِفوآه",      cat: "jashmal", level: 4, url: "/refua",              region: "tanakh" },
-  { id: "Linaje",             label: "Linaje",             labelFa: "تبار",        cat: "jashmal", level: 4, url: "/linaje",             region: "kabbalah" },
+  { id: "Linaje",             label: "Linaje · Madres del Mashíaj", labelFa: "تبار · مادران ماشیح", cat: "jashmal", level: 4, url: "/linaje",             region: "kabbalah" },
   { id: "Bilaam",             label: "Bilaam",             labelFa: "بَلعام",      cat: "jashmal", level: 4, url: "/bilaam",             region: "tanakh" },
 
   // ── Estudio Mas'ei / Nombre de 42 / Ana BeKoaj (verificado por el Sofer) ──
@@ -481,6 +528,8 @@ export const BNODES: BNode[] = [
   ...STUDY3_NODES,
   // ── Estudio 21 Pactos + Ehyé (21) → Biná (verificado por el Sofer) ──
   ...BRIT21_NODES,
+  // ── Estudio Las Madres del Mashíaj (Tamar + Rut) (verificado por el Sofer) ──
+  ...MADRES_NODES,
 ];
 
 // ─── Aristas (relaciones reales, NO dirigidas). Se deduplican antes de render ─
@@ -541,6 +590,8 @@ const RAW_EDGES: [string, string][] = [
   ...STUDY3_EDGES.map((e) => [e.a, e.b] as [string, string]),
   // Estudio 21 Pactos + Ehyé (21) → Biná
   ...BRIT21_EDGES.map((e) => [e.a, e.b] as [string, string]),
+  // Estudio Las Madres del Mashíaj (Tamar + Rut)
+  ...MADRES_EDGES.map((e) => [e.a, e.b] as [string, string]),
 ];
 
 // dedup + descarta aristas a nodos inexistentes (p.ej. placeholders)
@@ -659,6 +710,9 @@ export const SEFIRA_AFFINITY: Record<string, string[]> = {
   YHVH: ["Tiféret"], Adonai: ["Maljut"], "Brit Milá": ["Yesod"], "Pacto de Noé": ["Maljut"],
   "Pacto davídico": ["Maljut"], "Nuevo Pacto": ["Biná"], "Pacto de sal": ["Guevurá"],
   "Brit Shalom": ["Guevurá", "Tiféret"], "Arcoíris": ["Maljut"],
+  // Brain — estudio Las Madres del Mashíaj (Tamar + Rut)
+  Tamar: ["Yesod", "Maljut"], Rut: ["Maljut"], "Betsabé": ["Maljut"], "Naamá": ["Maljut"],
+  "Yehudá": ["Maljut"], Fares: ["Yesod"], "Averá Lishmah": ["Daat"],
 };
 const SEFIRA_PULL = 0.25; // jalón hacia el ancla (suavizado: agrupa sin amontonar)
 

@@ -9,7 +9,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 import { getSql } from "./db";
-import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, STUDY2_NODES, STUDY2_EDGES, STUDY3_NODES, STUDY3_EDGES, BRIT21_NODES, BRIT21_EDGES, type BNode } from "./brainData";
+import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, STUDY2_NODES, STUDY2_EDGES, STUDY3_NODES, STUDY3_EDGES, BRIT21_NODES, BRIT21_EDGES, MADRES_NODES, MADRES_EDGES, type BNode } from "./brainData";
 
 export type BrainGraph = { nodes: BNode[]; edges: [string, string][] };
 
@@ -294,6 +294,42 @@ export async function addBrit21(): Promise<void> {
       `;
     }
     for (const e of BRIT21_EDGES) {
+      await sql`
+        INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
+        VALUES (${edgeKey(e.a, e.b)}, ${e.a}, ${e.b}, ${e.kind}, 1, 'approved', 'sofer')
+        ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, status = 'approved'
+      `;
+    }
+  } catch {
+    /* nunca romper la lectura del cerebro */
+  }
+}
+
+// ── Estudio: Las Madres del Mashíaj (Tamar + Rut) (verificado por el Sofer) ──
+export async function addMadres(): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  try {
+    // Renombrar el hub EXISTENTE "Linaje" → "Linaje · Madres del Mashíaj".
+    // El nodo ya fue sembrado antes con el label viejo; sólo se actualizan los
+    // dos campos de texto (su url /linaje y demás campos quedan intactos).
+    await sql`
+      UPDATE brain_nodes
+         SET label = 'Linaje · Madres del Mashíaj', label_fa = 'تبار · مادران ماشیح'
+       WHERE id = 'Linaje'
+    `;
+    for (const n of MADRES_NODES) {
+      await sql`
+        INSERT INTO brain_nodes (id, label, label_fa, cat, level, url, region, status, source)
+        VALUES (${n.id}, ${n.label}, ${n.labelFa}, ${n.cat}, ${n.level},
+                ${n.url ?? null}, ${n.region ?? null}, 'approved', 'sofer')
+        ON CONFLICT (id) DO UPDATE SET
+          label = EXCLUDED.label, label_fa = EXCLUDED.label_fa,
+          cat = EXCLUDED.cat, level = EXCLUDED.level,
+          status = 'approved', source = 'sofer'
+      `;
+    }
+    for (const e of MADRES_EDGES) {
       await sql`
         INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
         VALUES (${edgeKey(e.a, e.b)}, ${e.a}, ${e.b}, ${e.kind}, 1, 'approved', 'sofer')
