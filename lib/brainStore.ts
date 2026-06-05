@@ -533,3 +533,24 @@ export async function setEdgeStatus(id: string, status: "approved" | "rejected")
   if (!sql) return;
   await sql`UPDATE brain_edges SET status = ${status} WHERE id = ${id}`;
 }
+
+// Aprobar / rechazar TODO lo pendiente de una vez (botón "aprobar todo").
+export async function setAllPending(status: "approved" | "rejected"): Promise<{ nodes: number; edges: number }> {
+  const sql = getSql();
+  if (!sql) return { nodes: 0, edges: 0 };
+  if (status === "approved") {
+    const n = (await sql`UPDATE brain_nodes SET status = 'approved' WHERE status = 'pending' RETURNING id`) as unknown[];
+    // aprobar las aristas pendientes cuyos DOS extremos ya están aprobados
+    const e = (await sql`
+      UPDATE brain_edges SET status = 'approved'
+      WHERE status = 'pending'
+        AND source_id IN (SELECT id FROM brain_nodes WHERE status = 'approved')
+        AND target_id IN (SELECT id FROM brain_nodes WHERE status = 'approved')
+      RETURNING id
+    `) as unknown[];
+    return { nodes: n.length, edges: e.length };
+  }
+  const n = (await sql`UPDATE brain_nodes SET status = 'rejected' WHERE status = 'pending' RETURNING id`) as unknown[];
+  const e = (await sql`UPDATE brain_edges SET status = 'rejected' WHERE status = 'pending' RETURNING id`) as unknown[];
+  return { nodes: n.length, edges: e.length };
+}

@@ -15,6 +15,7 @@ export default function CerebroAdminPage() {
   const [err, setErr] = useState("");
   const [nodes, setNodes] = useState<PNode[]>([]);
   const [edges, setEdges] = useState<PEdge[]>([]);
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     const t = localStorage.getItem("jashmal_admin_token");
@@ -57,6 +58,29 @@ export default function CerebroAdminPage() {
     }
   }
 
+  // aprobar / rechazar TODO lo pendiente de una vez
+  async function actAll(action: "approve" | "reject") {
+    const msg =
+      action === "approve"
+        ? `¿Aprobar TODO? Se encenderán en el cerebro ${nodes.length} sinapsis y ${edges.length} conexiones.`
+        : `¿Rechazar TODO lo pendiente (${nodes.length + edges.length})? No se borra nada del cerebro, solo se descarta lo que está esperando.`;
+    if (!confirm(msg)) return;
+    setBusy(true);
+    try {
+      await fetch("/api/admin/brain", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-admin-token": token },
+        body: JSON.stringify({ action, all: true }),
+      });
+      setNodes([]);
+      setEdges([]);
+      await load(token);
+    } catch {
+      /* ignore */
+    }
+    setBusy(false);
+  }
+
   const total = nodes.length + edges.length;
 
   return (
@@ -88,11 +112,31 @@ export default function CerebroAdminPage() {
           </div>
         ) : (
           <>
-            <div className="mb-4 flex items-center justify-between">
-              <span className="text-sm text-[#9a958a]">{total} pendientes</span>
-              <button onClick={() => load(token)} className="text-xs text-[#c9a43e] underline">
-                recargar
-              </button>
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+              <span className="text-sm text-[#9a958a]">{busy ? "procesando…" : `${total} pendientes`}</span>
+              <div className="flex items-center gap-2">
+                {total > 0 && (
+                  <>
+                    <button
+                      onClick={() => actAll("approve")}
+                      disabled={busy}
+                      className="rounded-md border border-emerald-500/50 bg-emerald-500/10 px-3 py-1.5 font-cinzel text-xs text-emerald-300 hover:bg-emerald-500/20 disabled:opacity-50"
+                    >
+                      ✓ Aprobar todo
+                    </button>
+                    <button
+                      onClick={() => actAll("reject")}
+                      disabled={busy}
+                      className="rounded-md border border-rose-500/40 px-3 py-1.5 font-cinzel text-xs text-rose-300 hover:bg-rose-500/15 disabled:opacity-50"
+                    >
+                      ✗ Rechazar todo
+                    </button>
+                  </>
+                )}
+                <button onClick={() => load(token)} className="text-xs text-[#c9a43e] underline">
+                  recargar
+                </button>
+              </div>
             </div>
 
             {total === 0 && (
