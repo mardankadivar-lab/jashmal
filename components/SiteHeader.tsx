@@ -31,26 +31,14 @@ export default function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-gold/15 bg-ink/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3">
+      <div className="relative mx-auto flex max-w-5xl items-center justify-between px-5 py-3">
         <Link href="/" onClick={() => setOpen(false)} className="flex items-baseline gap-2">
           <span className="font-cinzel text-lg tracking-wide text-gold">{t("site.name")}</span>
           <span className="hebrew text-sm text-muted">{t("site.hebrew")}</span>
         </Link>
 
-        {/* Menú en línea (escritorio) */}
-        <nav className="hidden items-center gap-5 text-sm lg:flex">
-          {NAV.map(([href, key]) => (
-            <Link key={href} href={href} className="text-muted transition-colors hover:text-parchment">
-              {t(key)}
-            </Link>
-          ))}
-          <ReadingControls />
-          <LanguageSwitcher />
-          <ThemeToggle />
-        </nav>
-
-        {/* Controles + hamburguesa (móvil/tablet) */}
-        <div className="flex items-center gap-3 lg:hidden">
+        {/* Tema siempre visible + botón desplegable (en TODOS los tamaños: web y móvil) */}
+        <div className="flex items-center gap-3">
           <ThemeToggle />
           <button
             onClick={() => setOpen((o) => !o)}
@@ -65,37 +53,38 @@ export default function SiteHeader() {
             </span>
           </button>
         </div>
-      </div>
 
-      {/* Panel desplegable (móvil/tablet) */}
-      {open && (
-        <>
-          {/* fondo para cerrar al tocar fuera */}
-          <button
-            aria-hidden="true"
-            tabIndex={-1}
-            onClick={() => setOpen(false)}
-            className="fixed inset-0 top-[57px] z-30 cursor-default lg:hidden"
-          />
-          <nav className="relative z-40 border-t border-gold/10 bg-ink/95 backdrop-blur-md lg:hidden">
-            <div className="mx-auto flex max-w-5xl flex-col px-5 py-2">
+        {/* Menú desplegable: tarjeta flotante anclada al lado del botón */}
+        {open && (
+          <nav className="absolute end-5 top-full z-50 mt-2 w-[min(260px,calc(100vw-2.5rem))] overflow-hidden rounded-2xl border border-gold/15 bg-ink/95 shadow-2xl shadow-black/50 backdrop-blur-md">
+            <div className="flex flex-col p-2">
               {NAV.map(([href, key]) => (
                 <Link
                   key={href}
                   href={href}
                   onClick={() => setOpen(false)}
-                  className="border-b border-gold/[0.06] py-3 font-cinzel text-sm text-parchment/90 transition-colors hover:text-gold"
+                  className="rounded-lg px-3 py-2.5 font-cinzel text-sm text-parchment/90 transition-colors hover:bg-gold/10 hover:text-gold"
                 >
                   {t(key)}
                 </Link>
               ))}
-              <div className="flex items-center gap-4 py-3">
+              <div className="mt-1 flex items-center gap-4 border-t border-gold/10 px-3 pb-1 pt-3">
                 <ReadingControls />
                 <LanguageSwitcher />
               </div>
             </div>
           </nav>
-        </>
+        )}
+      </div>
+
+      {/* Fondo para cerrar al hacer clic/tocar fuera */}
+      {open && (
+        <button
+          aria-hidden="true"
+          tabIndex={-1}
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 top-[57px] z-30 cursor-default"
+        />
       )}
     </header>
   );
