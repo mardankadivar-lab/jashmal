@@ -473,7 +473,19 @@ export async function existingNodeIds(): Promise<Map<string, string>> {
 
 export type PendingNode = {
   id: string; label: string; cat: string; level: number; url: string | null; source: string | null;
+  dup?: boolean; // true si su etiqueta ya existe (aprobada) o se repite en la cosecha
 };
+
+// normaliza una etiqueta para detectar duplicados (minúsculas, sin acentos/puntuación)
+function normLabel(s: string): string {
+  return (s || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-֑ͯ-ׇ]/g, "")
+    .replace(/[^\p{L}\p{N} ]/gu, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 export type PendingEdge = {
   id: string; source_id: string; target_id: string; source_label: string | null; target_label: string | null; origin: string | null;
 };
@@ -495,6 +507,15 @@ export async function listPending(): Promise<{ nodes: PendingNode[]; edges: Pend
     WHERE e.status = 'pending'
     ORDER BY e.created_at DESC LIMIT 300
   `) as PendingEdge[];
+  // marca duplicados: etiqueta que ya existe (aprobada) o repetida en la cosecha
+  const approved = (await sql`SELECT label FROM brain_nodes WHERE status = 'approved'`) as { label: string }[];
+  const approvedSet = new Set(approved.map((a) => normLabel(a.label)));
+  const seen = new Set<string>();
+  for (const n of nodes) {
+    const key = normLabel(n.label);
+    n.dup = approvedSet.has(key) || seen.has(key);
+    seen.add(key);
+  }
   return { nodes, edges };
 }
 
@@ -562,4 +583,20 @@ export async function rejectNodeIds(ids: string[]): Promise<number> {
   if (!sql || !ids.length) return 0;
   const r = (await sql`UPDATE brain_nodes SET status = 'rejected' WHERE id = ANY(${ids}) RETURNING id`) as unknown[];
   return r.length;
+}
+
+// Aprobar una lista de nodos por id (selección múltiple del panel). Al aprobarlos,
+// también aprueba las aristas pendientes cuyos dos extremos ya están aprobados.
+export async function approveNodeIds(ids: string[]): Promise<{ nodes: number; edges: number }> {
+  const sql = getSql();
+  if (!sql || !ids.length) return { nodes: 0, edges: 0 };
+  const n = (await sql`UPDATE brain_nodes SET status = 'approved' WHERE id = ANY(${ids}) RETURNING id`) as unknown[];
+  const e = (await sql`
+    UPDATE brain_edges SET status = 'approved'
+    WHERE status = 'pending'
+      AND source_id IN (SELECT id FROM brain_nodes WHERE status = 'approved')
+      AND target_id IN (SELECT id FROM brain_nodes WHERE status = 'approved')
+    RETURNING id
+  `) as unknown[];
+  return { nodes: n.length, edges: e.length };
 }

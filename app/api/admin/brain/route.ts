@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured } from "@/lib/db";
-import { listPending, setNodeStatus, setEdgeStatus, setAllPending, rejectNodeIds } from "@/lib/brainStore";
+import { listPending, setNodeStatus, setEdgeStatus, setAllPending, rejectNodeIds, approveNodeIds } from "@/lib/brainStore";
 
 export const runtime = "nodejs";
 
@@ -38,8 +38,12 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "invalid_body" }, { status: 400 });
   }
-  // LIMPIEZA: { action:"reject", ids:[...] } → rechaza esos nodos (aunque ya estén aprobados)
-  if (body.action === "reject" && Array.isArray(body.ids) && body.ids.length) {
+  // SELECCIÓN MÚLTIPLE / LIMPIEZA: { action:"approve"|"reject", ids:[...] }
+  if (Array.isArray(body.ids) && body.ids.length && (body.action === "approve" || body.action === "reject")) {
+    if (body.action === "approve") {
+      const res = await approveNodeIds(body.ids);
+      return NextResponse.json({ ok: true, ...res });
+    }
     const n = await rejectNodeIds(body.ids);
     return NextResponse.json({ ok: true, rejected: n });
   }

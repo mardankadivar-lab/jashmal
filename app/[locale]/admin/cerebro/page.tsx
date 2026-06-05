@@ -2,10 +2,11 @@
 
 // Panel del Sofer — revisar y aprobar las sinapsis/conexiones que el cerebro
 // "aprendió" de los estudios (estado 'pending'). Protegido por ADMIN_TOKEN.
+// Filtro de duplicados + selección múltiple para curar la cosecha.
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 
-type PNode = { id: string; label: string; cat: string; level: number; url: string | null; source: string | null };
+type PNode = { id: string; label: string; cat: string; level: number; url: string | null; source: string | null; dup?: boolean };
 type PEdge = { id: string; source_id: string; target_id: string; source_label: string | null; target_label: string | null; origin: string | null };
 
 export default function CerebroAdminPage() {
@@ -16,6 +17,8 @@ export default function CerebroAdminPage() {
   const [nodes, setNodes] = useState<PNode[]>([]);
   const [edges, setEdges] = useState<PEdge[]>([]);
   const [busy, setBusy] = useState(false);
+  const [hideDups, setHideDups] = useState(true);
+  const [sel, setSel] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const t = localStorage.getItem("jashmal_admin_token");
@@ -36,6 +39,7 @@ export default function CerebroAdminPage() {
       const data = await res.json();
       setNodes(data.nodes ?? []);
       setEdges(data.edges ?? []);
+      setSel(new Set());
       setLoaded(true);
       localStorage.setItem("jashmal_admin_token", tok);
     } catch {
@@ -44,36 +48,73 @@ export default function CerebroAdminPage() {
     setLoading(false);
   }, []);
 
+  // nodos visibles (oculta los duplicados si el toggle está activo)
+  const visNodes = useMemo(() => (hideDups ? nodes.filter((n) => !n.dup) : nodes), [nodes, hideDups]);
+  const dupCount = useMemo(() => nodes.filter((n) => n.dup).length, [nodes]);
+  const allVisSelected = visNodes.length > 0 && visNodes.every((n) => sel.has(n.id));
+
+  function toggleSel(id: string) {
+    setSel((p) => {
+      const s = new Set(p);
+      if (s.has(id)) s.delete(id);
+      else s.add(id);
+      return s;
+    });
+  }
+  function selectAllVisible() {
+    setSel(allVisSelected ? new Set() : new Set(visNodes.map((n) => n.id)));
+  }
+
+  async function post(body: object) {
+    return fetch("/api/admin/brain", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-admin-token": token },
+      body: JSON.stringify(body),
+    });
+  }
+
   async function act(kind: "node" | "edge", id: string, action: "approve" | "reject") {
     try {
-      await fetch("/api/admin/brain", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-admin-token": token },
-        body: JSON.stringify({ kind, id, action }),
-      });
+      await post({ kind, id, action });
       if (kind === "node") setNodes((p) => p.filter((n) => n.id !== id));
       else setEdges((p) => p.filter((e) => e.id !== id));
+      setSel((p) => {
+        const s = new Set(p);
+        s.delete(id);
+        return s;
+      });
     } catch {
       /* ignore */
     }
   }
 
-  // aprobar / rechazar TODO lo pendiente de una vez
+  // aprobar / rechazar SOLO lo seleccionado
+  async function actSelected(action: "approve" | "reject") {
+    const ids = [...sel];
+    if (!ids.length) return;
+    setBusy(true);
+    try {
+      await post({ action, ids });
+      await load(token);
+    } catch {
+      /* ignore */
+    }
+    setBusy(false);
+  }
+
+  // aprobar / rechazar TODO lo pendiente
   async function actAll(action: "approve" | "reject") {
     const msg =
       action === "approve"
-        ? `¿Aprobar TODO? Se encenderán en el cerebro ${nodes.length} sinapsis y ${edges.length} conexiones.`
-        : `¿Rechazar TODO lo pendiente (${nodes.length + edges.length})? No se borra nada del cerebro, solo se descarta lo que está esperando.`;
+        ? `¿Aprobar TODO lo pendiente? (${nodes.length} sinapsis + ${edges.length} conexiones)`
+        : `¿Rechazar TODO lo pendiente (${nodes.length + edges.length})?`;
     if (!confirm(msg)) return;
     setBusy(true);
     try {
-      await fetch("/api/admin/brain", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-admin-token": token },
-        body: JSON.stringify({ action, all: true }),
-      });
+      await post({ action, all: true });
       setNodes([]);
       setEdges([]);
+      setSel(new Set());
       await load(token);
     } catch {
       /* ignore */
@@ -112,32 +153,52 @@ export default function CerebroAdminPage() {
           </div>
         ) : (
           <>
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-              <span className="text-sm text-[#9a958a]">{busy ? "procesando…" : `${total} pendientes`}</span>
-              <div className="flex items-center gap-2">
-                {total > 0 && (
-                  <>
-                    <button
-                      onClick={() => actAll("approve")}
-                      disabled={busy}
-                      className="rounded-md border border-emerald-500/50 bg-emerald-500/10 px-3 py-1.5 font-cinzel text-xs text-emerald-300 hover:bg-emerald-500/20 disabled:opacity-50"
-                    >
-                      ✓ Aprobar todo
-                    </button>
-                    <button
-                      onClick={() => actAll("reject")}
-                      disabled={busy}
-                      className="rounded-md border border-rose-500/40 px-3 py-1.5 font-cinzel text-xs text-rose-300 hover:bg-rose-500/15 disabled:opacity-50"
-                    >
-                      ✗ Rechazar todo
-                    </button>
-                  </>
+            {/* estado + filtro de duplicados */}
+            <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+              <span className="text-[#9a958a]">
+                {busy ? "procesando…" : `${total} pendientes`}
+                {dupCount > 0 ? <span className="text-amber-300/70"> · {dupCount} duplicados</span> : null}
+              </span>
+              <label className="flex cursor-pointer select-none items-center gap-1.5 text-xs text-[#9a958a]">
+                <input type="checkbox" checked={hideDups} onChange={(e) => setHideDups(e.target.checked)} className="accent-[#c9a43e]" />
+                ocultar duplicados
+              </label>
+              <button onClick={() => load(token)} className="ms-auto text-xs text-[#c9a43e] underline">
+                recargar
+              </button>
+            </div>
+
+            {/* acciones: selección múltiple + masivas */}
+            {total > 0 && (
+              <div className="mb-4 flex flex-wrap items-center gap-2">
+                {visNodes.length > 0 && (
+                  <button onClick={selectAllVisible} className="rounded-md border border-[#c9a43e]/30 px-2.5 py-1 text-xs text-[#c9a43e] hover:bg-[#c9a43e]/10">
+                    {allVisSelected ? "deseleccionar" : "seleccionar visibles"}
+                  </button>
                 )}
-                <button onClick={() => load(token)} className="text-xs text-[#c9a43e] underline">
-                  recargar
+                <button
+                  onClick={() => actSelected("approve")}
+                  disabled={busy || sel.size === 0}
+                  className="rounded-md border border-emerald-500/50 bg-emerald-500/10 px-3 py-1.5 font-cinzel text-xs text-emerald-300 hover:bg-emerald-500/20 disabled:opacity-40"
+                >
+                  ✓ Aprobar seleccionados ({sel.size})
+                </button>
+                <button
+                  onClick={() => actSelected("reject")}
+                  disabled={busy || sel.size === 0}
+                  className="rounded-md border border-rose-500/40 px-3 py-1.5 font-cinzel text-xs text-rose-300 hover:bg-rose-500/15 disabled:opacity-40"
+                >
+                  ✗ Rechazar seleccionados
+                </button>
+                <span className="mx-1 text-[#9a958a]/30">|</span>
+                <button onClick={() => actAll("approve")} disabled={busy} className="rounded-md border border-emerald-500/30 px-2.5 py-1 text-xs text-emerald-300/80 hover:bg-emerald-500/10 disabled:opacity-40">
+                  Aprobar todo
+                </button>
+                <button onClick={() => actAll("reject")} disabled={busy} className="rounded-md border border-rose-500/30 px-2.5 py-1 text-xs text-rose-300/80 hover:bg-rose-500/10 disabled:opacity-40">
+                  Rechazar todo
                 </button>
               </div>
-            </div>
+            )}
 
             {total === 0 && (
               <p className="rounded-lg border border-[#c9a43e]/15 bg-black/30 p-6 text-center text-[#9a958a]">
@@ -145,16 +206,26 @@ export default function CerebroAdminPage() {
               </p>
             )}
 
-            {nodes.length > 0 && (
+            {visNodes.length > 0 && (
               <section className="mb-6">
                 <h2 className="mb-2 font-cinzel text-sm uppercase tracking-widest text-[#c9a43e]/60">
-                  Sinapsis nuevas ({nodes.length})
+                  Sinapsis nuevas ({visNodes.length})
                 </h2>
                 <ul className="space-y-2">
-                  {nodes.map((n) => (
-                    <li key={n.id} className="flex items-center justify-between rounded-lg border border-white/10 bg-black/30 px-3 py-2">
-                      <div className="min-w-0">
+                  {visNodes.map((n) => (
+                    <li
+                      key={n.id}
+                      className={`flex items-center gap-2.5 rounded-lg border px-3 py-2 ${sel.has(n.id) ? "border-[#c9a43e]/50 bg-[#c9a43e]/[0.06]" : "border-white/10 bg-black/30"}`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={sel.has(n.id)}
+                        onChange={() => toggleSel(n.id)}
+                        className="size-4 shrink-0 cursor-pointer accent-[#c9a43e]"
+                      />
+                      <div className="min-w-0 flex-1">
                         <span className="text-base text-[#e8e4d8]">{n.label}</span>
+                        {n.dup && <span className="ml-2 rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] text-amber-300/80">duplicado</span>}
                         <span className="ml-2 text-xs text-[#9a958a]">· {n.cat} · nivel {n.level}{n.source ? ` · ${n.source}` : ""}</span>
                       </div>
                       <div className="flex shrink-0 gap-1.5">
