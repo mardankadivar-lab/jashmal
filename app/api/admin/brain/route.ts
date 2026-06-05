@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured } from "@/lib/db";
-import { listPending, setNodeStatus, setEdgeStatus, setAllPending } from "@/lib/brainStore";
+import { listPending, setNodeStatus, setEdgeStatus, setAllPending, rejectNodeIds } from "@/lib/brainStore";
 
 export const runtime = "nodejs";
 
@@ -32,11 +32,16 @@ export async function POST(req: Request) {
   if (!dbConfigured()) {
     return NextResponse.json({ error: "no_db" }, { status: 503 });
   }
-  let body: { action?: string; kind?: string; id?: string; all?: boolean };
+  let body: { action?: string; kind?: string; id?: string; all?: boolean; ids?: string[] };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "invalid_body" }, { status: 400 });
+  }
+  // LIMPIEZA: { action:"reject", ids:[...] } → rechaza esos nodos (aunque ya estén aprobados)
+  if (body.action === "reject" && Array.isArray(body.ids) && body.ids.length) {
+    const n = await rejectNodeIds(body.ids);
+    return NextResponse.json({ ok: true, rejected: n });
   }
   // BULK: { action:"approve"|"reject", all:true } → aprueba/rechaza todo lo pendiente
   if (body.all === true && (body.action === "approve" || body.action === "reject")) {

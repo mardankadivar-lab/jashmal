@@ -554,3 +554,12 @@ export async function setAllPending(status: "approved" | "rejected"): Promise<{ 
   const e = (await sql`UPDATE brain_edges SET status = 'rejected' WHERE status = 'pending' RETURNING id`) as unknown[];
   return { nodes: n.length, edges: e.length };
 }
+
+// Rechazar (quitar del cerebro) una lista de nodos por id — para limpiar lo feo
+// o duplicado que se haya aprobado por error. Funciona aunque ya estén 'approved'.
+export async function rejectNodeIds(ids: string[]): Promise<number> {
+  const sql = getSql();
+  if (!sql || !ids.length) return 0;
+  const r = (await sql`UPDATE brain_nodes SET status = 'rejected' WHERE id = ANY(${ids}) RETURNING id`) as unknown[];
+  return r.length;
+}
