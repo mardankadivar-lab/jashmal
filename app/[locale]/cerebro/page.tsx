@@ -776,7 +776,7 @@ export default function GrafoPage() {
     expanding: isFa ? "در حال پژوهش…" : "Investigando…",
     search: isFa ? "جستجوی هر مفهوم…" : "Busca cualquier concepto…",
     // Inscripción positiva (Sofer): la luz del estudio que crece — Proverbios 4:18
-    mensaje: isFa ? "نوری که می‌آموزی، رو به فزونی است." : "La luz que estudias no se apaga: crece.",
+    mensaje: isFa ? "راهِ عادلان چون نورِ سپیده‌دم است، که پیوسته فزونی می‌یابد." : "La luz del justo es como la luz de aurora, que va de aumento a aumento.",
     mensajeHe: "וְאֹרַח צַדִּיקִים כְּאוֹר נֹגַהּ, הוֹלֵךְ וָאוֹר",
     mensajeRef: isFa ? "امثال ۴:۱۸" : "Proverbios 4:18",
   };
