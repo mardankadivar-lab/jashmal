@@ -708,6 +708,19 @@ export default function GrafoPage() {
 
   const selNode = selected ? graph.nodes.find((n) => n.id === selected) ?? null : null;
 
+  // huella de conexiones del nodo seleccionado: total + desglose por dominio
+  const selConnections = useMemo(() => {
+    if (!selected) return null;
+    const nbrs = neighborsIn(graph.edges, selected);
+    const nodeMap = new Map(graph.nodes.map((n) => [n.id, n]));
+    const byCat: Record<string, number> = {};
+    for (const id of nbrs) {
+      const c = nodeMap.get(id)?.cat;
+      if (c) byCat[c] = (byCat[c] ?? 0) + 1;
+    }
+    return { total: nbrs.size, byCat };
+  }, [selected, graph.edges, graph.nodes]);
+
   const T = {
     title: "חַשְׁמַל",
     subtitle: isFa ? "مغزِ زندهٔ خَשمَل" : "El cerebro vivo de Jashmal",
@@ -945,6 +958,27 @@ export default function GrafoPage() {
             </button>
           </div>
           <p className="mt-0.5 text-[10px] uppercase tracking-wide text-muted/50">{BRAIN_CATS[selNode.cat]?.label}</p>
+
+          {selConnections && selConnections.total > 0 && (
+            <div className="mt-2.5 border-t border-gold/10 pt-2.5">
+              <p className="mb-1 text-[11px] text-parchment/80">
+                <span className="font-cinzel text-sm text-gold">{selConnections.total}</span>{" "}
+                {isFa ? "اتصال" : selConnections.total === 1 ? "conexión" : "conexiones"}
+              </p>
+              <div className="flex flex-wrap gap-x-2.5 gap-y-1">
+                {Object.entries(selConnections.byCat)
+                  .sort((a, b) => b[1] - a[1])
+                  .map(([cat, n]) => (
+                    <span key={cat} className="flex items-center gap-1 text-[10px] text-muted/85">
+                      <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: BRAIN_CATS[cat]?.c ?? "#c9a43e" }} />
+                      {(isFa ? BRAIN_CATS[cat]?.labelFa : BRAIN_CATS[cat]?.label) ?? cat}:{" "}
+                      <span className="text-parchment/90">{n}</span>
+                    </span>
+                  ))}
+              </div>
+            </div>
+          )}
+
           <button
             onClick={expandNode}
             disabled={expanding}
