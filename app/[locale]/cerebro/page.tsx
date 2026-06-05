@@ -775,6 +775,10 @@ export default function GrafoPage() {
     expand: isFa ? "✦ گسترش" : "✦ Expandir",
     expanding: isFa ? "در حال پژوهش…" : "Investigando…",
     search: isFa ? "جستجوی هر مفهوم…" : "Busca cualquier concepto…",
+    // Inscripción positiva (Sofer): la luz del estudio que crece — Proverbios 4:18
+    mensaje: isFa ? "نوری که می‌آموزی، رو به فزونی است." : "La luz que estudias no se apaga: crece.",
+    mensajeHe: "וְאֹרַח צַדִּיקִים כְּאוֹר נֹגַהּ, הוֹלֵךְ וָאוֹר",
+    mensajeRef: isFa ? "امثال ۴:۱۸" : "Proverbios 4:18",
   };
 
   // Buscador global: sugerencias por nombre (es/fa). Seleccionar = volar + encender.
@@ -979,9 +983,13 @@ export default function GrafoPage() {
         </div>
       </div>
 
-      {/* Hint */}
-      <div className="pointer-events-none absolute bottom-4 left-1/2 z-10 -translate-x-1/2">
-        <p className="font-cinzel text-[9px] uppercase tracking-[0.25em] text-gold/25">{T.hint}</p>
+      {/* Inscripción (la luz que crece) + controles */}
+      <div className="pointer-events-none absolute bottom-4 left-1/2 z-10 flex w-[min(440px,74vw)] -translate-x-1/2 flex-col items-center gap-0.5 text-center">
+        <p className="font-cinzel text-xs italic tracking-wide text-gold/65 sm:text-sm">{T.mensaje}</p>
+        <p className="hebrew text-[11px] leading-tight text-gold/35">
+          {T.mensajeHe} <span className="text-muted/35">· {T.mensajeRef}</span>
+        </p>
+        <p className="mt-1.5 hidden font-cinzel text-[9px] uppercase tracking-[0.25em] text-gold/25 sm:block">{T.hint}</p>
       </div>
 
       {/* Tarjeta del nodo seleccionado */}
