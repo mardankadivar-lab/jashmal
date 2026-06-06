@@ -41,6 +41,7 @@ export const BRAIN_CATS: Record<string, { c: string; label: string; labelFa: str
   figure:     { c: "#e0795c", label: "Personajes", labelFa: "شخصیت‌ها" }, // personajes bíblicos (terracota)
   tema:       { c: "#c98bd6", label: "Temas",     labelFa: "موضوعات" },   // dominios temáticos (lavanda)
   jashmal:    { c: "#f4cf5a", label: "Jashmal",   labelFa: "خَשمَل" },  // contenido propio (oro)
+  comunidad:  { c: "#e08aa8", label: "Comunidad", labelFa: "جامعه" },   // jidushim de estudiantes (rosa)
 };
 
 // ─── Estudio: 42 estaciones (Mas'ei) · Nombre de 42 · Ana BeKoaj ──────────
@@ -885,6 +886,7 @@ const GALAXY_DIR: Record<string, [number, number, number]> = {
   philosophy: [0.38, -0.62, 0.70],
   science:    [-0.34, -0.70, -0.58],
   jashmal:    [0.52, -0.28, 0.82],
+  comunidad:  [-0.16, -0.52, 0.86],  // galaxia de la Comunidad (junto a Jashmal), nace latente
 };
 export const GALAXY_CATS = Object.keys(GALAXY_DIR).filter((c) => c !== "torah");
 const GALAXY_SPREAD = 6.4 * BRAIN_SCALE;   // separación entre galaxias (bien apartadas)
