@@ -22,7 +22,9 @@
     "tagline": "La voz del silencio",
     "description": "Una herramienta viva para el estudio de la Torá, el Talmud, el Midrash, la Cabalá y la Jasidut. Eliges un texto; el análisis desciende por los cuatro mundos del PaRDeS.",
     "etymology": "Del jashmal de Yejezkel 1:4 — jash (silencio) y mal (habla).",
-    "cta": "Comenzar a estudiar"
+    "cta": "Comenzar a estudiar",
+    "guided": "Nunca he estudiado esto. Llévame de la mano",
+    "guidedHint": "Empieza por El Umbral — una primera lección que no exige nada previo."
   },
   "study": {
     "title": "Motor de estudio",

@@ -22,7 +22,9 @@
     "tagline": "The voice of silence",
     "description": "A living tool for the study of the Torah, Talmud, Midrash, Kabbalah and Chasidut. You choose a text; the analysis descends through the four worlds of PaRDeS.",
     "etymology": "From the chashmal of Ezekiel 1:4 — chash (silence) and mal (speech).",
-    "cta": "Begin to study"
+    "cta": "Begin to study",
+    "guided": "I've never studied this. Take me by the hand",
+    "guidedHint": "Start with The Threshold — a first lesson that asks for nothing beforehand."
   },
   "study": {
     "title": "Study engine",

@@ -46,6 +46,18 @@ export default function HomePage() {
             >
               {t("hero.cta")}
             </Link>
+            {/* Puerta cálida para quien nunca ha estudiado: lo lleva a la Academia
+                (El Umbral). Va debajo del botón de estudio, con tono de invitación. */}
+            <div className="animate-fade-up mt-5">
+              <Link
+                href="/academia"
+                className="group inline-flex items-center gap-2 rounded-full bg-gold/10 px-7 py-3 font-cinzel text-sm tracking-wide text-gold-soft ring-1 ring-gold/30 transition-all hover:bg-gold/20 hover:text-gold hover:ring-gold/60"
+              >
+                <span aria-hidden="true" className="text-gold/70 transition group-hover:text-gold">✦</span>
+                {t("hero.guided")}
+              </Link>
+              <p className="mt-3 text-xs text-muted">{t("hero.guidedHint")}</p>
+            </div>
             <div className="animate-fade-up mt-12 border-t border-gold/15 pt-8">
               <MotivationBanner />
             </div>
