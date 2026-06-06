@@ -15,6 +15,7 @@ const NAV: [string, string][] = [
   ["/creacion", "nav.creation"],
   ["/arbol", "nav.tree"],
   ["/universo", "nav.brain"],
+  ["/comunidad", "nav.community"],
   ["/atlas", "nav.atlas"],
   ["/acerca", "nav.about"],
 ];
