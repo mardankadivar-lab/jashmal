@@ -9,7 +9,7 @@
 // y vecinos (sin cambiar el color de categoría); el resto baja de opacidad.
 // ─────────────────────────────────────────────────────────────────────────
 
-import { useMemo, useRef, useState, useEffect, Suspense } from "react";
+import { useMemo, useRef, useState, useEffect, useCallback, Suspense } from "react";
 import dynamic from "next/dynamic";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Html, OrbitControls } from "@react-three/drei";
@@ -35,7 +35,8 @@ import {
   TREE_PATHS,
   type BNode,
 } from "@/lib/brainData";
-import { gilgulChainForRoot, traverseGilgul, getGilgulModel } from "@/lib/gilgul";
+import { gilgulChainForRoot, traverseGilgul, getGilgulModel, GILGUL_ERAS } from "@/lib/gilgul";
+import type { GilgulMode } from "./GilgulLayer";
 
 type Graph = { nodes: BNode[]; edges: [string, string][] };
 
@@ -943,6 +944,8 @@ function BrainScene({
   activeCat,
   travel,
   gilgulRoot,
+  gilgulMode,
+  onEra,
   onFlewTo,
   onSelect,
   onHover,
@@ -961,6 +964,8 @@ function BrainScene({
   activeCat: string | null;
   travel: Travel | null;
   gilgulRoot: string | null;
+  gilgulMode: GilgulMode;
+  onEra: (era: string) => void;
   onFlewTo: () => void;
   onSelect: (id: string, additive: boolean) => void;
   onHover: (id: string | null) => void;
@@ -1183,6 +1188,8 @@ function BrainScene({
           nodeMap={nodeMap}
           lang={isFa ? "fa" : locale === "en" ? "en" : "es"}
           controlsRef={controlsRef}
+          mode={gilgulMode}
+          onEra={onEra}
         />
 
         {nodes.map((n) => {
@@ -1227,6 +1234,8 @@ export default function GrafoPage() {
   const [activeCat, setActiveCat] = useState<string | null>(null); // dominio resaltado (leyenda)
   const [travel, setTravel] = useState<Travel | null>(null); // viaje fibra óptica en curso (clic en arista)
   const [gilgulRoot, setGilgulRoot] = useState<string | null>(null); // modo Gilgul: raíz de alma invocada
+  const [gilgulMode, setGilgulMode] = useState<GilgulMode>("journey"); // Fase 2: "journey" (viaje) | "tree" (árbol completo)
+  const [currentEra, setCurrentEra] = useState<string | null>(null); // Fase 2: era que la chispa acaba de alcanzar (línea de tiempo)
 
   useEffect(() => {
     let alive = true;
@@ -1245,6 +1254,37 @@ export default function GrafoPage() {
 
   const selNode = selected ? graph.nodes.find((n) => n.id === selected) ?? null : null;
   const hovNode = hovered ? graph.nodes.find((n) => n.id === hovered) ?? null : null;
+
+  // ── Fase 2 (línea de tiempo): orden de las eras y avance de la chispa ──
+  // GILGUL_ERAS da el orden histórico. La chispa reporta su `era` al llegar a
+  // cada vasija; la barra avanza SOLO hacia adelante (coherente con el flujo
+  // lineal del proyecto: el linaje progresa por las generaciones, no retrocede).
+  const eraOrder = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const e of GILGUL_ERAS) m.set(e.id, e.order);
+    return m;
+  }, []);
+  const onEra = useCallback((era: string) => {
+    setCurrentEra((prev) => {
+      if (!prev) return era;
+      const a = eraOrder.get(prev) ?? -1;
+      const b = eraOrder.get(era) ?? -1;
+      return b > a ? era : prev; // solo avanza
+    });
+  }, [eraOrder]);
+  // al cambiar de raíz o de modo, reinicia la línea de tiempo
+  useEffect(() => { setCurrentEra(null); }, [gilgulRoot, gilgulMode]);
+  // al salir del modo Gilgul, vuelve a "journey" para la próxima invocación
+  useEffect(() => { if (!gilgulRoot) setGilgulMode("journey"); }, [gilgulRoot]);
+
+  // eras que TOCA esta raíz (para dibujar solo los tramos relevantes de la barra)
+  const gilgulEras = useMemo(() => {
+    if (!gilgulRoot) return [] as typeof GILGUL_ERAS;
+    const reachLinks = traverseGilgul(gilgulRoot).order;
+    const present = new Set<string>();
+    for (const l of reachLinks) if (l.era) present.add(l.era);
+    return GILGUL_ERAS.filter((e) => present.has(e.id));
+  }, [gilgulRoot]);
 
   // ── Info del modo GILGUL para la tarjeta (raíz, cadena, nº de vasijas) ──
   const gilgulInfo = useMemo(() => {
@@ -1390,6 +1430,8 @@ export default function GrafoPage() {
   const enterGilgul = (rootId: string) => {
     setSuggestOpen(false);
     setSelected(null); setCompare([]); setActiveCat(null); setTravel(null); setFlyToId(null);
+    setGilgulMode("journey");  // cada invocación arranca en el VIAJE (no hereda "árbol")
+    setCurrentEra(null);       // y con la línea de tiempo en cero
     setGilgulRoot(rootId);
     const lbl = graph.nodes.find((n) => n.id === rootId)?.label ?? rootId;
     setSearchQ(`${lbl} + Gilgul`); // texto canónico fijo
@@ -1574,6 +1616,8 @@ export default function GrafoPage() {
             activeCat={activeCat}
             travel={travel}
             gilgulRoot={gilgulRoot}
+            gilgulMode={gilgulMode}
+            onEra={onEra}
             onFlewTo={() => setFlyToId(null)}
             onSelect={handleSelect}
             onHover={(id) => { if (!travel) setHovered(id); }}
@@ -1921,6 +1965,21 @@ export default function GrafoPage() {
             ))}
           </div>
 
+          {/* Fase 2 — alternar entre VIAJE lineal y ÁRBOL de almas completo */}
+          <button
+            onClick={() => setGilgulMode((m) => (m === "tree" ? "journey" : "tree"))}
+            className="mt-3 w-full rounded-md border px-3 py-1.5 text-[11px] font-cinzel uppercase tracking-[0.14em] transition-colors"
+            style={{
+              borderColor: gilgulMode === "tree" ? "rgba(255,214,107,0.6)" : "rgba(255,214,107,0.3)",
+              background: gilgulMode === "tree" ? "rgba(255,214,107,0.14)" : "rgba(255,214,107,0.05)",
+              color: "#ffe9a8",
+            }}
+          >
+            {gilgulMode === "tree"
+              ? (isFa ? "↩ بازگشت به سفر" : locale === "en" ? "↩ Back to the journey" : "↩ Volver al viaje")
+              : (isFa ? "✸ نمایش کاملِ درختِ ارواح" : locale === "en" ? "✸ Show full soul-tree" : "✸ Mostrar árbol de almas completo")}
+          </button>
+
           {gilgulInfo.provisional && (
             <p className="mt-2.5 rounded-md border border-amber-300/20 bg-amber-300/[0.06] px-2 py-1.5 text-[10px] italic leading-snug text-amber-200/80">
               {isFa
@@ -1930,6 +1989,56 @@ export default function GrafoPage() {
                   : "Cadena de muestra (provisional) — se reemplazará por el dataset verificado del Sofer."}
             </p>
           )}
+        </div>
+      )}
+
+      {/* ── Fase 2 — LÍNEA DE TIEMPO histórica (avanza con la chispa) ──
+          Debajo de la galaxia, centrada. Marca la era que el linaje va
+          alcanzando (Génesis → Éxodo → Jueces → … → Talmud). Solo en modo
+          VIAJE (en árbol no hay una chispa que la haga avanzar). RTL para fa. */}
+      {gilgulInfo && gilgulMode === "journey" && gilgulEras.length > 1 && (
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex justify-center px-4"
+          dir={isFa ? "rtl" : "ltr"}
+        >
+          <div
+            className="pointer-events-auto flex max-w-[min(680px,92vw)] items-center gap-1.5 overflow-x-auto rounded-full border bg-ink/85 px-4 py-2 backdrop-blur-md"
+            style={{ borderColor: "rgba(255,214,107,0.28)", boxShadow: "0 0 22px rgba(255,214,107,0.1)" }}
+          >
+            {gilgulEras.map((e, i) => {
+              const cur = eraOrder.get(currentEra ?? "") ?? -1;
+              const reached = currentEra != null && (eraOrder.get(e.id) ?? 99) <= cur;
+              const isNow = currentEra === e.id;
+              const lbl = isFa ? e.labelFa : locale === "en" ? e.labelEn : e.label;
+              return (
+                <div key={e.id} className="flex shrink-0 items-center gap-1.5">
+                  {i > 0 && (
+                    <span
+                      className="h-px w-4 transition-colors duration-700 sm:w-6"
+                      style={{ background: reached ? "#ffd66b" : "rgba(255,214,107,0.18)" }}
+                    />
+                  )}
+                  <span className="flex items-center gap-1.5">
+                    <span
+                      className="inline-block rounded-full transition-all duration-500"
+                      style={{
+                        width: isNow ? 9 : 6,
+                        height: isNow ? 9 : 6,
+                        background: reached ? "#ffd66b" : "rgba(255,214,107,0.25)",
+                        boxShadow: isNow ? "0 0 10px #ffd66b, 0 0 4px #fff" : reached ? "0 0 6px rgba(255,214,107,0.6)" : "none",
+                      }}
+                    />
+                    <span
+                      className="whitespace-nowrap font-cinzel text-[10px] tracking-wide transition-colors duration-500"
+                      style={{ color: isNow ? "#fff7e6" : reached ? "#ffe9a8" : "rgba(201,194,173,0.5)" }}
+                    >
+                      {lbl}
+                    </span>
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>

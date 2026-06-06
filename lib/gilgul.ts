@@ -40,8 +40,11 @@ export type GilgulLink = {
   // Visualmente ya emerge de que varios links comparten `from`; este flag lo
   // documenta para tooltips/Fase 2 (coreografía de bifurcación).
   multichispa?: boolean;
-  // dato opcional para el tooltip de gematría (solo cuando confidence === "gematria")
-  gematria?: { aName: string; aValue: number; bName: string; bValue: number; shared?: number };
+  // dato opcional para el tooltip de gematría (solo cuando confidence === "gematria").
+  // `shared` = raíz común (igualdad/anagrama). `rule` = regla de transformación de
+  // letras (ej. at-bash) cuando NO hay igualdad numérica — el tooltip muestra la
+  // regla en vez de un empate falso (caso Yoav→Yoash: יואב=19 ≠ יואש=317, at-bash).
+  gematria?: { aName: string; aValue: number; bName: string; bValue: number; shared?: number; rule?: string };
   note?: string;         // glosa breve (es) para el tooltip / la tarjeta
   noteFa?: string;       // glosa breve (fa)
 };
@@ -106,19 +109,11 @@ const ABEL_LINKS: GilgulLink[] = [
     note: "Nóaj (נח) = Jen (חן) = 58; la raíz del jésed llega a Moshé.",
     noteFa: "نوح (נח) = حِن (חן) = ۵۸؛ ریشهٔ خِسِد به موشه می‌رسد.",
   },
-  {
-    from: "Moshé", to: "Egipcio Ex2", source: "Sha'ar HaGilgulim, Hakdamá 32:18",
-    confidence: "traditional", era: "shemot",
-    note: "Hevel/Moshé mata al egipcio con el Nombre de 42 (rectificación).",
-    noteFa: "هابیل/موشه مرد مصری را با نامِ ۴۲ می‌کُشد (اصلاح).",
-  },
-  // Multi-chispa: el LADO MALO de Hevel se astilla hacia Naval (vía Bilaam).
-  {
-    from: "Abel", to: "Naval", source: "Sha'ar HaGilgulim, Hakdamá 29:7-8",
-    confidence: "traditional", era: "shoftim",
-    note: "El lado no rectificado de Hevel (נבל ⊃ בל) desciende en Naval.",
-    noteFa: "سویِ اصلاح‌نشدهٔ هابیل (נבל ⊃ בל) در ناوال فرود می‌آید.",
-  },
+  // (Auditoría Sofer 2026-06-06: ELIMINADOS de la raíz de Abel dos links erróneos —
+  //  Moshé→Egipcio Ex2 [el egipcio es el LADO MALO de CAÍN, no gilgul de Moshé:
+  //  ShG 32:18, 36:100; la relación correcta Caín→Egipcio ya existe] y Abel→Naval
+  //  [Naval es de la raíz oscura de Laván, נבל=לבן=82: ShG 36:76,103]. Ver
+  //  SOFER_DARK_LINKS para el linaje correcto Laván→Bilaam→Naval.)
 ];
 
 // Raíz de CAÍN (Kayin) — lado de la guevurá. Se divide en MUCHAS vasijas.
@@ -330,6 +325,50 @@ const SOFER_DARK_LINKS: GilgulLink[] = [
     note: "Bilaam (ב) → Naval HaKarmelí (נ). נָבָל (82) = לָבָן (82), anagrama (נבל ↔ לבן).", noteFa: "بَلعام (ب) ← ناوال کَرمِلی (ن). نָבָל (۸۲) = لָבָן (۸۲)، واروبافت (נבל ↔ לבן)." },
 ];
 
+// ── CADENA 6 — Yaakov → Yirmiahu → Daniel → … → el Ran (36:52) — NUEVA ──
+// Lista directa del Arí: "שרש יעקב אבינו ע"ה, יעקב, ירמיהו הנביא, דניאל, אנטיגנוס
+// איש סוכו, ר"א בן דהבאי, רב פפא, הר"ן מפרש על הרי"ף". (+2 gotas en las dos Avigail
+// quedan como NOTA, no como eslabón, para no cruzar el linaje con la raíz oscura.)
+const SOFER_YAAKOV_LINKS: GilgulLink[] = [
+  { from: "Yaakov", to: "Yirmiahu", source: "Sha'ar HaGilgulim, Hakdamá 36:52", confidence: "direct", era: "shemot",
+    note: "La raíz de Yaakov Avinu desciende en Yirmiahu HaNaví.", noteFa: "ریشهٔ یعقوب آوینو در یِرمیاهوِ نبی فرود می‌آید." },
+  { from: "Yirmiahu", to: "Daniel", source: "Sha'ar HaGilgulim, Hakdamá 36:52", confidence: "direct", era: "neviim",
+    note: "→ Daniel.", noteFa: "← دانیال." },
+  { from: "Daniel", to: "Antígonos", source: "Sha'ar HaGilgulim, Hakdamá 36:52", confidence: "direct", era: "talmud",
+    note: "→ Antígonos Ish Sojo (de los Anshei Knéset HaGuedolá).", noteFa: "← اَنتیگونوس ایش سوخو (از مردانِ کِنِسِت بزرگ)." },
+  { from: "Antígonos", to: "R. Eleazar ben Dahavai", source: "Sha'ar HaGilgulim, Hakdamá 36:52", confidence: "direct", era: "talmud",
+    note: "→ Rabí Eleazar ben Dahavai.", noteFa: "← ربی اِلعازار بن دَهَوای." },
+  { from: "R. Eleazar ben Dahavai", to: "Rav Papa", source: "Sha'ar HaGilgulim, Hakdamá 36:52", confidence: "direct", era: "talmud",
+    note: "→ Rav Papa (Amorá).", noteFa: "← رَو پاپا (آمورا)." },
+  { from: "Rav Papa", to: "Ran", source: "Sha'ar HaGilgulim, Hakdamá 36:52", confidence: "direct", era: "talmud",
+    note: "→ el Ran (R. Nissim), comentarista del Rif. Cierra la raíz de Yaakov.", noteFa: "← هَران (ربی نیسیم)، شارحِ ریف. ریشهٔ یعقوب را می‌بندد." },
+];
+
+// ── CADENA 7 — Eliezer → Kalev → Benaiahu → Zejariá ben Yehoiada (36:53) — NUEVA ──
+// Lista directa del Arí: "שרש אליעזר עבד אברהם, אליעזר, כלב בן יפונה, בניהו בן
+// יהוידע, זכריהו בן יהוידע". Gematrías ✅: כָּלֵב(52)=בֵּן(52) (36:94);
+// יְפֻנֶּה(151)=אֶהְיֶ"ה דההי"ן/קנ"א (36:96).
+const SOFER_ELIEZER_LINKS: GilgulLink[] = [
+  { from: "Eliezer", to: "Kalev", source: "Sha'ar HaGilgulim, Hakdamá 36:53 / 36:94", confidence: "gematria", era: "shemot",
+    gematria: { aName: "כלב", aValue: 52, bName: "בן", bValue: 52, shared: 52 },
+    note: "Eliezer (siervo de Avraham) → Kalev ben Yefuné. כָּלֵב (52) = בֵּן (52).", noteFa: "اِلیعِزِر (خادم ابراهیم) ← کالِب بن یِفونه. کالِب (۵۲) = بِن (۵۲)." },
+  { from: "Kalev", to: "Benaiahu", source: "Sha'ar HaGilgulim, Hakdamá 36:53", confidence: "direct", era: "shoftim",
+    note: "→ Benaiahu ben Yehoiada (el guerrero de David).", noteFa: "← بِنایاهو بن یِهویاداع (دلاورِ داوود)." },
+  { from: "Benaiahu", to: "Zejariá ben Yehoiada", source: "Sha'ar HaGilgulim, Hakdamá 36:53", confidence: "direct", era: "neviim",
+    note: "→ Zejariá ben Yehoiada (el kohén; ≠ el profeta Zejariá).", noteFa: "← زِخَریا بن یِهویاداع (کوهِن؛ ≠ زِخَریای نبی)." },
+];
+
+// ── CADENA 8 — Yoav → Yoash (36:59, at-bash) — NUEVA ──
+// Lista directa del Arí: "שרש אחר, יואב בן צרויה, יואש המלך". El vínculo es por
+// AT-BASH (ב↔ש): "ויואב נתגלגל ביואש המלך, בחלוף בי"ת בשי"ן בא"ת ב"ש" (36:96,78).
+// NO es igualdad numérica (יואב=19, יואש=317): es la regla at-bash. El tooltip
+// muestra la REGLA (rule), no un empate de valores.
+const SOFER_YOAV_LINKS: GilgulLink[] = [
+  { from: "Yoav", to: "Yoash", source: "Sha'ar HaGilgulim, Hakdamá 36:59 / 96 / 78", confidence: "gematria", era: "shoftim",
+    gematria: { aName: "יואב", aValue: 19, bName: "יואש", bValue: 317, rule: "at-bash (ב↔ש)" },
+    note: "Yoav ben Tzeruiá → Yoash HaMélej, por at-bash (la ב de יואב ↔ la ש de יואש).", noteFa: "یوآو بن تصِرویا ← یوآش پادشاه، با اَت‌بَش (بِتِ یوآو ↔ شینِ یوآش)." },
+];
+
 // ── CASO ESPECIAL — Adam → David → Mashíaj  ⚠️ TRADICIÓN (NO Sha'ar HaGilgulim) ──
 // CRÍTICO para la credibilidad: esta cadena NO está en el Sha'ar HaGilgulim. En el
 // Arizal, David pertenece a la raíz de CAÍN (vía Yishai, ✅ 33:5). El secreto אד"ם
@@ -351,6 +390,9 @@ export const SOFER_GILGUL_LINKS: GilgulLink[] = [
   ...SOFER_HEVEL_LINKS,
   ...SOFER_ZIHARA_LINKS,
   ...SOFER_HARAN_LINKS,
+  ...SOFER_YAAKOV_LINKS,
+  ...SOFER_ELIEZER_LINKS,
+  ...SOFER_YOAV_LINKS,
   ...SOFER_DARK_LINKS,
   ...SOFER_TRADITION_LINKS,
 ];
@@ -388,6 +430,21 @@ export const GILGUL_CHAINS: GilgulChain[] = [
     id: "haran", root: "Harán",
     label: "Harán → Aharón (sacerdocio)", labelFa: "هاران ← اَهارون (کهانت)", labelEn: "Charan → Aharon (priesthood)",
     source: "Sha'ar HaGilgulim, Hakdamá 33:10-13", links: SOFER_HARAN_LINKS,
+  },
+  {
+    id: "yaakov", root: "Yaakov",
+    label: "Yaakov → Yirmiahu → … → el Ran", labelFa: "یعقوب ← یِرمیاهو ← … ← هَران", labelEn: "Yaakov → Yirmiahu → … → the Ran",
+    source: "Sha'ar HaGilgulim, Hakdamá 36:52", links: SOFER_YAAKOV_LINKS,
+  },
+  {
+    id: "eliezer", root: "Eliezer",
+    label: "Eliezer → Kalev → Benaiahu → Zejariá", labelFa: "اِلیعِزِر ← کالِب ← بِنایاهو ← زِخَریا", labelEn: "Eliezer → Kalev → Benaiahu → Zechariah",
+    source: "Sha'ar HaGilgulim, Hakdamá 36:53", links: SOFER_ELIEZER_LINKS,
+  },
+  {
+    id: "yoav", root: "Yoav",
+    label: "Yoav → Yoash (at-bash)", labelFa: "یوآو ← یوآش (اَت‌بَش)", labelEn: "Yoav → Yoash (at-bash)",
+    source: "Sha'ar HaGilgulim, Hakdamá 36:59", links: SOFER_YOAV_LINKS,
   },
   {
     id: "lavan", root: "Laván",
@@ -488,6 +545,49 @@ export function traverseGilgul(rootId: string, model = getGilgulModel()): Gilgul
     if (d > 24) break; // guarda anti-ciclos
   }
   return { root: rootId, order, reachable, depth };
+}
+
+// ── Ramas raíz→hoja (coreógrafo de la multi-chispa, Fase 2) ─────────────────
+// Descompone el linaje en CAMINOS desde la raíz hasta cada "hoja" (vasija sin
+// salida nueva). Las ramas que comparten prefijo arrancan juntas y se BIFURCAN
+// físicamente en el primer link donde divergen. Cada rama es una secuencia de
+// links contiguos (l[i].to === l[i+1].from), lista para una chispa propia.
+//
+// Construcción: DFS desde la raíz sobre el árbol de cobertura (cada nodo se
+// expande una sola vez → sin ciclos). En cada nodo, sus links salientes hacia
+// nodos AÚN no incorporados al árbol abren nuevas ramas; el primero continúa la
+// rama actual, los demás generan ramas hermanas que heredan el prefijo recorrido.
+export type GilgulBranch = {
+  links: GilgulLink[];        // links contiguos de la raíz a una hoja
+  startDepth: number[];       // depth (saltos desde raíz) del `from` de cada link
+};
+
+export function gilgulBranches(rootId: string, model = getGilgulModel()): GilgulBranch[] {
+  const branches: GilgulBranch[] = [];
+  const visited = new Set<string>([rootId]);
+
+  // DFS que arrastra el prefijo (los links ya recorridos para llegar a `node`).
+  const walk = (node: string, prefix: GilgulLink[], guard: number) => {
+    if (guard > 48) return; // anti-ciclo duro
+    // links salientes a nodos no incorporados todavía (define el árbol de cobertura)
+    const outs = (model.adjacency.get(node) ?? []).filter((l) => !visited.has(l.to));
+    if (outs.length === 0) {
+      // hoja: cierra la rama con su prefijo (si tiene al menos un link)
+      if (prefix.length > 0) {
+        branches.push({ links: prefix, startDepth: prefix.map((_, i) => i) });
+      }
+      return;
+    }
+    // reserva los destinos ANTES de descender (evita que dos hermanos repitan nodo)
+    for (const l of outs) visited.add(l.to);
+    outs.forEach((l) => {
+      // cada salida hereda el prefijo + este link → bifurcación real en `node`
+      walk(l.to, [...prefix, l], guard + 1);
+    });
+  };
+
+  walk(rootId, [], 0);
+  return branches;
 }
 
 // ── Detección: ¿este nodo es una raíz de alma invocable? ────────────────────

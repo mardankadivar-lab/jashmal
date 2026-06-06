@@ -27,6 +27,7 @@ import * as THREE from "three";
 import {
   getGilgulModel,
   traverseGilgul,
+  gilgulBranches,
   GILGUL_CONFIDENCE_COLOR,
   confidenceLabel,
   type GilgulLink,
@@ -35,6 +36,7 @@ import { BRAIN_SCALE, type BNode } from "@/lib/brainData";
 
 type Vec3 = [number, number, number];
 type Lang = "es" | "fa" | "en";
+export type GilgulMode = "journey" | "tree";
 
 // ── Textura de glow radial (propia, para no acoplar con page.tsx) ──────────
 let _glow: THREE.Texture | null = null;
@@ -226,7 +228,14 @@ function GilgulPath({
                 {link.gematria.aName} = {link.gematria.aValue}
                 <span style={{ opacity: 0.5, margin: "0 5px" }}>·</span>
                 {link.gematria.bName} = {link.gematria.bValue}
-                {link.gematria.shared != null && (
+                {/* regla de transformación (at-bash, etc.) cuando NO hay igualdad numérica */}
+                {link.gematria.rule != null && (
+                  <span style={{ display: "block", opacity: 0.85, marginTop: "2px", color: "#bfe0ff" }}>
+                    {lang === "fa" ? "قاعده: " : lang === "en" ? "rule: " : "regla: "}{link.gematria.rule}
+                  </span>
+                )}
+                {/* raíz común SOLO en igualdades (anagramas / mismo valor) */}
+                {link.gematria.rule == null && link.gematria.shared != null && (
                   <span style={{ display: "block", opacity: 0.7, marginTop: "1px" }}>
                     {lang === "fa" ? "ریشهٔ مشترک" : lang === "en" ? "shared root" : "raíz común"}: {link.gematria.shared}
                   </span>
@@ -246,49 +255,65 @@ function GilgulPath({
   );
 }
 
-// ── La CHISPA DEL ALMA: luz viva que recorre el linaje en orden BFS ────────
-// Recorre la concatenación de los splines (en orden de descubrimiento). Al
-// cruzar el final de un tramo, marca esa vasija como "encendida" (pulso) y el
-// sendero como "ya pasado" (queda iluminado). Tiene cola de cometa + flicker.
+// ── La CHISPA DEL ALMA: luz viva que recorre UNA RAMA del linaje ───────────
+// Recorre la concatenación de los splines de una rama (raíz→hoja). Al cruzar el
+// final de un tramo, marca esa vasija como "encendida" (pulso), el sendero como
+// "ya pasado" (queda iluminado) y reporta su `era` (para la línea de tiempo).
+// Tiene cola de cometa + flicker. Acepta un `delay` para escalonar el arranque
+// (Fase 2: chispas hermanas que se BIFURCAN — comparten prefijo, arrancan juntas
+// y se separan donde el linaje diverge).
 function SoulSpark({
   segments,
   onArriveNode,
   onPassLink,
+  onEra,
+  delay = 0,
+  speed = 22,
 }: {
   segments: { link: GilgulLink; pts: THREE.Vector3[] }[];
   onArriveNode: (id: string) => void;
   onPassLink: (key: string) => void;
+  onEra?: (era: string) => void;
+  delay?: number;            // s antes de empezar a moverse (coreografía multi-chispa)
+  speed?: number;            // puntos/seg
 }) {
   const tex = useMemo(() => glow(), []);
   const headRef = useRef<THREE.Sprite>(null);
   const TAIL = 9;
   const tailRefs = useRef<(THREE.Sprite | null)[]>([]);
-  // posiciones acumuladas: aplanamos todos los tramos en una sola pista
+  // posiciones acumuladas: aplanamos todos los tramos de la rama en una pista
   const track = useMemo(() => {
-    const flat: { p: THREE.Vector3; linkKey: string; toId: string; isLast: boolean }[] = [];
+    const flat: { p: THREE.Vector3; linkKey: string; toId: string; era?: string; isLast: boolean }[] = [];
     for (const seg of segments) {
       const key = `${seg.link.from}→${seg.link.to}`;
       seg.pts.forEach((p, i) =>
-        flat.push({ p, linkKey: key, toId: seg.link.to, isLast: i === seg.pts.length - 1 }),
+        flat.push({ p, linkKey: key, toId: seg.link.to, era: seg.link.era, isLast: i === seg.pts.length - 1 }),
       );
     }
     return flat;
   }, [segments]);
 
   const idxRef = useRef(0);
+  const waitRef = useRef(0);
   const firedLinks = useRef<Set<string>>(new Set());
   const firedNodes = useRef<Set<string>>(new Set());
   // reinicia el recorrido cuando cambian los segmentos (nueva raíz invocada)
   useEffect(() => {
     idxRef.current = 0;
+    waitRef.current = 0;
     firedLinks.current = new Set();
     firedNodes.current = new Set();
   }, [segments]);
 
   useFrame((_, dt) => {
     if (!headRef.current || track.length < 2) return;
-    // avanza ~22 puntos/seg → recorrido contemplativo de toda la cadena
-    idxRef.current = Math.min(track.length - 1, idxRef.current + dt * 22);
+    // escalonado: espera su `delay` antes de moverse (las hermanas se bifurcan)
+    if (waitRef.current < delay) {
+      waitRef.current += dt;
+      headRef.current.position.copy(track[0].p); // aguarda en la raíz
+      return;
+    }
+    idxRef.current = Math.min(track.length - 1, idxRef.current + dt * speed);
     const i = Math.floor(idxRef.current);
     const node = track[i];
     headRef.current.position.copy(node.p);
@@ -298,9 +323,13 @@ function SoulSpark({
     const s = flick * BRAIN_SCALE;
     headRef.current.scale.set(s, s, 1);
 
-    // dispara pulso al llegar al final de un tramo
+    // dispara pulso + era al llegar al final de un tramo
     if (node.isLast) {
-      if (!firedLinks.current.has(node.linkKey)) { firedLinks.current.add(node.linkKey); onPassLink(node.linkKey); }
+      if (!firedLinks.current.has(node.linkKey)) {
+        firedLinks.current.add(node.linkKey);
+        onPassLink(node.linkKey);
+        if (node.era && onEra) onEra(node.era);
+      }
       if (!firedNodes.current.has(node.toId)) { firedNodes.current.add(node.toId); onArriveNode(node.toId); }
     }
 
@@ -363,6 +392,8 @@ export default function GilgulLayer({
   nodeMap,
   lang,
   controlsRef,
+  mode = "journey",
+  onEra,
 }: {
   active: boolean;
   rootId: string | null;                          // raíz de alma invocada (ej. "Abel")
@@ -370,7 +401,10 @@ export default function GilgulLayer({
   nodeMap: Map<string, BNode>;
   lang: Lang;
   controlsRef: React.RefObject<any>;              // OrbitControls → para enfocar la raíz
+  mode?: GilgulMode;                              // "journey" = viaje lineal · "tree" = árbol completo
+  onEra?: (era: string) => void;                  // Fase 2: la chispa reporta la era al llegar a una vasija
 }) {
+  const isTree = mode === "tree";
   const model = useMemo(() => getGilgulModel(), []);
   // recorrido desde la raíz (orden BFS, multi-chispa incluido)
   const traversal = useMemo(
@@ -384,13 +418,21 @@ export default function GilgulLayer({
     return traversal.order.filter((l) => positions[l.from] && positions[l.to]);
   }, [traversal, positions]);
 
-  // segmentos (link + spline) en orden, para la chispa
-  const sparkSegments = useMemo(() => {
-    return drawnLinks.map((l) => ({
-      link: l,
-      pts: gilgulCurve(positions[l.from], positions[l.to]).getPoints(40),
-    }));
-  }, [drawnLinks, positions]);
+  // ── Fase 2 (multi-chispa coreografiada): RAMAS raíz→hoja. Las que comparten
+  //    prefijo arrancan juntas y se BIFURCAN físicamente donde el linaje diverge.
+  //    Cada rama → una SoulSpark con su propio track + delay escalonado. ──
+  const branchSparks = useMemo(() => {
+    if (!active || !rootId) return [] as { key: string; delay: number; segments: { link: GilgulLink; pts: THREE.Vector3[] }[] }[];
+    const branches = gilgulBranches(rootId, model);
+    return branches
+      .map((b, bi) => {
+        const segs = b.links
+          .filter((l) => positions[l.from] && positions[l.to])
+          .map((l) => ({ link: l, pts: gilgulCurve(positions[l.from], positions[l.to]).getPoints(40) }));
+        return { key: `b${bi}:${b.links[0]?.from ?? ""}→${b.links[b.links.length - 1]?.to ?? ""}`, delay: bi * 0.18, segments: segs };
+      })
+      .filter((b) => b.segments.length > 0);
+  }, [active, rootId, model, positions]);
 
   // estado vivo del recorrido de la chispa
   const [passedLinks, setPassedLinks] = useState<Set<string>>(new Set());
@@ -398,26 +440,35 @@ export default function GilgulLayer({
   const pulseKey = useRef(0);
   const [hotLink, setHotLink] = useState<string | null>(null);
 
-  // al (re)invocar una raíz, reinicia lo "encendido"
+  // al (re)invocar una raíz O cambiar de modo, reinicia lo "encendido"
   useEffect(() => {
     setPassedLinks(new Set());
     setPulses([]);
     setHotLink(null);
-  }, [rootId, active]);
+  }, [rootId, active, mode]);
+
+  // En modo ÁRBOL: enciende TODOS los senderos de una vez (organismo cósmico),
+  // sin esperar a la chispa. (Marca todo como "ya pasado" → todos iluminados.)
+  useEffect(() => {
+    if (isTree && drawnLinks.length > 0) {
+      setPassedLinks(new Set(drawnLinks.map((l) => `${l.from}→${l.to}`)));
+    }
+  }, [isTree, drawnLinks]);
 
   // ENFOQUE de la raíz: lleva la cámara al nodo raíz cuando se activa el modo.
   // (Atenuar los no-relacionados lo hace page.tsx vía intensidad; aquí solo
-  //  encuadramos la raíz para "esta es el alma raíz".)
+  //  encuadramos la raíz para "esta es el alma raíz".) En modo ÁRBOL retrocede
+  //  un poco más para abarcar el organismo completo.
   const camera = useThree((s) => s.camera);
   const focusedFor = useRef<string | null>(null);
   const focusProg = useRef(0);
-  useEffect(() => { focusedFor.current = null; focusProg.current = 0; }, [rootId]);
+  useEffect(() => { focusedFor.current = null; focusProg.current = 0; }, [rootId, mode]);
   useFrame((_, dt) => {
     if (!active || !rootId) return;
     const c = controlsRef.current;
     const target = positions[rootId];
     if (!c || !target) return;
-    if (focusedFor.current === rootId) return; // ya enfocado
+    if (focusedFor.current === `${rootId}:${mode}`) return; // ya enfocado para este modo
     focusProg.current = Math.min(1, focusProg.current + dt * 1.6);
     const tgt = new THREE.Vector3(...target);
     const k = Math.min(1, dt * 2.6);
@@ -425,11 +476,11 @@ export default function GilgulLayer({
     const dir = camera.position.clone().sub(tgt);
     const len = dir.length();
     if (len > 0.001) {
-      const newLen = THREE.MathUtils.lerp(len, 9, k); // distancia cómoda de la raíz
+      const newLen = THREE.MathUtils.lerp(len, isTree ? 15 : 9, k); // árbol: vista más amplia
       camera.position.copy(tgt).add(dir.multiplyScalar(newLen / len));
     }
     c.update();
-    if (focusProg.current >= 1) focusedFor.current = rootId;
+    if (focusProg.current >= 1) focusedFor.current = `${rootId}:${mode}`;
   });
 
   if (!active || !rootId || drawnLinks.length === 0) return null;
@@ -437,12 +488,9 @@ export default function GilgulLayer({
   const onPassLink = (key: string) =>
     setPassedLinks((prev) => (prev.has(key) ? prev : new Set(prev).add(key)));
   const onArriveNode = (id: string) => {
-    const n = nodeMap.get(id);
-    const cat = n?.cat;
     // color del pulso = certeza del link que llegó a este nodo (si lo hallamos)
     const link = drawnLinks.find((l) => l.to === id);
     const color = link ? GILGUL_CONFIDENCE_COLOR[link.confidence] : "#ffd66b";
-    void cat;
     const pos = positions[id];
     if (!pos) return;
     pulseKey.current += 1;
@@ -479,38 +527,60 @@ export default function GilgulLayer({
         );
       })}
 
-      {/* CHISPA del alma viajando por el linaje */}
-      <SoulSpark segments={sparkSegments} onArriveNode={onArriveNode} onPassLink={onPassLink} />
+      {/* CHISPAS del alma — Fase 2: una por RAMA, escalonadas (se bifurcan).
+          Solo en modo VIAJE; en modo ÁRBOL el organismo ya está encendido. */}
+      {!isTree && branchSparks.map((b) => (
+        <SoulSpark
+          key={b.key}
+          segments={b.segments}
+          delay={b.delay}
+          onArriveNode={onArriveNode}
+          onPassLink={onPassLink}
+          onEra={onEra}
+        />
+      ))}
 
-      {/* PULSOS de llegada en cada vasija */}
+      {/* En modo ÁRBOL: un pulso suave perpetuo recorre cada vasija (latido del
+          organismo), sin chispa viajera. */}
+      {isTree && <TreePulse nodeIds={traversal!.reachable} positions={positions} />}
+
+      {/* PULSOS de llegada en cada vasija (modo viaje) */}
       {pulses.map((p) => (
         <ArrivalPulse key={p.key} pos={p.pos} color={p.color} />
       ))}
 
       {/* RAÍZ encendida intensamente: anillo perpetuo suave alrededor de la raíz */}
       {positions[rootId] && <RootHalo pos={positions[rootId]} />}
+    </group>
+  );
+}
 
-      {/* ═══════════════════════════════════════════════════════════════════
-          FASE 2 — preparado, NO construido (TODOs claros):
-
-          TODO(fase2-timeline): línea de tiempo histórica bajo la galaxia que
-            avanza con la chispa. La data ya existe: cada GilgulLink trae `era`
-            y GILGUL_ERAS (lib/gilgul.ts) da el orden y los rótulos es/fa/en.
-            Plan: exponer un callback onEra(eraId) desde SoulSpark (al disparar
-            onArriveNode, leer link.era) y pintar una barra DOM en page.tsx.
-
-          TODO(fase2-multispark-coreografiado): hoy la chispa es UNA que recorre
-            el BFS completo (los splits ya se VEN como senderos que divergen del
-            mismo nodo). La Fase 2 lanza CHISPAS SIMULTÁNEAS que se BIFURCAN: al
-            llegar a un nodo con >1 link saliente (model.adjacency.get(id).length
-            > 1), instanciar N SoulSpark hijas, cada una con su sub-recorrido.
-            traverseGilgul ya provee el árbol; falta el coreógrafo de spawns.
-
-          TODO(fase2-arbol-completo): modo "Mostrar árbol de almas completo":
-            render de TODAS las cadenas (model.links) a la vez como organismo
-            cósmico, sin chispa (o con muchas), con leyenda de raíces. Botón en
-            page.tsx → un prop `mode: "journey" | "tree"` aquí.
-          ═══════════════════════════════════════════════════════════════════ */}
+// ── Modo ÁRBOL: latido suave que recorre todas las vasijas del organismo ────
+// Sin chispa viajera; cada vasija "respira" con un desfase → el árbol completo
+// se siente vivo a la vez. Solo se monta en mode="tree".
+function TreePulse({ nodeIds, positions }: { nodeIds: Set<string>; positions: Record<string, Vec3> }) {
+  const tex = useMemo(() => glow(), []);
+  const ids = useMemo(() => [...nodeIds].filter((id) => positions[id]), [nodeIds, positions]);
+  const refs = useRef<(THREE.Sprite | null)[]>([]);
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime;
+    for (let i = 0; i < ids.length; i++) {
+      const spr = refs.current[i];
+      if (!spr) continue;
+      const phase = (i / Math.max(1, ids.length)) * Math.PI * 2;
+      const beat = 0.5 + Math.sin(t * 1.1 + phase) * 0.5; // 0..1 desfasado
+      const s = (0.05 + beat * 0.06) * BRAIN_SCALE;
+      spr.scale.set(s, s, 1);
+      (spr.material as THREE.SpriteMaterial).opacity = 0.25 + beat * 0.5;
+    }
+  });
+  return (
+    <group>
+      {ids.map((id, i) => (
+        <sprite key={id} ref={(el) => { refs.current[i] = el; }} position={positions[id]}>
+          <spriteMaterial map={tex} color="#ffe9a8" transparent opacity={0.4} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+        </sprite>
+      ))}
     </group>
   );
 }

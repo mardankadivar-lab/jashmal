@@ -561,7 +561,9 @@ export const GILGUL_CAIN_HEVEL_EDGES: MaseiEdge[] = [
   { a: "Rabí Akiva", b: "Tikún",    kind: "solid" },  // ShG 34:7 (himtik et ha-guevurá)
   { a: "Yitró", b: "Moshé",         kind: "solid" },  // ShG 33:7 (Caín coopera con Hevel)
   { a: "Egipcio Ex2", b: "Moshé",   kind: "solid" },  // ShG 32:18 (Hevel mata con el Nombre de 42)
-  { a: "Naval", b: "Abel",          kind: "solid" },  // ShG 29:7-8 (lado MALO de Hevel, vía Bilaam); נבל⊃בל
+  // (Auditoría Sofer 2026-06-06: arista Naval↔Abel ELIMINADA. Naval NO cuelga de
+  //  Hevel: pertenece a la raíz oscura de Laván — נבל=לבן=82, ShG 36:76,103. Su
+  //  linaje correcto Laván→Bilaam→Naval vive en lib/gilgul.ts SOFER_DARK_LINKS.)
   { a: "Pinjás", b: "Eliyahu",      kind: "solid" },  // ShG 33:6 (Eliyahu = Pinjás)
   { a: "Nadav-Avihu", b: "Pinjás",  kind: "solid" },  // ShG 33:6 (ibur en Pinjás)
   { a: "Pinjás", b: "Shmuel HaNavi", kind: "solid" }, // ShG 33:6
@@ -718,6 +720,21 @@ export const GILGUL_VESSEL_NODES: BNode[] = [
   { id: "Zejariá",          label: "Zejariá ben Yeverejiahu",     labelFa: "زِخَریا بن یِوِرِخیاهو",  cat: "figure", level: 4 },
   // — Raíz OSCURA · Laván → Bilaam → Naval (36:76); נבל=לבן=82 —
   { id: "Laván",            label: "Laván HaArami · 82",          labelFa: "لاوان هَاَرامی · ۸۲",    cat: "figure", level: 4 },
+  // — Raíz de YAAKOV · Yaakov → Yirmiahu → … → el Ran (ShG 36:52) —
+  { id: "Yirmiahu",         label: "Yirmiahu HaNaví",             labelFa: "یِرمیاهو نبی",           cat: "figure", level: 4 },
+  { id: "Daniel",           label: "Daniel",                      labelFa: "دانیال",                 cat: "figure", level: 4 },
+  { id: "Antígonos",        label: "Antígonos Ish Sojo",          labelFa: "اَنتیگونوس ایش سوخو",    cat: "talmud", level: 4 },
+  { id: "R. Eleazar ben Dahavai", label: "R. Eleazar ben Dahavai", labelFa: "ربی اِلعازار بن دَهَوای", cat: "talmud", level: 4 },
+  { id: "Rav Papa",         label: "Rav Papa",                    labelFa: "رَو پاپا",               cat: "talmud", level: 4 },
+  { id: "Ran",              label: "El Ran (R. Nissim / Rif)",    labelFa: "هَران (ربی نیسیم)",       cat: "talmud", level: 4 },
+  // — Raíz de ELIEZER · Eliezer → Kalev → Benaiahu → Zejariá ben Yehoiada (ShG 36:53) —
+  { id: "Eliezer",          label: "Eliezer (siervo de Avraham)", labelFa: "اِلیعِزِر (خادم ابراهیم)", cat: "figure", level: 4 },
+  { id: "Kalev",            label: "Kalev ben Yefuné · 52",       labelFa: "کالِب بن یِفونه · ۵۲",   cat: "figure", level: 4 },
+  { id: "Benaiahu",         label: "Benaiahu ben Yehoiada",       labelFa: "بِنایاهو بن یِهویاداع",  cat: "figure", level: 4 },
+  { id: "Zejariá ben Yehoiada", label: "Zejariá ben Yehoiada (el kohén)", labelFa: "زِخَریا بن یِهویاداع", cat: "figure", level: 4 },
+  // — Raíz de YOAV · Yoav → Yoash (ShG 36:59, at-bash) —
+  { id: "Yoav",             label: "Yoav ben Tzeruiá",            labelFa: "یوآو بن تصِرویا",        cat: "figure", level: 4 },
+  { id: "Yoash",            label: "Yoash HaMélej",               labelFa: "یوآش پادشاه",            cat: "figure", level: 4 },
 ];
 
 // ─── Nodos ───────────────────────────────────────────────────────────────
