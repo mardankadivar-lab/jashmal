@@ -576,6 +576,57 @@ export const GILGUL_CAIN_HEVEL_EDGES: MaseiEdge[] = [
   { a: "Abel", b: "Caín",           kind: "interp" }, // las dos raíces como par complementario
 ];
 
+// ─── Jidush de Mardan · "El Tikún del Silencio" (נחש 358 = משיח) ───────────
+// VETADO por el Sofer. Guematrías verificadas: נחש=358 · משיח=358 · חש=308 ·
+// נ=50 · מי=50=ים. Fuentes confirmadas en Sefaria (texto exacto):
+//   · Jashmal=jash(silencio)+mal(habla): Talmud Bavli, Jaguigá 13b
+//   · חשמל en la visión: Yejezkel 1:4 ("כעין החשמל מתוך האש")
+//   · מי=Biná, מי+אלה=אלהים: Zohar, Hakdamá (Introduction) 3:7 y 5:21
+//     (origen bíblico: Yeshayahu 40:26 "מי ברא אלה"); comentario: Sulam.
+//   · Unidad: Devarim 6:4 + Melajim I 18:39 ("ה' הוא האלהים", Neilá)
+//   · Najash: Bereshit 3:1 · Tzimtzum/Jalal: Etz Jaim del Arí.
+// La SÍNTESIS (Najash=lectura caída del silencio; Mashíaj=hamtaká vía Biná) es
+// JIDUSH DE MARDAN → cat "jashmal", aristas interp. (matiz: מל=70 ≠ מי=50.)
+export const TIKUN_SILENCIO_NODES: BNode[] = [
+  { id: "Tikún del Silencio", label: "El Tikún del Silencio (נחש = משיח · 358)", labelFa: "تیکون سکوت (ناخاش = ماشیح · ۳۵۸)", cat: "jashmal",  level: 2, url: "/358" },
+  { id: "Jash",      label: "Jash · חש (silencio · 308)",       labelFa: "خَش · חש (سکوت · ۳۰۸)",        cat: "kabbalah", level: 3 },
+  { id: "Mi (Biná)", label: "Mi · מי (¿Quién? = Biná · 50)",    labelFa: "می · מי (کیست؟ = بینا · ۵۰)",   cat: "kabbalah", level: 3 },
+  { id: "Jashmal",   label: "Jashmal · חשמל (jash + mal)",      labelFa: "خَشمَل · חשמל (خَش + مَل)",     cat: "kabbalah", level: 3 },
+  { id: "Elohim",    label: "Elohim · אלהים (juicio · 86)",     labelFa: "اِلوهیم · אלהים (داوری · ۸۶)",  cat: "kabbalah", level: 3 },
+  { id: "Shemá",     label: "Shemá · la Unidad (ה' אחד)",       labelFa: "شِمَع · یگانگی (ה' אחد)",       cat: "kabbalah", level: 3 },
+  { id: "Jalal",     label: "Jalal · החלל (espacio vacío)",     labelFa: "خالال · فضای تهی",             cat: "kabbalah", level: 3 },
+  { id: "Hamtaká",   label: "Hamtaká (endulzar los juicios)",   labelFa: "هَمتاکا (شیرین‌سازی داوری‌ها)", cat: "kabbalah", level: 3 },
+];
+export const TIKUN_SILENCIO_EDGES: MaseiEdge[] = [
+  // ── AUTORIDAD CLÁSICA (solid) — hecho verificado en la fuente ──
+  { a: "Jashmal", b: "Yejezkel",  kind: "solid" },   // Yejezkel 1:4 (כעין החשמל מתוך האש)
+  { a: "Jashmal", b: "Jash",      kind: "solid" },   // Jaguigá 13b: jashot (חש=silencio)
+  { a: "Mi (Biná)", b: "Biná",    kind: "solid" },   // Zohar, Hakdamá 3:7 (מי = lo oculto supremo)
+  { a: "Mi (Biná)", b: "Zohar",   kind: "solid" },   // Zohar, Introduction 3:7 / 5:21
+  { a: "Mi (Biná)", b: "Elohim",  kind: "solid" },   // Zohar 5:21: מי+אלה = אלהים
+  { a: "Jash", b: "Najash",       kind: "solid" },   // חש núcleo de נחש (308 + נ50 = 358)
+  { a: "Jash", b: "Mashíaj",      kind: "solid" },   // חש núcleo de משיח (308 + מי50 = 358)
+  { a: "Najash", b: "358",        kind: "solid" },   // נחש = 358
+  { a: "Mashíaj", b: "358",       kind: "solid" },   // משיח = 358
+  { a: "Najash", b: "Bereshit",   kind: "solid" },   // Bereshit 3:1 (la serpiente)
+  { a: "Jalal", b: "Tzimtzum",    kind: "solid" },   // Etz Jaim: el Tzimtzum crea el Jalal
+  { a: "Shemá", b: "YHVH",        kind: "solid" },   // Devarim 6:4 (ה' אלהינו ה' אחד)
+  { a: "Shemá", b: "Elohim",      kind: "solid" },   // Melajim I 18:39 (ה' הוא האלהים)
+  // ── JIDUSH DE MARDAN (interp) — lectura propia, galaxia "jashmal" ──
+  { a: "Tikún del Silencio", b: "358",        kind: "interp" }, // el alma teológica del nodo 358
+  { a: "Tikún del Silencio", b: "Najash",     kind: "interp" }, // Najash = el silencio leído como abandono
+  { a: "Tikún del Silencio", b: "Mashíaj",    kind: "interp" }, // Mashíaj = el silencio endulzado vía Biná
+  { a: "Tikún del Silencio", b: "Jash",       kind: "interp" }, // el חש compartido es el campo del tikún
+  { a: "Tikún del Silencio", b: "Jashmal",    kind: "interp" }, // toca el nombre del proyecto
+  { a: "Tikún del Silencio", b: "Hamtaká",    kind: "interp" }, // el tikún = endulzar la interpretación
+  { a: "Tikún del Silencio", b: "Shemá",      kind: "interp" }, // el destino: ה' הוא האלהים (Unidad)
+  { a: "Najash", b: "Jalal",      kind: "interp" },             // lee el vacío del Tzimtzum como ausencia
+  { a: "Mashíaj", b: "Mi (Biná)", kind: "interp" },             // introduce la conciencia de Biná
+  { a: "Mashíaj", b: "Hamtaká",   kind: "interp" },             // endulzamiento de los dinim en su raíz
+  { a: "Hamtaká", b: "Biná",      kind: "interp" },             // los juicios se endulzan en su raíz = Biná
+  { a: "Jalal", b: "Jashmal",     kind: "interp" },             // el silencio (jash) = ocultamiento del Tzimtzum
+];
+
 // ─── Nodos ───────────────────────────────────────────────────────────────
 export const BNODES: BNode[] = [
   // ── Nivel 0 — corazón (Torá y Tanaj UNIFICADOS: la Torá es el núcleo del Tanaj) ──
@@ -680,6 +731,7 @@ export const BNODES: BNode[] = [
   ...TOHU_NODES,
   ...AVRAHAM_KAB_NODES,
   ...GILGUL_CAIN_HEVEL_NODES,
+  ...TIKUN_SILENCIO_NODES,
 ];
 
 // ─── Aristas (relaciones reales, NO dirigidas). Se deduplican antes de render ─
@@ -746,6 +798,7 @@ const RAW_EDGES: [string, string][] = [
   ...TOHU_EDGES.map((e) => [e.a, e.b] as [string, string]),
   ...AVRAHAM_KAB_EDGES.map((e) => [e.a, e.b] as [string, string]),
   ...GILGUL_CAIN_HEVEL_EDGES.map((e) => [e.a, e.b] as [string, string]),
+  ...TIKUN_SILENCIO_EDGES.map((e) => [e.a, e.b] as [string, string]),
 ];
 
 // dedup + descarta aristas a nodos inexistentes (p.ej. placeholders)
@@ -771,7 +824,7 @@ export const BEDGES: [string, string][] = (() => {
 const _KINDED_EDGES: MaseiEdge[] = [
   ...MASEI_EDGES, ...V4_EDGES, ...STUDY2_EDGES, ...STUDY3_EDGES,
   ...BRIT21_EDGES, ...MADRES_EDGES, ...TOHU_EDGES, ...AVRAHAM_KAB_EDGES,
-  ...GILGUL_CAIN_HEVEL_EDGES,
+  ...GILGUL_CAIN_HEVEL_EDGES, ...TIKUN_SILENCIO_EDGES,
 ];
 const EDGE_KIND = new Map<string, "solid" | "interp">();
 for (const e of _KINDED_EDGES) {
