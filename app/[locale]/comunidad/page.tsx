@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getSession } from "@/lib/communitySession";
 import { getUserByEmail } from "@/lib/community";
 import LoginForm from "@/components/community/LoginForm";
+import ShareRevelation from "@/components/community/ShareRevelation";
 
 export const dynamic = "force-dynamic";
 
@@ -49,9 +50,11 @@ export default async function ComunidadPage() {
                 </div>
               </div>
             </div>
-            <p className="mt-8 text-sm italic leading-relaxed text-muted/60">
-              Pronto podrás compartir tus revelaciones y encender tu primera estrella en la galaxia Comunidad.
-            </p>
+            <div className="mt-10 border-t border-gold/10 pt-8 text-center">
+              <p className="hebrew mb-1 text-2xl text-gold" style={{ filter: "drop-shadow(0 0 8px #c9a43e44)" }}>חִדּוּשׁ</p>
+              <p className="mb-6 font-cinzel text-xs uppercase tracking-[0.25em] text-gold/50">Comparte tu revelación</p>
+              <ShareRevelation />
+            </div>
             <Link
               href="/universo"
               className="mt-8 inline-block rounded-full border border-gold/30 px-5 py-2 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:bg-gold/10"
