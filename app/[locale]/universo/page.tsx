@@ -607,6 +607,314 @@ function FocusHelper({
   return null;
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// "VIAJE DE LUZ" — interactividad de ARISTAS (encima de todo lo existente)
+//   1. Hover de arista → glow + gradiente color(origen)→color(destino)
+//   2. Tooltip flotante minimalista "origen → destino" (clásica/interpretativa)
+//   3. Clic → la cámara VIAJA por el spline (fibra óptica) hasta el destino
+// Sólo se vuelven interactivas las aristas DEL NODO EN FOCO (handful, barato).
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Tipo del viaje en curso (lo orquesta la página). pts = puntos del spline.
+type Travel = { from: string; to: string; pts: THREE.Vector3[] };
+
+// Tubo con COLOR POR VÉRTICE a lo largo del spline: colA (galaxia origen) →
+// colB (galaxia destino). El gradiente atraviesa el dominio (ej. rojo→púrpura→azul).
+function gradientTube(
+  pts: THREE.Vector3[],
+  radius: number,
+  colA: THREE.Color,
+  colB: THREE.Color,
+): THREE.BufferGeometry {
+  const curve = new THREE.CatmullRomCurve3(pts);
+  const tubular = Math.max(8, pts.length - 1);
+  const radial = 6;
+  const geo = new THREE.TubeGeometry(curve, tubular, radius, radial, false);
+  const pos = geo.attributes.position;
+  const colors = new Float32Array(pos.count * 3);
+  const tmp = new THREE.Color();
+  // TubeGeometry recorre (tubular+1) anillos de (radial+1) vértices cada uno;
+  // el índice de anillo da el parámetro t a lo largo de la curva.
+  const ring = radial + 1;
+  for (let i = 0; i < pos.count; i++) {
+    const seg = Math.floor(i / ring);
+    const t = tubular === 0 ? 0 : seg / tubular;
+    tmp.copy(colA).lerp(colB, t);
+    colors[i * 3] = tmp.r;
+    colors[i * 3 + 1] = tmp.g;
+    colors[i * 3 + 2] = tmp.b;
+  }
+  geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+  return geo;
+}
+
+// Una arista interactiva (sólo las del nodo en foco). Tubo fino visible con
+// gradiente + tubo "hit" grueso invisible para que sea fácil de tocar/clicar.
+function InteractiveEdge({
+  curve,
+  colA,
+  colB,
+  isHot,
+  isFa,
+  fromLabel,
+  toLabel,
+  onHover,
+  onPick,
+}: {
+  curve: EdgeCurve;
+  colA: THREE.Color;
+  colB: THREE.Color;
+  isHot: boolean;
+  isFa: boolean;
+  fromLabel: string;
+  toLabel: string;
+  onHover: (h: boolean) => void;
+  onPick: () => void;
+}) {
+  // tubo visible delgado, con gradiente por vértice
+  const tubeGeo = useMemo(
+    () => gradientTube(curve.pts, 0.012 * BRAIN_SCALE, colA, colB),
+    [curve.pts, colA, colB],
+  );
+  // tubo de impacto: invisible, más grueso → área de hover/clic generosa
+  const hitGeo = useMemo(
+    () => gradientTube(curve.pts, 0.07 * BRAIN_SCALE, colA, colB),
+    [curve.pts, colA, colB],
+  );
+  useEffect(() => () => { tubeGeo.dispose(); hitGeo.dispose(); }, [tubeGeo, hitGeo]);
+
+  const matRef = useRef<THREE.MeshBasicMaterial>(null);
+  useFrame(({ clock }) => {
+    if (!matRef.current) return;
+    // en reposo apenas se insinúa; al hover late con un glow suave
+    const base = isHot ? 0.55 + Math.sin(clock.elapsedTime * 4) * 0.12 : 0.16;
+    matRef.current.opacity = base;
+  });
+
+  // punto medio del spline, un poco elevado → ahí flota el rótulo
+  const mid = curve.pts[Math.floor(curve.pts.length / 2)];
+
+  return (
+    <group>
+      <mesh geometry={tubeGeo}>
+        <meshBasicMaterial
+          ref={matRef}
+          vertexColors
+          transparent
+          opacity={0.16}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          toneMapped={false}
+        />
+      </mesh>
+      {/* área de impacto invisible (hover + clic) */}
+      <mesh
+        geometry={hitGeo}
+        onPointerOver={(e) => { e.stopPropagation(); onHover(true); document.body.style.cursor = "pointer"; }}
+        onPointerOut={() => { onHover(false); document.body.style.cursor = "default"; }}
+        onClick={(e) => { e.stopPropagation(); onPick(); }}
+      >
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+      </mesh>
+      {isHot && (
+        <Html position={[mid.x, mid.y, mid.z]} center distanceFactor={11} zIndexRange={[30, 0]} style={{ pointerEvents: "none" }}>
+          <div
+            dir={isFa ? "rtl" : "ltr"}
+            style={{
+              transform: "translateY(-16px)",
+              whiteSpace: "nowrap",
+              userSelect: "none",
+              fontFamily: "var(--font-cinzel, serif)",
+              fontSize: "11px",
+              letterSpacing: "0.04em",
+              padding: "3px 9px",
+              borderRadius: "9999px",
+              border: "1px solid rgba(201,164,62,0.35)",
+              background: "rgba(5,5,10,0.82)",
+              color: "#f0e6cf",
+              backdropFilter: "blur(4px)",
+              boxShadow: "0 0 14px rgba(0,0,0,0.6)",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+            }}
+          >
+            <span>{isFa ? toLabel : fromLabel}</span>
+            <span style={{ color: "#c9a43e" }}>{isFa ? "←" : "→"}</span>
+            <span>{isFa ? fromLabel : toLabel}</span>
+            <span
+              style={{
+                marginInlineStart: "4px",
+                fontSize: "8px",
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                opacity: 0.6,
+                color: curve.kind === "solid" ? "#c9a43e" : "#9aa6c4",
+              }}
+            >
+              {curve.kind === "solid" ? (isFa ? "کلاسیک" : "clásica") : (isFa ? "تفسیری" : "interp.")}
+            </span>
+          </div>
+        </Html>
+      )}
+    </group>
+  );
+}
+
+// Capa de aristas interactivas: SÓLO las del nodo en foco (raycasting barato).
+function FocusEdges({
+  curves,
+  focusId,
+  hotKey,
+  nodeMap,
+  isFa,
+  onHover,
+  onPick,
+}: {
+  curves: EdgeCurve[];
+  focusId: string;
+  hotKey: string | null;
+  nodeMap: Map<string, BNode>;
+  isFa: boolean;
+  onHover: (key: string | null) => void;
+  onPick: (c: EdgeCurve) => void;
+}) {
+  // aristas que tocan el nodo en foco, orientadas para que `a` sea SIEMPRE el foco
+  const focusCurves = useMemo(() => {
+    const out: { c: EdgeCurve; oriented: EdgeCurve }[] = [];
+    for (const c of curves) {
+      if (c.a !== focusId && c.b !== focusId) continue;
+      if (c.a === focusId) out.push({ c, oriented: c });
+      else out.push({ c, oriented: { a: c.b, b: c.a, pts: [...c.pts].reverse(), kind: c.kind } });
+    }
+    return out;
+  }, [curves, focusId]);
+
+  const colCache = useMemo(() => new Map<string, THREE.Color>(), []);
+  const colorOf = (cat: string | undefined) => {
+    const hex = BRAIN_CATS[cat ?? ""]?.c ?? "#c9a43e";
+    let col = colCache.get(hex);
+    if (!col) { col = new THREE.Color(hex); colCache.set(hex, col); }
+    return col;
+  };
+
+  return (
+    <group>
+      {focusCurves.map(({ c, oriented }) => {
+        const key = c.a + "→" + c.b;
+        const fromN = nodeMap.get(oriented.a);
+        const toN = nodeMap.get(oriented.b);
+        return (
+          <InteractiveEdge
+            key={key}
+            curve={oriented}
+            colA={colorOf(fromN?.cat)}
+            colB={colorOf(toN?.cat)}
+            isHot={hotKey === key}
+            isFa={isFa}
+            fromLabel={fromN ? (isFa ? fromN.labelFa : fromN.label) : oriented.a}
+            toLabel={toN ? (isFa ? toN.labelFa : toN.label) : oriented.b}
+            onHover={(h) => onHover(h ? key : null)}
+            onPick={() => onPick(oriented)}
+          />
+        );
+      })}
+    </group>
+  );
+}
+
+// Pulsos de luz que FLUYEN por el spline mientras la cámara viaja (fibra óptica).
+function TravelPulses({ pts, colA, colB }: { pts: THREE.Vector3[]; colA: THREE.Color; colB: THREE.Color }) {
+  const tex = useMemo(() => glowTexture(), []);
+  const N = 7; // pulsos escalonados que corren hacia el destino
+  const refs = useRef<(THREE.Sprite | null)[]>([]);
+  const last = pts.length - 1;
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime;
+    for (let i = 0; i < N; i++) {
+      const spr = refs.current[i];
+      if (!spr) continue;
+      const u = (t * 0.9 + i / N) % 1;
+      const idx = Math.min(last, Math.max(0, Math.floor(u * last)));
+      const p = pts[idx];
+      spr.position.set(p.x, p.y, p.z);
+      const s = (0.05 + Math.sin((t + i) * 6) * 0.018) * BRAIN_SCALE;
+      spr.scale.set(s, s, 1);
+      const m = spr.material as THREE.SpriteMaterial;
+      m.color.copy(colA).lerp(colB, u);
+      m.opacity = 0.85 * Math.sin(u * Math.PI); // nace y muere suave en los extremos
+    }
+  });
+  return (
+    <group>
+      {Array.from({ length: N }).map((_, i) => (
+        <sprite key={i} ref={(el) => { refs.current[i] = el; }}>
+          <spriteMaterial map={tex} transparent opacity={0} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} />
+        </sprite>
+      ))}
+    </group>
+  );
+}
+
+// Vuelo de cámara A LO LARGO del spline (no teletransporte): consciencia
+// viajando por la fibra. Al llegar, dispara onArrived → reusa la selección.
+function TravelHelper({
+  travel,
+  controlsRef,
+  nodeMap,
+  onArrived,
+}: {
+  travel: Travel;
+  controlsRef: React.RefObject<any>;
+  nodeMap: Map<string, BNode>;
+  onArrived: (toId: string) => void;
+}) {
+  const camera = useThree((s) => s.camera);
+  const curve = useMemo(() => new THREE.CatmullRomCurve3(travel.pts), [travel.pts]);
+  const colA = useMemo(() => new THREE.Color(BRAIN_CATS[nodeMap.get(travel.from)?.cat ?? ""]?.c ?? "#c9a43e"), [nodeMap, travel.from]);
+  const colB = useMemo(() => new THREE.Color(BRAIN_CATS[nodeMap.get(travel.to)?.cat ?? ""]?.c ?? "#c9a43e"), [nodeMap, travel.to]);
+  const dest = useMemo(() => travel.pts[travel.pts.length - 1].clone(), [travel.pts]);
+  const startOff = useRef<THREE.Vector3 | null>(null);
+  const prog = useRef(0); // 0..1 a lo largo del recorrido
+  const done = useRef(false);
+
+  useFrame((_, dt) => {
+    const c = controlsRef.current;
+    if (!c || done.current) return;
+    // offset inicial de la cámara respecto a su target (para conservar el "atrás")
+    if (!startOff.current) startOff.current = camera.position.clone().sub(c.target);
+
+    prog.current = Math.min(1, prog.current + dt * 0.55); // ~1.8s de viaje
+    const e = prog.current < 0.5 ? 2 * prog.current * prog.current : 1 - Math.pow(-2 * prog.current + 2, 2) / 2; // easeInOut
+
+    // el TARGET corre por la curva; la cámara lo sigue un poco por detrás sobre la misma curva
+    const tgt = curve.getPointAt(e);
+    c.target.lerp(tgt, Math.min(1, dt * 6));
+
+    const back = Math.max(0, e - 0.10);
+    const behind = curve.getPointAt(back);
+    // distancia de seguimiento que se cierra al acercarse (de "dentro de la fibra" a encuadre)
+    const followDist = THREE.MathUtils.lerp(CFG.radiusFocus * 0.55, CFG.radiusFocus, e);
+    const dir = behind.clone().sub(tgt);
+    if (dir.lengthSq() < 1e-6) dir.copy(startOff.current).normalize();
+    else dir.normalize();
+    const desired = tgt.clone().add(dir.multiplyScalar(followDist * 0.6))
+      .add(new THREE.Vector3(0, CFG.radiusFocus * 0.25, 0)); // leve elevación
+    camera.position.lerp(desired, Math.min(1, dt * 4));
+    c.update();
+
+    if (prog.current >= 1) {
+      done.current = true;
+      // asienta el target exactamente en el destino antes de soltar
+      c.target.copy(dest);
+      c.update();
+      onArrived(travel.to);
+    }
+  });
+
+  return <TravelPulses pts={travel.pts} colA={colA} colB={colB} />;
+}
+
 // ── Escena ─────────────────────────────────────────────────────────────────
 function BrainScene({
   nodes,
@@ -618,10 +926,13 @@ function BrainScene({
   locale,
   flyToId,
   activeCat,
+  travel,
   onFlewTo,
   onSelect,
   onHover,
   onDouble,
+  onPickEdge,
+  onTravelArrived,
 }: {
   nodes: BNode[];
   edges: [string, string][];
@@ -632,10 +943,13 @@ function BrainScene({
   locale: string;
   flyToId: string | null;
   activeCat: string | null;
+  travel: Travel | null;
   onFlewTo: () => void;
   onSelect: (id: string, additive: boolean) => void;
   onHover: (id: string | null) => void;
   onDouble: (n: BNode) => void;
+  onPickEdge: (from: string, to: string, pts: THREE.Vector3[]) => void;
+  onTravelArrived: (toId: string) => void;
 }) {
   const positions = useMemo(() => layoutNodes(nodes), [nodes]);
   // estrellas de la galaxia Comunidad (jidushim) → sus aristas son interpretativas
@@ -697,6 +1011,10 @@ function BrainScene({
 
   // controles de mouse (girar / mover / zoom) con pausa de auto-giro al interactuar
   const controlsRef = useRef<any>(null);
+  // arista bajo el mouse (sólo entre las del nodo en foco) → glow + tooltip
+  const [hotEdge, setHotEdge] = useState<string | null>(null);
+  // al cambiar el nodo en foco (o entrar en viaje), olvida la arista resaltada
+  useEffect(() => { setHotEdge(null); }, [focusId, travel]);
   // marca de tiempo del último movimiento real de cámara (girar/zoom/pinch):
   // sirve para NO deseleccionar cuando el "clic" en el fondo viene de un gesto.
   // Solo cuenta mientras el usuario interactúa (no el auto-giro).
@@ -772,13 +1090,17 @@ function BrainScene({
         zoomSpeed={0.9}
         minDistance={0.5}
         maxDistance={90}
-        autoRotate={autoRot && !selected && !compareActive && !catActive}
+        autoRotate={autoRot && !selected && !compareActive && !catActive && !travel}
         autoRotateSpeed={0.3}
         onStart={() => { interacting.current = true; pauseAuto(); }}
         onEnd={() => { interacting.current = false; resumeAuto(); }}
         onChange={() => { if (interacting.current) lastCamMove.current = performance.now(); }}
       />
-      <FocusHelper flyToPos={flyToPos} controlsRef={controlsRef} onArrived={onFlewTo} />
+      {/* viaje fibra óptica (clic en arista) tiene prioridad sobre el vuelo al buscar */}
+      {!travel && <FocusHelper flyToPos={flyToPos} controlsRef={controlsRef} onArrived={onFlewTo} />}
+      {travel && (
+        <TravelHelper travel={travel} controlsRef={controlsRef} nodeMap={nodeMap} onArrived={onTravelArrived} />
+      )}
       <ambientLight intensity={0.35} />
 
       {/* el universo: estrellas de fondo + nebulosas con nombre por galaxia */}
@@ -797,6 +1119,19 @@ function BrainScene({
         {!compareActive && !catActive && pathToTorah.length > 1 && <PathToTorah path={pathToTorah} curves={curves} />}
         {compareActive && sharedCurves.length > 0 && <FiberHighlight curves={sharedCurves} color="#ffe9a8" />}
         {catActive && catCurves.length > 0 && <FiberHighlight curves={catCurves} color={BRAIN_CATS[activeCat ?? ""]?.c ?? "#c9a43e"} />}
+
+        {/* "Viaje de luz": aristas interactivas del nodo en foco (hover/gradiente/tooltip/clic) */}
+        {!compareActive && !catActive && !travel && focusId && (
+          <FocusEdges
+            curves={curves}
+            focusId={focusId}
+            hotKey={hotEdge}
+            nodeMap={nodeMap}
+            isFa={isFa}
+            onHover={setHotEdge}
+            onPick={(c) => onPickEdge(c.a, c.b, c.pts)}
+          />
+        )}
 
         {nodes.map((n) => {
           const pos = positions[n.id];
@@ -837,6 +1172,7 @@ export default function GrafoPage() {
   const [compare, setCompare] = useState<string[]>([]); // modo comparación (Cmd/Ctrl-clic)
   const [flyToId, setFlyToId] = useState<string | null>(null); // SOLO al buscar: vuela al nodo
   const [activeCat, setActiveCat] = useState<string | null>(null); // dominio resaltado (leyenda)
+  const [travel, setTravel] = useState<Travel | null>(null); // viaje fibra óptica en curso (clic en arista)
   // para distinguir un TAP deliberado en el vacío (soltar) de un arrastre/zoom de cámara
   const downRef = useRef<{ x: number; y: number; t: number } | null>(null);
 
@@ -1003,12 +1339,29 @@ export default function GrafoPage() {
       setFlyToId(next);
     }
   };
-  const clearAll = () => { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); };
+  const clearAll = () => { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setTravel(null); };
+
+  // ── "Viaje de luz": clic en una arista → la cámara VIAJA por la fibra ──
+  // Mientras viaja, soltamos la selección (no hay tarjeta encima del recorrido)
+  // y desactivamos flyTo (el viaje manda). La arista entrega su spline orientado.
+  const startTravel = (from: string, to: string, pts: THREE.Vector3[]) => {
+    if (travel) return; // no encadenar viajes a mitad de uno
+    setActiveCat(null); setCompare([]); setFlyToId(null); setSelected(null);
+    setTravel({ from, to, pts });
+  };
+  // al llegar al destino: termina el viaje y REUSA la selección normal (el
+  // FocusHelper existente asienta el encuadre fino y lo vuelve el nuevo centro).
+  const arriveTravel = (toId: string) => {
+    setTravel(null);
+    setSelected(toId);
+    setFlyToId(toId); // pulso final + encuadre cómodo (flujo de selección existente)
+  };
+
   // Escape = cerrar la selección. Junto al botón de la tarjeta, es la ÚNICA
   // forma de soltar el punto: ya nunca se pierde solo al explorar (zoom/arrastrar).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); }
+      if (e.key === "Escape") { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setTravel(null); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -1107,10 +1460,13 @@ export default function GrafoPage() {
             locale={locale}
             flyToId={flyToId}
             activeCat={activeCat}
+            travel={travel}
             onFlewTo={() => setFlyToId(null)}
             onSelect={handleSelect}
-            onHover={setHovered}
+            onHover={(id) => { if (!travel) setHovered(id); }}
             onDouble={handleDouble}
+            onPickEdge={startTravel}
+            onTravelArrived={arriveTravel}
           />
           <EffectComposer>
             <Bloom intensity={0.72} luminanceThreshold={0.2} luminanceSmoothing={0.7} mipmapBlur radius={0.5} />
