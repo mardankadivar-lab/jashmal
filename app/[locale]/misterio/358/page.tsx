@@ -288,47 +288,279 @@ export default function MisterioPage() {
           </div>
         </Section>
 
-        {/* ── LO QUE DICE EL ZOHAR ─────────────────────────────────────────── */}
-        <Section>
-          <h2 className="mb-4 font-cinzel text-sm uppercase tracking-[0.3em] text-gold/60">
-            {fa ? "زوهر چه می‌گوید؟" : "¿Qué dice el Zohar?"}
-          </h2>
-        </Section>
+        {/* ════════════════════════════════════════════════════════════════════
+            ESTUDIO DEL SOFER — verificado en Sefaria. 5 secciones (PaRDeS).
+            Idioma: español para ambos locales (trilingüe diferido; el hero/CTA
+            ya cubren fa). Los PullQuote reciben el mismo texto es en `es` y `fa`.
+           ════════════════════════════════════════════════════════════════════ */}
 
-        <PullQuote
-          he="נָחָשׁ בְּגִימַטְרִיָּא מָשִׁיחַ — וְכֵן צֵרֶף הַדָּבָר"
-          es="Najash en Gematría equivale a Mashíaj — y así se conecta la cosa"
-          fa="نَحاش در گیماتریا برابر مَشیاح است — و بدین‌گونه این امر به هم پیوند می‌خورد"
-          source="Zohar Jadash, Balak"
-          locale={locale}
-        />
-
-        {/* ── LA EXPLICACIÓN CABALÍSTICA ───────────────────────────────────── */}
+        {/* ── 1. תַּרְגּוּם — El versículo raíz ──────────────────────────────── */}
         <Section>
+          <p className="hebrew mb-3 text-3xl text-gold" style={{ filter: "drop-shadow(0 0 10px rgba(201,164,62,0.5))" }}>
+            תַּרְגּוּם
+          </p>
           <h2 className="mb-6 font-cinzel text-sm uppercase tracking-[0.3em] text-gold/60">
-            {fa ? "معنای عمیق‌تر" : "El significado profundo"}
+            El versículo raíz
           </h2>
 
           <div className="space-y-5 text-sm leading-relaxed text-parchment/80">
             <p>
-              {fa
-                ? "در کابالا، تصادف وجود ندارد — به‌ویژه در زبان عبری که هر حرف آن مقدس است. برابری عددی دو واژه نشان‌دهندهٔ پیوند معنوی عمیق میان آن‌هاست."
-                : "En Cabalá no existen las coincidencias — especialmente en hebreo, donde cada letra es sagrada. Dos palabras con el mismo valor numérico comparten una raíz espiritual."}
+              Todo nace del nombre del proyecto. Jashmal (<span className="hebrew text-gold/90">חַשְׁמַל</span>) aparece
+              una sola vez, en el corazón de la visión de Yejezkel junto al río Kevar.
+            </p>
+          </div>
+
+          <PullQuote
+            he="וּמִתּוֹכָהּ כְּעֵין הַחַשְׁמַל מִתּוֹךְ הָאֵשׁ"
+            es="Y de en medio de él, como el aspecto del jashmal, de en medio del fuego."
+            fa="Y de en medio de él, como el aspecto del jashmal, de en medio del fuego."
+            source="Yejezkel (Ezequiel) 1:4"
+            locale={locale}
+          />
+
+          <div className="space-y-5 text-sm leading-relaxed text-parchment/80">
+            <p>
+              La palabra <span className="hebrew text-gold/90">חַשְׁמַל</span> no se traduce: se contempla. Los Sabios
+              la descompusieron en dos respiros: <span className="hebrew text-gold/90">חַשׁ</span> (jash, silencio /
+              callar) y <span className="hebrew text-gold/90">מַל</span> (mal, habla / discurso). El jashmal es la
+              frontera donde lo que calla y lo que habla son una sola luz. Ese es el latido del proyecto: el silencio
+              que comienza a hablar.
+            </p>
+          </div>
+        </Section>
+
+        {/* ── 2. מְפָרְשִׁים — Los comentaristas sobre el jashmal ────────────── */}
+        <Section>
+          <p className="hebrew mb-3 text-3xl text-gold" style={{ filter: "drop-shadow(0 0 10px rgba(201,164,62,0.5))" }}>
+            מְפָרְשִׁים
+          </p>
+          <h2 className="mb-6 font-cinzel text-sm uppercase tracking-[0.3em] text-gold/60">
+            Los comentaristas sobre el jashmal
+          </h2>
+
+          <div className="space-y-5 text-sm leading-relaxed text-parchment/80">
+            <p>
+              El jashmal es uno de los pasos más vigilados de la Torá. El Talmud (Jaguigá 13b) prohíbe enseñar la Obra
+              de la Carroza salvo al sabio que entiende solo, y narra al niño que comprendió el jashmal y &ldquo;salió
+              fuego y lo consumió&rdquo;. Allí el Talmud da el notarikón:{" "}
+              <span className="hebrew text-gold/90">חַיּוֹת אֵשׁ מְמַלְּלוֹת</span> (&ldquo;jayot de fuego que
+              hablan&rdquo;), y enseña que a veces <span className="hebrew text-gold/90">חָשׁוֹת</span> (callan) y a
+              veces <span className="hebrew text-gold/90">מְמַלְּלוֹת</span> (hablan), según el flujo de lo Alto.
+            </p>
+            <p className="text-xs italic text-parchment/55">
+              Precisión: el notarikón son 3 palabras —jayot esh memallelot—; el par jashot / memallelot es la
+              enseñanza sobre su ritmo. No se mezclan.
+            </p>
+
+            <p>
+              <span className="font-cinzel text-gold/80">Rashi:</span> el jashmal son ángeles de fuego que hablan; su
+              naturaleza es el ritmo entre callar y hablar.
             </p>
             <p>
-              {fa
-                ? "مار، نیروی آشفتگی، تاریکی و نفس‌الاماره را نمایندگی می‌کند. مَشیاح، نیروی ترمیم، روشنایی و تعالی است. اما هر دو از همان منبع انرژی تغذیه می‌کنند — تفاوت در جهت است."
-                : "La serpiente representa la fuerza del caos, la oscuridad, el instinto sin dirección. El Mesías representa la fuerza de la rectificación, la luz, la elevación. Pero ambos operan con la misma energía primordial — la diferencia está en la dirección."}
+              <span className="font-cinzel text-gold/80">Ramban</span> (cabalista): el jashmal es un velo de la luz
+              superior; lo &ldquo;como el aspecto de&rdquo; (<span className="hebrew text-gold/90">כְּעֵין</span>) nunca
+              es la cosa misma sino su semejanza tolerable — frontera, no destino.
             </p>
             <p>
-              {fa
-                ? "زوهر می‌گوید: مَشیاح کسی نیست که تاریکی را نابود کند، بلکه کسی است که آن را دگرگون می‌سازد. مار باید به نیروی شفابخش تبدیل شود — همان‌طور که موسی مار برنجین را در بیابان برافراشت."
-                : "El Zohar enseña: el Mesías no viene a destruir la oscuridad, sino a transformarla. La misma energía que produce el caos, dirigida hacia arriba, produce la redención. La serpiente debe ser elevada — como hizo Moisés con la serpiente de bronce en el desierto."}
+              <span className="font-cinzel text-gold/80">Ibn Ezra:</span> protege el misterio con la gramática del
+              asombro; el profeta dice &ldquo;como el aspecto del jashmal&rdquo;, confesando el límite del lenguaje.
             </p>
             <p>
-              {fa
-                ? "بالِ حاسولام (رب یهودا لایب آشلاگ) می‌گوید: در زمان تیقون (ترمیم)، نیروهای ظلمت به نور تبدیل خواهند شد. ۳۵۸ یعنی: آنچه باید تغییر کند و آنچه تغییر می‌دهد یک ریشه دارند."
-                : "El Baal HaSulam (Rav Yehuda Ashlag) enseña: en el tiempo del Tikún, las fuerzas del caos se transformarán en luz. El 358 revela que el rectificador y lo que necesita rectificación comparten la misma raíz — son el mismo poder, aplicado en direcciones opuestas."}
+              <span className="font-cinzel text-gold/80">Abarbanel:</span> la visión llega en el exilio, junto al río
+              Kevar, &ldquo;del norte&rdquo; (la severidad); señal de que la Presencia acompaña a Israel incluso fuera
+              de la Tierra, incluso en el silencio del destierro.
+            </p>
+            <p>
+              <span className="font-cinzel text-gold/80">Malbim:</span> cada elemento (viento, nube, fuego, resplandor,
+              jashmal) es un grado del ascenso profético; el jashmal es el último velo antes del Habla: el silencio ya
+              cargado de discurso, jash a punto de volverse mal.
+            </p>
+          </div>
+        </Section>
+
+        {/* ── 3. פרד״ס — Las cuatro entradas ────────────────────────────────── */}
+        <Section>
+          <p className="hebrew mb-3 text-3xl text-gold" style={{ filter: "drop-shadow(0 0 10px rgba(201,164,62,0.5))" }}>
+            פרד״ס
+          </p>
+          <h2 className="mb-6 font-cinzel text-sm uppercase tracking-[0.3em] text-gold/60">
+            Las cuatro entradas
+          </h2>
+
+          <div className="space-y-5 text-sm leading-relaxed text-parchment/80">
+            <p>
+              <span className="font-cinzel text-gold/80">Pshat:</span> el jashmal es el fulgor central de la visión de
+              Yejezkel (ángeles que callan y hablan, Jaguigá 13b). La serpiente,{" "}
+              <span className="hebrew text-gold/90">נָחָשׁ</span>, es la criatura del versículo:
+            </p>
+          </div>
+
+          <PullQuote
+            he="וְהַנָּחָשׁ הָיָה עָרוּם מִכֹּל חַיַּת הַשָּׂדֶה"
+            es="Y la serpiente era la más astuta de todos los animales del campo."
+            fa="Y la serpiente era la más astuta de todos los animales del campo."
+            source="Bereshit (Génesis) 3:1"
+            locale={locale}
+          />
+
+          <div className="space-y-5 text-sm leading-relaxed text-parchment/80">
+            <p>la voz que introduce la duda y la separación.</p>
+
+            <p>
+              <span className="font-cinzel text-gold/80">Remez:</span> la guematría abre la puerta.{" "}
+              <span className="hebrew text-gold/90">נָחָשׁ</span> = 50+8+300 = 358;{" "}
+              <span className="hebrew text-gold/90">מָשִׁיחַ</span> = 40+300+10+8 = 358. La serpiente y el Mesías
+              comparten 358. Pero el jidush mira el NÚCLEO: ambas esconden{" "}
+              <span className="hebrew text-gold/90">חַשׁ</span> (=308).{" "}
+              <span className="hebrew text-gold/90">נָחָשׁ</span> = <span className="hebrew text-gold/90">נ</span>(50)+
+              <span className="hebrew text-gold/90">חשׁ</span>; <span className="hebrew text-gold/90">מָשִׁיחַ</span> ={" "}
+              <span className="hebrew text-gold/90">חשׁ</span>+<span className="hebrew text-gold/90">מי</span>
+              (40+10=50). Están construidas sobre el MISMO silencio (<span className="hebrew text-gold/90">חש</span>),
+              y se diferencian por cómo nombran al 50: en Najash es{" "}
+              <span className="hebrew text-gold/90">נ</span> (Nun, la nefilá / caída); en Mashíaj es{" "}
+              <span className="hebrew text-gold/90">מי</span> (Mem-Yod=50 = &ldquo;¿Quién?&rdquo; = Biná).
+            </p>
+            <p className="text-xs italic text-parchment/55">
+              Aviso: <span className="hebrew">מי</span>=50 ≠ <span className="hebrew">מל</span>=70. No se cruzan.
+            </p>
+          </div>
+
+          {/* Drash — jidush de Mardan, marcado visualmente distinto */}
+          <div className="my-8 space-y-3 border-s-2 border-gold/30 ps-4">
+            <p className="text-xs italic text-gold/50">
+              Jidush de Mardan — lectura propia, no cita clásica
+            </p>
+            <p className="text-sm leading-relaxed text-parchment/80">
+              <span className="font-cinzel text-gold/80">Drash:</span> la serpiente y el Mesías son la misma estructura
+              leída de dos maneras; ambos hechos del mismo silencio. La serpiente lee en el silencio una{" "}
+              <span className="hebrew text-gold/90">נ</span>: caída, abandono (&ldquo;estás solo, Dios calló porque te
+              dejó&rdquo; — el primer susurro del jardín). El Mesías lee el MISMO silencio como{" "}
+              <span className="hebrew text-gold/90">מי</span>, la pregunta de Biná: el silencio no es ausencia, es una
+              Presencia tan alta que aún no tiene palabras.
+            </p>
+          </div>
+
+          <div className="space-y-5 text-sm leading-relaxed text-parchment/80">
+            <p>
+              <span className="font-cinzel text-gold/80">Sod</span> (con Baal HaSulam):{" "}
+              <span className="hebrew text-gold/90">מי</span> = Biná en el Zohar. El Zohar, en su Hakdamá, lee:
+            </p>
+          </div>
+
+          <PullQuote
+            he="שְׂאוּ מָרוֹם עֵינֵיכֶם וּרְאוּ מִי בָרָא אֵלֶּה"
+            es="Alzad a lo alto vuestros ojos y ved: ¿Quién (Mi) creó estos (Ele)?"
+            fa="Alzad a lo alto vuestros ojos y ved: ¿Quién (Mi) creó estos (Ele)?"
+            source="Yeshayahu (Isaías) 40:26"
+            locale={locale}
+          />
+
+          <div className="space-y-5 text-sm leading-relaxed text-parchment/80">
+            <p>
+              <span className="hebrew text-gold/90">מי</span> (la pregunta oculta, Biná) +{" "}
+              <span className="hebrew text-gold/90">אלה</span> (lo manifiesto) ={" "}
+              <span className="hebrew text-gold/90">אלהים</span> (Elohim) — la Divinidad es la unión de la Pregunta
+              oculta con la Respuesta revelada (Zohar, Hakdamá 3:7 y 5:21, comentario del Sulam de Baal HaSulam). Que
+              el &ldquo;50&rdquo; del Mashíaj sea precisamente <span className="hebrew text-gold/90">מי</span> lo
+              enlaza con la primera palabra esotérica del Zohar.
+            </p>
+            <p>
+              Según Baal HaSulam (sobre el Etz Jaim del Arí): el primer acto fue el Tzimtzum, el retiro de la Luz que
+              dejó el Jalal (espacio vacío) — el silencio original. La serpiente lee el Jalal como ausencia real (la{" "}
+              <span className="hebrew text-gold/90">נ</span> de nefilá, caída dentro del Tzimtzum tomado como abandono).
+              El Mashíaj introduce la conciencia de Biná (<span className="hebrew text-gold/90">מי</span>): el Tzimtzum
+              no es desaparición sino ocultamiento; dentro del Jalal la Luz sigue, velada. Eso es la hamtaká
+              (endulzamiento): el mismo silencio se revela como Presencia oculta.
+            </p>
+            <p className="text-xs italic text-parchment/55">
+              Nota: la hamtaká es doctrina luriana-jasídica general, sin folio puntual; el Tzimtzum / Jalal sí son del
+              Etz Jaim del Arí.
+            </p>
+          </div>
+        </Section>
+
+        {/* ── 4. חֲסִידוּת — El silencio como prueba de fe ──────────────────── */}
+        <Section>
+          <p className="hebrew mb-3 text-3xl text-gold" style={{ filter: "drop-shadow(0 0 10px rgba(201,164,62,0.5))" }}>
+            חֲסִידוּת
+          </p>
+          <h2 className="mb-6 font-cinzel text-sm uppercase tracking-[0.3em] text-gold/60">
+            El silencio como prueba de fe (Baal Shem Tov)
+          </h2>
+
+          <div className="space-y-5 text-sm leading-relaxed text-parchment/80">
+            <p>
+              El Baal Shem Tov enseñó sobre la hester panim (el ocultamiento del Rostro): el escondite mismo es
+              cercanía — solo se esconde quien está presente. El vacío no prueba ausencia; es la prueba más alta de la
+              fe. El silencio de Dios es invitación al devekut en el vacío.
+            </p>
+            <p>
+              El alma en sequía está parada en el Jalal y tiene las dos lecturas del 358: oír a la serpiente
+              (&ldquo;estás solo&rdquo;), la nefilá; o hacer el trabajo del Mashíaj dentro de sí, la hamtakat hadinim,
+              reconociendo que el silencio es <span className="hebrew text-gold/90">מי</span>, Presencia oculta — el
+              alma que se creía sola y descubre que nunca lo estuvo.
+            </p>
+            <p>
+              Ese es el Tikún del Silencio: no llenar el vacío de ruido, sino escucharlo de nuevo hasta que el callar
+              revele que era habla contenida.
+            </p>
+          </div>
+        </Section>
+
+        {/* ── 5. הִתְבּוֹנְנוּת — Síntesis: nunca estuviste solo ─────────────── */}
+        <Section>
+          <p className="hebrew mb-3 text-3xl text-gold" style={{ filter: "drop-shadow(0 0 10px rgba(201,164,62,0.5))" }}>
+            הִתְבּוֹנְנוּת
+          </p>
+          <h2 className="mb-6 font-cinzel text-sm uppercase tracking-[0.3em] text-gold/60">
+            Síntesis: nunca estuviste solo
+          </h2>
+
+          <div className="space-y-5 text-sm leading-relaxed text-parchment/80">
+            <p>
+              Hay un solo silencio. La diferencia entre la serpiente y el Mesías no está en el silencio, sino en cómo
+              lo lees. <span className="hebrew text-gold/90">נָחָשׁ</span> y{" "}
+              <span className="hebrew text-gold/90">מָשִׁיחַ</span> valen 358 y guardan el mismo corazón,{" "}
+              <span className="hebrew text-gold/90">חַשׁ</span>. La serpiente le añade{" "}
+              <span className="hebrew text-gold/90">נ</span> y lo lee como caída; el Mesías le añade{" "}
+              <span className="hebrew text-gold/90">מי</span> (la pregunta de Biná) y lee el mismo silencio como
+              Presencia oculta.
+            </p>
+            <p>
+              De Najash a Mashíaj no se cambia de mundo: se reinterpreta el mismo silencio, se endulza (hamtaká) lo que
+              parecía abandono hasta revelarse cercanía. Es lo que late en el nombre del proyecto:{" "}
+              <span className="hebrew text-gold/90">חַשְׁמַל</span>, jash (silencio) que se vuelve mal (habla). El
+              silencio no se borra; aprende a hablar. Y cuando aprende, dice la frase con que Israel cierra Yom Kipur
+              en la Neilá:
+            </p>
+          </div>
+
+          <PullQuote
+            he="ה' הוּא הָאֱלֹהִים"
+            es="El Eterno, Él es Elohim."
+            fa="El Eterno, Él es Elohim."
+            source="Melajim I (Reyes I) 18:39"
+            locale={locale}
+          />
+
+          <div className="space-y-5 text-sm leading-relaxed text-parchment/80">
+            <p>
+              El YHVH que se revela y el Elohim que se oculta son una sola realidad, como proclama el Shemá:
+            </p>
+          </div>
+
+          <PullQuote
+            he="ה' אֱלֹהֵינוּ ה' אֶחָד"
+            es="El Eterno nuestro Dios, el Eterno es Uno."
+            fa="El Eterno nuestro Dios, el Eterno es Uno."
+            source="Devarim (Deuteronomio) 6:4"
+            locale={locale}
+          />
+
+          <div className="space-y-5 text-sm leading-relaxed text-parchment/80">
+            <p>
+              El mensaje, sencillo y estremecedor: el silencio que tomaste por abandono era Presencia que aún no tenía
+              palabras. Nunca estuviste solo.
             </p>
           </div>
         </Section>
