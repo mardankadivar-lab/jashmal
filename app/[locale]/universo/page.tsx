@@ -492,6 +492,7 @@ function Synapse({
   pos,
   intensity,
   showLabel,
+  sizeBoost = 1,
   isFa,
   onClick,
   onDouble,
@@ -501,6 +502,7 @@ function Synapse({
   pos: [number, number, number];
   intensity: number; // 0..1.4 — cuánto está "despierta"
   showLabel: boolean;
+  sizeBoost?: number; // >1 → la sinapsis se agranda (vecino directo del foco)
   isFa: boolean;
   onClick: (additive: boolean) => void;
   onDouble: () => void;
@@ -522,8 +524,8 @@ function Synapse({
     const t = clock.elapsedTime;
     const pulse = 1 + Math.sin(t * 1.4 + pos[0] * 1.7) * 0.1;
     const k = intensity; // 0..~1.4
-    const halo = CFG.haloBase * lvlScale * (0.8 + k * 0.9) * pulse * BRAIN_SCALE * 0.34;
-    const core = CFG.coreBase * lvlScale * (0.9 + k * 0.7) * pulse * BRAIN_SCALE * 0.34;
+    const halo = CFG.haloBase * lvlScale * (0.8 + k * 0.9) * pulse * BRAIN_SCALE * 0.34 * sizeBoost;
+    const core = CFG.coreBase * lvlScale * (0.9 + k * 0.7) * pulse * BRAIN_SCALE * 0.34 * sizeBoost;
     if (haloRef.current) haloRef.current.scale.set(halo, halo, 1);
     if (coreRef.current) coreRef.current.scale.set(core, core, 1);
     if (haloMat.current) haloMat.current.opacity = Math.min(0.9, 0.12 + k * 0.5);
@@ -659,6 +661,7 @@ function InteractiveEdge({
   colB,
   isHot,
   isFa,
+  locale,
   fromLabel,
   toLabel,
   onHover,
@@ -669,6 +672,7 @@ function InteractiveEdge({
   colB: THREE.Color;
   isHot: boolean;
   isFa: boolean;
+  locale: string;
   fromLabel: string;
   toLabel: string;
   onHover: (h: boolean) => void;
@@ -679,9 +683,10 @@ function InteractiveEdge({
     () => gradientTube(curve.pts, 0.012 * BRAIN_SCALE, colA, colB),
     [curve.pts, colA, colB],
   );
-  // tubo de impacto: invisible, más grueso → área de hover/clic generosa
+  // tubo de impacto: invisible, MUY grueso → área de hover/clic generosa, así se
+  // viaja por la fibra sin tener que cazar el nodo diminuto del destino.
   const hitGeo = useMemo(
-    () => gradientTube(curve.pts, 0.07 * BRAIN_SCALE, colA, colB),
+    () => gradientTube(curve.pts, 0.13 * BRAIN_SCALE, colA, colB),
     [curve.pts, colA, colB],
   );
   useEffect(() => () => { tubeGeo.dispose(); hitGeo.dispose(); }, [tubeGeo, hitGeo]);
@@ -730,21 +735,25 @@ function InteractiveEdge({
               fontFamily: "var(--font-cinzel, serif)",
               fontSize: "11px",
               letterSpacing: "0.04em",
-              padding: "3px 9px",
+              padding: "4px 11px",
               borderRadius: "9999px",
-              border: "1px solid rgba(201,164,62,0.35)",
-              background: "rgba(5,5,10,0.82)",
+              border: "1px solid rgba(201,164,62,0.45)",
+              background: "rgba(5,5,10,0.86)",
               color: "#f0e6cf",
               backdropFilter: "blur(4px)",
-              boxShadow: "0 0 14px rgba(0,0,0,0.6)",
+              boxShadow: "0 0 16px rgba(201,164,62,0.25)",
               display: "flex",
               alignItems: "center",
               gap: "6px",
             }}
           >
-            <span>{isFa ? toLabel : fromLabel}</span>
-            <span style={{ color: "#c9a43e" }}>{isFa ? "←" : "→"}</span>
-            <span>{isFa ? fromLabel : toLabel}</span>
+            {/* micro-rótulo: deja claro que un clic VIAJA al destino */}
+            <span style={{ fontSize: "8px", textTransform: "uppercase", letterSpacing: "0.14em", opacity: 0.55 }}>
+              {isFa ? "سفر به" : locale === "en" ? "travel to" : "viajar a"}
+            </span>
+            <span style={{ color: "#c9a43e", fontWeight: 700 }}>{isFa ? "←" : "→"}</span>
+            {/* el DESTINO, siempre destacado en dorado */}
+            <span style={{ color: "#ffe9a8", fontWeight: 700 }}>{toLabel}</span>
             <span
               style={{
                 marginInlineStart: "4px",
@@ -755,7 +764,7 @@ function InteractiveEdge({
                 color: curve.kind === "solid" ? "#c9a43e" : "#9aa6c4",
               }}
             >
-              {curve.kind === "solid" ? (isFa ? "کلاسیک" : "clásica") : (isFa ? "تفسیری" : "interp.")}
+              {curve.kind === "solid" ? (isFa ? "کلاسیک" : locale === "en" ? "classic" : "clásica") : (isFa ? "تفسیری" : locale === "en" ? "interp." : "interp.")}
             </span>
           </div>
         </Html>
@@ -771,6 +780,7 @@ function FocusEdges({
   hotKey,
   nodeMap,
   isFa,
+  locale,
   onHover,
   onPick,
 }: {
@@ -779,6 +789,7 @@ function FocusEdges({
   hotKey: string | null;
   nodeMap: Map<string, BNode>;
   isFa: boolean;
+  locale: string;
   onHover: (key: string | null) => void;
   onPick: (c: EdgeCurve) => void;
 }) {
@@ -815,6 +826,7 @@ function FocusEdges({
             colB={colorOf(toN?.cat)}
             isHot={hotKey === key}
             isFa={isFa}
+            locale={locale}
             fromLabel={fromN ? (isFa ? fromN.labelFa : fromN.label) : oriented.a}
             toLabel={toN ? (isFa ? toN.labelFa : toN.label) : oriented.b}
             onHover={(h) => onHover(h ? key : null)}
@@ -887,7 +899,7 @@ function TravelHelper({
     // offset inicial de la cámara respecto a su target (para conservar el "atrás")
     if (!startOff.current) startOff.current = camera.position.clone().sub(c.target);
 
-    prog.current = Math.min(1, prog.current + dt * 0.55); // ~1.8s de viaje
+    prog.current = Math.min(1, prog.current + dt * 0.27); // ~3.7s de viaje galáctico (lento, cinematográfico)
     const e = prog.current < 0.5 ? 2 * prog.current * prog.current : 1 - Math.pow(-2 * prog.current + 2, 2) / 2; // easeInOut
 
     // el TARGET corre por la curva; la cámara lo sigue un poco por detrás sobre la misma curva
@@ -1095,6 +1107,15 @@ function BrainScene({
     //  mouse o elegir, aparecen las estrellas y sus vecinos → sin texto encimado)
     return false;
   };
+  // tamaño extra de la sinapsis: cuando hay un nodo SELECCIONADO, sus vecinos
+  // DIRECTOS (distancia 1) se agrandan para que se VEAN aunque estén lejos o en
+  // una zona densa → así el usuario sabe a dónde llevan las aristas encendidas.
+  const boostOf = (n: BNode): number => {
+    if (gilgulActive || compareActive || catActive) return 1; // esos modos tienen su propio realce
+    if (!selected || !dist) return 1; // solo al SELECCIONAR (no en simple hover)
+    if (n.id === selected) return 1.18; // el foco, un punto más grande
+    return dist.get(n.id) === 1 ? 1.5 : 1; // vecino directo: claramente más grande
+  };
 
   return (
     <>
@@ -1106,9 +1127,9 @@ function BrainScene({
         enablePan
         panSpeed={0.5}
         rotateSpeed={0.55}
-        zoomSpeed={0.9}
-        minDistance={0.5}
-        maxDistance={90}
+        zoomSpeed={1.05}
+        minDistance={0.02}
+        maxDistance={120}
         autoRotate={autoRot && !selected && !compareActive && !catActive && !travel && !gilgulActive}
         autoRotateSpeed={0.3}
         onStart={() => { interacting.current = true; pauseAuto(); }}
@@ -1126,9 +1147,9 @@ function BrainScene({
       <StarField />
       <Nebulae isFa={isFa} />
 
-      {/* (Se quitó el plano de "tap para deseleccionar": soltaba la selección
-          por accidente al hacer zoom/arrastrar o al fallar un nodo por poco.
-          Ahora la selección solo se cierra con el botón de la tarjeta o Escape.) */}
+      {/* La selección NUNCA se suelta al tocar el fondo, arrastrar, hacer zoom ni
+          al fallar un clic cerca de un nodo. Solo se cierra con acciones explícitas:
+          el botón × de la tarjeta, la tecla Escape, o al elegir OTRO nodo. */}
 
       <group ref={groupRef}>
         <AmbientTissue />
@@ -1148,6 +1169,7 @@ function BrainScene({
             hotKey={hotEdge}
             nodeMap={nodeMap}
             isFa={isFa}
+            locale={locale}
             onHover={setHotEdge}
             onPick={(c) => onPickEdge(c.a, c.b, c.pts)}
           />
@@ -1173,6 +1195,7 @@ function BrainScene({
               pos={pos}
               intensity={intensityOf(n)}
               showLabel={showLabelOf(n)}
+              sizeBoost={boostOf(n)}
               isFa={isFa}
               onClick={(additive) => onSelect(n.id, additive)}
               onDouble={() => onDouble(n)}
@@ -1204,8 +1227,6 @@ export default function GrafoPage() {
   const [activeCat, setActiveCat] = useState<string | null>(null); // dominio resaltado (leyenda)
   const [travel, setTravel] = useState<Travel | null>(null); // viaje fibra óptica en curso (clic en arista)
   const [gilgulRoot, setGilgulRoot] = useState<string | null>(null); // modo Gilgul: raíz de alma invocada
-  // para distinguir un TAP deliberado en el vacío (soltar) de un arrastre/zoom de cámara
-  const downRef = useRef<{ x: number; y: number; t: number } | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -1526,7 +1547,6 @@ export default function GrafoPage() {
       className="always-dark fixed inset-0 z-50 overflow-hidden"
       style={{ background: "#03040a" }}
       dir={isFa ? "rtl" : "ltr"}
-      onPointerDown={(e) => { downRef.current = { x: e.clientX, y: e.clientY, t: performance.now() }; }}
     >
       <Suspense
         fallback={
@@ -1539,13 +1559,6 @@ export default function GrafoPage() {
           camera={{ position: [0, 6, CFG.radiusIdle], fov: 55 }}
           gl={{ antialias: true }}
           style={{ position: "absolute", inset: 0 }}
-          onPointerMissed={(e) => {
-            // soltar SOLO si fue un tap limpio en el vacío (no un arrastre/zoom)
-            const d = downRef.current;
-            if (!d) return;
-            const moved = Math.hypot((e as MouseEvent).clientX - d.x, (e as MouseEvent).clientY - d.y);
-            if (moved < 6 && performance.now() - d.t < 450) clearAll();
-          }}
         >
           <color attach="background" args={["#03040a"]} />
           <fogExp2 attach="fog" args={["#03040a", 0.005]} />
