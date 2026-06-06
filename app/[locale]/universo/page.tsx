@@ -1232,7 +1232,7 @@ export default function GrafoPage() {
 
       {/* Tarjeta del nodo seleccionado */}
       {selNode && (
-        <div className="absolute bottom-4 end-4 z-10 w-[min(260px,80vw)] rounded-xl border border-gold/25 bg-ink/90 p-4 backdrop-blur-md">
+        <div className="absolute bottom-24 end-4 z-10 w-[min(260px,80vw)] rounded-xl border border-gold/25 bg-ink/90 p-4 backdrop-blur-md">
           <div className="flex items-start justify-between gap-2">
             <p className="font-cinzel text-base" style={{ color: BRAIN_CATS[selNode.cat]?.c ?? "#c9a43e" }}>
               {isFa ? selNode.labelFa : selNode.label}
@@ -1307,7 +1307,7 @@ export default function GrafoPage() {
 
       {/* Panel de comparación multi-nodo (intersección) */}
       {compare.length > 0 && (
-        <div className="absolute bottom-4 end-4 z-10 w-[min(280px,84vw)] rounded-xl border border-cyan-300/30 bg-ink/90 p-4 backdrop-blur-md">
+        <div className="absolute bottom-24 end-4 z-10 w-[min(280px,84vw)] rounded-xl border border-cyan-300/30 bg-ink/90 p-4 backdrop-blur-md">
           <div className="flex items-center justify-between">
             <p className="font-cinzel text-sm uppercase tracking-wide text-cyan-200/90">
               {isFa ? "مقایسه" : "Comparando"}

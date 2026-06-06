@@ -5,6 +5,7 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Analytics } from "@vercel/analytics/next";
 import { routing, type Locale } from "@/i18n/routing";
+import GlobalTutor from "@/components/GlobalTutor";
 import "../globals.css";
 
 const cinzel = Cinzel({
@@ -77,6 +78,7 @@ export default async function LocaleLayout({
       >
         <NextIntlClientProvider messages={messages}>
           {children}
+          <GlobalTutor />
         </NextIntlClientProvider>
         <Analytics />
       </body>

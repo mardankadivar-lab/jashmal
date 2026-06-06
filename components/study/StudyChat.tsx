@@ -146,7 +146,7 @@ export default function StudyChat({ studyRef, prefill, onPrefillConsumed }: Stud
   }
 
   return (
-    <div className="fixed bottom-6 end-6 z-40">
+    <div className="fixed bottom-6 end-6 z-[60]">
       {/* Panel de chat */}
       {open && (
         <div className="mb-3 flex h-[420px] w-80 flex-col rounded-xl border border-gold/25 bg-ink shadow-2xl">
