@@ -22,6 +22,7 @@ const nextConfig: NextConfig = {
       { source: "/serpiente-de-cobre", destination: "/es/misterio/serpiente-de-cobre" },
       { source: "/refua", destination: "/es/misterio/refua" },
       { source: "/21-pactos", destination: "/es/misterio/21-pactos" },
+      { source: "/enoch", destination: "/es/misterio/enoch" },
       { source: "/universo", destination: "/es/universo" },
     ];
   },

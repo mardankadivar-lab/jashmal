@@ -9,7 +9,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 import { getSql } from "./db";
-import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, STUDY2_NODES, STUDY2_EDGES, STUDY3_NODES, STUDY3_EDGES, BRIT21_NODES, BRIT21_EDGES, MADRES_NODES, MADRES_EDGES, TOHU_NODES, TOHU_EDGES, AVRAHAM_KAB_NODES, AVRAHAM_KAB_EDGES, GILGUL_CAIN_HEVEL_NODES, GILGUL_CAIN_HEVEL_EDGES, GILGUL_VESSEL_NODES, TIKUN_SILENCIO_NODES, TIKUN_SILENCIO_EDGES, type BNode } from "./brainData";
+import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, STUDY2_NODES, STUDY2_EDGES, STUDY3_NODES, STUDY3_EDGES, BRIT21_NODES, BRIT21_EDGES, MADRES_NODES, MADRES_EDGES, TOHU_NODES, TOHU_EDGES, AVRAHAM_KAB_NODES, AVRAHAM_KAB_EDGES, GILGUL_CAIN_HEVEL_NODES, GILGUL_CAIN_HEVEL_EDGES, GILGUL_VESSEL_NODES, TIKUN_SILENCIO_NODES, TIKUN_SILENCIO_EDGES, ENOCH_NODES, ENOCH_EDGES, type BNode } from "./brainData";
 
 export type BrainGraph = { nodes: BNode[]; edges: [string, string][] };
 
@@ -490,6 +490,39 @@ export async function addTikunSilencio(): Promise<void> {
       `;
     }
     for (const e of TIKUN_SILENCIO_EDGES) {
+      try {
+        await sql`
+          INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
+          VALUES (${edgeKey(e.a, e.b)}, ${e.a}, ${e.b}, ${e.kind}, 1, 'approved', 'sofer')
+          ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, status = 'approved'
+        `;
+      } catch { /* arista a nodo inexistente → se ignora */ }
+    }
+  } catch {
+    /* nunca romper la lectura del cerebro */
+  }
+}
+
+// ── Jidush de Mardan: "Janóoj — la gracia que asciende" (חנוך → Metatrón) ──
+// Vetado por el Sofer; guardarraíl teológico (Metatrón = ángel/siervo, jamás un
+// segundo poder). Reusa el nodo "Janoj" (capa Gilgul) y "Tikún del Silencio".
+export async function addEnoch(): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  try {
+    for (const n of ENOCH_NODES) {
+      await sql`
+        INSERT INTO brain_nodes (id, label, label_fa, cat, level, url, region, status, source)
+        VALUES (${n.id}, ${n.label}, ${n.labelFa}, ${n.cat}, ${n.level},
+                ${n.url ?? null}, ${n.region ?? null}, 'approved', 'sofer')
+        ON CONFLICT (id) DO UPDATE SET
+          label = EXCLUDED.label, label_fa = EXCLUDED.label_fa,
+          cat = EXCLUDED.cat, level = EXCLUDED.level,
+          url = COALESCE(EXCLUDED.url, brain_nodes.url),
+          status = 'approved', source = 'sofer'
+      `;
+    }
+    for (const e of ENOCH_EDGES) {
       try {
         await sql`
           INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)

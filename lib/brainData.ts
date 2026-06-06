@@ -629,6 +629,55 @@ export const TIKUN_SILENCIO_EDGES: MaseiEdge[] = [
   { a: "Jalal", b: "Jashmal",     kind: "interp" },             // el silencio (jash) = ocultamiento del Tzimtzum
 ];
 
+// ─── Jidush de Mardan: "Janóoj — la gracia que asciende" (vetado por el Sofer) ─
+// חנוך = חן(58)+ו(6)+ך(20) = 84. El nombre humano (84) esconde su milui celestial
+// (חית418 · נון106 · ואו13 · כף100 = 637). Misma raíz ח־נ־ך que חינוך (educación).
+// AUTORIDAD CLÁSICA (solid):
+//   · Bereshit 5:23-24 ("ויתהלך חנוך את האלהים", 365 años) → nodo Bereshit.
+//   · Targum Yonatan a Gén 5:24 llama a Janoj "Metatrón, Safra Rabá" (el Gran Escriba).
+//   · מטטרון = 314 = שדי (Shemot 23:21 "כי שמי בקרבו"; Sanhedrín 38b).
+//   · Guardarraíl (שני פיות): Jaguigá 15a — a Metatrón lo azotan con 60 latigazos de
+//     fuego cuando Ajer sospecha "שתי רשויות"; su autoridad es prestada, JAMÁS un
+//     segundo poder. → nodo Talmud.
+//   · El Kav (קו=106, vía el milui de נון) es del Etz Jaim del Arí (la línea tras el
+//     Tzimtzum) → nodo Tzimtzum.
+// SÍNTESIS interpretativa (jidush de Mardan, cat "jashmal", aristas interp): la
+// gracia (חן) que se canaliza (ו) y se vuelve mano/acción (ך); el alma educada
+// (חינוך) transfigurada en vehículo de luz; חן58 → קול136 → ניגון119 (el camino
+// tiene música). Reusa el nodo "Janoj" (= Janoj/Metatrón, capa Gilgul) en vez de
+// duplicarlo; reusa "Tikún del Silencio" como puente temático jashmal.
+export const ENOCH_NODES: BNode[] = [
+  { id: "Janóoj-gracia", label: "Janóoj — la gracia que asciende (חנוך · 84)", labelFa: "حَنوخ — فیضی که بالا می‌رود (חنوך · ۸۴)", cat: "jashmal",  level: 2, url: "/enoch" },
+  { id: "Targum Yonatan", label: "Targum Yonatan",                  labelFa: "تَرگوم یوناتان",              cat: "midrash",  level: 2 },
+  { id: "Shaddai",        label: "Shaddai · שדי (314)",             labelFa: "شَدّای · שדי (۳۱۴)",          cat: "kabbalah", level: 3 },
+  { id: "Jen",            label: "Jen · חן (gracia · 58)",          labelFa: "خِن · חן (فیض · ۵۸)",         cat: "kabbalah", level: 3 },
+  { id: "Jinuj",          label: "Jinuj · חינוך (educación del alma)", labelFa: "خینوخ · חینוך (تربیت روح)", cat: "kabbalah", level: 3 },
+  { id: "Nigún",          label: "Nigún · ניגון (melodía · 119)",   labelFa: "نیگون · ניגون (نغمه · ۱۱۹)",   cat: "chasidut", level: 3 },
+  { id: "Kav",            label: "Kav · קו (la línea · 106)",       labelFa: "کاو · קו (خط · ۱۰۶)",         cat: "kabbalah", level: 3 },
+  { id: "Likutei Moharán", label: "Likutei Moharán (Rabí Najmán)",  labelFa: "لیکوطی موهَران (ربی نَحمان)", cat: "chasidut", level: 2 },
+  { id: "Olamot",         label: "Los 4 Mundos (Atzilut→Asiyá)",    labelFa: "چهار عالَم (آتسیلوت→عَسیّا)",  cat: "kabbalah", level: 3 },
+];
+export const ENOCH_EDGES: MaseiEdge[] = [
+  // ── AUTORIDAD CLÁSICA (solid) — hecho verificado en la fuente ──
+  { a: "Janóoj-gracia", b: "Bereshit",      kind: "solid" },  // Bereshit 5:23-24 (Janoj caminó con Elohim, 365 años)
+  { a: "Janóoj-gracia", b: "Targum Yonatan", kind: "solid" }, // Targum Yonatan Gén 5:24 (Janoj = Metatrón, Safra Rabá)
+  { a: "Janóoj-gracia", b: "Janoj",         kind: "solid" },  // mismo personaje: el Janoj/Metatrón de la capa Gilgul
+  { a: "Janoj", b: "Talmud",                kind: "solid" },  // Jaguigá 15a / Sanhedrín 38b (Metatrón en el Talmud)
+  { a: "Janoj", b: "Shaddai",               kind: "solid" },  // מטטרון = שדי = 314 (Shemot 23:21; Sanhedrín 38b)
+  { a: "Janóoj-gracia", b: "Shaddai",       kind: "solid" },  // el sello del Nombre: שמי בקרבו
+  { a: "Kav", b: "Tzimtzum",                kind: "solid" },  // Etz Jaim del Arí: el Kav (קו) es la línea tras el Tzimtzum
+  { a: "Targum Yonatan", b: "Bereshit",     kind: "solid" },  // el Targum traduce/expande la Torá
+  // ── JIDUSH DE MARDAN (interp) — lectura propia, galaxia "jashmal" ──
+  { a: "Janóoj-gracia", b: "Jen",           kind: "interp" }, // חן (58) = la gracia oculta que eleva las chispas
+  { a: "Janóoj-gracia", b: "Jinuj",         kind: "interp" }, // misma raíz ח־נ־ך: la educación/consagración del alma
+  { a: "Janóoj-gracia", b: "Nigún",         kind: "interp" }, // חן58 → קול136 → ניגון119 (el camino tiene música)
+  { a: "Janóoj-gracia", b: "Kav",           kind: "interp" }, // la ו = el kav; milui נון=106=קו (vía el Arí)
+  { a: "Janóoj-gracia", b: "Likutei Moharán", kind: "interp" }, // remez najmaniano (NO cita literal)
+  { a: "Janóoj-gracia", b: "Olamot",        kind: "interp" }, // la gracia desciende por los 4 Mundos hasta la acción
+  { a: "Janóoj-gracia", b: "Tikún del Silencio", kind: "interp" }, // puente jashmal: Janoj "caminó" en silencio con Dios
+  { a: "Jen", b: "Nigún",                   kind: "interp" }, // de la gracia a la melodía (58→119)
+];
+
 // ─── Vasijas del Sha'ar HaGilgulim (capa Gilgul) — verificadas por el Sofer ──
 // Eslabones de las 5 cadenas-ancla del dataset verificado (Hakdamot 32–36 del
 // Sha'ar HaGilgulim) que NO existían como nodo. Cada `from`/`to` de
@@ -776,6 +825,8 @@ export const BNODES: BNode[] = [
   ...AVRAHAM_KAB_NODES,
   ...GILGUL_CAIN_HEVEL_NODES,
   ...TIKUN_SILENCIO_NODES,
+  // ── Jidush de Mardan: Janóoj — la gracia que asciende (galaxia Jashmal) ──
+  ...ENOCH_NODES,
   // ── Vasijas del Sha'ar HaGilgulim (capa Gilgul, verificadas por el Sofer) ──
   ...GILGUL_VESSEL_NODES,
 ];
@@ -845,6 +896,8 @@ const RAW_EDGES: [string, string][] = [
   ...AVRAHAM_KAB_EDGES.map((e) => [e.a, e.b] as [string, string]),
   ...GILGUL_CAIN_HEVEL_EDGES.map((e) => [e.a, e.b] as [string, string]),
   ...TIKUN_SILENCIO_EDGES.map((e) => [e.a, e.b] as [string, string]),
+  // Jidush Janóoj — la gracia que asciende (חנוך → Metatrón, vía חן/ו/ך)
+  ...ENOCH_EDGES.map((e) => [e.a, e.b] as [string, string]),
 ];
 
 // dedup + descarta aristas a nodos inexistentes (p.ej. placeholders)
@@ -870,7 +923,7 @@ export const BEDGES: [string, string][] = (() => {
 const _KINDED_EDGES: MaseiEdge[] = [
   ...MASEI_EDGES, ...V4_EDGES, ...STUDY2_EDGES, ...STUDY3_EDGES,
   ...BRIT21_EDGES, ...MADRES_EDGES, ...TOHU_EDGES, ...AVRAHAM_KAB_EDGES,
-  ...GILGUL_CAIN_HEVEL_EDGES, ...TIKUN_SILENCIO_EDGES,
+  ...GILGUL_CAIN_HEVEL_EDGES, ...TIKUN_SILENCIO_EDGES, ...ENOCH_EDGES,
 ];
 const EDGE_KIND = new Map<string, "solid" | "interp">();
 for (const e of _KINDED_EDGES) {

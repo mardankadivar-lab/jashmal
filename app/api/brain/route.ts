@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured, getSql } from "@/lib/db";
-import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addGilgulCainHevel, addGilgulVessels, addTikunSilencio } from "@/lib/brainStore";
+import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch } from "@/lib/brainStore";
 import { BNODES, BEDGES } from "@/lib/brainData";
 
 export const runtime = "nodejs";
@@ -45,6 +45,8 @@ function ensureInit(): Promise<void> {
       await addGilgulVessels();
       // Jidush de Mardan: El Tikún del Silencio (נחש 358 = משיח) — galaxia Jashmal
       await addTikunSilencio();
+      // Jidush de Mardan: Janóoj — la gracia que asciende (חנוך → Metatrón) — Jashmal
+      await addEnoch();
     })().catch((e) => {
       initPromise = null; // permite reintentar en la próxima llamada
       throw e;
