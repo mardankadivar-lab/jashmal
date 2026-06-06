@@ -91,6 +91,73 @@ body {
   color: rgb(var(--c-strong));
 }
 
+/* ─── Umbral de navegación "Sigue el hilo" (הֶמְשֵׁךְ) ──────────────────────
+   NO es la séptima sección del estudio: el contenido quedó sellado en la
+   חֲתִימָה. Esto se lee como NAVEGACIÓN — un separador dorado + micro-rótulo +
+   chips clicables hacia otros estudios. Soporta RTL (fa) por el dir del <nav>. */
+.study-threshold {
+  margin-top: 2.75rem;
+  padding-top: 0.5rem;
+}
+/* (1) Separador/umbral: línea dorada que se desvanece a los lados, con el sello. */
+.study-threshold__rule {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.1rem;
+}
+.study-threshold__rule::before,
+.study-threshold__rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgb(var(--c-gold) / 0.45), transparent);
+}
+.study-threshold__seal {
+  font-family: var(--font-cinzel), serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: rgb(var(--c-gold) / 0.8);
+  white-space: nowrap;
+}
+/* (2) Micro-rótulo en el idioma del usuario: discreto, no compite con el estudio. */
+.study-threshold__label {
+  margin: 0 0 1.1rem;
+  text-align: center;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  color: rgb(var(--c-muted));
+  text-transform: none;
+}
+/* (3) Chips/enlaces dorados: preguntas-puente clicables, NO párrafos de prosa. */
+.study-threshold__chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.study-threshold__chip {
+  border: 1px solid rgb(var(--c-gold) / 0.28);
+  border-radius: 0.7rem;
+  padding: 0.65rem 0.9rem;
+  background: rgb(var(--c-gold) / 0.04);
+  line-height: 1.5;
+  font-size: 1rem;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.study-threshold__chip:hover {
+  border-color: rgb(var(--c-gold) / 0.55);
+  background: rgb(var(--c-gold) / 0.08);
+}
+/* Dentro del chip, el enlace dorado pierde el subrayado punteado: el chip ENTERO
+   ya comunica "clicable", y queremos que se lea como botón de navegación. */
+.study-threshold__chip .gold-link {
+  border-bottom: none;
+  font-weight: 500;
+}
+
 ::selection {
   background: rgb(var(--sel) / 0.25);
 }

@@ -70,13 +70,30 @@ Navegación: Categoría → Libro → Capítulo/Folio → (rango de versículos)
 Talmud usa Daf + Amud (a/b).
 
 ## Estructura del análisis (system prompt)
-En este orden exacto, con títulos en hebreo:
-1. תַּרְגּוּם — Traducción del pasaje
-2. מְפָרְשִׁים — Comentaristas clásicos: Rashi, Ramban, Ibn Ezra,
-   Abarbanel, Malbim (cada uno con su voz)
-3. פרד״ס — PRDS: Pshat, Remez, Drash, Sod (con Baal HaSulam en Sod)
-4. חֲסִידוּת — Implicaciones jasídicas (Baal Shem Tov)
-5. הִתְבּוֹנְנוּת — Síntesis: mensaje profundo y sencillo
+FLUJO ESTRICTAMENTE LINEAL (entendimiento → integración → acción): el estudio
+avanza y TERMINA; nunca retrocede. Una vez en la contemplación (Hitbonenut) está
+PROHIBIDO reintroducir comentario nuevo, Arizal o secciones previas. En este orden
+exacto, con títulos en hebreo:
+1. תַּרְגּוּם — Traducción (texto original en hebreo + traducción)
+2. מְפָרְשִׁים — Comentaristas clásicos: Rashi, Ramban, Ibn Ezra, Abarbanel,
+   Malbim, **Arizal** y otras fuentes relevantes (cada uno con su voz). TODO el
+   Arizal / Cabalá luriana (Partzufim, sefirot, tikunim) vive AQUÍ, nunca después.
+3. פרד״ס — PaRDeS: Pshat, Remez, Drash, Sod (con Baal HaSulam en Sod). La voz
+   jasídica (Baal Shem Tov) se INTEGRA aquí en Drash/Sod, NO en sección aparte.
+4. הִתְבּוֹנְנוּת — Hitbonenut: SOLO contemplación/internalización. Prohibido
+   comentario nuevo, Arizal o volver atrás. (¿qué me enseña?, ¿qué patrones veo?,
+   ¿cómo se relaciona con mi alma?, ¿con la creación?)
+5. מַעֲשֶׂה — Maasé: acción práctica concreta y realizable hoy (¿qué acción surge?,
+   ¿qué midá mejorar?, ¿qué conducta cambiar?, ¿qué implementar hoy?).
+6. חֲתִימָה (jatimá, “el sello”) — Síntesis de cierre que SELLA el estudio (idea
+   principal · insight clave · insight espiritual · aplicación práctica). Sección
+   FINAL del contenido de estudio: NADA de Arizal ni comentarios después.
+Tras la חֲתִימָה va únicamente un UMBRAL DE NAVEGACIÓN: הֶמְשֵׁךְ (“Sigue el hilo”),
+2–4 preguntas-puente clicables hacia OTROS estudios. NO es la séptima sección ni
+tiene el rango de las 6 secciones; el contenido de estudio quedó sellado en la
+חֲתִימָה. Aquí solo se tienden puentes (enlaces {{study:…}} / {{letter:…}}), SIN
+comentario, Arizal, gematría ni análisis nuevo. El frontend lo renderiza como un
+umbral (separador + micro-rótulo + chips dorados), no como otra sección de estudio.
 REGLAS: citar fuentes exactas (libro cap:versículo, folio del Talmud,
 Zohar, Midrash). Ser profundo, no breve.
 
