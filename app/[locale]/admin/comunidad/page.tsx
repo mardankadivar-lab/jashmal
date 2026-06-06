@@ -15,6 +15,7 @@ type ReviewRow = {
   email: string;
 };
 type NodeOpt = { id: string; label: string; cat: string };
+type StarRow = { id: string; label: string; author: string | null; connectsTo: string };
 
 // Título por defecto para la estrella: la primera frase (o ~56 caracteres) del jidush.
 function defaultTitle(text: string): string {
@@ -44,6 +45,7 @@ export default function AdminComunidadPage() {
   const [token, setToken] = useState("");
   const [queue, setQueue] = useState<ReviewRow[] | null>(null);
   const [nodes, setNodes] = useState<NodeOpt[]>([]);
+  const [stars, setStars] = useState<StarRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [flash, setFlash] = useState<string | null>(null);
@@ -66,6 +68,7 @@ export default function AdminComunidadPage() {
       }
       setQueue(d.queue ?? []);
       setNodes(d.nodes ?? []);
+      setStars(d.stars ?? []);
     } catch {
       setError("Error al cargar.");
     } finally {
@@ -96,6 +99,30 @@ export default function AdminComunidadPage() {
     } catch {
       setFlash("⚠ Error de red.");
       return false;
+    }
+  }
+
+  async function removeStar(nodeId: string, label: string) {
+    if (!confirm(`¿Retirar la estrella "${label}"?\n\nSe apaga del universo (es reversible) y se revierten la estrella y la luz del estudiante.`)) {
+      return;
+    }
+    setFlash(null);
+    const subId = nodeId.replace(/^c-/, "");
+    try {
+      const res = await fetch("/api/admin/community", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-admin-token": token },
+        body: JSON.stringify({ action: "remove", id: subId }),
+      });
+      const d = await res.json();
+      if (!res.ok || d.error) {
+        setFlash("⚠ " + errMsg(d.error));
+        return;
+      }
+      setStars((s) => s.filter((x) => x.id !== nodeId));
+      setFlash("Estrella retirada y archivada.");
+    } catch {
+      setFlash("⚠ Error de red.");
     }
   }
 
@@ -139,6 +166,40 @@ export default function AdminComunidadPage() {
               ))}
             </ul>
           </>
+        )}
+
+        {stars.length > 0 && (
+          <div className="mt-10 border-t border-gold/10 pt-6">
+            <p className="font-cinzel text-sm uppercase tracking-widest text-gold/70">
+              Estrellas encendidas · {stars.length}
+            </p>
+            <p className="mt-1 text-xs text-muted/60">
+              Las que ya brillan en la galaxia Comunidad. Retirar una la apaga del universo (reversible).
+            </p>
+            <ul className="mt-3 space-y-2">
+              {stars.map((s) => (
+                <li
+                  key={s.id}
+                  className="flex items-center gap-3 rounded-lg border border-gold/12 bg-white/[0.02] px-3 py-2 text-sm"
+                >
+                  <span className="text-rose-200/80">✦</span>
+                  <span className="min-w-0">
+                    <span className="block truncate text-parchment/90">{s.label}</span>
+                    <span className="block truncate text-[11px] text-muted/60">
+                      {s.author ?? "—"}
+                      {s.connectsTo ? ` · ↔ ${s.connectsTo}` : ""}
+                    </span>
+                  </span>
+                  <button
+                    onClick={() => removeStar(s.id, s.label)}
+                    className="ms-auto shrink-0 rounded-full border border-red-500/40 px-3 py-1 text-xs text-red-400/90 transition-colors hover:bg-red-500/10"
+                  >
+                    Retirar
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
         {/* lista de conceptos del universo para el autocompletar */}

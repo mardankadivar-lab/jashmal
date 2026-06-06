@@ -9,7 +9,7 @@ import {
   incrementUserStats,
   decrementUserStats,
 } from "@/lib/community";
-import { ensureBrainTables, addCommunityStar, getBrainGraph, setNodeStatus } from "@/lib/brainStore";
+import { ensureBrainTables, addCommunityStar, getBrainGraph, setNodeStatus, listCommunityStars } from "@/lib/brainStore";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -35,12 +35,13 @@ export async function GET(req: Request) {
   await ensureCommunityTables();
   await ensureBrainTables(); // asegura la columna 'author' antes de leer el grafo
   const queue = await listSoferReview();
+  const stars = await listCommunityStars();
   const g = await getBrainGraph();
   const nodes = (g?.nodes ?? [])
     .filter((n) => n.cat !== "comunidad")
     .map((n) => ({ id: n.id, label: n.label, cat: n.cat }))
     .sort((a, b) => a.label.localeCompare(b.label));
-  return NextResponse.json({ configured: true, queue, nodes });
+  return NextResponse.json({ configured: true, queue, stars, nodes });
 }
 
 // POST /api/admin/community  (cabecera x-admin-token)

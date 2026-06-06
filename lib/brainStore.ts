@@ -591,6 +591,29 @@ export async function addCommunityStar(input: {
   }
 }
 
+// Lista las estrellas ENCENDIDAS de la galaxia Comunidad (para moderarlas).
+export type CommunityStar = { id: string; label: string; author: string | null; connectsTo: string };
+export async function listCommunityStars(): Promise<CommunityStar[]> {
+  const sql = getSql();
+  if (!sql) return [];
+  try {
+    return (await sql`
+      SELECT n.id, n.label, n.author,
+        COALESCE((
+          SELECT CASE WHEN e.source_id = n.id THEN e.target_id ELSE e.source_id END
+          FROM brain_edges e
+          WHERE (e.source_id = n.id OR e.target_id = n.id) AND e.origin = 'community' AND e.status = 'approved'
+          LIMIT 1
+        ), '') AS "connectsTo"
+      FROM brain_nodes n
+      WHERE n.cat = 'comunidad' AND n.status = 'approved'
+      ORDER BY n.created_at DESC
+    `) as CommunityStar[];
+  } catch {
+    return [];
+  }
+}
+
 // ── Revisión del Sofer (panel) ────────────────────────────────────────────
 // ids de nodos YA existentes (cualquier estado) → para que la cosecha reutilice
 // el nodo canónico en vez de crear duplicados con otra grafía.

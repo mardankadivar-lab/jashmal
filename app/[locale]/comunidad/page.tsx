@@ -1,24 +1,17 @@
 import Link from "next/link";
 import { getSession } from "@/lib/communitySession";
 import { getUserByEmail } from "@/lib/community";
+import { levelForStars } from "@/lib/communityLevels";
 import LoginForm from "@/components/community/LoginForm";
 import ShareRevelation from "@/components/community/ShareRevelation";
 
 export const dynamic = "force-dynamic";
 
-const LEVELS: Record<string, { he: string; es: string }> = {
-  talmid: { he: "תַּלְמִיד", es: "Talmid" },
-  shoel: { he: "שׁוֹאֵל", es: "Shoel" },
-  javer: { he: "חָבֵר", es: "Javer" },
-  maguid: { he: "מַגִּיד", es: "Maguid" },
-  jajam: { he: "חָכָם", es: "Jajam" },
-  mekubal: { he: "מְקֻבָּל", es: "Mekubal" },
-};
-
 export default async function ComunidadPage() {
   const session = await getSession();
   const user = session ? await getUserByEmail(session.email) : null;
-  const lvl = user ? LEVELS[user.level] ?? { he: "", es: user.level } : null;
+  const prog = user ? levelForStars(user.stars, user.level) : null;
+  const lvl = prog ? { he: prog.current.he, es: prog.current.es } : null;
 
   return (
     <div className="always-dark min-h-screen" style={{ background: "#05050a" }}>
@@ -49,6 +42,25 @@ export default async function ComunidadPage() {
                   <span className="text-[11px] uppercase tracking-wide text-muted/60">luz</span>
                 </div>
               </div>
+              {prog?.next ? (
+                <p className="mt-5 border-t border-gold/10 pt-4 text-xs leading-relaxed text-parchment/65">
+                  {prog.toNext === 0 ? (
+                    <>Estás a las puertas de <span className="text-gold/90">{prog.next.es}</span>.</>
+                  ) : (
+                    <>
+                      Te {prog.toNext === 1 ? "falta" : "faltan"}{" "}
+                      <span className="font-cinzel text-gold/90">{prog.toNext}</span>{" "}
+                      {prog.toNext === 1 ? "estrella" : "estrellas"} para{" "}
+                      <span className="text-gold/90">{prog.next.es}</span>{" "}
+                      <span className="hebrew">{prog.next.he}</span>.
+                    </>
+                  )}
+                </p>
+              ) : prog ? (
+                <p className="mt-5 border-t border-gold/10 pt-4 text-xs leading-relaxed text-gold/60">
+                  Has alcanzado la cima del ascenso por estrellas. <span className="hebrew">מְקֻבָּל</span> (Mekubal) se otorga a mano.
+                </p>
+              ) : null}
             </div>
             <div className="mt-10 border-t border-gold/10 pt-8 text-center">
               <p className="hebrew mb-1 text-2xl text-gold" style={{ filter: "drop-shadow(0 0 8px #c9a43e44)" }}>חִדּוּשׁ</p>
