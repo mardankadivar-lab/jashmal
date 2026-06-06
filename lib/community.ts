@@ -110,3 +110,17 @@ export async function createSubmission(input: {
   `;
   return id;
 }
+
+// Guarda el veredicto del Sofer (Puerta 1) sobre un envío.
+export async function updateSoferVerdict(
+  id: string,
+  v: { verdict: string; score: number; notes: string; status: SubmissionStatus },
+): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  await sql`
+    UPDATE community_submissions
+       SET sofer_verdict = ${v.verdict}, score = ${v.score}, sofer_notes = ${v.notes}, status = ${v.status}
+     WHERE id = ${id}
+  `;
+}

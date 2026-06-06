@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/communitySession";
-import { ensureCommunityTables, createSubmission } from "@/lib/community";
+import { ensureCommunityTables, createSubmission, updateSoferVerdict } from "@/lib/community";
+import { soferEvaluate } from "@/lib/sofer";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60; // el Sofer (Claude) puede tardar unos segundos
 
 // POST { text, connectsTo?, studyRef? } → guarda la revelación (estado 'pending').
 // Requiere sesión iniciada. Luego el Sofer (Puerta 1) la evaluará.
@@ -32,5 +34,13 @@ export async function POST(req: Request) {
   if (!id) {
     return NextResponse.json({ ok: false, error: "No se pudo guardar. Intenta de nuevo." }, { status: 500 });
   }
-  return NextResponse.json({ ok: true, id });
+  // ── Puerta 1: el Sofer (IA) evalúa con su criterio ───────────────────────
+  const v = await soferEvaluate({ text, connectsTo });
+  if (v) {
+    const status = v.verdict === "aceptar" ? "sofer_review" : "rejected";
+    await updateSoferVerdict(id, { verdict: v.verdict, score: v.score, notes: v.message, status });
+    return NextResponse.json({ ok: true, id, verdict: v.verdict, score: v.score, message: v.message });
+  }
+  // si el Sofer no pudo evaluar (sin clave/error), queda 'pending' para revisión manual
+  return NextResponse.json({ ok: true, id, verdict: "pending", message: "Recibimos tu revelación. El Sofer la revisará pronto." });
 }
