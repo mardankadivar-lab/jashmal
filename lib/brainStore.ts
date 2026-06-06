@@ -456,6 +456,10 @@ export async function addGilgulVessels(): Promise<void> {
   const sql = getSql();
   if (!sql) return;
   try {
+    // Limpieza de auditoría (Sofer): borra la arista FALSA Abel↔Naval del cerebro.
+    // Naval es de la raíz de Laván, no de Hevel. Las migraciones solo AGREGAN, así
+    // que la arista ya seedeada en la BD hay que eliminarla explícitamente.
+    await sql`DELETE FROM brain_edges WHERE id = ${edgeKey("Abel", "Naval")}`;
     for (const n of GILGUL_VESSEL_NODES) {
       await sql`
         INSERT INTO brain_nodes (id, label, label_fa, cat, level, url, region, status, source)
