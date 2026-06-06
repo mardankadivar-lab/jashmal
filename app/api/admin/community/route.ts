@@ -7,8 +7,9 @@ import {
   approveSubmissionRow,
   rejectSubmissionRow,
   incrementUserStats,
+  decrementUserStats,
 } from "@/lib/community";
-import { ensureBrainTables, addCommunityStar, getBrainGraph } from "@/lib/brainStore";
+import { ensureBrainTables, addCommunityStar, getBrainGraph, setNodeStatus } from "@/lib/brainStore";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -71,6 +72,20 @@ export async function POST(req: Request) {
 
   const sub = await getSubmissionById(id);
   if (!sub) return NextResponse.json({ error: "not_found" }, { status: 404 });
+
+  // ── Quitar / archivar una estrella ya encendida (soft, reversible) ──────
+  // Apaga el nodo (desaparece del universo, pero NO se borra: status 'rejected'),
+  // revierte estrella + luz del estudiante y archiva el envío.
+  if (body.action === "remove") {
+    const nodeId = sub.node_id ?? `c-${id}`;
+    await setNodeStatus(nodeId, "rejected");
+    if (sub.status === "approved") {
+      await decrementUserStats(sub.user_id, sub.score);
+    }
+    await rejectSubmissionRow(id, body.note?.trim() || "estrella retirada");
+    return NextResponse.json({ ok: true, status: "removed", nodeId });
+  }
+
   if (sub.status !== "sofer_review") {
     return NextResponse.json({ error: "already_resolved", status: sub.status }, { status: 409 });
   }

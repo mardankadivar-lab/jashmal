@@ -201,3 +201,15 @@ export async function incrementUserStats(userId: string, addLight: number): Prom
      WHERE id = ${userId}
   `;
 }
+
+// Revierte (al retirar/archivar una estrella): resta una estrella y su luz, sin bajar de 0.
+export async function decrementUserStats(userId: string, subLight: number): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  await sql`
+    UPDATE community_users
+       SET stars = GREATEST(0, stars - 1),
+           light = GREATEST(0, light - ${Math.max(0, Math.floor(subLight))})
+     WHERE id = ${userId}
+  `;
+}
