@@ -9,7 +9,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 import { getSql } from "./db";
-import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, STUDY2_NODES, STUDY2_EDGES, STUDY3_NODES, STUDY3_EDGES, BRIT21_NODES, BRIT21_EDGES, MADRES_NODES, MADRES_EDGES, TOHU_NODES, TOHU_EDGES, AVRAHAM_KAB_NODES, AVRAHAM_KAB_EDGES, GILGUL_CAIN_HEVEL_NODES, GILGUL_CAIN_HEVEL_EDGES, TIKUN_SILENCIO_NODES, TIKUN_SILENCIO_EDGES, type BNode } from "./brainData";
+import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, STUDY2_NODES, STUDY2_EDGES, STUDY3_NODES, STUDY3_EDGES, BRIT21_NODES, BRIT21_EDGES, MADRES_NODES, MADRES_EDGES, TOHU_NODES, TOHU_EDGES, AVRAHAM_KAB_NODES, AVRAHAM_KAB_EDGES, GILGUL_CAIN_HEVEL_NODES, GILGUL_CAIN_HEVEL_EDGES, GILGUL_VESSEL_NODES, TIKUN_SILENCIO_NODES, TIKUN_SILENCIO_EDGES, type BNode } from "./brainData";
 
 export type BrainGraph = { nodes: BNode[]; edges: [string, string][] };
 
@@ -438,6 +438,34 @@ export async function addGilgulCainHevel(): Promise<void> {
           ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, status = 'approved'
         `;
       } catch { /* arista a nodo inexistente → se ignora, no rompe el resto */ }
+    }
+  } catch {
+    /* nunca romper la lectura del cerebro */
+  }
+}
+
+// ── Capa Gilgul: vasijas del Sha'ar HaGilgulim (verificadas por el Sofer) ──
+// Inserta SOLO los nodos-vasija de las 5 cadenas-ancla (Caín→Akiva, Pinjás→
+// Eliyahu, Hevel→Moshé, Zihará Ilá'a→R. Yishmael, Harán→Zejariá, + raíz oscura
+// Laván→Bilaam→Naval) que no existían. Las "aristas" de gilgul NO van al grafo
+// del cerebro: viven en lib/gilgul.ts (SOFER_GILGUL_LINKS) y las dibuja la capa
+// GilgulLayer aparte. Aquí solo garantizamos que cada from/to exista en la BD.
+// UPSERT idempotente: la versión verificada del Sofer gana sobre cualquier
+// 'pending' previo con el mismo id.
+export async function addGilgulVessels(): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  try {
+    for (const n of GILGUL_VESSEL_NODES) {
+      await sql`
+        INSERT INTO brain_nodes (id, label, label_fa, cat, level, url, region, status, source)
+        VALUES (${n.id}, ${n.label}, ${n.labelFa}, ${n.cat}, ${n.level},
+                ${n.url ?? null}, ${n.region ?? null}, 'approved', 'sofer')
+        ON CONFLICT (id) DO UPDATE SET
+          label = EXCLUDED.label, label_fa = EXCLUDED.label_fa,
+          cat = EXCLUDED.cat, level = EXCLUDED.level,
+          status = 'approved', source = 'sofer'
+      `;
     }
   } catch {
     /* nunca romper la lectura del cerebro */

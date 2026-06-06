@@ -629,6 +629,48 @@ export const TIKUN_SILENCIO_EDGES: MaseiEdge[] = [
   { a: "Jalal", b: "Jashmal",     kind: "interp" },             // el silencio (jash) = ocultamiento del Tzimtzum
 ];
 
+// ─── Vasijas del Sha'ar HaGilgulim (capa Gilgul) — verificadas por el Sofer ──
+// Eslabones de las 5 cadenas-ancla del dataset verificado (Hakdamot 32–36 del
+// Sha'ar HaGilgulim) que NO existían como nodo. Cada `from`/`to` de
+// SOFER_GILGUL_LINKS (lib/gilgul.ts) debe existir aquí. Galaxia por disciplina:
+// personajes del Tanaj → "figure" (junto a Caín/Abel/Shet/Rabí Akiva…); sabios
+// tannaim/amoraim → "talmud". level 4. labelFa cae a label (trilingüe diferido).
+// labelEn no aplica al BNode (el render trilingüe del universo usa label/labelFa).
+export const GILGUL_VESSEL_NODES: BNode[] = [
+  // — Raíz de CAÍN · cadena hasta Rabí Akiva (ShG 33/36) —
+  { id: "Kenán",            label: "Kenán",                       labelFa: "کِنان",                  cat: "figure", level: 4 },
+  { id: "Mahalalel",        label: "Mahalalel",                   labelFa: "مَهَلَلئیل",             cat: "figure", level: 4 },
+  { id: "Yshajar",          label: "Yshajar (hijo de Yaakov)",    labelFa: "یِساخار",                cat: "figure", level: 4 },
+  { id: "Najshón",          label: "Najshón ben Aminadav · 414",  labelFa: "نَحشون بن عَمیناداو · ۴۱۴", cat: "figure", level: 4 },
+  { id: "Yishai",           label: "Yishai (padre de David)",     labelFa: "ییشای (پدر داوود)",      cat: "figure", level: 4 },
+  { id: "Matityahu",        label: "Matityahu (Macabeo)",         labelFa: "مَتیتیاهو (مَکَّابی)",   cat: "figure", level: 4 },
+  { id: "Akavia",           label: "Akavia ben Mahalalel",        labelFa: "عَکَویا بن مَهَلَلئیل",  cat: "talmud", level: 4 },
+  { id: "Ribaz",            label: "Rabán Yojanán ben Zakai",     labelFa: "رَبان یوحانان بن زَکای", cat: "talmud", level: 4 },
+  { id: "Abaye",            label: "Abaye (Rav Yeiva Saba)",      labelFa: "اَبَیه (رَو ییوا سَبا)", cat: "talmud", level: 4 },
+  // — Raíz de CAÍN · sub-rama de Pinjás → Eliyahu (Hakdamá 32; Berajot 4b) —
+  { id: "Elishá",           label: "Elishá HaNaví (Eliseo)",      labelFa: "اِلیشَع نبی",            cat: "figure", level: 4 },
+  { id: "Jiel",             label: "Jiel Bet-HaElí",              labelFa: "حیئل بیت‌الئیلی",        cat: "figure", level: 4 },
+  { id: "Mashíaj ben Yosef", label: "Mashíaj ben Yosef",          labelFa: "ماشیَخ بن یوسف",         cat: "figure", level: 4 },
+  // — Raíz de HEVEL · cadena hasta Moshé + Hillel/Shamai (34:1, 34:4-6) —
+  { id: "Shem",             label: "Shem ben Nóaj",               labelFa: "شیم بن نوح",             cat: "figure", level: 4 },
+  { id: "Hillel",           label: "Hillel HaZakén",              labelFa: "هیلِل هَزاکِن",          cat: "talmud", level: 4 },
+  { id: "Shamai",           label: "Shamai HaZakén",              labelFa: "شَمّای هَزاکِن",         cat: "talmud", level: 4 },
+  // — Raíz ZIHARÁ ILÁ'A · Janoj/Metatrón → R. Yishmael (36:54) —
+  { id: "Janoj",            label: "Janoj / Metatrón",            labelFa: "حَنوخ / مِطَطرون",       cat: "figure", level: 4 },
+  { id: "Ajiá HaShiloní",   label: "Ajiá HaShiloní",              labelFa: "اَخیا هَشیلونی",         cat: "figure", level: 4 },
+  { id: "Yehoshúa ben Perajiá", label: "Yehoshúa ben Perajiá",    labelFa: "یهوشع بن پِرَخیا",       cat: "talmud", level: 4 },
+  { id: "R. Yehoshúa ben Janania", label: "R. Yehoshúa ben Janania", labelFa: "ربی یهوشع بن حَنَنیا", cat: "talmud", level: 4 },
+  { id: "R. Yishmael",      label: "R. Yishmael ben Elishá (Kohén Gadol)", labelFa: "ربی یشمَعئیل بن اِلیشَع", cat: "talmud", level: 4 },
+  // — Raíz de HEVEL (sub-rama) · línea sacerdotal Harán → Zejariá (33:10-13) —
+  { id: "Harán",            label: "Harán (hermano de Avraham)",  labelFa: "هاران (برادر ابراهیم)",  cat: "figure", level: 4 },
+  { id: "Yaavetz",          label: "Yaavetz (juez)",              labelFa: "یَعبِص (داور)",          cat: "figure", level: 4 },
+  { id: "Tolá",             label: "Tolá ben Puá (juez)",         labelFa: "تولاع بن پووا (داور)",   cat: "figure", level: 4 },
+  { id: "Uriah HaKohén",    label: "Uriah HaKohén",               labelFa: "اوریاهِ کوهِن",          cat: "figure", level: 4 },
+  { id: "Zejariá",          label: "Zejariá ben Yeverejiahu",     labelFa: "زِخَریا بن یِوِرِخیاهو",  cat: "figure", level: 4 },
+  // — Raíz OSCURA · Laván → Bilaam → Naval (36:76); נבל=לבן=82 —
+  { id: "Laván",            label: "Laván HaArami · 82",          labelFa: "لاوان هَاَرامی · ۸۲",    cat: "figure", level: 4 },
+];
+
 // ─── Nodos ───────────────────────────────────────────────────────────────
 export const BNODES: BNode[] = [
   // ── Nivel 0 — corazón (Torá y Tanaj UNIFICADOS: la Torá es el núcleo del Tanaj) ──
@@ -734,6 +776,8 @@ export const BNODES: BNode[] = [
   ...AVRAHAM_KAB_NODES,
   ...GILGUL_CAIN_HEVEL_NODES,
   ...TIKUN_SILENCIO_NODES,
+  // ── Vasijas del Sha'ar HaGilgulim (capa Gilgul, verificadas por el Sofer) ──
+  ...GILGUL_VESSEL_NODES,
 ];
 
 // ─── Aristas (relaciones reales, NO dirigidas). Se deduplican antes de render ─

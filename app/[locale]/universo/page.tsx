@@ -35,10 +35,13 @@ import {
   TREE_PATHS,
   type BNode,
 } from "@/lib/brainData";
+import { gilgulChainForRoot, traverseGilgul, getGilgulModel } from "@/lib/gilgul";
 
 type Graph = { nodes: BNode[]; edges: [string, string][] };
 
 const Canvas = dynamic(() => import("@react-three/fiber").then((m) => m.Canvas), { ssr: false });
+// Capa Gilgul (linaje de almas): ADITIVA, solo se monta cuando hay raíz invocada.
+const GilgulLayer = dynamic(() => import("./GilgulLayer"), { ssr: false });
 
 // ── Ajustes del look (todo el tuning fino vive aquí) ──────────────────────
 const CFG = {
@@ -927,6 +930,7 @@ function BrainScene({
   flyToId,
   activeCat,
   travel,
+  gilgulRoot,
   onFlewTo,
   onSelect,
   onHover,
@@ -944,6 +948,7 @@ function BrainScene({
   flyToId: string | null;
   activeCat: string | null;
   travel: Travel | null;
+  gilgulRoot: string | null;
   onFlewTo: () => void;
   onSelect: (id: string, additive: boolean) => void;
   onHover: (id: string | null) => void;
@@ -975,6 +980,14 @@ function BrainScene({
   const pathSet = useMemo(() => new Set(pathToTorah), [pathToTorah]);
   const flyToPos = flyToId && positions[flyToId] ? new THREE.Vector3(...positions[flyToId]) : null;
   const focusColor = focusId ? (BRAIN_CATS[nodeMap.get(focusId)?.cat ?? ""]?.c ?? "#cfe6ff") : "#cfe6ff";
+
+  // ── Modo GILGUL (linaje de almas): qué nodos toca el linaje de la raíz ──
+  // Cuando hay raíz, atenuamos TODO lo no-relacionado y encendemos la cadena.
+  const gilgulActive = !!gilgulRoot;
+  const gilgulReach = useMemo(() => {
+    if (!gilgulRoot) return null;
+    return traverseGilgul(gilgulRoot).reachable; // ids alcanzados por el linaje
+  }, [gilgulRoot]);
 
   // ── Modo comparación (Cmd/Ctrl-clic 2+ nodos): qué COMPARTEN ──
   const compareActive = compare.length >= 2;
@@ -1042,6 +1055,11 @@ function BrainScene({
   const catHit = (c: string) => c === activeCat || (activeCat === "tanakh" && c === "torah");
   const intensityOf = (n: BNode): number => {
     const awakeBase = n.level <= 1 ? 0.55 : n.level === 2 ? 0.32 : 0.18; // latente
+    if (gilgulActive && gilgulReach) {
+      if (n.id === gilgulRoot) return 1.4;          // la raíz del alma, intensa
+      if (gilgulReach.has(n.id)) return 1.1;        // vasijas del linaje, encendidas
+      return awakeBase * 0.06;                       // todo lo demás se atenúa fuerte
+    }
     if (compareActive) {
       if (compareSet.has(n.id)) return 1.4; // los nodos comparados
       if (sharedSet.has(n.id)) return 1.15; // lo que COMPARTEN
@@ -1064,6 +1082,7 @@ function BrainScene({
   };
   const showLabelOf = (n: BNode): boolean => {
     if (n.id === hovered) return true; // la estrella apuntada SIEMPRE muestra su nombre
+    if (gilgulActive && gilgulReach) return n.id === gilgulRoot || gilgulReach.has(n.id); // rotula el linaje
     if (compareActive) return compareSet.has(n.id) || sharedSet.has(n.id);
     if (catActive) return catHit(n.cat) && n.level <= 3; // rotula los nodos del dominio
     if (n.id === focusId) return true;
@@ -1090,7 +1109,7 @@ function BrainScene({
         zoomSpeed={0.9}
         minDistance={0.5}
         maxDistance={90}
-        autoRotate={autoRot && !selected && !compareActive && !catActive && !travel}
+        autoRotate={autoRot && !selected && !compareActive && !catActive && !travel && !gilgulActive}
         autoRotateSpeed={0.3}
         onStart={() => { interacting.current = true; pauseAuto(); }}
         onEnd={() => { interacting.current = false; resumeAuto(); }}
@@ -1114,14 +1133,15 @@ function BrainScene({
       <group ref={groupRef}>
         <AmbientTissue />
         <PotentialNodes />
-        <BaseFibers segments={baseSegments} dimmed={focusId !== null || compareActive || catActive} />
-        {!compareActive && !catActive && focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} />}
-        {!compareActive && !catActive && pathToTorah.length > 1 && <PathToTorah path={pathToTorah} curves={curves} />}
-        {compareActive && sharedCurves.length > 0 && <FiberHighlight curves={sharedCurves} color="#ffe9a8" />}
-        {catActive && catCurves.length > 0 && <FiberHighlight curves={catCurves} color={BRAIN_CATS[activeCat ?? ""]?.c ?? "#c9a43e"} />}
+        <BaseFibers segments={baseSegments} dimmed={focusId !== null || compareActive || catActive || gilgulActive} />
+        {!gilgulActive && !compareActive && !catActive && focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} />}
+        {!gilgulActive && !compareActive && !catActive && pathToTorah.length > 1 && <PathToTorah path={pathToTorah} curves={curves} />}
+        {!gilgulActive && compareActive && sharedCurves.length > 0 && <FiberHighlight curves={sharedCurves} color="#ffe9a8" />}
+        {!gilgulActive && catActive && catCurves.length > 0 && <FiberHighlight curves={catCurves} color={BRAIN_CATS[activeCat ?? ""]?.c ?? "#c9a43e"} />}
 
-        {/* "Viaje de luz": aristas interactivas del nodo en foco (hover/gradiente/tooltip/clic) */}
-        {!compareActive && !catActive && !travel && focusId && (
+        {/* "Viaje de luz": aristas interactivas del nodo en foco (hover/gradiente/tooltip/clic).
+            En modo Gilgul se desactiva (las fibras de conocimiento ceden el paso al linaje). */}
+        {!gilgulActive && !compareActive && !catActive && !travel && focusId && (
           <FocusEdges
             curves={curves}
             focusId={focusId}
@@ -1132,6 +1152,16 @@ function BrainScene({
             onPick={(c) => onPickEdge(c.a, c.b, c.pts)}
           />
         )}
+
+        {/* ── CAPA GILGUL (linaje de almas) — solo cuando hay raíz invocada ── */}
+        <GilgulLayer
+          active={gilgulActive}
+          rootId={gilgulRoot}
+          positions={positions}
+          nodeMap={nodeMap}
+          lang={isFa ? "fa" : locale === "en" ? "en" : "es"}
+          controlsRef={controlsRef}
+        />
 
         {nodes.map((n) => {
           const pos = positions[n.id];
@@ -1173,6 +1203,7 @@ export default function GrafoPage() {
   const [flyToId, setFlyToId] = useState<string | null>(null); // SOLO al buscar: vuela al nodo
   const [activeCat, setActiveCat] = useState<string | null>(null); // dominio resaltado (leyenda)
   const [travel, setTravel] = useState<Travel | null>(null); // viaje fibra óptica en curso (clic en arista)
+  const [gilgulRoot, setGilgulRoot] = useState<string | null>(null); // modo Gilgul: raíz de alma invocada
   // para distinguir un TAP deliberado en el vacío (soltar) de un arrastre/zoom de cámara
   const downRef = useRef<{ x: number; y: number; t: number } | null>(null);
 
@@ -1193,6 +1224,21 @@ export default function GrafoPage() {
 
   const selNode = selected ? graph.nodes.find((n) => n.id === selected) ?? null : null;
   const hovNode = hovered ? graph.nodes.find((n) => n.id === hovered) ?? null : null;
+
+  // ── Info del modo GILGUL para la tarjeta (raíz, cadena, nº de vasijas) ──
+  const gilgulInfo = useMemo(() => {
+    if (!gilgulRoot) return null;
+    const chain = gilgulChainForRoot(gilgulRoot);
+    const reach = traverseGilgul(gilgulRoot).reachable;
+    const rootNode = graph.nodes.find((n) => n.id === gilgulRoot);
+    return {
+      root: gilgulRoot,
+      label: rootNode ? (isFa ? rootNode.labelFa : rootNode.label) : gilgulRoot,
+      source: chain?.source ?? "Sha'ar HaGilgulim",
+      vessels: Math.max(0, reach.size - 1), // vasijas además de la raíz
+      provisional: chain?.provisional ?? false,
+    };
+  }, [gilgulRoot, graph.nodes, isFa]);
 
   // huella de conexiones del nodo seleccionado: total + desglose por dominio
   const selConnections = useMemo(() => {
@@ -1234,7 +1280,9 @@ export default function GrafoPage() {
   const norm = (s: string) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
   // término ACTUAL = lo escrito después del último "+" → sugerencias para mezclas
   const currentTerm = searchQ.split("+").pop() ?? "";
-  type Sugg = { key: string; label: string; labelFa: string; cat: string; kind: "node" | "cat" };
+  type Sugg = { key: string; label: string; labelFa: string; cat: string; kind: "node" | "cat" | "gilgul" };
+  // raíces de alma conocidas (ids) → para ofrecer "+ Gilgul" cuando aplica
+  const gilgulRootIds = useMemo(() => new Set(getGilgulModel().byRoot.keys()), []);
   // Sugerencias del término actual: galaxias (disciplinas) + conceptos (nodos).
   const suggestions = useMemo<Sugg[]>(() => {
     const q = norm(currentTerm);
@@ -1243,19 +1291,27 @@ export default function GrafoPage() {
       .filter(([k, v]) => k !== "torah" && k !== "jashmal" && (norm(k).includes(q) || norm(v.label).includes(q)))
       .slice(0, 3)
       .map(([k, v]) => ({ key: k, label: v.label, labelFa: v.labelFa, cat: k, kind: "cat" }));
-    const nodes: Sugg[] = graph.nodes
+    const matched = graph.nodes
       .filter((n) => norm(n.label).includes(q) || norm(n.id).includes(q) || (n.labelFa ?? "").includes(currentTerm.trim()))
-      .sort((a, b) => norm(a.label).indexOf(q) - norm(b.label).indexOf(q))
+      .sort((a, b) => norm(a.label).indexOf(q) - norm(b.label).indexOf(q));
+    const nodes: Sugg[] = matched
       .slice(0, 7)
       .map((n) => ({ key: n.id, label: n.label, labelFa: n.labelFa, cat: n.cat, kind: "node" }));
-    return [...cats, ...nodes].slice(0, 8);
+    // si NO hay "+" todavía y el primer nodo es una raíz de alma → ofrece "+ Gilgul"
+    const gilguls: Sugg[] = [];
+    if (!searchQ.includes("+")) {
+      const rootHit = matched.find((n) => gilgulRootIds.has(n.id));
+      if (rootHit) gilguls.push({ key: rootHit.id, label: rootHit.label, labelFa: rootHit.labelFa, cat: rootHit.cat, kind: "gilgul" });
+    }
+    return [...gilguls, ...cats, ...nodes].slice(0, 8);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTerm, graph.nodes]);
+  }, [currentTerm, graph.nodes, searchQ]);
 
   // Buscar = seleccionar + VOLAR hacia el nodo (porque no se ve en pantalla).
   const pickNode = (id: string) => {
     setCompare([]);
     setActiveCat(null);
+    setGilgulRoot(null);
     setSelected(id);
     setFlyToId(id);
     setSuggestOpen(false);
@@ -1279,11 +1335,52 @@ export default function GrafoPage() {
     }
     return null;
   };
-  // Enter en el buscador: "A + B" = MEZCLA (enciende lo que conectan). Si no, vuela al 1º.
+  // ── Disparador del modo GILGUL ──
+  // "<raíz> + gilgul" (o "gilgul + <raíz>") invoca el linaje de almas de esa raíz.
+  // Reconoce "gilgul", "gilgulim" y el farsi "گیلگول". Devuelve el id de la raíz
+  // si el término resuelto ES una raíz de alma conocida; si no, null (→ flujo normal).
+  const isGilgulWord = (s: string) => {
+    const n = norm(s);
+    return n === "gilgul" || n === "gilgulim" || s.trim() === "گیلگول" || s.trim().startsWith("گیلگول");
+  };
+  const detectGilgulRoot = (rawQuery: string): string | null => {
+    if (!rawQuery.includes("+")) return null;
+    const parts = rawQuery.split("+").map((p) => p.trim()).filter(Boolean);
+    if (parts.length < 2) return null;
+    const gilgulIdx = parts.findIndex(isGilgulWord);
+    if (gilgulIdx === -1) return null;
+    // el OTRO término (no la palabra gilgul) es la raíz candidata
+    const other = parts.find((_, i) => i !== gilgulIdx);
+    if (!other) return null;
+    const q = norm(other);
+    // 1) intenta casar DIRECTO contra las raíces de alma conocidas (es/fa/id) →
+    //    evita que "Raíz de Abel" gane sobre "Abel" por orden del array.
+    for (const rootId of gilgulRootIds) {
+      const rn = graph.nodes.find((n) => n.id === rootId);
+      if (!rn) continue;
+      if (norm(rn.id).includes(q) || norm(rn.label).includes(q) || (rn.labelFa ?? "").includes(other)) return rootId;
+    }
+    // 2) si no, resuelve normal y acepta solo si es una raíz de alma real
+    const id = resolveTerm(other);
+    if (id && gilgulChainForRoot(id)) return id;
+    return null;
+  };
+  // entra al modo Gilgul: limpia los demás modos, fija el texto y enfoca la raíz
+  const enterGilgul = (rootId: string) => {
+    setSuggestOpen(false);
+    setSelected(null); setCompare([]); setActiveCat(null); setTravel(null); setFlyToId(null);
+    setGilgulRoot(rootId);
+    const lbl = graph.nodes.find((n) => n.id === rootId)?.label ?? rootId;
+    setSearchQ(`${lbl} + Gilgul`); // texto canónico fijo
+  };
+
+  // Enter en el buscador: primero GILGUL ("X + gilgul"); luego "A + B" = MEZCLA. Si no, vuela al 1º.
   const submitSearch = () => {
     setSuggestOpen(false);
     const q = searchQ.trim();
     if (!q) return;
+    const gRoot = detectGilgulRoot(q);
+    if (gRoot) { enterGilgul(gRoot); return; }
     if (q.includes("+")) {
       const ids = q.split("+").map((s) => resolveTerm(s)).filter((x): x is string => !!x);
       const uniq = [...new Set(ids)];
@@ -1302,6 +1399,7 @@ export default function GrafoPage() {
   // elegir una sugerencia: si es MEZCLA (hay "+"), completa el término; si no, va al concepto
   const chooseSuggestion = (s: Sugg) => {
     setSuggestOpen(false);
+    if (s.kind === "gilgul") { enterGilgul(s.key); return; } // invoca el linaje de almas
     if (searchQ.includes("+")) {
       const parts = searchQ.split("+").map((p) => p.trim());
       parts[parts.length - 1] = s.label;
@@ -1320,13 +1418,14 @@ export default function GrafoPage() {
   // limpiar el buscador Y soltar el resultado (el texto se queda hasta que se limpie aquí)
   const clearSearch = () => {
     setSearchQ(""); setSuggestOpen(false);
-    setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null);
+    setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setGilgulRoot(null);
   };
 
   // clic normal = seleccionar uno; Cmd/Ctrl/Shift-clic = agregar a comparación.
   // Al hacer clic NO se vuela (la cámara se queda quieta y no se pierde el punto).
   const handleSelect = (id: string, additive: boolean) => {
     setActiveCat(null); // tocar un nodo apaga el resaltado de dominio
+    setGilgulRoot(null); // y sale del modo Gilgul (vuelve a la exploración normal)
     if (additive) {
       setFlyToId(null);
       setSelected(null);
@@ -1339,7 +1438,7 @@ export default function GrafoPage() {
       setFlyToId(next);
     }
   };
-  const clearAll = () => { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setTravel(null); };
+  const clearAll = () => { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setTravel(null); setGilgulRoot(null); };
 
   // ── "Viaje de luz": clic en una arista → la cámara VIAJA por la fibra ──
   // Mientras viaja, soltamos la selección (no hay tarjeta encima del recorrido)
@@ -1361,14 +1460,14 @@ export default function GrafoPage() {
   // forma de soltar el punto: ya nunca se pierde solo al explorar (zoom/arrastrar).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setTravel(null); }
+      if (e.key === "Escape") { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setTravel(null); setGilgulRoot(null); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
   // clic en un dominio de la leyenda → enciende toda esa parte del cerebro (toggle)
   const toggleCat = (key: string) => {
-    setSelected(null); setCompare([]); setFlyToId(null);
+    setSelected(null); setCompare([]); setFlyToId(null); setGilgulRoot(null);
     setActiveCat((p) => (p === key ? null : key));
   };
   const handleDouble = (n: BNode) => { if (n.url) window.open("https://jashmal.org" + n.url, "_blank"); };
@@ -1461,6 +1560,7 @@ export default function GrafoPage() {
             flyToId={flyToId}
             activeCat={activeCat}
             travel={travel}
+            gilgulRoot={gilgulRoot}
             onFlewTo={() => setFlyToId(null)}
             onSelect={handleSelect}
             onHover={(id) => { if (!travel) setHovered(id); }}
@@ -1547,6 +1647,25 @@ export default function GrafoPage() {
               {suggestions.map((s) => {
                 const c = BRAIN_CATS[s.cat]?.c ?? "#c9a43e";
                 const disc = s.cat === "torah" ? "tanakh" : s.cat;
+                if (s.kind === "gilgul") {
+                  // fila especial: invoca el LINAJE DE ALMAS de esta raíz
+                  return (
+                    <li key={"gilgul:" + s.key}>
+                      <button
+                        onClick={() => chooseSuggestion(s)}
+                        className="flex w-full items-center gap-2 border-b border-gold/10 bg-gold/[0.05] px-4 py-2 text-start transition-colors hover:bg-gold/15"
+                      >
+                        <span className="text-sm leading-none" style={{ filter: "drop-shadow(0 0 6px #ffd66b)" }}>✦</span>
+                        <span className="truncate text-sm text-gold">
+                          {isFa ? `${s.labelFa} + گیلگول` : `${s.label} + Gilgul`}
+                        </span>
+                        <span className="ms-auto shrink-0 text-[10px] uppercase tracking-wide text-gold/55">
+                          {isFa ? "تبارِ روح" : locale === "en" ? "soul lineage" : "linaje de alma"}
+                        </span>
+                      </button>
+                    </li>
+                  );
+                }
                 return (
                   <li key={s.kind + ":" + s.key}>
                     <button
@@ -1729,6 +1848,74 @@ export default function GrafoPage() {
                 </div>
               )}
             </>
+          )}
+        </div>
+      )}
+
+      {/* ── Tarjeta del modo GILGUL (linaje de almas) ── */}
+      {gilgulInfo && (
+        <div
+          className="absolute bottom-24 end-4 z-10 w-[min(290px,86vw)] rounded-xl border bg-ink/92 p-4 backdrop-blur-md"
+          style={{ borderColor: "rgba(255,214,107,0.4)", boxShadow: "0 0 26px rgba(255,214,107,0.12)" }}
+          dir={isFa ? "rtl" : "ltr"}
+        >
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <p className="font-cinzel text-[10px] uppercase tracking-[0.2em]" style={{ color: "#ffd66b" }}>
+                {isFa ? "✦ تبارِ روح" : locale === "en" ? "✦ Soul lineage" : "✦ Linaje del alma"}
+              </p>
+              <p className="mt-0.5 font-cinzel text-base" style={{ color: "#ffe9a8" }}>{gilgulInfo.label}</p>
+            </div>
+            <button
+              onClick={clearAll}
+              aria-label={isFa ? "بستن" : "cerrar"}
+              className="-me-1 -mt-1 shrink-0 rounded-full px-2 py-0.5 text-lg leading-none text-muted/50 transition-colors hover:text-gold"
+            >
+              ×
+            </button>
+          </div>
+
+          <p className="mt-2 text-[12px] italic leading-snug text-parchment/80">
+            {isFa
+              ? "جرقهٔ روح را تماشا کن که از ریشه برمی‌خیزد و نسل به نسل سفر می‌کند."
+              : locale === "en"
+                ? "Watch the soul-spark rise from the root and travel from vessel to vessel through the generations."
+                : "Mira la chispa del alma emerger de la raíz y viajar de vasija en vasija a través de las generaciones."}
+          </p>
+
+          <div className="mt-3 border-t border-gold/10 pt-2.5 text-[11px] text-muted/85">
+            <p>
+              <span className="font-cinzel" style={{ color: "#ffd66b" }}>{gilgulInfo.vessels}</span>{" "}
+              {isFa ? "ظرفِ روح" : locale === "en" ? (gilgulInfo.vessels === 1 ? "vessel" : "vessels") : (gilgulInfo.vessels === 1 ? "vasija" : "vasijas")}
+            </p>
+            <p className="mt-0.5">
+              <span className="opacity-60">{isFa ? "منبع: " : locale === "en" ? "Source: " : "Fuente: "}</span>
+              {gilgulInfo.source}
+            </p>
+          </div>
+
+          {/* leyenda de certeza por color (la spec) */}
+          <div className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1 border-t border-gold/10 pt-2.5">
+            {([
+              ["#ffd66b", isFa ? "تصریح‌شده" : locale === "en" ? "direct" : "directo"],
+              ["#f0b85a", isFa ? "سنتی" : locale === "en" ? "tradition" : "tradición"],
+              ["#9fd0ff", isFa ? "گِماتریا" : "gematría"],
+            ] as const).map(([col, lbl]) => (
+              <span key={lbl} className="flex items-center gap-1.5 text-[10px] text-muted/80">
+                <span className="inline-block h-2 w-4 rounded-full" style={{ background: col, boxShadow: `0 0 7px ${col}` }} />
+                {lbl}
+              </span>
+            ))}
+          </div>
+
+          {gilgulInfo.provisional && (
+            <p className="mt-2.5 rounded-md border border-amber-300/20 bg-amber-300/[0.06] px-2 py-1.5 text-[10px] italic leading-snug text-amber-200/80">
+              {isFa
+                ? "زنجیرهٔ نمونه (موقت) — به‌زودی با مجموعهٔ تأییدشدهٔ سوفر جایگزین می‌شود."
+                : locale === "en"
+                  ? "Sample chain (provisional) — to be replaced by the Sofer's verified dataset."
+                  : "Cadena de muestra (provisional) — se reemplazará por el dataset verificado del Sofer."}
+            </p>
           )}
         </div>
       )}

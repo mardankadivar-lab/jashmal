@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured, getSql } from "@/lib/db";
-import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addGilgulCainHevel, addTikunSilencio } from "@/lib/brainStore";
+import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addGilgulCainHevel, addGilgulVessels, addTikunSilencio } from "@/lib/brainStore";
 import { BNODES, BEDGES } from "@/lib/brainData";
 
 export const runtime = "nodejs";
@@ -41,6 +41,8 @@ function ensureInit(): Promise<void> {
       await addAvrahamKab();
       // Estudio verificado: Gilgulim de Caín y Abel (Sha'ar HaGilgulim)
       await addGilgulCainHevel();
+      // Capa Gilgul: vasijas de las 5 cadenas-ancla del Sha'ar HaGilgulim
+      await addGilgulVessels();
       // Jidush de Mardan: El Tikún del Silencio (נחש 358 = משיח) — galaxia Jashmal
       await addTikunSilencio();
     })().catch((e) => {
