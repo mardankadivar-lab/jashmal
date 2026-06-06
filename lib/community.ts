@@ -124,3 +124,80 @@ export async function updateSoferVerdict(
      WHERE id = ${id}
   `;
 }
+
+// ── Puerta 2 (Mardan): la cola de aprobación ──────────────────────────────
+// Las revelaciones que PASARON al Sofer (status 'sofer_review') y esperan el
+// visto final de Mardan para encender la estrella del estudiante.
+export type ReviewRow = {
+  id: string;
+  text: string;
+  connects_to: string | null;
+  score: number;
+  sofer_verdict: string | null;
+  sofer_notes: string | null;
+  created: string;
+  user_id: string;
+  name: string | null;
+  email: string;
+};
+
+export async function listSoferReview(): Promise<ReviewRow[]> {
+  const sql = getSql();
+  if (!sql) return [];
+  return (await sql`
+    SELECT s.id, s.text, s.connects_to, s.score, s.sofer_verdict, s.sofer_notes, s.created,
+           s.user_id, u.name, u.email
+    FROM community_submissions s
+    JOIN community_users u ON u.id = s.user_id
+    WHERE s.status = 'sofer_review'
+    ORDER BY s.created ASC
+  `) as ReviewRow[];
+}
+
+export type SubmissionFull = ReviewRow & { status: string; node_id: string | null };
+
+export async function getSubmissionById(id: string): Promise<SubmissionFull | null> {
+  const sql = getSql();
+  if (!sql) return null;
+  const rows = (await sql`
+    SELECT s.id, s.text, s.connects_to, s.score, s.sofer_verdict, s.sofer_notes, s.created,
+           s.user_id, s.status, s.node_id, u.name, u.email
+    FROM community_submissions s
+    JOIN community_users u ON u.id = s.user_id
+    WHERE s.id = ${id}
+  `) as SubmissionFull[];
+  return rows[0] ?? null;
+}
+
+// Mardan APRUEBA: marca el envío 'approved', guarda el nodo creado y su nota.
+export async function approveSubmissionRow(id: string, nodeId: string, note?: string): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  await sql`
+    UPDATE community_submissions
+       SET status = 'approved', node_id = ${nodeId}, mardan_notes = ${note ?? null}
+     WHERE id = ${id}
+  `;
+}
+
+// Mardan RECHAZA (tras el Sofer): marca 'rejected' y guarda su nota.
+export async function rejectSubmissionRow(id: string, note?: string): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  await sql`
+    UPDATE community_submissions
+       SET status = 'rejected', mardan_notes = ${note ?? null}
+     WHERE id = ${id}
+  `;
+}
+
+// Suma una estrella al estudiante y su "luz" (score de conexiones confirmadas).
+export async function incrementUserStats(userId: string, addLight: number): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  await sql`
+    UPDATE community_users
+       SET stars = stars + 1, light = light + ${Math.max(0, Math.floor(addLight))}
+     WHERE id = ${userId}
+  `;
+}

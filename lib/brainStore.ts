@@ -48,6 +48,8 @@ export async function ensureBrainTables(): Promise<boolean> {
       created_at  timestamptz NOT NULL DEFAULT now()
     )
   `;
+  // columna 'author': el estudiante autor de una estrella de la galaxia Comunidad
+  await sql`ALTER TABLE brain_nodes ADD COLUMN IF NOT EXISTS author text`;
   await sql`CREATE INDEX IF NOT EXISTS brain_edges_src ON brain_edges (source_id)`;
   await sql`CREATE INDEX IF NOT EXISTS brain_edges_tgt ON brain_edges (target_id)`;
   await sql`CREATE INDEX IF NOT EXISTS brain_nodes_status ON brain_nodes (status)`;
@@ -481,12 +483,12 @@ export async function getBrainGraph(includePending = false): Promise<BrainGraph 
   try {
     const statuses = includePending ? ["approved", "pending"] : ["approved"];
     const nodeRows = (await sql`
-      SELECT id, label, label_fa, cat, level, url, region
+      SELECT id, label, label_fa, cat, level, url, region, author
       FROM brain_nodes
       WHERE status = ANY(${statuses})
     `) as Array<{
       id: string; label: string; label_fa: string | null; cat: string;
-      level: number; url: string | null; region: string | null;
+      level: number; url: string | null; region: string | null; author: string | null;
     }>;
     const edgeRows = (await sql`
       SELECT source_id, target_id
@@ -503,6 +505,7 @@ export async function getBrainGraph(includePending = false): Promise<BrainGraph 
       level: (r.level as BNode["level"]) ?? 3,
       url: r.url ?? undefined,
       region: r.region ?? undefined,
+      author: r.author ?? undefined,
     }));
     // solo aristas cuyos dos extremos existen
     const edges: [string, string][] = edgeRows
@@ -548,6 +551,44 @@ export async function addEdge(
     ON CONFLICT (id) DO UPDATE SET weight = brain_edges.weight + 0.5
   `;
   return true;
+}
+
+// ── Comunidad · Puerta 2: encender la estrella de un estudiante ────────────
+// Crea el nodo del jidush en la galaxia 'comunidad' (con el NOMBRE del autor) y
+// lo conecta al concepto elegido con una arista 'interp' — un jidush SIEMPRE es
+// interpretación, nunca fuente clásica. El target debe existir y estar aprobado.
+// Idempotente (re-aprobar actualiza título/autor sin duplicar).
+export async function addCommunityStar(input: {
+  id: string;
+  label: string;
+  labelFa?: string | null;
+  author: string;
+  url?: string | null;
+  targetId: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  const sql = getSql();
+  if (!sql) return { ok: false, error: "no_db" };
+  try {
+    const t = (await sql`
+      SELECT id FROM brain_nodes WHERE id = ${input.targetId} AND status = 'approved' LIMIT 1
+    `) as Array<{ id: string }>;
+    if (t.length === 0) return { ok: false, error: "target_not_found" };
+    await sql`
+      INSERT INTO brain_nodes (id, label, label_fa, cat, level, url, status, source, author)
+      VALUES (${input.id}, ${input.label}, ${input.labelFa ?? input.label}, 'comunidad', 4,
+              ${input.url ?? null}, 'approved', 'community', ${input.author})
+      ON CONFLICT (id) DO UPDATE
+        SET label = EXCLUDED.label, label_fa = EXCLUDED.label_fa, author = EXCLUDED.author
+    `;
+    await sql`
+      INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
+      VALUES (${edgeKey(input.id, input.targetId)}, ${input.id}, ${input.targetId}, 'interp', 1, 'approved', 'community')
+      ON CONFLICT (id) DO NOTHING
+    `;
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "db_error" };
+  }
 }
 
 // ── Revisión del Sofer (panel) ────────────────────────────────────────────

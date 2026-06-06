@@ -24,6 +24,7 @@ export type BNode = {
   level: 0 | 1 | 2 | 3 | 4;
   url?: string;    // atajo real del sitio (solo donde existe)
   region?: string; // override de región (si difiere de la de su categoría)
+  author?: string; // autor (estrella de la galaxia Comunidad = el estudiante)
 };
 
 // ─── Paleta de categorías (color = LUZ; permanente, nunca cambia al tocar) ──

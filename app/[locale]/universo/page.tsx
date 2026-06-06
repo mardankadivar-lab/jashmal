@@ -89,6 +89,7 @@ type EdgeCurve = { a: string; b: string; pts: THREE.Vector3[]; kind: "solid" | "
 function buildCurves(
   positions: Record<string, [number, number, number]>,
   edges: [string, string][],
+  commSet: Set<string>,
 ): EdgeCurve[] {
   const curves: EdgeCurve[] = [];
   for (const [a, b] of edges) {
@@ -104,7 +105,9 @@ function buildCurves(
     const len = va.distanceTo(vb);
     const ctrl = mid.add(out.multiplyScalar(len * CFG.fiberSag));
     const curve = new THREE.QuadraticBezierCurve3(va, ctrl, vb);
-    curves.push({ a, b, pts: curve.getPoints(CFG.fiberSegments), kind: edgeKind(a, b) });
+    // una arista que toca la galaxia Comunidad (un jidush) es SIEMPRE interpretativa
+    const kind = commSet.has(a) || commSet.has(b) ? "interp" : edgeKind(a, b);
+    curves.push({ a, b, pts: curve.getPoints(CFG.fiberSegments), kind });
   }
   return curves;
 }
@@ -635,7 +638,12 @@ function BrainScene({
   onDouble: (n: BNode) => void;
 }) {
   const positions = useMemo(() => layoutNodes(nodes), [nodes]);
-  const curves = useMemo(() => buildCurves(positions, edges), [positions, edges]);
+  // estrellas de la galaxia Comunidad (jidushim) → sus aristas son interpretativas
+  const commSet = useMemo(
+    () => new Set(nodes.filter((n) => n.cat === "comunidad").map((n) => n.id)),
+    [nodes],
+  );
+  const curves = useMemo(() => buildCurves(positions, edges, commSet), [positions, edges, commSet]);
   const baseSegments = useMemo(() => curvesToSegments(curves), [curves]);
   const nodeMap = useMemo(() => new Map(nodes.map((n) => [n.id, n])), [nodes]);
 
@@ -855,12 +863,15 @@ export default function GrafoPage() {
     if (!selected) return null;
     const nbrs = neighborsIn(graph.edges, selected);
     const nodeMap = new Map(graph.nodes.map((n) => [n.id, n]));
+    const selCat = nodeMap.get(selected)?.cat;
     const byCat: Record<string, number> = {};
     let solid = 0, interp = 0;
     for (const id of nbrs) {
       const c = nodeMap.get(id)?.cat;
       if (c) byCat[c] = (byCat[c] ?? 0) + 1;
-      if (edgeKind(selected, id) === "solid") solid++; else interp++;
+      // un jidush de la Comunidad cuenta SIEMPRE como interpretativa, nunca clásica
+      const isComm = selCat === "comunidad" || c === "comunidad";
+      if (!isComm && edgeKind(selected, id) === "solid") solid++; else interp++;
     }
     return { total: nbrs.size, byCat, solid, interp };
   }, [selected, graph.edges, graph.nodes]);
@@ -1246,6 +1257,9 @@ export default function GrafoPage() {
             </button>
           </div>
           <p className="mt-0.5 text-[10px] uppercase tracking-wide text-muted/50">{BRAIN_CATS[selNode.cat]?.label}</p>
+          {selNode.author && (
+            <p className="mt-1 text-[11px] italic text-rose-200/80">✦ {isFa ? "از" : "por"} {selNode.author}</p>
+          )}
 
           {selConnections && selConnections.total > 0 && (
             <div className="mt-2.5 border-t border-gold/10 pt-2.5">
