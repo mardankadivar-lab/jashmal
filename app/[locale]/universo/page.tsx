@@ -37,6 +37,10 @@ import {
 } from "@/lib/brainData";
 import { gilgulChainForRoot, traverseGilgul, getGilgulModel, GILGUL_ERAS } from "@/lib/gilgul";
 import type { GilgulMode } from "./GilgulLayer";
+import Consola from "./Consola";
+import EdgeTooltip, { type EdgeHint } from "./EdgeTooltip";
+import { useUniversoHistory } from "./useUniversoHistory";
+import { useIsMobile } from "./useIsMobile";
 
 type Graph = { nodes: BNode[]; edges: [string, string][] };
 
@@ -661,10 +665,6 @@ function InteractiveEdge({
   colA,
   colB,
   isHot,
-  isFa,
-  locale,
-  fromLabel,
-  toLabel,
   onHover,
   onPick,
 }: {
@@ -672,10 +672,6 @@ function InteractiveEdge({
   colA: THREE.Color;
   colB: THREE.Color;
   isHot: boolean;
-  isFa: boolean;
-  locale: string;
-  fromLabel: string;
-  toLabel: string;
   onHover: (h: boolean) => void;
   onPick: () => void;
 }) {
@@ -700,9 +696,6 @@ function InteractiveEdge({
     matRef.current.opacity = base;
   });
 
-  // punto medio del spline, un poco elevado → ahí flota el rótulo
-  const mid = curve.pts[Math.floor(curve.pts.length / 2)];
-
   return (
     <group>
       <mesh geometry={tubeGeo}>
@@ -725,51 +718,6 @@ function InteractiveEdge({
       >
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
-      {isHot && (
-        <Html position={[mid.x, mid.y, mid.z]} center distanceFactor={11} zIndexRange={[30, 0]} style={{ pointerEvents: "none" }}>
-          <div
-            dir={isFa ? "rtl" : "ltr"}
-            style={{
-              transform: "translateY(-16px)",
-              whiteSpace: "nowrap",
-              userSelect: "none",
-              fontFamily: "var(--font-cinzel, serif)",
-              fontSize: "11px",
-              letterSpacing: "0.04em",
-              padding: "4px 11px",
-              borderRadius: "9999px",
-              border: "1px solid rgba(201,164,62,0.45)",
-              background: "rgba(5,5,10,0.86)",
-              color: "#f0e6cf",
-              backdropFilter: "blur(4px)",
-              boxShadow: "0 0 16px rgba(201,164,62,0.25)",
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-            }}
-          >
-            {/* micro-rótulo: deja claro que un clic VIAJA al destino */}
-            <span style={{ fontSize: "8px", textTransform: "uppercase", letterSpacing: "0.14em", opacity: 0.55 }}>
-              {isFa ? "سفر به" : locale === "en" ? "travel to" : "viajar a"}
-            </span>
-            <span style={{ color: "#c9a43e", fontWeight: 700 }}>{isFa ? "←" : "→"}</span>
-            {/* el DESTINO, siempre destacado en dorado */}
-            <span style={{ color: "#ffe9a8", fontWeight: 700 }}>{toLabel}</span>
-            <span
-              style={{
-                marginInlineStart: "4px",
-                fontSize: "8px",
-                textTransform: "uppercase",
-                letterSpacing: "0.12em",
-                opacity: 0.6,
-                color: curve.kind === "solid" ? "#c9a43e" : "#9aa6c4",
-              }}
-            >
-              {curve.kind === "solid" ? (isFa ? "کلاسیک" : locale === "en" ? "classic" : "clásica") : (isFa ? "تفسیری" : locale === "en" ? "interp." : "interp.")}
-            </span>
-          </div>
-        </Html>
-      )}
     </group>
   );
 }
@@ -781,7 +729,7 @@ function FocusEdges({
   hotKey,
   nodeMap,
   isFa,
-  locale,
+  filterCat,
   onHover,
   onPick,
 }: {
@@ -790,20 +738,23 @@ function FocusEdges({
   hotKey: string | null;
   nodeMap: Map<string, BNode>;
   isFa: boolean;
-  locale: string;
-  onHover: (key: string | null) => void;
+  filterCat: string | null; // chip-filtro activo → solo aristas hacia esa disciplina
+  onHover: (info: { key: string; toLabel: string; kind: "solid" | "interp" } | null) => void;
   onPick: (c: EdgeCurve) => void;
 }) {
-  // aristas que tocan el nodo en foco, orientadas para que `a` sea SIEMPRE el foco
+  // aristas que tocan el nodo en foco, orientadas para que `a` sea SIEMPRE el foco.
+  // Si hay chip-filtro activo, solo se vuelven interactivas las que llevan a esa disciplina.
   const focusCurves = useMemo(() => {
     const out: { c: EdgeCurve; oriented: EdgeCurve }[] = [];
     for (const c of curves) {
       if (c.a !== focusId && c.b !== focusId) continue;
+      const otherId = c.a === focusId ? c.b : c.a;
+      if (filterCat && nodeMap.get(otherId)?.cat !== filterCat) continue;
       if (c.a === focusId) out.push({ c, oriented: c });
       else out.push({ c, oriented: { a: c.b, b: c.a, pts: [...c.pts].reverse(), kind: c.kind } });
     }
     return out;
-  }, [curves, focusId]);
+  }, [curves, focusId, filterCat, nodeMap]);
 
   const colCache = useMemo(() => new Map<string, THREE.Color>(), []);
   const colorOf = (cat: string | undefined) => {
@@ -826,11 +777,9 @@ function FocusEdges({
             colA={colorOf(fromN?.cat)}
             colB={colorOf(toN?.cat)}
             isHot={hotKey === key}
-            isFa={isFa}
-            locale={locale}
-            fromLabel={fromN ? (isFa ? fromN.labelFa : fromN.label) : oriented.a}
-            toLabel={toN ? (isFa ? toN.labelFa : toN.label) : oriented.b}
-            onHover={(h) => onHover(h ? key : null)}
+            onHover={(h) =>
+              onHover(h ? { key, toLabel: toN ? (isFa ? toN.labelFa : toN.label) : oriented.b, kind: oriented.kind } : null)
+            }
             onPick={() => onPick(oriented)}
           />
         );
@@ -942,16 +891,20 @@ function BrainScene({
   locale,
   flyToId,
   activeCat,
+  filterCat,
   travel,
+  travelRequest,
   gilgulRoot,
   gilgulMode,
   onEra,
   onFlewTo,
   onSelect,
   onHover,
+  onEdgeHint,
   onDouble,
   onPickEdge,
   onTravelArrived,
+  onTravelConsumed,
 }: {
   nodes: BNode[];
   edges: [string, string][];
@@ -962,16 +915,20 @@ function BrainScene({
   locale: string;
   flyToId: string | null;
   activeCat: string | null;
+  filterCat: string | null;
   travel: Travel | null;
+  travelRequest: { from: string; to: string } | null;
   gilgulRoot: string | null;
   gilgulMode: GilgulMode;
   onEra: (era: string) => void;
   onFlewTo: () => void;
   onSelect: (id: string, additive: boolean) => void;
   onHover: (id: string | null) => void;
+  onEdgeHint: (hint: { toLabel: string; kind: "solid" | "interp" } | null) => void;
   onDouble: (n: BNode) => void;
   onPickEdge: (from: string, to: string, pts: THREE.Vector3[]) => void;
   onTravelArrived: (toId: string) => void;
+  onTravelConsumed: () => void;
 }) {
   const positions = useMemo(() => layoutNodes(nodes), [nodes]);
   // estrellas de la galaxia Comunidad (jidushim) → sus aristas son interpretativas
@@ -1039,12 +996,30 @@ function BrainScene({
     );
   }, [activeCat, curves, nodeMap]);
 
+  // ── Chip-filtro (Consola): con un nodo seleccionado, aísla SUS aristas hacia
+  //    una disciplina; resalta esos destinos y atenúa el resto del universo. ──
+  const filterActive = !!(selected && filterCat);
+
   // controles de mouse (girar / mover / zoom) con pausa de auto-giro al interactuar
   const controlsRef = useRef<any>(null);
-  // arista bajo el mouse (sólo entre las del nodo en foco) → glow + tooltip
+  // arista bajo el mouse (sólo entre las del nodo en foco) → glow + tooltip al cursor
   const [hotEdge, setHotEdge] = useState<string | null>(null);
-  // al cambiar el nodo en foco (o entrar en viaje), olvida la arista resaltada
-  useEffect(() => { setHotEdge(null); }, [focusId, travel]);
+  // al cambiar el nodo en foco (o entrar en viaje), olvida la arista resaltada y su rótulo
+  useEffect(() => { setHotEdge(null); onEdgeHint(null); }, [focusId, travel, onEdgeHint]);
+
+  // ── Petición de viaje desde la Consola (chip de destino): la página pide
+  //    "viaja de A → B"; aquí encontramos el spline real, lo orientamos y
+  //    disparamos el mismo "Viaje de luz" que el clic directo en la arista. ──
+  useEffect(() => {
+    if (!travelRequest) return;
+    const { from, to } = travelRequest;
+    const c = curves.find((c) => (c.a === from && c.b === to) || (c.a === to && c.b === from));
+    if (c) {
+      const pts = c.a === from ? c.pts : [...c.pts].reverse();
+      onPickEdge(from, to, pts);
+    }
+    onTravelConsumed();
+  }, [travelRequest, curves, onPickEdge, onTravelConsumed]);
   // marca de tiempo del último movimiento real de cámara (girar/zoom/pinch):
   // sirve para NO deseleccionar cuando el "clic" en el fondo viene de un gesto.
   // Solo cuenta mientras el usuario interactúa (no el auto-giro).
@@ -1085,6 +1060,11 @@ function BrainScene({
     if (catActive) {
       return catHit(n.cat) ? 1.25 : awakeBase * 0.1; // dominio encendido, resto apagado
     }
+    if (filterActive && dist) {
+      if (n.id === selected) return 1.4;                                  // el nodo en foco
+      if (dist.get(n.id) === 1 && n.cat === filterCat) return 1.1;        // destinos de la disciplina filtrada
+      return awakeBase * 0.1;                                             // el resto se atenúa
+    }
     // hover: la estrella apuntada se ilumina aunque haya OTRA lockeada (sin cambiar
     // las aristas encendidas, que siguen siendo las del nodo lockeado).
     if (n.id === hovered && n.id !== selected) return 1.1;
@@ -1102,6 +1082,7 @@ function BrainScene({
     if (gilgulActive && gilgulReach) return n.id === gilgulRoot || gilgulReach.has(n.id); // rotula el linaje
     if (compareActive) return compareSet.has(n.id) || sharedSet.has(n.id);
     if (catActive) return catHit(n.cat) && n.level <= 3; // rotula los nodos del dominio
+    if (filterActive) return n.id === selected || (dist?.get(n.id) === 1 && n.cat === filterCat); // foco + destinos filtrados
     if (n.id === focusId) return true;
     if (dist) {
       const d = dist.get(n.id);
@@ -1117,6 +1098,7 @@ function BrainScene({
   // una zona densa → así el usuario sabe a dónde llevan las aristas encendidas.
   const boostOf = (n: BNode): number => {
     if (gilgulActive || compareActive || catActive) return 1; // esos modos tienen su propio realce
+    if (filterActive) return n.id === selected ? 1.18 : (dist?.get(n.id) === 1 && n.cat === filterCat ? 1.5 : 1);
     if (!selected || !dist) return 1; // solo al SELECCIONAR (no en simple hover)
     if (n.id === selected) return 1.18; // el foco, un punto más grande
     return dist.get(n.id) === 1 ? 1.5 : 1; // vecino directo: claramente más grande
@@ -1135,6 +1117,13 @@ function BrainScene({
         zoomSpeed={1.05}
         minDistance={0.02}
         maxDistance={120}
+        // ── Movimiento 360° esférico: SIN topes de ángulo (polar 0..π, azimut libre) ──
+        minPolarAngle={0}
+        maxPolarAngle={Math.PI}
+        minAzimuthAngle={-Infinity}
+        maxAzimuthAngle={Infinity}
+        // ── Táctil (móvil): un dedo orbita · dos dedos pellizco-zoom + paneo ──
+        touches={{ ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN }}
         autoRotate={autoRot && !selected && !compareActive && !catActive && !travel && !gilgulActive}
         autoRotateSpeed={0.3}
         onStart={() => { interacting.current = true; pauseAuto(); }}
@@ -1160,12 +1149,15 @@ function BrainScene({
         <AmbientTissue />
         <PotentialNodes />
         <BaseFibers segments={baseSegments} dimmed={focusId !== null || compareActive || catActive || gilgulActive} />
-        {!gilgulActive && !compareActive && !catActive && focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} />}
-        {!gilgulActive && !compareActive && !catActive && pathToTorah.length > 1 && <PathToTorah path={pathToTorah} curves={curves} />}
+        {/* en modo filtro, la malla jerárquica y el camino a la Torá se apagan para
+            que solo brillen las aristas hacia la disciplina elegida (foco limpio) */}
+        {!gilgulActive && !compareActive && !catActive && !filterActive && focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} />}
+        {!gilgulActive && !compareActive && !catActive && !filterActive && pathToTorah.length > 1 && <PathToTorah path={pathToTorah} curves={curves} />}
         {!gilgulActive && compareActive && sharedCurves.length > 0 && <FiberHighlight curves={sharedCurves} color="#ffe9a8" />}
         {!gilgulActive && catActive && catCurves.length > 0 && <FiberHighlight curves={catCurves} color={BRAIN_CATS[activeCat ?? ""]?.c ?? "#c9a43e"} />}
 
-        {/* "Viaje de luz": aristas interactivas del nodo en foco (hover/gradiente/tooltip/clic).
+        {/* "Viaje de luz": aristas interactivas del nodo en foco (hover/gradiente/clic →
+            tooltip al cursor). Con chip-filtro activo solo se activan las de esa disciplina.
             En modo Gilgul se desactiva (las fibras de conocimiento ceden el paso al linaje). */}
         {!gilgulActive && !compareActive && !catActive && !travel && focusId && (
           <FocusEdges
@@ -1174,8 +1166,8 @@ function BrainScene({
             hotKey={hotEdge}
             nodeMap={nodeMap}
             isFa={isFa}
-            locale={locale}
-            onHover={setHotEdge}
+            filterCat={selected ? filterCat : null}
+            onHover={(info) => { setHotEdge(info?.key ?? null); onEdgeHint(info ? { toLabel: info.toLabel, kind: info.kind } : null); }}
             onPick={(c) => onPickEdge(c.a, c.b, c.pts)}
           />
         )}
@@ -1236,6 +1228,17 @@ export default function GrafoPage() {
   const [gilgulRoot, setGilgulRoot] = useState<string | null>(null); // modo Gilgul: raíz de alma invocada
   const [gilgulMode, setGilgulMode] = useState<GilgulMode>("journey"); // Fase 2: "journey" (viaje) | "tree" (árbol completo)
   const [currentEra, setCurrentEra] = useState<string | null>(null); // Fase 2: era que la chispa acaba de alcanzar (línea de tiempo)
+  const [filterCat, setFilterCat] = useState<string | null>(null); // chip-filtro de la Consola (disciplina del nodo en foco)
+  const [travelRequest, setTravelRequest] = useState<{ from: string; to: string } | null>(null); // viaje pedido desde la Consola
+  const [edgeHint, setEdgeHint] = useState<EdgeHint | null>(null); // rótulo "viajar a" que sigue al cursor
+
+  // Consola unificada + hoja inferior en móvil + historial de navegación (migaja ← →)
+  const isMobile = useIsMobile();
+  const history = useUniversoHistory();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const consumeTravelRequest = useCallback(() => setTravelRequest(null), []);
+  // al cambiar de nodo seleccionado, el chip-filtro se reinicia (cada nodo, filtro fresco)
+  useEffect(() => { setFilterCat(null); }, [selected]);
 
   useEffect(() => {
     let alive = true;
@@ -1376,6 +1379,7 @@ export default function GrafoPage() {
     setSelected(id);
     setFlyToId(id);
     setSuggestOpen(false);
+    history.visit(id); // registra en el historial de navegación (migaja ← →)
     const lbl = graph.nodes.find((n) => n.id === id)?.label;
     if (lbl) setSearchQ(lbl); // el texto se queda FIJO en el resultado
   };
@@ -1430,6 +1434,7 @@ export default function GrafoPage() {
   const enterGilgul = (rootId: string) => {
     setSuggestOpen(false);
     setSelected(null); setCompare([]); setActiveCat(null); setTravel(null); setFlyToId(null);
+    history.clear(); // el linaje de almas es otro modo: el historial de nodos se reinicia
     setGilgulMode("journey");  // cada invocación arranca en el VIAJE (no hereda "árbol")
     setCurrentEra(null);       // y con la línea de tiempo en cero
     setGilgulRoot(rootId);
@@ -1450,6 +1455,7 @@ export default function GrafoPage() {
       if (uniq.length >= 2) {
         setSelected(null);
         setActiveCat(null);
+        history.clear(); // la mezcla/comparación es otro modo → reinicia el historial
         setCompare(uniq.slice(0, 4)); // modo mezcla: enciende sus conexiones comunes
         setFlyToId(uniq[0]); // acerca a uno para dar contexto
         // (el texto "A + B" queda FIJO en el buscador hasta que el usuario limpie con ×)
@@ -1471,8 +1477,8 @@ export default function GrafoPage() {
     }
     if (s.kind === "cat") {
       const id = resolveTerm(s.label);
-      setCompare([]); setActiveCat(null);
-      if (id) { setSelected(id); setFlyToId(id); }
+      setCompare([]); setActiveCat(null); setGilgulRoot(null);
+      if (id) { setSelected(id); setFlyToId(id); history.visit(id); }
       setSearchQ(s.label);
     } else {
       pickNode(s.key);
@@ -1482,6 +1488,7 @@ export default function GrafoPage() {
   const clearSearch = () => {
     setSearchQ(""); setSuggestOpen(false);
     setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setGilgulRoot(null);
+    history.clear();
   };
 
   // clic normal = seleccionar uno; Cmd/Ctrl/Shift-clic = agregar a comparación.
@@ -1492,6 +1499,7 @@ export default function GrafoPage() {
     if (additive) {
       setFlyToId(null);
       setSelected(null);
+      history.clear(); // entrar a comparación reinicia el historial de nodos
       setCompare((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
     } else {
       const next = selected === id ? null : id;
@@ -1499,9 +1507,28 @@ export default function GrafoPage() {
       setSelected(next);
       // al elegir un concepto, la cámara VIAJA hasta él → indagar y saltar por sus aristas
       setFlyToId(next);
+      if (next) history.visit(next); else history.clear(); // registra el salto (o limpia al soltar)
     }
   };
-  const clearAll = () => { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setTravel(null); setGilgulRoot(null); };
+  const clearAll = () => { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setTravel(null); setGilgulRoot(null); history.clear(); };
+
+  // ── Historial: ← volver · → adelante · saltar a un punto de la migaja ──
+  // Re-seleccionan el nodo y VUELAN la cámara, SIN registrar (no crean rama nueva).
+  const goToHistory = (id: string) => {
+    setActiveCat(null); setCompare([]); setGilgulRoot(null); setTravel(null);
+    setSelected(id);
+    setFlyToId(id);
+  };
+  const goBack = () => { const id = history.peekBack; if (id) { history.back(); goToHistory(id); } };
+  const goForward = () => { const id = history.peekForward; if (id) { history.forward(); goToHistory(id); } };
+  const jumpTo = (index: number) => { const id = history.stack[index]; if (id) { history.jumpTo(index); goToHistory(id); } };
+
+  // ── Viaje pedido desde la Consola (chip de destino de una disciplina) ──
+  // Captura el origen (el nodo en foco) AHORA; BrainScene halla el spline y dispara el viaje.
+  const travelTo = (toId: string) => {
+    if (!selected || travel) return;
+    setTravelRequest({ from: selected, to: toId });
+  };
 
   // ── "Viaje de luz": clic en una arista → la cámara VIAJA por la fibra ──
   // Mientras viaja, soltamos la selección (no hay tarjeta encima del recorrido)
@@ -1517,20 +1544,22 @@ export default function GrafoPage() {
     setTravel(null);
     setSelected(toId);
     setFlyToId(toId); // pulso final + encuadre cómodo (flujo de selección existente)
+    history.visit(toId); // el viaje por la fibra SÍ se registra (es navegar a un nodo nuevo)
   };
 
   // Escape = cerrar la selección. Junto al botón de la tarjeta, es la ÚNICA
   // forma de soltar el punto: ya nunca se pierde solo al explorar (zoom/arrastrar).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setTravel(null); setGilgulRoot(null); }
+      if (e.key === "Escape") { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setTravel(null); setGilgulRoot(null); history.clear(); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // clic en un dominio de la leyenda → enciende toda esa parte del cerebro (toggle)
   const toggleCat = (key: string) => {
-    setSelected(null); setCompare([]); setFlyToId(null); setGilgulRoot(null);
+    setSelected(null); setCompare([]); setFlyToId(null); setGilgulRoot(null); history.clear();
     setActiveCat((p) => (p === key ? null : key));
   };
   const handleDouble = (n: BNode) => { if (n.url) window.open("https://jashmal.org" + n.url, "_blank"); };
@@ -1552,6 +1581,30 @@ export default function GrafoPage() {
     const n = graph.nodes.find((x) => x.id === id);
     return n ? (isFa ? n.labelFa : n.label) : id;
   };
+
+  // destinos del chip-filtro: vecinos del nodo en foco que pertenecen a la disciplina
+  // elegida → cada uno es un botón "viajar a" en la Consola (elige dirección y vuela).
+  const destinations = useMemo(() => {
+    if (!selected || !filterCat) return [] as { id: string; label: string; cat: string }[];
+    const nbrs = neighborsIn(graph.edges, selected);
+    const out: { id: string; label: string; cat: string }[] = [];
+    for (const id of nbrs) {
+      const n = graph.nodes.find((x) => x.id === id);
+      if (n && n.cat === filterCat) out.push({ id, label: isFa ? n.labelFa : n.label, cat: n.cat });
+    }
+    out.sort((a, b) => a.label.localeCompare(b.label));
+    return out;
+  }, [selected, filterCat, graph.edges, graph.nodes, isFa]);
+
+  // migaja: el camino recorrido (ids del historial → etiquetas localizadas)
+  const breadcrumb = useMemo(
+    () =>
+      history.stack.map((id) => {
+        const n = graph.nodes.find((x) => x.id === id);
+        return { id, label: n ? (isFa ? n.labelFa : n.label) : id };
+      }),
+    [history.stack, graph.nodes, isFa],
+  );
 
   // Expansión recursiva: el Sofer del dominio investiga el nodo → el cerebro crece.
   function mergeGraph(prev: Graph, addNodes: BNode[], addEdges: [string, string][]): Graph {
@@ -1614,16 +1667,20 @@ export default function GrafoPage() {
             locale={locale}
             flyToId={flyToId}
             activeCat={activeCat}
+            filterCat={filterCat}
             travel={travel}
+            travelRequest={travelRequest}
             gilgulRoot={gilgulRoot}
             gilgulMode={gilgulMode}
             onEra={onEra}
             onFlewTo={() => setFlyToId(null)}
             onSelect={handleSelect}
             onHover={(id) => { if (!travel) setHovered(id); }}
+            onEdgeHint={setEdgeHint}
             onDouble={handleDouble}
             onPickEdge={startTravel}
             onTravelArrived={arriveTravel}
+            onTravelConsumed={consumeTravelRequest}
           />
           <EffectComposer>
             <Bloom intensity={0.72} luminanceThreshold={0.2} luminanceSmoothing={0.7} mipmapBlur radius={0.5} />
@@ -1675,6 +1732,7 @@ export default function GrafoPage() {
         <div className="pointer-events-auto w-[min(360px,86vw)]">
           <div className="relative">
             <input
+              ref={searchInputRef}
               value={searchQ}
               onChange={(e) => { setSearchQ(e.target.value); setSuggestOpen(true); }}
               onFocus={() => setSuggestOpen(true)}
@@ -1743,26 +1801,7 @@ export default function GrafoPage() {
         </div>
       </div>
 
-      {/* Leyenda — clic en un dominio enciende toda esa parte del cerebro */}
-      <div className="absolute bottom-4 start-4 z-10 rounded-xl border border-gold/15 bg-ink/85 p-3 backdrop-blur-md">
-        <p className="mb-1.5 font-cinzel text-[10px] uppercase tracking-[0.2em] text-gold/45">{T.legend}</p>
-        <div className="grid grid-cols-2 gap-x-1.5 gap-y-0.5">
-          {Object.entries(BRAIN_CATS).filter(([k]) => k !== "jashmal" && k !== "torah").map(([key, v]) => {
-            const on = activeCat === key;
-            return (
-              <button
-                key={key}
-                onClick={() => toggleCat(key)}
-                aria-pressed={on}
-                className={`flex items-center gap-2 rounded-md px-2 py-1 text-start transition-colors ${on ? "bg-gold/15" : "hover:bg-gold/10"}`}
-              >
-                <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: v.c, boxShadow: `0 0 8px ${v.c}` }} />
-                <span className={`text-[13px] leading-tight ${on ? "font-medium text-parchment" : "text-muted/85"}`}>{isFa ? v.labelFa : v.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      {/* (La leyenda de disciplinas vive ahora dentro de la Consola unificada, abajo) */}
 
       {/* Inscripción (la luz que crece) + controles */}
       <div className="pointer-events-none absolute bottom-4 left-1/2 z-10 flex w-[min(440px,74vw)] -translate-x-1/2 flex-col items-center gap-0.5 text-center">
@@ -1773,224 +1812,48 @@ export default function GrafoPage() {
         <p className="mt-1.5 hidden font-cinzel text-[9px] uppercase tracking-[0.25em] text-gold/25 sm:block">{T.hint}</p>
       </div>
 
-      {/* Tarjeta del nodo seleccionado */}
-      {selNode && (
-        <div className="absolute bottom-24 end-4 z-10 w-[min(260px,80vw)] rounded-xl border border-gold/25 bg-ink/90 p-4 backdrop-blur-md">
-          <div className="flex items-start justify-between gap-2">
-            <p className="font-cinzel text-base" style={{ color: BRAIN_CATS[selNode.cat]?.c ?? "#c9a43e" }}>
-              {isFa ? selNode.labelFa : selNode.label}
-            </p>
-            <button
-              onClick={clearAll}
-              aria-label={isFa ? "بستن" : "cerrar"}
-              className="-me-1 -mt-1 shrink-0 rounded-full px-2 py-0.5 text-lg leading-none text-muted/50 transition-colors hover:text-gold"
-            >
-              ×
-            </button>
-          </div>
-          <p className="mt-0.5 text-[10px] uppercase tracking-wide text-muted/50">{BRAIN_CATS[selNode.cat]?.label}</p>
-          {selNode.author && (
-            <p className="mt-1 text-[11px] italic text-rose-200/80">✦ {isFa ? "از" : "por"} {selNode.author}</p>
-          )}
+      {/* ── LA CONSOLA: el ÚNICO panel de control (reemplaza leyenda + tarjeta de
+          nodo + panel de comparación + tarjeta Gilgul). Hoja inferior en móvil,
+          panel anclado abajo-izquierda en escritorio. ── */}
+      <Consola
+        isFa={isFa}
+        locale={locale}
+        isMobile={isMobile}
+        cats={Object.entries(BRAIN_CATS).filter(([k]) => k !== "jashmal" && k !== "torah")}
+        activeCat={activeCat}
+        onToggleCat={toggleCat}
+        onFocusSearch={() => searchInputRef.current?.focus()}
+        selNode={selNode}
+        selConnections={selConnections}
+        filterCat={filterCat}
+        onFilterCat={setFilterCat}
+        destinations={destinations}
+        onTravelTo={travelTo}
+        onExpand={expandNode}
+        expanding={expanding}
+        studyConcept={selNode ? selNode.label.replace(/\s*\([^)]*\)\s*/g, " ").trim() : ""}
+        studyUrl={selNode?.url ?? null}
+        canBack={history.canBack}
+        canForward={history.canForward}
+        breadcrumb={breadcrumb}
+        currentIndex={history.index}
+        onBack={goBack}
+        onForward={goForward}
+        onJump={jumpTo}
+        onExit={clearAll}
+        compare={compare}
+        compareShared={compareShared}
+        labelOf={labelOf}
+        onPickShared={pickNode}
+        onRemoveCompare={(id) => setCompare((p) => p.filter((x) => x !== id))}
+        gilgulInfo={gilgulInfo}
+        gilgulMode={gilgulMode}
+        onToggleGilgulMode={() => setGilgulMode((m) => (m === "tree" ? "journey" : "tree"))}
+      />
 
-          {selConnections && selConnections.total > 0 && (
-            <div className="mt-2.5 border-t border-gold/10 pt-2.5">
-              <p className="mb-1 text-[11px] text-parchment/80">
-                <span className="font-cinzel text-sm text-gold">{selConnections.total}</span>{" "}
-                {isFa ? "اتصال" : selConnections.total === 1 ? "conexión" : "conexiones"}
-              </p>
-              {(selConnections.solid > 0 || selConnections.interp > 0) && (
-                <p
-                  className="mb-1.5 text-[10px] text-muted/70"
-                  title={isFa ? "کلاسیک = منبع مستقیم · تفسیری = خوانش" : "Clásicas = fuente directa · Interpretativas = lectura cabalística"}
-                >
-                  <span className="text-gold/90">{selConnections.solid}</span> {isFa ? "کلاسیک" : "clásicas"}
-                  <span className="text-muted/40"> · </span>
-                  <span className="text-parchment/55">{selConnections.interp}</span> {isFa ? "تفسیری" : "interpretativas"}
-                </p>
-              )}
-              <div className="flex flex-wrap gap-x-2.5 gap-y-1">
-                {Object.entries(selConnections.byCat)
-                  .sort((a, b) => b[1] - a[1])
-                  .map(([cat, n]) => (
-                    <span key={cat} className="flex items-center gap-1 text-[10px] text-muted/85">
-                      <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: BRAIN_CATS[cat]?.c ?? "#c9a43e" }} />
-                      {(isFa ? BRAIN_CATS[cat]?.labelFa : BRAIN_CATS[cat]?.label) ?? cat}:{" "}
-                      <span className="text-parchment/90">{n}</span>
-                    </span>
-                  ))}
-              </div>
-            </div>
-          )}
-
-          <button
-            onClick={expandNode}
-            disabled={expanding}
-            className="mt-3 block w-full rounded-full border border-cyan-300/30 bg-cyan-300/[0.06] px-4 py-2 text-center font-cinzel text-xs uppercase tracking-widest text-cyan-200/90 transition-all hover:border-cyan-300/60 hover:bg-cyan-300/15 disabled:opacity-50"
-            title="El Sofer investiga este tema y abre sus conexiones"
-          >
-            {expanding ? T.expanding : T.expand}
-          </button>
-          {selNode.url ? (
-            <a
-              href={"https://jashmal.org" + selNode.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 block rounded-full border border-gold/30 bg-gold/[0.07] px-4 py-2 text-center font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold/60 hover:bg-gold/15"
-            >
-              {T.study}
-            </a>
-          ) : (
-            <Link
-              href={`/estudio?concept=${encodeURIComponent(selNode.label.replace(/\s*\([^)]*\)\s*/g, " ").trim())}`}
-              className="mt-2 block rounded-full border border-gold/30 bg-gold/[0.07] px-4 py-2 text-center font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold/60 hover:bg-gold/15"
-            >
-              {T.study}
-            </Link>
-          )}
-        </div>
-      )}
-
-      {/* Panel de comparación multi-nodo (intersección) */}
-      {compare.length > 0 && (
-        <div className="absolute bottom-24 end-4 z-10 w-[min(280px,84vw)] rounded-xl border border-cyan-300/30 bg-ink/90 p-4 backdrop-blur-md">
-          <div className="flex items-center justify-between">
-            <p className="font-cinzel text-sm uppercase tracking-wide text-cyan-200/90">
-              {isFa ? "مقایسه" : "Comparando"}
-            </p>
-            <button onClick={clearAll} className="text-[10px] uppercase tracking-wide text-muted/60 transition-colors hover:text-gold">
-              {isFa ? "پاک کردن" : "limpiar"}
-            </button>
-          </div>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {compare.map((id) => (
-              <span key={id} className="inline-flex items-center gap-1 rounded-full border border-gold/25 bg-gold/[0.06] px-2 py-0.5 text-[11px] text-parchment">
-                {labelOf(id)}
-                <button
-                  onClick={() => setCompare((p) => p.filter((x) => x !== id))}
-                  className="text-muted/60 transition-colors hover:text-rose-300"
-                  aria-label="quitar"
-                >
-                  ×
-                </button>
-              </span>
-            ))}
-          </div>
-          {compare.length < 2 ? (
-            <p className="mt-3 text-[11px] italic leading-snug text-muted/60">
-              {isFa
-                ? "با Cmd/Ctrl روی موضوع دیگری کلیک کن تا مقایسه شود"
-                : "Cmd/Ctrl + clic en otro tema para comparar"}
-            </p>
-          ) : (
-            <>
-              <p className="mb-1 mt-3 font-cinzel text-[10px] uppercase tracking-wide text-gold/60">
-                {isFa ? "مشترک" : "Comparten"}
-              </p>
-              {compareShared.length === 0 ? (
-                <p className="text-[11px] italic leading-snug text-muted/50">
-                  {isFa ? "اشتراک مستقیمی نیست (✦ گسترش بزن)" : "Sin coincidencia directa (toca ✦ Expandir para descubrir)"}
-                </p>
-              ) : (
-                <div className="flex flex-wrap gap-1.5">
-                  {compareShared.map((id) => (
-                    <button
-                      key={id}
-                      onClick={() => pickNode(id)}
-                      className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[11px] text-gold transition-colors hover:bg-gold/20"
-                    >
-                      {labelOf(id)}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      )}
-
-      {/* ── Tarjeta del modo GILGUL (linaje de almas) ── */}
-      {gilgulInfo && (
-        <div
-          className="absolute bottom-24 end-4 z-10 w-[min(290px,86vw)] rounded-xl border bg-ink/92 p-4 backdrop-blur-md"
-          style={{ borderColor: "rgba(255,214,107,0.4)", boxShadow: "0 0 26px rgba(255,214,107,0.12)" }}
-          dir={isFa ? "rtl" : "ltr"}
-        >
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="font-cinzel text-[10px] uppercase tracking-[0.2em]" style={{ color: "#ffd66b" }}>
-                {isFa ? "✦ تبارِ روح" : locale === "en" ? "✦ Soul lineage" : "✦ Linaje del alma"}
-              </p>
-              <p className="mt-0.5 font-cinzel text-base" style={{ color: "#ffe9a8" }}>{gilgulInfo.label}</p>
-            </div>
-            <button
-              onClick={clearAll}
-              aria-label={isFa ? "بستن" : "cerrar"}
-              className="-me-1 -mt-1 shrink-0 rounded-full px-2 py-0.5 text-lg leading-none text-muted/50 transition-colors hover:text-gold"
-            >
-              ×
-            </button>
-          </div>
-
-          <p className="mt-2 text-[12px] italic leading-snug text-parchment/80">
-            {isFa
-              ? "جرقهٔ روح را تماشا کن که از ریشه برمی‌خیزد و نسل به نسل سفر می‌کند."
-              : locale === "en"
-                ? "Watch the soul-spark rise from the root and travel from vessel to vessel through the generations."
-                : "Mira la chispa del alma emerger de la raíz y viajar de vasija en vasija a través de las generaciones."}
-          </p>
-
-          <div className="mt-3 border-t border-gold/10 pt-2.5 text-[11px] text-muted/85">
-            <p>
-              <span className="font-cinzel" style={{ color: "#ffd66b" }}>{gilgulInfo.vessels}</span>{" "}
-              {isFa ? "ظرفِ روح" : locale === "en" ? (gilgulInfo.vessels === 1 ? "vessel" : "vessels") : (gilgulInfo.vessels === 1 ? "vasija" : "vasijas")}
-            </p>
-            <p className="mt-0.5">
-              <span className="opacity-60">{isFa ? "منبع: " : locale === "en" ? "Source: " : "Fuente: "}</span>
-              {gilgulInfo.source}
-            </p>
-          </div>
-
-          {/* leyenda de certeza por color (la spec) */}
-          <div className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1 border-t border-gold/10 pt-2.5">
-            {([
-              ["#ffd66b", isFa ? "تصریح‌شده" : locale === "en" ? "direct" : "directo"],
-              ["#f0b85a", isFa ? "سنتی" : locale === "en" ? "tradition" : "tradición"],
-              ["#9fd0ff", isFa ? "گِماتریا" : "gematría"],
-            ] as const).map(([col, lbl]) => (
-              <span key={lbl} className="flex items-center gap-1.5 text-[10px] text-muted/80">
-                <span className="inline-block h-2 w-4 rounded-full" style={{ background: col, boxShadow: `0 0 7px ${col}` }} />
-                {lbl}
-              </span>
-            ))}
-          </div>
-
-          {/* Fase 2 — alternar entre VIAJE lineal y ÁRBOL de almas completo */}
-          <button
-            onClick={() => setGilgulMode((m) => (m === "tree" ? "journey" : "tree"))}
-            className="mt-3 w-full rounded-md border px-3 py-1.5 text-[11px] font-cinzel uppercase tracking-[0.14em] transition-colors"
-            style={{
-              borderColor: gilgulMode === "tree" ? "rgba(255,214,107,0.6)" : "rgba(255,214,107,0.3)",
-              background: gilgulMode === "tree" ? "rgba(255,214,107,0.14)" : "rgba(255,214,107,0.05)",
-              color: "#ffe9a8",
-            }}
-          >
-            {gilgulMode === "tree"
-              ? (isFa ? "↩ بازگشت به سفر" : locale === "en" ? "↩ Back to the journey" : "↩ Volver al viaje")
-              : (isFa ? "✸ نمایش کاملِ درختِ ارواح" : locale === "en" ? "✸ Show full soul-tree" : "✸ Mostrar árbol de almas completo")}
-          </button>
-
-          {gilgulInfo.provisional && (
-            <p className="mt-2.5 rounded-md border border-amber-300/20 bg-amber-300/[0.06] px-2 py-1.5 text-[10px] italic leading-snug text-amber-200/80">
-              {isFa
-                ? "زنجیرهٔ نمونه (موقت) — به‌زودی با مجموعهٔ تأییدشدهٔ سوفر جایگزین می‌شود."
-                : locale === "en"
-                  ? "Sample chain (provisional) — to be replaced by the Sofer's verified dataset."
-                  : "Cadena de muestra (provisional) — se reemplazará por el dataset verificado del Sofer."}
-            </p>
-          )}
-        </div>
-      )}
+      {/* Rótulo "viajar a → destino" que SIGUE AL CURSOR (antes flotaba lejos en
+          el medio de la arista y se perdía al acercar el zoom). */}
+      <EdgeTooltip hint={edgeHint} isFa={isFa} locale={locale} />
 
       {/* ── Fase 2 — LÍNEA DE TIEMPO histórica (avanza con la chispa) ──
           Debajo de la galaxia, centrada. Marca la era que el linaje va
@@ -1998,7 +1861,7 @@ export default function GrafoPage() {
           VIAJE (en árbol no hay una chispa que la haga avanzar). RTL para fa. */}
       {gilgulInfo && gilgulMode === "journey" && gilgulEras.length > 1 && (
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex justify-center px-4"
+          className="pointer-events-none absolute inset-x-0 bottom-24 z-10 flex justify-center px-4 sm:bottom-6"
           dir={isFa ? "rtl" : "ltr"}
         >
           <div
