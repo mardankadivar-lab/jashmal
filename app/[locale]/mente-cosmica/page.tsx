@@ -1342,10 +1342,12 @@ export default function GrafoPage() {
     expanding: isFa ? "در حال پژوهش…" : "Investigando…",
     search: isFa ? "جستجو… یا ترکیب با +" : "Busca un concepto… o mezcla con +",
     // Inscripción positiva (Sofer): el Creador se envuelve en luz — Salmo 104:2
-    // (fa aún sin traducción del Sofer → cae al español como fallback)
-    mensaje: locale === "en"
-      ? "He wraps Himself in light as with a garment; He stretches out the heavens like a curtain."
-      : "El que se cubre de luz como de vestidura, que extiende los cielos como una cortina.",
+    // (fa verificado por el Sofer: persa puro, sin letras hebreas)
+    mensaje: isFa
+      ? "خویشتن را به نور مثل ردا پوشانیده‌ای، و آسمان را مثل پرده پهن ساخته‌ای."
+      : locale === "en"
+        ? "He wraps Himself in light as with a garment; He stretches out the heavens like a curtain."
+        : "El que se cubre de luz como de vestidura, que extiende los cielos como una cortina.",
     mensajeHe: "עֹטֶה אוֹר כַּשַּׂלְמָה נוֹטֶה שָׁמַיִם כַּיְרִיעָה",
     mensajeRef: isFa ? "مزمور ۱۰۴:۲" : locale === "en" ? "Psalm 104:2" : "Salmo 104:2",
   };
@@ -1741,6 +1743,12 @@ export default function GrafoPage() {
           <div className="relative">
             <input
               ref={searchInputRef}
+              type="search"
+              name="q"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="none"
+              spellCheck={false}
               value={searchQ}
               onChange={(e) => { setSearchQ(e.target.value); setSuggestOpen(true); }}
               onFocus={() => setSuggestOpen(true)}

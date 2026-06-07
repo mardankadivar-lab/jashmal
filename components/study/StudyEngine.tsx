@@ -350,12 +350,17 @@ export default function StudyEngine() {
         <form id="tour-search" onSubmit={onSearch} className="relative flex gap-2">
           <div className="relative flex-1">
             <input
+              type="search"
+              name="q"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onFocus={() => suggestions.length > 0 && setShowSug(true)}
               onBlur={() => setTimeout(() => setShowSug(false), 150)}
               placeholder={t("searchPlaceholder")}
               autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="none"
+              spellCheck={false}
               className="w-full rounded-md border border-gold/25 bg-white/[0.03] px-3 py-2 text-sm text-parchment placeholder:text-muted/70 focus:border-gold/60 focus:outline-none"
             />
             {/* Dropdown de sugerencias */}
