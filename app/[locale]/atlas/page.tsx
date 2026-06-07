@@ -146,21 +146,26 @@ function Globe({ onBackground }: { onBackground: () => void }) {
 
 // ── Un lugar: sinapsis geográfica luminosa ─────────────────────────────────
 function PlaceNode({
-  place, pos, selected, dimmed, isFa, onClick, onHover,
+  place, pos, selected, dimmed, isFa, harvested, hits, onClick, onHover,
 }: {
   place: Place;
   pos: [number, number, number];
   selected: boolean;
   dimmed: boolean;
   isFa: boolean;
+  harvested: boolean; // cosechada al estudiar (no de la semilla) → brilla "nueva"
+  hits: number;       // veces estudiada → crece el resplandor
   onClick: () => void;
   onHover: (h: boolean) => void;
 }) {
   const tex = useMemo(glowTexture, []);
   const col = REGION_COLORS[place.region] ?? "#c9a43e";
-  const base = place.importance === 3 ? 0.28 : place.importance === 2 ? 0.2 : 0.14;
+  // el resplandor base crece (un poco) con las veces que se ha estudiado
+  const base = (place.importance === 3 ? 0.28 : place.importance === 2 ? 0.2 : 0.14)
+    + Math.min(0.06, hits * 0.008);
   const haloRef = useRef<THREE.Sprite>(null);
   const coreRef = useRef<THREE.Sprite>(null);
+  const ringRef = useRef<THREE.Sprite>(null); // anillo dorado de "recién encendida"
   const [hover, setHover] = useState(false);
   const showLabel = place.importance === 3 || selected || hover;
   // escalona la altura de la etiqueta (los lugares de Tierra Santa están muy juntos)
@@ -174,10 +179,20 @@ function PlaceNode({
     const k = selected ? 1.7 : dimmed ? 0.5 : 1;
     if (haloRef.current) haloRef.current.scale.setScalar(base * 1.8 * pulse * k);
     if (coreRef.current) coreRef.current.scale.setScalar(base * 0.6 * pulse * k);
+    // anillo de las localidades recién cosechadas: respira más lento y amplio
+    if (ringRef.current) {
+      const slow = 1 + Math.sin(clock.elapsedTime * 0.9 + pos[1] * 2) * 0.28;
+      ringRef.current.scale.setScalar(base * 2.7 * slow * k);
+    }
   });
 
   return (
     <group position={pos}>
+      {harvested && (
+        <sprite ref={ringRef}>
+          <spriteMaterial map={tex} color="#c9a43e" transparent opacity={dimmed ? 0.12 : 0.3} blending={THREE.AdditiveBlending} depthWrite={false} />
+        </sprite>
+      )}
       <sprite ref={haloRef}>
         <spriteMaterial map={tex} color={col} transparent opacity={dimmed ? 0.25 : 0.6} blending={THREE.AdditiveBlending} depthWrite={false} />
       </sprite>
@@ -233,8 +248,9 @@ function RouteArc({ pts, color, opacity, comet }: { pts: THREE.Vector3[]; color:
 
 // ── Escena ────────────────────────────────────────────────────────────────
 function AtlasScene({
-  selected, activeRoute, isFa, onSelect, onBackground,
+  places, selected, activeRoute, isFa, onSelect, onBackground,
 }: {
+  places: Place[];
   selected: string | null;
   activeRoute: string | null;
   isFa: boolean;
@@ -243,9 +259,9 @@ function AtlasScene({
 }) {
   const positions = useMemo(() => {
     const m: Record<string, [number, number, number]> = {};
-    for (const p of PLACES) m[p.id] = latLngToVec3(p.lat, p.lng, GLOBE_R * 1.012);
+    for (const p of places) m[p.id] = latLngToVec3(p.lat, p.lng, GLOBE_R * 1.012);
     return m;
-  }, []);
+  }, [places]);
 
   // puntos de cada ruta (concatena arcos entre paradas consecutivas)
   const routePts = useMemo(() => {
@@ -312,7 +328,7 @@ function AtlasScene({
       ))}
 
       {/* lugares */}
-      {PLACES.map((p) => {
+      {places.map((p) => {
         const onRoute = activeRoute ? (ROUTES.find((r) => r.id === activeRoute)?.stops.includes(p.id) ?? false) : true;
         return (
           <PlaceNode
@@ -322,6 +338,8 @@ function AtlasScene({
             selected={selected === p.id}
             dimmed={(anyRoute && !onRoute) || (selected !== null && selected !== p.id)}
             isFa={isFa}
+            harvested={p.source === "harvest"}
+            hits={p.hits ?? 0}
             onClick={() => onSelect(p.id)}
             onHover={() => {}}
           />
@@ -339,7 +357,29 @@ export default function AtlasPage() {
   const [activeRoute, setActiveRoute] = useState<string | null>(null);
   const [searchQ, setSearchQ] = useState("");
 
-  const selPlace = selected ? placeById(selected) : null;
+  // El Atlas vivo lee sus localidades de /api/atlas (BD: semilla + cosechadas);
+  // la semilla estática es el respaldo si la BD no está. Crece al estudiar lugares.
+  const [places, setPlaces] = useState<Place[]>(PLACES);
+  useEffect(() => {
+    let alive = true;
+    fetch("/api/atlas")
+      .then((r) => r.json())
+      .then((d) => {
+        if (alive && d && Array.isArray(d.places) && d.places.length) {
+          setPlaces(d.places as Place[]);
+        }
+      })
+      .catch(() => {});
+    return () => { alive = false; };
+  }, []);
+
+  const placeLookup = useMemo(() => {
+    const m: Record<string, Place> = {};
+    for (const p of places) m[p.id] = p;
+    return m;
+  }, [places]);
+  const harvestedCount = useMemo(() => places.filter((p) => p.source === "harvest").length, [places]);
+  const selPlace = selected ? placeLookup[selected] ?? null : null;
 
   const T = {
     title: "אַטְלַס",
@@ -356,8 +396,8 @@ export default function AtlasPage() {
   const suggestions = useMemo(() => {
     const q = searchQ.trim().toLowerCase();
     if (!q) return [] as Place[];
-    return PLACES.filter((p) => p.es.toLowerCase().includes(q) || p.he.includes(searchQ.trim())).slice(0, 6);
-  }, [searchQ]);
+    return places.filter((p) => p.es.toLowerCase().includes(q) || p.he.includes(searchQ.trim())).slice(0, 6);
+  }, [searchQ, places]);
 
   const studyHref = (concept: string) => `/estudio?concept=${encodeURIComponent(concept)}`;
 
@@ -368,6 +408,7 @@ export default function AtlasPage() {
           <color attach="background" args={["#03040a"]} />
           <fogExp2 attach="fog" args={["#03040a", 0.012]} />
           <AtlasScene
+            places={places}
             selected={selected}
             activeRoute={activeRoute}
             isFa={isFa}
@@ -385,6 +426,11 @@ export default function AtlasPage() {
         <div>
           <p className="hebrew text-2xl text-gold" style={{ filter: "drop-shadow(0 0 10px #c9a43e55)" }}>{T.title}</p>
           <p className="font-cinzel text-xs uppercase tracking-[0.25em] text-gold/50">{T.subtitle}</p>
+          <p className="mt-0.5 font-cinzel text-[9px] uppercase tracking-[0.2em] text-gold/35">
+            {places.length} {isFa ? "مکان" : "lugares"}
+            {harvestedCount > 0 && <span className="text-gold/55"> · +{harvestedCount} {isFa ? "تازه" : "cosechados"}</span>}
+            <span className="text-gold/25"> · {isFa ? "با مطالعه رشد می‌کند" : "crece al estudiar"}</span>
+          </p>
         </div>
         <Link href="/" className="pointer-events-auto rounded-full border border-gold/20 bg-ink/80 px-3 py-1.5 font-cinzel text-xs text-muted backdrop-blur-md transition-colors hover:text-gold">
           {isFa ? "→ " : "← "}{T.back}

@@ -115,6 +115,15 @@ export async function requestStudy(
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mode: body.mode, subject, text: study }),
       }).catch(() => {});
+
+      // Alimentar el Atlas vivo: si el estudio menciona una localidad bíblica
+      // (Jerusalén, Hebrón, Sinaí…), se enciende como nodo en /atlas y este crece.
+      // Mismo principio que el cerebro: en segundo plano, idempotente, sin bloquear.
+      void fetch("/api/atlas/harvest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ subject, text: study }),
+      }).catch(() => {});
     }
   } catch {
     /* la cosecha nunca debe afectar al usuario */

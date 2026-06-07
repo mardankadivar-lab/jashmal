@@ -19,6 +19,11 @@ export type Place = {
   sefira: string | null;
   desc: string;
   warn?: string; // ubicación disputada o nota del Sofer
+  // ── Atlas vivo (cosecha) — campos opcionales, aditivos ──
+  fa?: string;        // nombre en farsi (diferido en la UI; se guarda para el futuro)
+  aliases?: string[]; // nombres alternos para DETECTAR la localidad en un estudio
+  hits?: number;      // veces que se ha estudiado (encendido) → brillo orgánico
+  source?: string;    // 'seed' (semilla) | 'harvest' (cosechado al estudiar)
 };
 
 export type AtlasRoute = {
@@ -43,6 +48,7 @@ export const REGION_COLORS: Record<string, string> = {
   aram: "#9aa8c7",
   sinai: "#e0b25e",
   arabia: "#caa46a",
+  filistea: "#7f8db0", // costa filistea (gris-acero marino)
 };
 
 export const REGION_LABELS: Record<string, { es: string; fa: string }> = {
@@ -55,6 +61,7 @@ export const REGION_LABELS: Record<string, { es: string; fa: string }> = {
   aram: { es: "Aram", fa: "آرام" },
   sinai: { es: "Sinaí", fa: "سینا" },
   arabia: { es: "Arabia", fa: "عربستان" },
+  filistea: { es: "Filistea / costa", fa: "فلستیه" },
 };
 
 export const PLACES: Place[] = [
