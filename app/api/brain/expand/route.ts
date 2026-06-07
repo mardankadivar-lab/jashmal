@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { anthropic, buildExpandPrompt, EXPAND_MODEL } from "@/lib/anthropic";
 import { dbConfigured } from "@/lib/db";
-import { addNode, addEdge, existingNodeIds, edgeKey } from "@/lib/brainStore";
+import { addNode, addEdge, existingNodeIds, edgeKey, hasPersianArabic } from "@/lib/brainStore";
 import { clientIp } from "@/lib/rateLimit";
 import type { BNode } from "@/lib/brainData";
 
@@ -54,7 +54,10 @@ export async function POST(req: Request) {
   }
 
   // ── Invocar al Sofer del dominio ──
-  let related: Array<{ label: string; cat: string; level: number; relation?: string }> = [];
+  // "label" = nombre canónico en ESPAÑOL (id + label); "labelLoc" = ese mismo
+  // concepto en el idioma del usuario (→ label_fa / label_en). Así el canónico
+  // queda SIEMPRE en español y nunca se contamina con persa/árabe.
+  let related: Array<{ label: string; labelLoc?: string; cat: string; level: number; relation?: string }> = [];
   try {
     const msg = await anthropic.messages.create({
       model: EXPAND_MODEL,
@@ -81,24 +84,35 @@ export async function POST(req: Request) {
   const newEdges: [string, string][] = [];
   const seenEdge = new Set<string>();
 
+  // El término del idioma actual va a la columna que toca (label_fa / label_en),
+  // NUNCA a `label` (que se queda con el canónico español).
+  const localized = (localTerm: string): Partial<BNode> =>
+    locale === "fa" ? { labelFa: localTerm } : locale === "en" ? { labelEn: localTerm } : {};
+
   if (dbConfigured()) {
     const existing = await existingNodeIds();
     const canonical = (lab: string) => existing.get(lab.toLowerCase()) ?? titleCase(lab);
-    // asegurar que el sujeto exista (pendiente si es nuevo)
+    // asegurar que el sujeto exista (pendiente si es nuevo). `label` (= selNode.label)
+    // ya viene en español canónico; si por algún motivo trajera persa/árabe, caemos
+    // al id para no contaminar el canónico.
     await addNode(
-      { id: nodeId, label, labelFa: label, cat, level: (body.level as BNode["level"]) ?? 3 },
+      { id: nodeId, label: hasPersianArabic(label) ? nodeId : label, cat, level: (body.level as BNode["level"]) ?? 3 },
       "pending",
       "expand",
     );
 
     for (const r of related.slice(0, 10)) {
-      const rawLabel = (r.label ?? "").toString().trim();
-      if (!rawLabel || rawLabel.length > 80) continue;
+      const canonicalEs = (r.label ?? "").toString().trim();
+      if (!canonicalEs || canonicalEs.length > 80) continue;
+      // El canónico DEBE ser español/latino. Si el Sofer lo mandó en persa/árabe,
+      // descartamos el item antes que contaminar `label` (no duplicar en farsi).
+      if (hasPersianArabic(canonicalEs)) continue;
+      const localTerm = (r.labelLoc ?? "").toString().trim() || canonicalEs;
       const rCat = ALLOWED_CATS.has(r.cat) ? r.cat : "kabbalah";
       const rLevel = ([2, 3, 4].includes(r.level) ? r.level : 3) as BNode["level"];
-      const id = canonical(rawLabel);
+      const id = canonical(canonicalEs); // reconoce el nodo español existente (mismo id)
       if (id === nodeId) continue;
-      const node: BNode = { id, label: rawLabel, labelFa: rawLabel, cat: rCat, level: rLevel };
+      const node: BNode = { id, label: canonicalEs, ...localized(localTerm), cat: rCat, level: rLevel };
       await addNode(node, "pending", "expand");
       await addEdge(nodeId, id, "pending", "expand");
       newNodes.push(node);
@@ -108,13 +122,14 @@ export async function POST(req: Request) {
   } else {
     // sin BD: devolver de todos modos para que el cliente lo muestre en sesión
     for (const r of related.slice(0, 10)) {
-      const rawLabel = (r.label ?? "").toString().trim();
-      if (!rawLabel) continue;
+      const canonicalEs = (r.label ?? "").toString().trim();
+      if (!canonicalEs || hasPersianArabic(canonicalEs)) continue;
+      const localTerm = (r.labelLoc ?? "").toString().trim() || canonicalEs;
       const rCat = ALLOWED_CATS.has(r.cat) ? r.cat : "kabbalah";
       const rLevel = ([2, 3, 4].includes(r.level) ? r.level : 3) as BNode["level"];
-      const id = titleCase(rawLabel);
+      const id = titleCase(canonicalEs);
       if (id === nodeId) continue;
-      newNodes.push({ id, label: rawLabel, labelFa: rawLabel, cat: rCat, level: rLevel });
+      newNodes.push({ id, label: canonicalEs, ...localized(localTerm), cat: rCat, level: rLevel });
       newEdges.push([nodeId, id]);
     }
   }

@@ -7,7 +7,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 import { parseHyperlinks } from "./hyperlinks";
-import { addNode, addEdge, existingNodeIds } from "./brainStore";
+import { addNode, addEdge, existingNodeIds, hasPersianArabic } from "./brainStore";
 import { resolveHebrewLetter } from "./hebrewLetters";
 import type { BNode } from "./brainData";
 
@@ -52,17 +52,25 @@ export async function harvestFromStudy(
     return { created: 0, subject: input.subjectId, concepts: [] };
   }
 
-  // mapa de ids existentes (lowercase → id real) para reutilizar el canónico
+  // mapa de etiquetas existentes (lowercase id/label/label_fa/label_en → id real):
+  // resuelve un término en CUALQUIER idioma a su nodo español canónico, para no
+  // duplicar (un estudio en farsi enlaza "تسیمتسوم" → reconoce el nodo "Tzimtzum").
   const existing = await existingNodeIds();
   const canonical = (label: string): string => existing.get(label.toLowerCase()) ?? label;
 
-  // sujeto del estudio
+  // sujeto del estudio. El `label` canónico debe ser LATINO (español). Si el sujeto
+  // viene en persa/árabe y NO resuelve a un nodo español existente, no cosechamos:
+  // mejor no alimentar que contaminar el canónico (CLAUDE.md: exactitud ante todo).
   const subjId = canonical(input.subjectId);
+  if (hasPersianArabic(subjId)) {
+    return { created: 0, subject: subjId, concepts: [] };
+  }
+  const subjFa = hasPersianArabic(input.subjectLabel); // el sujeto del estudio venía en persa
   await addNode(
     {
       id: subjId,
-      label: input.subjectLabel,
-      labelFa: input.subjectLabel,
+      label: subjFa ? subjId : input.subjectLabel, // canónico latino
+      labelFa: subjFa ? input.subjectLabel : undefined, // persa → label_fa (su columna)
       cat: input.subjectCat,
       level: input.subjectLevel,
       url: input.url,
@@ -86,12 +94,18 @@ export async function harvestFromStudy(
     }
     if (!rawId) continue;
     const id = canonical(rawId);
+    // término no-latino que NO resolvió a un nodo español → no cosechar (no
+    // contaminar `label`). Si SÍ resolvió, `id` ya es el canónico latino.
+    if (hasPersianArabic(id)) continue;
     if (seen.has(id.toLowerCase())) continue;
     seen.add(id.toLowerCase());
 
-    // crear el concepto solo si NO existe ya (si existe, addNode no hace nada)
+    // crear el concepto solo si NO existe ya (si existe, addNode solo rellena las
+    // traducciones que falten). `label` SIEMPRE latino; si el término venía en
+    // persa (estudio en farsi), va a label_fa, su columna correcta.
+    const termFa = hasPersianArabic(rawId);
     await addNode(
-      { id, label: rawId, labelFa: rawId, cat: "kabbalah", level: 3 },
+      { id, label: termFa ? id : rawId, labelFa: termFa ? rawId : undefined, cat: "kabbalah", level: 3 },
       "pending",
       "study",
     );

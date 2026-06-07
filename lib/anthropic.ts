@@ -109,14 +109,19 @@ comentarios lo discuten?, ¿conceptos relacionados?".
 REGLAS:
 - 6 a 9 items. SOLO conexiones reales de la tradición judía; NUNCA inventes fuentes ni vínculos.
 - Usa nombres canónicos y reconocibles (ej: Rashi, Zohar, Akedá, Avraham, Tzimtzum, Tiféret, Génesis 22, Bereshit Rabá). Esto permite reconectar con nodos que ya existen.
-- "label": el nombre en ${lang} (transliterado si es nombre propio hebreo), corto (1–4 palabras).
+- "label": SIEMPRE el nombre canónico en ESPAÑOL (transliterado al alfabeto latino si es
+  nombre propio hebreo; ej: Tzimtzum, Ein Sof, Baal Shem Tov, Moshé, Tania), corto (1–4
+  palabras). Esta es la clave de identidad del nodo: NUNCA la escribas en otro alfabeto
+  (ni hebreo, ni árabe/persa), pase lo que pase con el idioma del usuario.
+- "labelLoc": EXACTAMENTE el mismo concepto, pero escrito en ${lang} (la lengua del usuario).${
+    locale === "es" ? " Como el idioma es español, repite aquí el mismo valor de \"label\"." : ""}
 - "cat": EXACTAMENTE una de: tanakh, mishnah, talmud, midrash, halakhah, kabbalah, chasidut, philosophy, science, jashmal.
 - "level": 2 = libro/obra/tratado; 3 = concepto/personaje/tema; 4 = artículo.
-- "relation": 2–4 palabras que digan cómo se conecta (ej: "fuente bíblica", "lo comenta", "concepto madre").
+- "relation": 2–4 palabras (en ${lang}) que digan cómo se conecta (ej: "fuente bíblica", "lo comenta", "concepto madre").
 ${RIGOR_RULE}
 
 Responde ÚNICAMENTE con un objeto JSON válido, sin texto antes ni después, con esta forma:
-{"related":[{"label":"...","cat":"...","level":3,"relation":"..."}]}`;
+{"related":[{"label":"...","labelLoc":"...","cat":"...","level":3,"relation":"..."}]}`;
 }
 
 export function buildTranslatePrompt(): string {

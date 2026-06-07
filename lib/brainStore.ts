@@ -18,6 +18,20 @@ export function edgeKey(a: string, b: string): string {
   return a < b ? `${a}|${b}` : `${b}|${a}`;
 }
 
+// ── Guardia anti-contaminación: ¿el texto trae letras persas/árabes? ───────
+// Cubre el bloque árabe (U+0600–06FF, donde viven TODAS las letras persas:
+// پ چ ژ گ ک ی), su suplemento y las formas de presentación. NUNCA marca el
+// hebreo (U+0590–05FF), que es legítimo en gematrías. La columna canónica
+// `label` (y el `id`) JAMÁS debe contener estos caracteres; el persa va a
+// `label_fa`. Mismo rango que usa la migración de limpieza de la BD.
+const PERSIAN_ARABIC_RE = /[؀-ۿݐ-ݿﭐ-﷿ﹰ-ﻼ]/;
+export function hasPersianArabic(s: string): boolean {
+  return PERSIAN_ARABIC_RE.test(s || "");
+}
+// La MISMA clase de caracteres como string (los \u de JS se vuelven literales),
+// para pasarla como parámetro al operador ~ de Postgres en la migración.
+const PERSIAN_ARABIC_SQL_CLASS = "[؀-ۿݐ-ݿﭐ-﷿ﹰ-ﻼ]";
+
 // ── Crear tablas (idempotente) ────────────────────────────────────────────
 export async function ensureBrainTables(): Promise<boolean> {
   const sql = getSql();
@@ -81,6 +95,27 @@ export async function ensureBrainTables(): Promise<boolean> {
   } catch {
     /* el backfill nunca debe romper la creación de tablas */
   }
+
+  // ── Limpieza idempotente: nodos CONTAMINADOS con `label` en persa/árabe ──
+  // Bug histórico: al expandir/cosechar EN FARSI, el pipeline escribía el término
+  // del idioma de la UI dentro de `id` + `label` (no solo en `label_fa`), creando
+  // DUPLICADOS de nodos que ya existen en español. En /es esos nodos se veían en
+  // farsi. Aquí se borran de raíz (y sus aristas). El filtro SOLO mira `label`
+  // (NUNCA `label_fa`, que SÍ debe llevar persa) y SOLO el rango árabe/persa
+  // (NO el hebreo U+0590–05FF, legítimo en gematrías). Idempotente: tras el primer
+  // arranque ya no hay filas que cumplan la condición. La lógica nueva de
+  // expand/harvest impide que se vuelvan a crear.
+  try {
+    await sql`
+      DELETE FROM brain_edges
+       WHERE source_id IN (SELECT id FROM brain_nodes WHERE label ~ ${PERSIAN_ARABIC_SQL_CLASS})
+          OR target_id IN (SELECT id FROM brain_nodes WHERE label ~ ${PERSIAN_ARABIC_SQL_CLASS})
+    `;
+    await sql`DELETE FROM brain_nodes WHERE label ~ ${PERSIAN_ARABIC_SQL_CLASS}`;
+  } catch {
+    /* la limpieza nunca debe romper la creación de tablas */
+  }
+
   return true;
 }
 
@@ -620,11 +655,17 @@ export async function addNode(
 ): Promise<boolean> {
   const sql = getSql();
   if (!sql) return false;
+  // `label` (canónico, español) e `id` se fijan en la PRIMERA inserción y NO se
+  // tocan después. Si el nodo ya existe, solo RELLENAMOS las traducciones que
+  // falten (label_fa / label_en) — así expandir/cosechar en farsi reconoce el
+  // nodo español y le agrega su persa, sin duplicar ni pisar nada.
   await sql`
-    INSERT INTO brain_nodes (id, label, label_fa, cat, level, url, region, status, source)
-    VALUES (${node.id}, ${node.label}, ${node.labelFa}, ${node.cat}, ${node.level},
+    INSERT INTO brain_nodes (id, label, label_fa, label_en, cat, level, url, region, status, source)
+    VALUES (${node.id}, ${node.label}, ${node.labelFa ?? null}, ${node.labelEn ?? null}, ${node.cat}, ${node.level},
             ${node.url ?? null}, ${node.region ?? null}, ${status}, ${source})
-    ON CONFLICT (id) DO NOTHING
+    ON CONFLICT (id) DO UPDATE SET
+      label_fa = COALESCE(brain_nodes.label_fa, EXCLUDED.label_fa),
+      label_en = COALESCE(brain_nodes.label_en, EXCLUDED.label_en)
   `;
   return true;
 }
@@ -713,10 +754,25 @@ export async function listCommunityStars(): Promise<CommunityStar[]> {
 // el nodo canónico en vez de crear duplicados con otra grafía.
 export async function existingNodeIds(): Promise<Map<string, string>> {
   const sql = getSql();
-  const map = new Map<string, string>(); // lowercase → id real
+  const map = new Map<string, string>(); // lowercase (id/label/label_fa/label_en) → id real
   if (!sql) return map;
   try {
-    const rows = (await sql`SELECT id FROM brain_nodes`) as Array<{ id: string }>;
+    const rows = (await sql`
+      SELECT id, label, label_fa, label_en FROM brain_nodes
+    `) as Array<{ id: string; label: string; label_fa: string | null; label_en: string | null }>;
+    // Indexa por el id y por CADA etiqueta conocida (es/fa/en) → así un término en
+    // cualquier idioma reconoce su nodo canónico y la cosecha/expansión no duplica
+    // (sin esto, "تانیا" no encontraba el nodo español "Tania" y se duplicaba).
+    const put = (k: string | null | undefined, id: string) => {
+      const key = (k ?? "").trim().toLowerCase();
+      if (key && !map.has(key)) map.set(key, id);
+    };
+    for (const r of rows) {
+      put(r.label, r.id);
+      put(r.label_fa, r.id);
+      put(r.label_en, r.id);
+    }
+    // El id SIEMPRE gana sobre cualquier colisión de etiqueta (segunda pasada).
     for (const r of rows) map.set(r.id.toLowerCase(), r.id);
   } catch {
     /* ignore */
