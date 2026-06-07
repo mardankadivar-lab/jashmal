@@ -22,17 +22,16 @@
 
 import { useMemo, useRef, useState, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import {
   getGilgulModel,
   traverseGilgul,
   gilgulBranches,
   GILGUL_CONFIDENCE_COLOR,
-  confidenceLabel,
   type GilgulLink,
 } from "@/lib/gilgul";
 import { BRAIN_SCALE, type BNode } from "@/lib/brainData";
+import type { GilgulHint } from "./GilgulTooltip";
 
 type Vec3 = [number, number, number];
 type Lang = "es" | "fa" | "en";
@@ -81,9 +80,6 @@ function GilgulPath({
   link,
   pa,
   pb,
-  lang,
-  fromLabel,
-  toLabel,
   isHot,
   onHover,
   sparkPassed,
@@ -91,9 +87,6 @@ function GilgulPath({
   link: GilgulLink;
   pa: Vec3;
   pb: Vec3;
-  lang: Lang;
-  fromLabel: string;
-  toLabel: string;
   isHot: boolean;
   onHover: (h: boolean) => void;
   sparkPassed: boolean; // ¿la chispa ya pasó por aquí? → el sendero "queda encendido"
@@ -149,8 +142,6 @@ function GilgulPath({
     }
   });
 
-  const mid = pts[Math.floor(pts.length / 2)];
-
   return (
     <group>
       {/* tubo luminoso del sendero */}
@@ -179,78 +170,10 @@ function GilgulPath({
       >
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
-
-      {/* TOOLTIP de gilgul (la spec): Tipo · Fuente · Certeza (+ gematría) */}
-      {isHot && (
-        <Html position={[mid.x, mid.y, mid.z]} center distanceFactor={11} zIndexRange={[40, 0]} style={{ pointerEvents: "none" }}>
-          <div
-            dir={lang === "fa" ? "rtl" : "ltr"}
-            style={{
-              transform: "translateY(-12px)",
-              minWidth: "168px",
-              maxWidth: "230px",
-              userSelect: "none",
-              fontFamily: "var(--font-cinzel, serif)",
-              fontSize: "10.5px",
-              lineHeight: 1.45,
-              padding: "8px 11px",
-              borderRadius: "12px",
-              border: `1px solid ${GILGUL_CONFIDENCE_COLOR[link.confidence]}66`,
-              background: "rgba(5,5,10,0.9)",
-              color: "#f0e6cf",
-              backdropFilter: "blur(5px)",
-              boxShadow: `0 0 18px ${GILGUL_CONFIDENCE_COLOR[link.confidence]}33, 0 0 14px rgba(0,0,0,0.7)`,
-              textAlign: lang === "fa" ? "right" : "left",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "3px" }}>
-              <span style={{ width: 7, height: 7, borderRadius: 99, background: GILGUL_CONFIDENCE_COLOR[link.confidence], boxShadow: `0 0 7px ${GILGUL_CONFIDENCE_COLOR[link.confidence]}` }} />
-              <span style={{ letterSpacing: "0.12em", textTransform: "uppercase", fontSize: "8.5px", color: GILGUL_CONFIDENCE_COLOR[link.confidence] }}>
-                {lang === "fa" ? "گیلگول" : "Gilgul"}
-              </span>
-            </div>
-            <div style={{ fontSize: "11.5px", color: "#fff7e6", marginBottom: "4px" }}>
-              {lang === "fa" ? toLabel : fromLabel}
-              <span style={{ color: GILGUL_CONFIDENCE_COLOR[link.confidence], margin: "0 5px" }}>{lang === "fa" ? "←" : "→"}</span>
-              {lang === "fa" ? fromLabel : toLabel}
-            </div>
-            <div style={{ fontSize: "9px", color: "#c9c2ad", opacity: 0.85 }}>
-              <span style={{ opacity: 0.6 }}>{lang === "fa" ? "منبع: " : lang === "en" ? "Source: " : "Fuente: "}</span>
-              {link.source}
-            </div>
-            <div style={{ fontSize: "9px", color: "#c9c2ad", marginTop: "2px" }}>
-              <span style={{ opacity: 0.6 }}>{lang === "fa" ? "قطعیت: " : lang === "en" ? "Confidence: " : "Certeza: "}</span>
-              <span style={{ color: GILGUL_CONFIDENCE_COLOR[link.confidence] }}>{confidenceLabel(link.confidence, lang)}</span>
-            </div>
-            {/* desglose de gematría cuando aplica */}
-            {link.confidence === "gematria" && link.gematria && (
-              <div className="hebrew" style={{ fontSize: "10px", color: "#9fd0ff", marginTop: "5px", paddingTop: "5px", borderTop: "1px solid rgba(159,208,255,0.25)" }}>
-                {link.gematria.aName} = {link.gematria.aValue}
-                <span style={{ opacity: 0.5, margin: "0 5px" }}>·</span>
-                {link.gematria.bName} = {link.gematria.bValue}
-                {/* regla de transformación (at-bash, etc.) cuando NO hay igualdad numérica */}
-                {link.gematria.rule != null && (
-                  <span style={{ display: "block", opacity: 0.85, marginTop: "2px", color: "#bfe0ff" }}>
-                    {lang === "fa" ? "قاعده: " : lang === "en" ? "rule: " : "regla: "}{link.gematria.rule}
-                  </span>
-                )}
-                {/* raíz común SOLO en igualdades (anagramas / mismo valor) */}
-                {link.gematria.rule == null && link.gematria.shared != null && (
-                  <span style={{ display: "block", opacity: 0.7, marginTop: "1px" }}>
-                    {lang === "fa" ? "ریشهٔ مشترک" : lang === "en" ? "shared root" : "raíz común"}: {link.gematria.shared}
-                  </span>
-                )}
-              </div>
-            )}
-            {/* glosa breve si existe */}
-            {(lang === "fa" ? link.noteFa : link.note) && (
-              <div style={{ fontSize: "9.5px", fontStyle: "italic", color: "#d8cfb6", marginTop: "5px", opacity: 0.9 }}>
-                {lang === "fa" ? link.noteFa : link.note}
-              </div>
-            )}
-          </div>
-        </Html>
-      )}
+      {/* El tooltip de hover del sendero ya NO vive aquí (era un <Html> en el
+          midpoint 3D que se perdía al acercar el zoom). Ahora es un tooltip DOM
+          que sigue al cursor: GilgulTooltip, montado fuera del Canvas en page.tsx.
+          GilgulLayer bubblea el sendero bajo el cursor vía onHint (ver abajo). */}
     </group>
   );
 }
@@ -394,6 +317,7 @@ export default function GilgulLayer({
   controlsRef,
   mode = "journey",
   onEra,
+  onHint,
 }: {
   active: boolean;
   rootId: string | null;                          // raíz de alma invocada (ej. "Abel")
@@ -403,6 +327,7 @@ export default function GilgulLayer({
   controlsRef: React.RefObject<any>;              // OrbitControls → para enfocar la raíz
   mode?: GilgulMode;                              // "journey" = viaje lineal · "tree" = árbol completo
   onEra?: (era: string) => void;                  // Fase 2: la chispa reporta la era al llegar a una vasija
+  onHint?: (hint: GilgulHint | null) => void;     // sendero bajo el cursor → tooltip DOM que lo sigue (fuera del Canvas)
 }) {
   const isTree = mode === "tree";
   const model = useMemo(() => getGilgulModel(), []);
@@ -445,6 +370,8 @@ export default function GilgulLayer({
     setPassedLinks(new Set());
     setPulses([]);
     setHotLink(null);
+    onHint?.(null); // y oculta el tooltip de sendero (DOM que sigue al cursor)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rootId, active, mode]);
 
   // En modo ÁRBOL: enciende TODOS los senderos de una vez (organismo cósmico),
@@ -517,11 +444,12 @@ export default function GilgulLayer({
             link={l}
             pa={positions[l.from]}
             pb={positions[l.to]}
-            lang={lang}
-            fromLabel={labelOf(l.from)}
-            toLabel={labelOf(l.to)}
             isHot={hotLink === key}
-            onHover={(h) => setHotLink(h ? key : null)}
+            onHover={(h) => {
+              setHotLink(h ? key : null);
+              // bubblea el sendero bajo el cursor → tooltip DOM (sigue al cursor, fuera del Canvas)
+              onHint?.(h ? { link: l, fromLabel: labelOf(l.from), toLabel: labelOf(l.to) } : null);
+            }}
             sparkPassed={passedLinks.has(key)}
           />
         );

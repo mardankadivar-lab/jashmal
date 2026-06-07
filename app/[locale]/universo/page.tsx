@@ -39,6 +39,7 @@ import { gilgulChainForRoot, traverseGilgul, getGilgulModel, GILGUL_ERAS } from 
 import type { GilgulMode } from "./GilgulLayer";
 import Consola from "./Consola";
 import EdgeTooltip, { type EdgeHint } from "./EdgeTooltip";
+import GilgulTooltip, { type GilgulHint } from "./GilgulTooltip";
 import { useUniversoHistory } from "./useUniversoHistory";
 import { useIsMobile } from "./useIsMobile";
 
@@ -901,6 +902,7 @@ function BrainScene({
   onSelect,
   onHover,
   onEdgeHint,
+  onGilgulHint,
   onDouble,
   onPickEdge,
   onTravelArrived,
@@ -925,6 +927,7 @@ function BrainScene({
   onSelect: (id: string, additive: boolean) => void;
   onHover: (id: string | null) => void;
   onEdgeHint: (hint: { toLabel: string; kind: "solid" | "interp" } | null) => void;
+  onGilgulHint: (hint: GilgulHint | null) => void;
   onDouble: (n: BNode) => void;
   onPickEdge: (from: string, to: string, pts: THREE.Vector3[]) => void;
   onTravelArrived: (toId: string) => void;
@@ -1182,6 +1185,7 @@ function BrainScene({
           controlsRef={controlsRef}
           mode={gilgulMode}
           onEra={onEra}
+          onHint={onGilgulHint}
         />
 
         {nodes.map((n) => {
@@ -1231,6 +1235,7 @@ export default function GrafoPage() {
   const [filterCat, setFilterCat] = useState<string | null>(null); // chip-filtro de la Consola (disciplina del nodo en foco)
   const [travelRequest, setTravelRequest] = useState<{ from: string; to: string } | null>(null); // viaje pedido desde la Consola
   const [edgeHint, setEdgeHint] = useState<EdgeHint | null>(null); // rótulo "viajar a" que sigue al cursor
+  const [gilgulHint, setGilgulHint] = useState<GilgulHint | null>(null); // sendero de gilgul bajo el cursor → tooltip DOM que lo sigue
 
   // Consola unificada + hoja inferior en móvil + historial de navegación (migaja ← →)
   const isMobile = useIsMobile();
@@ -1677,6 +1682,7 @@ export default function GrafoPage() {
             onSelect={handleSelect}
             onHover={(id) => { if (!travel) setHovered(id); }}
             onEdgeHint={setEdgeHint}
+            onGilgulHint={setGilgulHint}
             onDouble={handleDouble}
             onPickEdge={startTravel}
             onTravelArrived={arriveTravel}
@@ -1854,6 +1860,11 @@ export default function GrafoPage() {
       {/* Rótulo "viajar a → destino" que SIGUE AL CURSOR (antes flotaba lejos en
           el medio de la arista y se perdía al acercar el zoom). */}
       <EdgeTooltip hint={edgeHint} isFa={isFa} locale={locale} />
+
+      {/* Tooltip del SENDERO DE GILGUL que SIGUE AL CURSOR (antes flotaba en el
+          punto medio 3D del sendero y se perdía al acercar el zoom). Mismo patrón
+          DOM que EdgeTooltip: position:fixed + pointermove + opacity por hint. */}
+      <GilgulTooltip hint={gilgulHint} lang={isFa ? "fa" : locale === "en" ? "en" : "es"} />
 
       {/* ── Fase 2 — LÍNEA DE TIEMPO histórica (avanza con la chispa) ──
           Debajo de la galaxia, centrada. Marca la era que el linaje va
