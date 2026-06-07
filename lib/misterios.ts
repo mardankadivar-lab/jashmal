@@ -52,6 +52,17 @@ export const MISTERIOS: Misterio[] = [
     orden: 3,
   },
   {
+    slug: "betsabe",
+    he: "בַּת־שֶׁבַע",
+    titulo: "Betsabé — El viajero que se quedó a vivir",
+    tituloFa: "بَت‌شِبَع — مسافری که ماند تا بماند",
+    gancho: "¿Quién se acostó con Betsabé: el rey David… o un viajero extraño? El Talmud lee la caída más famosa de la Biblia con una sola imagen —el huésped que se vuelve amo— y, en su raíz, esconde la luz del Mashíaj.",
+    ganchoFa: "چه کسی با بَت‌شِبَع خوابید: داوودِ پادشاه… یا مسافری بیگانه؟ تلمود مشهورترین سقوطِ کتاب مقدس را با یک تصویر می‌خواند —مهمانی که ارباب می‌شود— و در ریشه‌اش، نورِ ماشیح را پنهان می‌کند.",
+    serie: "dos-filos",
+    color: "#cf8c52",
+    orden: 3.5,
+  },
+  {
     slug: "linaje",
     he: "עֲבֵרָה לִשְׁמָהּ",
     titulo: "El linaje prohibido del Mashíaj",
