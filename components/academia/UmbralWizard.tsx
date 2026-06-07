@@ -373,12 +373,7 @@ function ScreenStep({ c, alreadySaved }: { c: UmbralContent; alreadySaved: boole
             <p className="mt-2 text-sm leading-relaxed text-parchment/75">
               Cuando vuelvas, retomas justo aquí. Sigue adelante — la puerta está abierta.
             </p>
-            <Link
-              href="/estudio"
-              className="mt-6 inline-block rounded-full border-2 border-gold bg-gold/10 px-9 py-3.5 font-cinzel text-sm font-bold uppercase tracking-widest text-gold transition-all hover:bg-gold/20"
-            >
-              {c.s4.cta}
-            </Link>
+            {/* El botón de continuar va abajo, único, hacia la escalera guiada. */}
           </div>
         ) : (
           <>
@@ -390,13 +385,27 @@ function ScreenStep({ c, alreadySaved }: { c: UmbralContent; alreadySaved: boole
         )}
       </div>
 
-      {/* puente final hacia el estudio */}
+      {/* La próxima piedra: la escalera guiada del Módulo 1 (NO el motor libre).
+          Esto resuelve "al terminar El Umbral lo soltamos sin rumbo". */}
       <div className="mt-10 text-center">
         <Link
-          href="/estudio"
-          className="font-cinzel text-xs uppercase tracking-widest text-parchment/60 underline-offset-4 transition hover:text-gold hover:underline"
+          href="/academia/modulo-1"
+          className="inline-block rounded-full border-2 border-gold bg-gold/10 px-9 py-4 font-cinzel text-sm font-bold uppercase tracking-widest text-gold transition-all hover:bg-gold/20 hover:shadow-[0_0_24px_rgba(201,164,62,0.25)]"
         >
-          Entrar a la sala de estudio →
+          Comienza el Módulo 1 →
+        </Link>
+        <p className="mt-3 text-xs text-muted">
+          Seis lecciones guiadas. Sabrás siempre cuál es tu próximo paso.
+        </p>
+      </div>
+
+      {/* Salida discreta para quien prefiera explorar por su cuenta. */}
+      <div className="mt-6 text-center">
+        <Link
+          href="/estudio"
+          className="font-cinzel text-[11px] uppercase tracking-widest text-parchment/45 underline-offset-4 transition hover:text-gold hover:underline"
+        >
+          o explora la sala de estudio libre →
         </Link>
       </div>
     </div>
