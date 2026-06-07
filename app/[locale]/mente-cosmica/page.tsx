@@ -1341,10 +1341,13 @@ export default function GrafoPage() {
     expand: isFa ? "✦ گسترش" : "✦ Expandir",
     expanding: isFa ? "در حال پژوهش…" : "Investigando…",
     search: isFa ? "جستجو… یا ترکیب با +" : "Busca un concepto… o mezcla con +",
-    // Inscripción positiva (Sofer): la luz del estudio que crece — Proverbios 4:18
-    mensaje: isFa ? "راهِ عادلان چون نورِ سپیده‌دم است، که پیوسته فزونی می‌یابد." : "La luz del justo es como la luz de aurora, que va de aumento a aumento.",
-    mensajeHe: "וְאֹרַח צַדִּיקִים כְּאוֹר נֹגַהּ, הוֹלֵךְ וָאוֹר",
-    mensajeRef: isFa ? "امثال ۴:۱۸" : "Proverbios 4:18",
+    // Inscripción positiva (Sofer): el Creador se envuelve en luz — Salmo 104:2
+    // (fa aún sin traducción del Sofer → cae al español como fallback)
+    mensaje: locale === "en"
+      ? "He wraps Himself in light as with a garment; He stretches out the heavens like a curtain."
+      : "El que se cubre de luz como de vestidura, que extiende los cielos como una cortina.",
+    mensajeHe: "עֹטֶה אוֹר כַּשַּׂלְמָה נוֹטֶה שָׁמַיִם כַּיְרִיעָה",
+    mensajeRef: isFa ? "مزمور ۱۰۴:۲" : locale === "en" ? "Psalm 104:2" : "Salmo 104:2",
   };
 
   // normaliza (minúsculas, sin acentos) para comparar
