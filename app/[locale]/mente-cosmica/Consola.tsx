@@ -303,7 +303,7 @@ export default function Consola(props: ConsolaProps) {
           {(selConnections.solid > 0 || selConnections.interp > 0) && (
             <p
               className="mb-2 text-[10px] text-muted/70"
-              title={isFa ? "کلاسیک = منبع مستقیم · تفسیری = خوانش" : "Clásicas = fuente directa · Interpretativas = lectura"}
+              title={tri("Clásicas = fuente directa · Interpretativas = lectura", "کلاسیک = منبع مستقیم · تفسیری = خوانش", "Classic = direct source · Interpretive = reading")}
             >
               <span className="text-gold/90">{selConnections.solid}</span> {tri("clásicas", "کلاسیک", "classic")}
               <span className="text-muted/40"> · </span>

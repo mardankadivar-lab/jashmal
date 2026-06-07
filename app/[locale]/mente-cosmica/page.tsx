@@ -1329,18 +1329,22 @@ export default function GrafoPage() {
     return { total: nbrs.size, byCat, solid, interp };
   }, [selected, graph.edges, graph.nodes]);
 
+  // tri(es, fa, en): elige por idioma. EN nunca debe caer a la rama española.
+  const tri = (es: string, fa: string, en: string) => (isFa ? fa : locale === "en" ? en : es);
   const T = {
     title: "חַשְׁמַל",
-    subtitle: isFa ? "ذهنِ کیهانیِ خَشمَل" : "La Mente Cósmica de Jashmal",
-    back: isFa ? "بازگشت به خانه" : "Volver al inicio",
-    hint: isFa
-      ? "بکشید برای چرخش · اسکرول/پینچ برای زوم · کلیک روی سیناپس · دوبار کلیک برای مطالعه"
-      : "Arrastra para girar · rueda o pellizca para acercar · clic en una sinapsis · doble clic para estudiar",
-    legend: isFa ? "دامنه‌های دانش" : "Dominios del saber",
-    study: isFa ? "مطالعه ←" : "Estudiar →",
-    expand: isFa ? "✦ گسترش" : "✦ Expandir",
-    expanding: isFa ? "در حال پژوهش…" : "Investigando…",
-    search: isFa ? "جستجو… یا ترکیب با +" : "Busca un concepto… o mezcla con +",
+    subtitle: tri("La Mente Cósmica de Jashmal", "ذهنِ کیهانیِ خَشمَل", "The Cosmic Mind of Jashmal"),
+    back: tri("Volver al inicio", "بازگشت به خانه", "Back to home"),
+    hint: tri(
+      "Arrastra para girar · rueda o pellizca para acercar · clic en una sinapsis · doble clic para estudiar",
+      "بکشید برای چرخش · اسکرول/پینچ برای زوم · کلیک روی سیناپس · دوبار کلیک برای مطالعه",
+      "Drag to rotate · Scroll or pinch to zoom · Click a synapse · Double-click to study",
+    ),
+    legend: tri("Dominios del saber", "دامنه‌های دانش", "Domains of knowledge"),
+    study: tri("Estudiar →", "مطالعه ←", "Study →"),
+    expand: tri("✦ Expandir", "✦ گسترش", "✦ Expand"),
+    expanding: tri("Investigando…", "در حال پژوهش…", "Researching…"),
+    search: tri("Busca un concepto… o mezcla con +", "جستجو… یا ترکیب با +", "Search a concept… or mix with +"),
     // Inscripción positiva (Sofer): el Creador se envuelve en luz — Salmo 104:2
     // (fa verificado por el Sofer: persa puro, sin letras hebreas)
     mensaje: isFa
@@ -1658,7 +1662,7 @@ export default function GrafoPage() {
       <Suspense
         fallback={
           <div className="flex h-full items-center justify-center">
-            <p className="animate-pulse font-cinzel text-gold/50">{isFa ? "در حال بیدار شدن…" : "Despertando la mente…"}</p>
+            <p className="animate-pulse font-cinzel text-gold/50">{tri("Despertando la mente…", "در حال بیدار شدن…", "Awakening the mind…")}</p>
           </div>
         }
       >
@@ -1764,7 +1768,7 @@ export default function GrafoPage() {
             {searchQ ? (
               <button
                 onClick={clearSearch}
-                aria-label={isFa ? "پاک کردن" : "limpiar"}
+                aria-label={tri("limpiar", "پاک کردن", "clear")}
                 className="absolute end-2.5 top-1/2 -translate-y-1/2 rounded-full px-1.5 text-lg leading-none text-muted/60 transition-colors hover:text-gold"
               >
                 ×
