@@ -22,6 +22,7 @@ export type ConsolaProps = {
   isFa: boolean;
   locale: string;
   isMobile: boolean;
+  traveling: boolean; // hay un viaje de cámara en curso (o pedido) → apartar la Consola
 
   // ── leyenda / galaxias (reposo) ──
   cats: [string, Cat][];
@@ -73,6 +74,7 @@ export default function Consola(props: ConsolaProps) {
     isFa,
     locale,
     isMobile,
+    traveling,
     cats,
     activeCat,
     onToggleCat,
@@ -120,10 +122,27 @@ export default function Consola(props: ConsolaProps) {
 
   // ── hoja inferior (móvil): abrir/cerrar + arrastre del asa ──
   const [open, setOpen] = useState(false);
-  // al enfocar algo nuevo (nodo / comparación / gilgul) la hoja sube sola
+  // "tucked" = la Consola se APARTA durante un viaje (y al llegar) para no tapar
+  // la grabación del vuelo. Solo el usuario la vuelve a subir (asa en móvil /
+  // pastilla en escritorio); no se auto-sube al enfocar el nodo de destino.
+  const [tucked, setTucked] = useState(false);
+  const wasTraveling = useRef(false);
+  // al ARRANCAR un viaje: baja la hoja y entra en modo "apartada"
   useEffect(() => {
+    if (traveling && !wasTraveling.current) {
+      setOpen(false);
+      setTucked(true);
+    }
+    wasTraveling.current = traveling;
+  }, [traveling]);
+  // al enfocar algo nuevo (nodo / comparación / gilgul) la hoja sube sola — SALVO
+  // mientras viaja o está "apartada" (recién llegado): ahí manda el usuario.
+  useEffect(() => {
+    if (tucked || traveling) return;
     if (focusActive) setOpen(true);
-  }, [focusActive, selNode?.id, compare.length, gilgulInfo?.label]);
+  }, [tucked, traveling, focusActive, selNode?.id, compare.length, gilgulInfo?.label]);
+  // el usuario la sube a mano (asa en móvil · pastilla en escritorio)
+  const raise = () => { setTucked(false); setOpen(true); };
   const dragStartY = useRef<number | null>(null);
   const onHandleDown = (e: React.PointerEvent) => {
     dragStartY.current = e.clientY;
@@ -134,10 +153,12 @@ export default function Consola(props: ConsolaProps) {
     if (start == null) return;
     const dy = e.clientY - start;
     if (Math.abs(dy) < 8) {
-      setOpen((o) => !o); // toque = alternar
+      setOpen((o) => { const next = !o; if (next) setTucked(false); return next; }); // toque = alternar (subir = des-apartar)
       return;
     }
-    setOpen(dy < 0); // arrastrar arriba abre, abajo cierra
+    const willOpen = dy < 0; // arrastrar arriba abre, abajo cierra
+    if (willOpen) setTucked(false);
+    setOpen(willOpen);
   };
 
   const iconBtn = `flex shrink-0 items-center justify-center rounded-full text-muted/60 transition-colors hover:text-gold ${
@@ -491,6 +512,22 @@ export default function Consola(props: ConsolaProps) {
 
   // ── escritorio: panel anclado abajo-izquierda ──
   if (!isMobile) {
+    // durante/después de un viaje la Consola se repliega a una PASTILLA (control
+    // claro) abajo-izquierda; el usuario la abre al ir a elegir el próximo nodo.
+    if (tucked) {
+      return (
+        <button
+          dir={dir}
+          onClick={raise}
+          aria-label={tri("Abrir la consola", "باز کردن کنسول", "Open console")}
+          className="fixed bottom-4 start-4 z-30 flex max-w-[min(344px,92vw)] items-center gap-2 rounded-full border border-gold/25 bg-ink/88 px-4 py-2.5 shadow-[0_8px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl transition-colors hover:border-gold/50"
+          style={view === "gilgul" ? { borderColor: "rgba(255,214,107,0.4)" } : undefined}
+        >
+          <span className="shrink-0 text-gold/55">▴</span>
+          {peekLine}
+        </button>
+      );
+    }
     return (
       <div
         dir={dir}

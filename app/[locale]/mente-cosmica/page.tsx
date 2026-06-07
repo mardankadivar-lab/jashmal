@@ -1824,6 +1824,7 @@ export default function GrafoPage() {
         isFa={isFa}
         locale={locale}
         isMobile={isMobile}
+        traveling={!!(travel || travelRequest)}
         cats={Object.entries(BRAIN_CATS).filter(([k]) => k !== "jashmal" && k !== "torah")}
         activeCat={activeCat}
         onToggleCat={toggleCat}

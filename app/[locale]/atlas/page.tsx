@@ -160,9 +160,13 @@ function PlaceNode({
 }) {
   const tex = useMemo(glowTexture, []);
   const col = REGION_COLORS[place.region] ?? "#c9a43e";
-  // el resplandor base crece (un poco) con las veces que se ha estudiado
-  const base = (place.importance === 3 ? 0.28 : place.importance === 2 ? 0.2 : 0.14)
-    + Math.min(0.06, hits * 0.008);
+  // Chispas finas: puntos pequeños y delicados (no bolas). El resplandor base
+  // crece UN POCO con las veces que se ha estudiado, pero acotado: una localidad
+  // muy estudiada brilla algo más y TODAS quedan pequeñas.
+  const base = (place.importance === 3 ? 0.12 : place.importance === 2 ? 0.085 : 0.06)
+    + Math.min(0.03, hits * 0.004);
+  // área de toque invisible: cómoda aunque la chispa sea diminuta (no encoge el clic)
+  const hit = Math.max(0.22, base * 3.4);
   const haloRef = useRef<THREE.Sprite>(null);
   const coreRef = useRef<THREE.Sprite>(null);
   const ringRef = useRef<THREE.Sprite>(null); // anillo dorado de "recién encendida"
@@ -176,13 +180,14 @@ function PlaceNode({
 
   useFrame(({ clock }) => {
     const pulse = 1 + Math.sin(clock.elapsedTime * 1.5 + pos[0] * 2) * 0.12;
-    const k = selected ? 1.7 : dimmed ? 0.5 : 1;
-    if (haloRef.current) haloRef.current.scale.setScalar(base * 1.8 * pulse * k);
-    if (coreRef.current) coreRef.current.scale.setScalar(base * 0.6 * pulse * k);
-    // anillo de las localidades recién cosechadas: respira más lento y amplio
+    const k = selected ? 1.55 : dimmed ? 0.55 : 1;
+    // halo = bloom suave alrededor · core = la chispa brillante puntual (el "glint")
+    if (haloRef.current) haloRef.current.scale.setScalar(base * 1.5 * pulse * k);
+    if (coreRef.current) coreRef.current.scale.setScalar(base * 0.55 * pulse * k);
+    // anillo de "recién cosechada": fino y proporcional (respira lento y amplio)
     if (ringRef.current) {
       const slow = 1 + Math.sin(clock.elapsedTime * 0.9 + pos[1] * 2) * 0.28;
-      ringRef.current.scale.setScalar(base * 2.7 * slow * k);
+      ringRef.current.scale.setScalar(base * 1.9 * slow * k);
     }
   });
 
@@ -190,7 +195,7 @@ function PlaceNode({
     <group position={pos}>
       {harvested && (
         <sprite ref={ringRef}>
-          <spriteMaterial map={tex} color="#c9a43e" transparent opacity={dimmed ? 0.12 : 0.3} blending={THREE.AdditiveBlending} depthWrite={false} />
+          <spriteMaterial map={tex} color="#c9a43e" transparent opacity={dimmed ? 0.1 : 0.22} blending={THREE.AdditiveBlending} depthWrite={false} />
         </sprite>
       )}
       <sprite ref={haloRef}>
@@ -199,9 +204,9 @@ function PlaceNode({
       <sprite ref={coreRef}>
         <spriteMaterial map={tex} color="#fff7e6" transparent opacity={dimmed ? 0.4 : 0.95} blending={THREE.AdditiveBlending} depthWrite={false} />
       </sprite>
-      {/* área de clic */}
+      {/* área de clic (invisible) — se mantiene cómoda aunque la chispa sea diminuta */}
       <sprite
-        scale={[base * 2.6, base * 2.6, 1]}
+        scale={[hit, hit, 1]}
         onClick={(e) => { e.stopPropagation(); onClick(); }}
         onPointerOver={(e) => { e.stopPropagation(); setHover(true); onHover(true); document.body.style.cursor = "pointer"; }}
         onPointerOut={() => { setHover(false); onHover(false); document.body.style.cursor = "default"; }}
