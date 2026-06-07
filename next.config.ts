@@ -46,6 +46,11 @@ const nextConfig: NextConfig = {
       // convierte en /es/cosmic y da 404).
       { source: "/cosmic", destination: "/en/cosmic-mind", permanent: true },
 
+      // "cosmic-mind" es el slug INGLÉS. Sin prefijo de idioma, el middleware
+      // de next-intl lo trataría como ruta en español y caería en /es/mente-cosmica.
+      // Lo fijamos aquí (antes del middleware) para que SIEMPRE vaya al inglés.
+      { source: "/cosmic-mind", destination: "/en/cosmic-mind", permanent: true },
+
       { source: "/universo", destination: "/mente-cosmica", permanent: true },
       { source: "/es/universo", destination: "/es/mente-cosmica", permanent: true },
       { source: "/fa/universo", destination: "/fa/cosmic-mind", permanent: true },
