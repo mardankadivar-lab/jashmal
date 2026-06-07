@@ -30,7 +30,7 @@ function contextFor(seg: string, sub: string): string {
   switch (seg) {
     case "":
       return "la página principal de Jashmal (estudio de Torá y Cabalá)";
-    case "universo":
+    case "mente-cosmica":
       return 'el "Universo del Conocimiento" de Jashmal: un mapa cósmico donde cada estrella es un concepto de Torá o Cabalá y las líneas conectan estudios entre sí';
     case "letras":
       return sub
@@ -56,7 +56,7 @@ function contextFor(seg: string, sub: string): string {
 // que el estudiante pueda preguntar el significado de cualquier término sin
 // tener que saber hebreo.
 export default function GlobalTutor() {
-  const pathname = usePathname(); // p. ej. /es/universo, /fa/letras/bet, /es
+  const pathname = usePathname(); // p. ej. /es/mente-cosmica, /fa/letras/bet, /es
   const all = pathname.split("/").filter(Boolean);
   const rest = LOCALES.includes(all[0]) ? all.slice(1) : all;
   const seg = rest[0] ?? "";

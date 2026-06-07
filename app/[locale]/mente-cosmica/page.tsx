@@ -1,7 +1,7 @@
 "use client";
 
 // ─────────────────────────────────────────────────────────────────────────
-// /universo — "El Universo del Conocimiento de Jashmal"
+// /mente-cosmica — "El Universo del Conocimiento de Jashmal"
 // El grafo MISMO es el cerebro: nodos = sinapsis luminosas, aristas = fibras
 // neuronales curvas. Torá = corazón central. Forma cerebral 3D (lóbulos) desde
 // cualquier ángulo. Bloom + additive blending. Cámara cinematográfica con

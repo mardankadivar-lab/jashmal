@@ -6,7 +6,7 @@
 // vasija (personaje) a otra a través de las generaciones.
 //
 // Este archivo es SOLO DATOS + helpers. No renderiza nada. El render vive en
-// app/[locale]/universo/GilgulLayer.tsx y consume `getGilgulModel()`.
+// app/[locale]/mente-cosmica/GilgulLayer.tsx y consume `getGilgulModel()`.
 //
 // PUNTO DE INGESTA DEL SOFER (editor-erudito):
 //   El Sofer está preparando el dataset verificado de gilgulim (cadenas de alma
