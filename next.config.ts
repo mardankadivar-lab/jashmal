@@ -28,22 +28,30 @@ const nextConfig: NextConfig = {
   async redirects() {
     // Rutas viejas de la "Mente Cósmica": "/grafo" y "/cerebro" fueron nombres
     // previos, y "/universo" fue la ruta anterior. TODAS redirigen de forma
-    // permanente a /mente-cosmica para no romper enlaces compartidos, marcadores
+    // permanente a la URL actual para no romper enlaces compartidos, marcadores
     // ni el SEO. redirects() corre ANTES del middleware de next-intl, así que
-    // cada locale (/es, /fa, /en) salta directo, sin doble salto.
+    // cada locale salta directo a su URL canónica (en/fa → /cosmic-mind,
+    // es → /mente-cosmica), sin doble salto. La URL pública cambia por idioma:
+    //   es → /mente-cosmica   ·   en → /cosmic-mind   ·   fa → /cosmic-mind
     return [
+      // Antiguo nombre interno → URL canónica localizada (que NADA dé 404).
+      // El middleware de next-intl también redirige /en/mente-cosmica, pero lo
+      // dejamos explícito como 308 permanente para SEO y para ir directo.
+      { source: "/en/mente-cosmica", destination: "/en/cosmic-mind", permanent: true },
+      { source: "/fa/mente-cosmica", destination: "/fa/cosmic-mind", permanent: true },
+
       { source: "/universo", destination: "/mente-cosmica", permanent: true },
       { source: "/es/universo", destination: "/es/mente-cosmica", permanent: true },
-      { source: "/fa/universo", destination: "/fa/mente-cosmica", permanent: true },
-      { source: "/en/universo", destination: "/en/mente-cosmica", permanent: true },
+      { source: "/fa/universo", destination: "/fa/cosmic-mind", permanent: true },
+      { source: "/en/universo", destination: "/en/cosmic-mind", permanent: true },
       { source: "/grafo", destination: "/mente-cosmica", permanent: true },
       { source: "/es/grafo", destination: "/es/mente-cosmica", permanent: true },
-      { source: "/fa/grafo", destination: "/fa/mente-cosmica", permanent: true },
-      { source: "/en/grafo", destination: "/en/mente-cosmica", permanent: true },
+      { source: "/fa/grafo", destination: "/fa/cosmic-mind", permanent: true },
+      { source: "/en/grafo", destination: "/en/cosmic-mind", permanent: true },
       { source: "/cerebro", destination: "/mente-cosmica", permanent: true },
       { source: "/es/cerebro", destination: "/es/mente-cosmica", permanent: true },
-      { source: "/fa/cerebro", destination: "/fa/mente-cosmica", permanent: true },
-      { source: "/en/cerebro", destination: "/en/mente-cosmica", permanent: true },
+      { source: "/fa/cerebro", destination: "/fa/cosmic-mind", permanent: true },
+      { source: "/en/cerebro", destination: "/en/cosmic-mind", permanent: true },
     ];
   },
 };

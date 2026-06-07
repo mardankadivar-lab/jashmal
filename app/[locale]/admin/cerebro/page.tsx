@@ -5,6 +5,7 @@
 // Filtro de duplicados + selección múltiple para curar la cosecha.
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { LocalizedLink } from "@/i18n/navigation";
 
 type PNode = { id: string; label: string; cat: string; level: number; url: string | null; source: string | null; dup?: boolean };
 type PEdge = { id: string; source_id: string; target_id: string; source_label: string | null; target_label: string | null; origin: string | null };
@@ -130,7 +131,7 @@ export default function CerebroAdminPage() {
         <h1 className="mb-1 font-cinzel text-2xl text-[#c9a43e]">Panel del Sofer · Cerebro</h1>
         <p className="mb-6 text-sm text-[#9a958a]">
           Aprueba o rechaza lo que el cerebro aprendió de los estudios. Lo aprobado se enciende en{" "}
-          <a href="/mente-cosmica" className="text-[#c9a43e] underline">el cerebro</a>.
+          <LocalizedLink href="/mente-cosmica" className="text-[#c9a43e] underline">el cerebro</LocalizedLink>.
         </p>
 
         {!loaded ? (

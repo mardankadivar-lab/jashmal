@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LocalizedLink } from "@/i18n/navigation";
 import { getSession } from "@/lib/communitySession";
 import { getUserByEmail } from "@/lib/community";
 import { levelForStars } from "@/lib/communityLevels";
@@ -67,12 +67,12 @@ export default async function ComunidadPage() {
               <p className="mb-6 font-cinzel text-xs uppercase tracking-[0.25em] text-gold/50">Comparte tu revelación</p>
               <ShareRevelation />
             </div>
-            <Link
+            <LocalizedLink
               href="/mente-cosmica"
               className="mt-8 inline-block rounded-full border border-gold/30 px-5 py-2 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:bg-gold/10"
             >
               Ver la Mente Cósmica →
-            </Link>
+            </LocalizedLink>
           </div>
         ) : (
           <LoginForm />

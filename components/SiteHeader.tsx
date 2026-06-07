@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link, LocalizedLink } from "@/i18n/navigation";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ThemeToggle from "./ThemeToggle";
 import ReadingControls from "./ReadingControls";
@@ -60,16 +60,25 @@ export default function SiteHeader() {
         {open && (
           <nav className="absolute end-5 top-full z-50 mt-2 w-[min(260px,calc(100vw-2.5rem))] overflow-hidden rounded-2xl border border-gold/15 bg-ink/95 shadow-2xl shadow-black/50 backdrop-blur-md">
             <div className="flex flex-col p-2">
-              {NAV.map(([href, key]) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-2.5 font-cinzel text-sm text-parchment/90 transition-colors hover:bg-gold/10 hover:text-gold"
-                >
-                  {t(key)}
-                </Link>
-              ))}
+              {NAV.map(([href, key]) => {
+                const cls =
+                  "rounded-lg px-3 py-2.5 font-cinzel text-sm text-parchment/90 transition-colors hover:bg-gold/10 hover:text-gold";
+                // La Mente Cósmica tiene URL localizada (/cosmic-mind en en/fa):
+                // su enlace usa la navegación localizada para generar la URL
+                // correcta por idioma directamente, sin saltos de redirect.
+                if (href === "/mente-cosmica") {
+                  return (
+                    <LocalizedLink key={href} href="/mente-cosmica" onClick={() => setOpen(false)} className={cls}>
+                      {t(key)}
+                    </LocalizedLink>
+                  );
+                }
+                return (
+                  <Link key={href} href={href} onClick={() => setOpen(false)} className={cls}>
+                    {t(key)}
+                  </Link>
+                );
+              })}
               <div className="mt-1 flex items-center gap-4 border-t border-gold/10 px-3 pb-1 pt-3">
                 <ReadingControls />
                 <LanguageSwitcher />

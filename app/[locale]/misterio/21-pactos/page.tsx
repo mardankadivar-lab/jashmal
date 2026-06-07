@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter, LocalizedLink } from "@/i18n/navigation";
 import MisterioLangToggle from "@/components/MisterioLangToggle";
 
 // ── Página de misterio: 21 PACTOS / EHYÉ = 21 ─────────────────────────────────
@@ -435,7 +435,7 @@ export default function VeintiunPactosPage() {
             </button>
 
             <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 font-cinzel text-[11px] uppercase tracking-widest text-gold/50">
-              <Link href="/mente-cosmica" className="hover:text-gold">Verlo en la Mente Cósmica de Jashmal →</Link>
+              <LocalizedLink href="/mente-cosmica" className="hover:text-gold">Verlo en la Mente Cósmica de Jashmal →</LocalizedLink>
               <Link href="/misterios" className="hover:text-gold">Más misterios →</Link>
             </div>
           </div>

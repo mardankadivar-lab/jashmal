@@ -30,7 +30,10 @@ function contextFor(seg: string, sub: string): string {
   switch (seg) {
     case "":
       return "la página principal de Jashmal (estudio de Torá y Cabalá)";
+    // "mente-cosmica" (es) y "cosmic-mind" (en/fa) son la MISMA página: la URL
+    // cambia por idioma (pathnames localizados de next-intl), el contexto no.
     case "mente-cosmica":
+    case "cosmic-mind":
       return 'el "Universo del Conocimiento" de Jashmal: un mapa cósmico donde cada estrella es un concepto de Torá o Cabalá y las líneas conectan estudios entre sí';
     case "letras":
       return sub
