@@ -37,6 +37,24 @@ export default function CreacionPage() {
   // Color de fondo interpolado
   const bgColor = stage.bgColor;
 
+  // ── Modelo de legibilidad por etapa ───────────────────────────────
+  // DOS etapas tienen fondo CLARO/blanco (Ein Sof y Tikún). Ahí el
+  // dorado puro NO se lee. En esas etapas usamos texto OSCURO + halo
+  // claro; en las etapas oscuras usamos crema/dorado + halo oscuro
+  // fuerte. Así el texto se lee SIEMPRE, sin importar qué pase detrás
+  // en la animación 3D (partículas brillantes, destellos, etc.).
+  const isLight = stage.id === "ein-sof" || stage.id === "tikun";
+  const titleColor = isLight ? "#0b0712" : "#f6e8b6"; // título grande
+  const subColor = isLight ? "#1c1408" : "#f1e3b2"; // nombre es/fa
+  const bodyColor = isLight ? "#241a09" : "#f0e7d0"; // cita (cuerpo)
+  const dimColor = isLight ? "#5a451f" : "#d9c896"; // fuentes / nº
+  // Halo del color CONTRARIO: despega la letra de cualquier fondo.
+  const lightHalo =
+    "0 1px 2px rgba(255,255,255,0.95), 0 0 16px rgba(255,251,240,0.8), 0 2px 14px rgba(255,255,255,0.55)";
+  const darkHalo =
+    "0 2px 10px rgba(0,0,0,0.95), 0 0 26px rgba(0,0,0,0.75), 0 1px 3px rgba(0,0,0,0.98)";
+  const textHalo = isLight ? lightHalo : darkHalo;
+
   return (
     <div className="always-dark fixed inset-0 z-50 overflow-hidden" style={{ background: bgColor, transition: "background 1.2s ease" }}>
       {/* Canvas Three.js — fijo, ocupa toda la pantalla */}
@@ -59,48 +77,51 @@ export default function CreacionPage() {
       </div>
 
       {/* ── Velo legibilidad ─────────────────────────────────────────
-          Un degradado radial oscuro entre el 3D y el texto: las esferas,
+          Un degradado radial entre el 3D y el texto: las esferas,
           chispas y destellos del fondo nunca tapan la letra hebrea ni la
-          cita. No bloquea el scroll (pointer-events-none). En Ein Sof el
-          fondo es luz blanca y el texto es oscuro, así que ahí usamos un
-          velo CLARO en vez de oscuro. */}
+          cita. No bloquea el scroll (pointer-events-none). En las etapas
+          de fondo CLARO (Ein Sof y Tikún) el texto es oscuro, así que ahí
+          usamos un velo CLARO; en las oscuras, un velo OSCURO. */}
       <div
         className="pointer-events-none absolute inset-0 z-[15] transition-[background] duration-1000"
         style={{
-          background:
-            stage.id === "ein-sof"
-              ? "radial-gradient(ellipse 62% 58% at 50% 50%, rgba(255,254,248,0.55) 0%, rgba(255,254,248,0.28) 45%, transparent 72%)"
-              : "radial-gradient(ellipse 60% 55% at 50% 50%, rgba(5,5,10,0.62) 0%, rgba(5,5,10,0.32) 45%, transparent 72%)",
+          background: isLight
+            ? "radial-gradient(ellipse 80% 74% at 50% 50%, rgba(255,253,245,0.8) 0%, rgba(255,253,245,0.52) 50%, transparent 82%)"
+            : "radial-gradient(ellipse 76% 70% at 50% 50%, rgba(4,4,9,0.82) 0%, rgba(4,4,9,0.54) 48%, transparent 82%)",
         }}
       />
 
       {/* ── Overlay de texto — sticky, centrado ──────────────────── */}
-      <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center px-6">
+      <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center px-6 py-24 sm:py-16">
 
         {/* Nombre de la etapa */}
         <div className="text-center" style={{ animation: "fadeIn 0.8s ease" }} key={stage.id}>
-          <p className="mb-1 font-cinzel text-[11px] uppercase tracking-[0.35em] text-gold/40">
+          <p
+            className="mb-2 font-cinzel text-[12px] uppercase tracking-[0.35em] sm:text-[13px]"
+            style={{ color: dimColor, textShadow: textHalo }}
+          >
             {activeStage + 1} / {TOTAL}
           </p>
 
           <h1
-            className="hebrew mb-2 leading-none"
+            className="hebrew mb-3 leading-none"
             style={{
-              fontSize: "clamp(52px, 10vw, 88px)",
-              color: stage.id === "ein-sof" ? "#08060f" : stage.id === "tikun" ? "#c9a43e" : "#c9a43e",
-              textShadow: stage.id === "ein-sof" ? "none" : `0 0 30px ${stage.particleColor}88, 0 0 60px ${stage.particleColor}44`,
-              filter: stage.id === "ein-sof" ? "none" : `drop-shadow(0 0 12px ${stage.particleColor}66)`,
+              fontSize: "clamp(50px, 11vw, 92px)",
+              color: titleColor,
+              textShadow: isLight
+                ? textHalo
+                : `${textHalo}, 0 0 32px ${stage.particleColor}66, 0 0 60px ${stage.particleColor}33`,
             }}
           >
             {stage.nameHe}
           </h1>
 
           <h2
-            className="font-cinzel text-base uppercase tracking-widest"
+            className="font-cinzel uppercase tracking-[0.18em]"
             style={{
-              color: stage.id === "ein-sof" ? "#1a140a" : "#c9a43e",
-              opacity: 0.8,
-              fontSize: "clamp(11px, 2vw, 14px)",
+              color: subColor,
+              fontSize: "clamp(15px, 2.8vw, 21px)",
+              textShadow: textHalo,
             }}
           >
             {locale === "fa" ? stage.nameFa : stage.nameEs}
@@ -109,14 +130,14 @@ export default function CreacionPage() {
 
         {/* Cita */}
         <p
-          className="mt-6 max-w-xl text-center text-sm leading-relaxed"
+          className="mt-6 max-w-[34rem] text-center leading-relaxed sm:max-w-2xl"
           key={stage.id + "-quote"}
           style={{
-            color: stage.id === "ein-sof" ? "#3a2e1a" : "#c9a43e",
-            opacity: 0.75,
+            color: bodyColor,
             animation: "fadeIn 1.2s ease",
             direction: locale === "fa" ? "rtl" : "ltr",
-            fontSize: "clamp(12px, 1.8vw, 15px)",
+            fontSize: "clamp(16px, 2.3vw, 20px)",
+            textShadow: textHalo,
           }}
           dir={locale === "fa" ? "rtl" : "ltr"}
         >
@@ -126,14 +147,17 @@ export default function CreacionPage() {
         {/* Fuente / cita hebrea */}
         {stage.sourceHe && (
           <p
-            className="hebrew mt-4 text-center text-sm italic"
-            style={{ color: stage.id === "ein-sof" ? "#5a4a2a" : "#c9a43e88", fontSize: "13px" }}
+            className="hebrew mt-4 text-center italic"
+            style={{ color: dimColor, fontSize: "clamp(14px, 1.9vw, 17px)", textShadow: textHalo }}
           >
             {stage.sourceHe}
           </p>
         )}
         {stage.sourceEs && (
-          <p className="mt-1 font-cinzel text-[10px] uppercase tracking-widest text-gold/35">
+          <p
+            className="mt-1.5 font-cinzel text-[12px] uppercase tracking-widest"
+            style={{ color: dimColor, textShadow: textHalo }}
+          >
             {stage.sourceEs}
           </p>
         )}
@@ -145,7 +169,11 @@ export default function CreacionPage() {
               const params = new URLSearchParams({ ref: stage.studyRef!, context: "kabbalah" });
               router.push(`/estudio?${params.toString()}`);
             }}
-            className="pointer-events-auto mt-8 rounded-full border border-gold/40 bg-gold/[0.08] px-6 py-2.5 font-cinzel text-xs uppercase tracking-widest text-gold/80 transition-all hover:border-gold hover:bg-gold/15 hover:text-gold backdrop-blur-sm"
+            className={`pointer-events-auto mt-8 rounded-full border px-6 py-2.5 font-cinzel text-sm uppercase tracking-widest backdrop-blur-sm transition-all ${
+              isLight
+                ? "border-[#0b0712]/45 bg-[#0b0712]/[0.06] text-[#0b0712] hover:border-[#0b0712] hover:bg-[#0b0712]/10"
+                : "border-gold/50 bg-gold/[0.1] text-gold hover:border-gold hover:bg-gold/20"
+            }`}
           >
             {locale === "fa" ? "مطالعهٔ عمیق‌تر" : "Estudiar en profundidad"} →
           </button>
@@ -200,7 +228,7 @@ export default function CreacionPage() {
         {activeStage >= 10 && (
           <button
             onClick={() => router.push("/arbol")}
-            className="rounded-full border border-gold/40 bg-gold/10 px-3 py-1.5 font-cinzel text-xs text-gold backdrop-blur-md transition-all hover:border-gold hover:bg-gold/20"
+            className="rounded-full border border-gold/40 bg-black/45 px-3 py-1.5 font-cinzel text-xs text-gold backdrop-blur-md transition-all hover:border-gold hover:bg-gold/20"
             style={{ animation: "fadeIn 0.6s ease" }}
           >
             {locale === "fa" ? "درخت حیات ←" : "Árbol de la Vida →"}
@@ -211,10 +239,10 @@ export default function CreacionPage() {
       {/* ── Hint de scroll (visible solo al inicio) ──────────────── */}
       {activeStage === 0 && (
         <div className="pointer-events-none absolute bottom-8 left-1/2 z-30 -translate-x-1/2 flex flex-col items-center gap-2" style={{ animation: "fadeIn 2s ease" }}>
-          <p className="font-cinzel text-[10px] uppercase tracking-[0.3em]" style={{ color: "#3a2e1a" }}>
+          <p className="font-cinzel text-[12px] uppercase tracking-[0.3em]" style={{ color: "#2a2008" }}>
             {locale === "fa" ? "اسکرول کنید" : "Desliza para comenzar el viaje"}
           </p>
-          <div style={{ width: 1, height: 24, background: "linear-gradient(to bottom, #3a2e1a, transparent)" }} />
+          <div style={{ width: 1, height: 24, background: "linear-gradient(to bottom, #2a2008, transparent)" }} />
         </div>
       )}
 
