@@ -71,7 +71,7 @@ export default async function ComunidadPage() {
               href="/universo"
               className="mt-8 inline-block rounded-full border border-gold/30 px-5 py-2 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:bg-gold/10"
             >
-              Ver el universo →
+              Ver la Mente Cósmica →
             </Link>
           </div>
         ) : (

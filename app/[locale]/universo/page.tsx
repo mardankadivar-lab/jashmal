@@ -1329,7 +1329,7 @@ export default function GrafoPage() {
 
   const T = {
     title: "חַשְׁמַל",
-    subtitle: isFa ? "مغزِ زندهٔ خَשمَل" : "El cerebro vivo de Jashmal",
+    subtitle: isFa ? "ذهنِ کیهانیِ خَشمَل" : "La Mente Cósmica de Jashmal",
     back: isFa ? "بازگشت به خانه" : "Volver al inicio",
     hint: isFa
       ? "بکشید برای چرخش · اسکرول/پینچ برای زوم · کلیک روی سیناپس · دوبار کلیک برای مطالعه"
