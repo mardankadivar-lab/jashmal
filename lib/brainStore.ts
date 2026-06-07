@@ -57,21 +57,25 @@ export async function ensureBrainTables(): Promise<boolean> {
   await sql`CREATE INDEX IF NOT EXISTS brain_nodes_status ON brain_nodes (status)`;
   await sql`CREATE INDEX IF NOT EXISTS brain_edges_status ON brain_edges (status)`;
 
-  // ── Backfill trilingüe (Fase 3): baja labelEn del código a la BD ──────────
+  // ── Backfill trilingüe (Fase 3): baja labelEn/labelFa del código a la BD ──
   // seedBrain() solo corre con la tabla VACÍA; en producción los nodos YA están
-  // sembrados, así que aquí (idempotente, en cada arranque) propagamos labelEn a
-  // todos los BNODES (núcleo inline + sub-arrays de estudios). Solo escribe donde
-  // el valor cambió (IS DISTINCT FROM). NO toca label ni label_fa.
+  // sembrados, así que aquí (idempotente, en cada arranque) propagamos labelEn y
+  // labelFa de TODOS los BNODES (núcleo inline + sub-arrays). brainData.ts es la
+  // fuente de verdad de los nodos curados: esto refleja sus traducciones es/fa/en
+  // (incl. las 3 correcciones de farsi del Sofer). Solo escribe donde algún valor
+  // cambió (IS DISTINCT FROM). NO toca label, cat, url ni nodos de comunidad.
   try {
-    const enNodes = BNODES.filter((n) => n.labelEn);
-    if (enNodes.length > 0) {
-      const enIds = enNodes.map((n) => n.id);
-      const enLabels = enNodes.map((n) => n.labelEn as string);
+    const tri = BNODES.filter((n) => n.labelFa || n.labelEn);
+    if (tri.length > 0) {
+      const triIds = tri.map((n) => n.id);
+      const triFa = tri.map((n) => n.labelFa ?? n.label);
+      const triEn = tri.map((n) => n.labelEn ?? n.label);
       await sql`
         UPDATE brain_nodes AS b
-           SET label_en = t.label_en
-          FROM unnest(${enIds}::text[], ${enLabels}::text[]) AS t(id, label_en)
-         WHERE b.id = t.id AND b.label_en IS DISTINCT FROM t.label_en
+           SET label_fa = t.label_fa, label_en = t.label_en
+          FROM unnest(${triIds}::text[], ${triFa}::text[], ${triEn}::text[]) AS t(id, label_fa, label_en)
+         WHERE b.id = t.id
+           AND (b.label_fa IS DISTINCT FROM t.label_fa OR b.label_en IS DISTINCT FROM t.label_en)
       `;
     }
   } catch {
