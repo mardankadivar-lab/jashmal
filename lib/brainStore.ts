@@ -50,10 +50,33 @@ export async function ensureBrainTables(): Promise<boolean> {
   `;
   // columna 'author': el estudiante autor de una estrella de la galaxia Comunidad
   await sql`ALTER TABLE brain_nodes ADD COLUMN IF NOT EXISTS author text`;
+  // columna 'label_en': etiqueta en inglés (Fase 3 del trilingüe es/fa/en)
+  await sql`ALTER TABLE brain_nodes ADD COLUMN IF NOT EXISTS label_en text`;
   await sql`CREATE INDEX IF NOT EXISTS brain_edges_src ON brain_edges (source_id)`;
   await sql`CREATE INDEX IF NOT EXISTS brain_edges_tgt ON brain_edges (target_id)`;
   await sql`CREATE INDEX IF NOT EXISTS brain_nodes_status ON brain_nodes (status)`;
   await sql`CREATE INDEX IF NOT EXISTS brain_edges_status ON brain_edges (status)`;
+
+  // ── Backfill trilingüe (Fase 3): baja labelEn del código a la BD ──────────
+  // seedBrain() solo corre con la tabla VACÍA; en producción los nodos YA están
+  // sembrados, así que aquí (idempotente, en cada arranque) propagamos labelEn a
+  // todos los BNODES (núcleo inline + sub-arrays de estudios). Solo escribe donde
+  // el valor cambió (IS DISTINCT FROM). NO toca label ni label_fa.
+  try {
+    const enNodes = BNODES.filter((n) => n.labelEn);
+    if (enNodes.length > 0) {
+      const enIds = enNodes.map((n) => n.id);
+      const enLabels = enNodes.map((n) => n.labelEn as string);
+      await sql`
+        UPDATE brain_nodes AS b
+           SET label_en = t.label_en
+          FROM unnest(${enIds}::text[], ${enLabels}::text[]) AS t(id, label_en)
+         WHERE b.id = t.id AND b.label_en IS DISTINCT FROM t.label_en
+      `;
+    }
+  } catch {
+    /* el backfill nunca debe romper la creación de tablas */
+  }
   return true;
 }
 
@@ -66,17 +89,18 @@ export async function seedBrain(): Promise<{ nodes: number; edges: number }> {
   const ids = BNODES.map((n) => n.id);
   const labels = BNODES.map((n) => n.label);
   const labelFas = BNODES.map((n) => n.labelFa ?? n.label); // labelFa es opcional → cae al español
+  const labelEns = BNODES.map((n) => n.labelEn ?? n.label); // labelEn es opcional → cae al español
   const cats = BNODES.map((n) => n.cat);
   const levels = BNODES.map((n) => n.level);
   const urls = BNODES.map((n) => n.url ?? null);
   const regions = BNODES.map((n) => n.region ?? null);
   await sql`
-    INSERT INTO brain_nodes (id, label, label_fa, cat, level, url, region, status, source)
-    SELECT id, label, label_fa, cat, level, url, region, 'approved', 'seed'
+    INSERT INTO brain_nodes (id, label, label_fa, label_en, cat, level, url, region, status, source)
+    SELECT id, label, label_fa, label_en, cat, level, url, region, 'approved', 'seed'
     FROM unnest(
-      ${ids}::text[], ${labels}::text[], ${labelFas}::text[], ${cats}::text[],
+      ${ids}::text[], ${labels}::text[], ${labelFas}::text[], ${labelEns}::text[], ${cats}::text[],
       ${levels}::int[], ${urls}::text[], ${regions}::text[]
-    ) AS t(id, label, label_fa, cat, level, url, region)
+    ) AS t(id, label, label_fa, label_en, cat, level, url, region)
     ON CONFLICT (id) DO NOTHING
   `;
 
@@ -548,11 +572,11 @@ export async function getBrainGraph(includePending = false): Promise<BrainGraph 
   try {
     const statuses = includePending ? ["approved", "pending"] : ["approved"];
     const nodeRows = (await sql`
-      SELECT id, label, label_fa, cat, level, url, region, author
+      SELECT id, label, label_fa, label_en, cat, level, url, region, author
       FROM brain_nodes
       WHERE status = ANY(${statuses})
     `) as Array<{
-      id: string; label: string; label_fa: string | null; cat: string;
+      id: string; label: string; label_fa: string | null; label_en: string | null; cat: string;
       level: number; url: string | null; region: string | null; author: string | null;
     }>;
     const edgeRows = (await sql`
@@ -566,6 +590,7 @@ export async function getBrainGraph(includePending = false): Promise<BrainGraph 
       id: r.id,
       label: r.label,
       labelFa: r.label_fa ?? r.label,
+      labelEn: r.label_en ?? undefined, // si falta inglés, nodeLabel() cae al español
       cat: r.cat,
       level: (r.level as BNode["level"]) ?? 3,
       url: r.url ?? undefined,

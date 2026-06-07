@@ -72,18 +72,18 @@ export function catLabel(catKey: string, locale: string): string {
 // HaJaim) = viajes para liberar chispas; Nombre de 42 = Kidushín 71a;
 // Ana BeKoaj (7×6=42) atribución tradicional a R. Nejunia ben HaKana.
 export const MASEI_NODES: BNode[] = [
-  { id: "Masei",          label: "Mas'ei · 42 estaciones", labelFa: "مَسعِی · ۴۲ منزل",          cat: "tanakh",   level: 3 },
-  { id: "Nombre de 42",   label: "Nombre de 42 (Mem-Bet)", labelFa: "نام ۴۲ حرفی (مم-بت)",        cat: "kabbalah", level: 3 },
-  { id: "Ana BeKoaj",     label: "Ana BeKoaj",             labelFa: "آنا بِخوآח",                cat: "kabbalah", level: 3 },
-  { id: "Birur",          label: "Birur (chispas)",        labelFa: "بیرور (جدا کردن جرقه‌ها)",   cat: "kabbalah", level: 3 },
-  { id: "Tikún",          label: "Tikún",                  labelFa: "تیقون (اصلاح)",             cat: "kabbalah", level: 3 },
-  { id: "Nitzotzot",      label: "Nitzotzot (chispas)",    labelFa: "نیتسوتسوت (جرقه‌ها)",         cat: "kabbalah", level: 3 },
-  { id: "Gilgulim",       label: "Gilgulim",               labelFa: "گیلگولیم (تناسخ)",           cat: "kabbalah", level: 3 },
-  { id: "Cuatro Mundos",  label: "Cuatro Mundos (ABYA)",   labelFa: "چهار عالم (آبیع)",           cat: "kabbalah", level: 3 },
-  { id: "Raamses",        label: "Raamsés (esclavitud)",   labelFa: "رَعمسیس (بردگی)",            cat: "tanakh",   level: 3 },
-  { id: "Mara",           label: "Mará (amargura)",        labelFa: "مارا (تلخی)",                cat: "tanakh",   level: 3 },
-  { id: "Kivrot HaTaava", label: "Kivrot HaTaavá",         labelFa: "قبروت هَتَّاوا",              cat: "tanakh",   level: 3 },
-  { id: "Arvot Moav",     label: "Arvot Moav (umbral)",    labelFa: "عَرووت موآو (آستانه)",        cat: "tanakh",   level: 3 },
+  { id: "Masei",          label: "Mas'ei · 42 estaciones", labelFa: "مَسعِی · ۴۲ منزل", labelEn: "Mas'ei · 42 Journeys",          cat: "tanakh",   level: 3 },
+  { id: "Nombre de 42",   label: "Nombre de 42 (Mem-Bet)", labelFa: "نام ۴۲ حرفی (مم-بت)", labelEn: "42-Letter Name (Mem-Bet)",        cat: "kabbalah", level: 3 },
+  { id: "Ana BeKoaj",     label: "Ana BeKoaj",             labelFa: "آنا بِخوآخ", labelEn: "Ana BeKoach",                cat: "kabbalah", level: 3 },
+  { id: "Birur",          label: "Birur (chispas)",        labelFa: "بیرور (جدا کردن جرقه‌ها)", labelEn: "Birur (sifting sparks)",   cat: "kabbalah", level: 3 },
+  { id: "Tikún",          label: "Tikún",                  labelFa: "تیقون (اصلاح)", labelEn: "Tikkun",             cat: "kabbalah", level: 3 },
+  { id: "Nitzotzot",      label: "Nitzotzot (chispas)",    labelFa: "نیتسوتسوت (جرقه‌ها)", labelEn: "Nitzotzot (sparks)",         cat: "kabbalah", level: 3 },
+  { id: "Gilgulim",       label: "Gilgulim",               labelFa: "گیلگولیم (تناسخ)", labelEn: "Gilgulim (reincarnations)",           cat: "kabbalah", level: 3 },
+  { id: "Cuatro Mundos",  label: "Cuatro Mundos (ABYA)",   labelFa: "چهار عالم (آبیع)", labelEn: "Four Worlds (ABYA)",           cat: "kabbalah", level: 3 },
+  { id: "Raamses",        label: "Raamsés (esclavitud)",   labelFa: "رَعمسیس (بردگی)", labelEn: "Raamses (bondage)",            cat: "tanakh",   level: 3 },
+  { id: "Mara",           label: "Mará (amargura)",        labelFa: "مارا (تلخی)", labelEn: "Marah (bitterness)",                cat: "tanakh",   level: 3 },
+  { id: "Kivrot HaTaava", label: "Kivrot HaTaavá",         labelFa: "قبروت هَتَّاوا", labelEn: "Kivrot HaTaavah",              cat: "tanakh",   level: 3 },
+  { id: "Arvot Moav",     label: "Arvot Moav (umbral)",    labelFa: "عَرووت موآو (آستانه)", labelEn: "Arvot Moav (threshold)",        cat: "tanakh",   level: 3 },
 ];
 
 export type MaseiEdge = { a: string; b: string; kind: "solid" | "interp" };
@@ -125,37 +125,37 @@ export const MASEI_EDGES: MaseiEdge[] = [
 // Verificado por el Sofer. Afinidades sefiróticas en SEFIRA_AFFINITY (arriba).
 export const V4_NODES: BNode[] = [
   // Personajes
-  { id: "Noaj", label: "Nóaj", labelFa: "نوح", cat: "figure", level: 3 },
-  { id: "Avraham", label: "Abraham", labelFa: "ابراهیم", cat: "figure", level: 3 },
-  { id: "Sará", label: "Sará", labelFa: "سارا", cat: "figure", level: 3 },
-  { id: "Yitzjak", label: "Yitzjak", labelFa: "ییصحاق", cat: "figure", level: 3 },
-  { id: "Rivká", label: "Rivká", labelFa: "ربکا", cat: "figure", level: 3 },
-  { id: "Yaakov", label: "Yaakov", labelFa: "یعقوب", cat: "figure", level: 3 },
-  { id: "Rajel", label: "Rajel", labelFa: "راحیل", cat: "figure", level: 3 },
-  { id: "Leá", label: "Leá", labelFa: "لیه", cat: "figure", level: 3 },
-  { id: "Moshé", label: "Moshé", labelFa: "موشه", cat: "figure", level: 3 },
-  { id: "Aharón", label: "Aharón", labelFa: "اَهارون", cat: "figure", level: 3 },
-  { id: "Miriam", label: "Miriam", labelFa: "میریام", cat: "figure", level: 3 },
-  { id: "Yehoshúa", label: "Yehoshúa", labelFa: "یهوشع", cat: "figure", level: 3 },
-  { id: "David", label: "David", labelFa: "داوود", cat: "figure", level: 3 },
-  { id: "Shlomó", label: "Shlomó", labelFa: "شلومو", cat: "figure", level: 3 },
-  { id: "Eliyahu", label: "Eliyahu", labelFa: "الیاهو", cat: "figure", level: 3 },
-  { id: "Yeshayahu", label: "Yeshayahu", labelFa: "یشعیاهو", cat: "figure", level: 3 },
+  { id: "Noaj", label: "Nóaj", labelFa: "نوح", labelEn: "Noah", cat: "figure", level: 3 },
+  { id: "Avraham", label: "Abraham", labelFa: "ابراهیم", labelEn: "Abraham", cat: "figure", level: 3 },
+  { id: "Sará", label: "Sará", labelFa: "سارا", labelEn: "Sarah", cat: "figure", level: 3 },
+  { id: "Yitzjak", label: "Yitzjak", labelFa: "ییصحاق", labelEn: "Isaac (Yitzchak)", cat: "figure", level: 3 },
+  { id: "Rivká", label: "Rivká", labelFa: "ربکا", labelEn: "Rebecca (Rivkah)", cat: "figure", level: 3 },
+  { id: "Yaakov", label: "Yaakov", labelFa: "یعقوب", labelEn: "Jacob (Yaakov)", cat: "figure", level: 3 },
+  { id: "Rajel", label: "Rajel", labelFa: "راحیل", labelEn: "Rachel", cat: "figure", level: 3 },
+  { id: "Leá", label: "Leá", labelFa: "لیه", labelEn: "Leah", cat: "figure", level: 3 },
+  { id: "Moshé", label: "Moshé", labelFa: "موشه", labelEn: "Moses (Moshe)", cat: "figure", level: 3 },
+  { id: "Aharón", label: "Aharón", labelFa: "اَهارون", labelEn: "Aaron (Aharon)", cat: "figure", level: 3 },
+  { id: "Miriam", label: "Miriam", labelFa: "میریام", labelEn: "Miriam", cat: "figure", level: 3 },
+  { id: "Yehoshúa", label: "Yehoshúa", labelFa: "یهوشع", labelEn: "Joshua (Yehoshua)", cat: "figure", level: 3 },
+  { id: "David", label: "David", labelFa: "داوود", labelEn: "David", cat: "figure", level: 3 },
+  { id: "Shlomó", label: "Shlomó", labelFa: "شلومو", labelEn: "Solomon (Shlomo)", cat: "figure", level: 3 },
+  { id: "Eliyahu", label: "Eliyahu", labelFa: "الیاهو", labelEn: "Elijah (Eliyahu)", cat: "figure", level: 3 },
+  { id: "Yeshayahu", label: "Yeshayahu", labelFa: "یشعیاهو", labelEn: "Isaiah (Yeshayahu)", cat: "figure", level: 3 },
   // Temas
-  { id: "Briá", label: "Creación (Briá)", labelFa: "آفرینش", cat: "tema", level: 3 },
-  { id: "Neshamá", label: "Alma (Neshamá)", labelFa: "روح", cat: "tema", level: 3 },
-  { id: "Nevuá", label: "Profecía (Nevuá)", labelFa: "نبوّت", cat: "tema", level: 3 },
-  { id: "Malajim", label: "Ángeles (Malajim)", labelFa: "فرشتگان", cat: "tema", level: 3 },
-  { id: "Gueulá", label: "Redención (Gueulá)", labelFa: "رستگاری", cat: "tema", level: 3 },
-  { id: "Galut", label: "Exilio (Galut)", labelFa: "تبعید", cat: "tema", level: 3 },
-  { id: "Eretz Israel", label: "Tierra de Israel", labelFa: "سرزمین اسرائیل", cat: "tema", level: 3 },
-  { id: "Bet HaMikdash", label: "Templo (Bet HaMikdash)", labelFa: "بیت‌المقدس", cat: "tema", level: 3 },
-  { id: "Tefilá", label: "Oración (Tefilá)", labelFa: "نیایش", cat: "tema", level: 3 },
-  { id: "Shabat", label: "Shabat", labelFa: "شَبات", cat: "tema", level: 3 },
-  { id: "Yirá", label: "Temor de Dios (Yirá)", labelFa: "ترس از خدا", cat: "tema", level: 3 },
-  { id: "Ahavá", label: "Amor de Dios (Ahavá)", labelFa: "عشق به خدا", cat: "tema", level: 3 },
-  { id: "Brit", label: "Pacto (Brit)", labelFa: "پیمان", cat: "tema", level: 3 },
-  { id: "Shejiná", label: "Shejiná", labelFa: "شخینا", cat: "tema", level: 3 },
+  { id: "Briá", label: "Creación (Briá)", labelFa: "آفرینش", labelEn: "Creation (Beriah)", cat: "tema", level: 3 },
+  { id: "Neshamá", label: "Alma (Neshamá)", labelFa: "روح", labelEn: "Soul (Neshamah)", cat: "tema", level: 3 },
+  { id: "Nevuá", label: "Profecía (Nevuá)", labelFa: "نبوّت", labelEn: "Prophecy (Nevuah)", cat: "tema", level: 3 },
+  { id: "Malajim", label: "Ángeles (Malajim)", labelFa: "فرشتگان", labelEn: "Angels (Malachim)", cat: "tema", level: 3 },
+  { id: "Gueulá", label: "Redención (Gueulá)", labelFa: "رستگاری", labelEn: "Redemption (Geulah)", cat: "tema", level: 3 },
+  { id: "Galut", label: "Exilio (Galut)", labelFa: "تبعید", labelEn: "Exile (Galut)", cat: "tema", level: 3 },
+  { id: "Eretz Israel", label: "Tierra de Israel", labelFa: "سرزمین اسرائیل", labelEn: "Land of Israel (Eretz Yisrael)", cat: "tema", level: 3 },
+  { id: "Bet HaMikdash", label: "Templo (Bet HaMikdash)", labelFa: "بیت‌المقدس", labelEn: "Temple (Beit HaMikdash)", cat: "tema", level: 3 },
+  { id: "Tefilá", label: "Oración (Tefilá)", labelFa: "نیایش", labelEn: "Prayer (Tefillah)", cat: "tema", level: 3 },
+  { id: "Shabat", label: "Shabat", labelFa: "شَبات", labelEn: "Shabbat", cat: "tema", level: 3 },
+  { id: "Yirá", label: "Temor de Dios (Yirá)", labelFa: "ترس از خدا", labelEn: "Fear of God (Yirah)", cat: "tema", level: 3 },
+  { id: "Ahavá", label: "Amor de Dios (Ahavá)", labelFa: "عشق به خدا", labelEn: "Love of God (Ahavah)", cat: "tema", level: 3 },
+  { id: "Brit", label: "Pacto (Brit)", labelFa: "پیمان", labelEn: "Covenant (Brit)", cat: "tema", level: 3 },
+  { id: "Shejiná", label: "Shejiná", labelFa: "شخینا", labelEn: "Shechinah", cat: "tema", level: 3 },
 ];
 
 export const V4_EDGES: MaseiEdge[] = [
@@ -210,8 +210,8 @@ export const V4_EDGES: MaseiEdge[] = [
 // NOTA: la colocación letra↔sendero es la disposición del Arizal (no texto literal
 // del Sefer Yetzirá, que solo da 3 madres / 7 dobles / 12 simples).
 export const TREE_NODES: BNode[] = [
-  { id: "Netzaj", label: "Netzaj", labelFa: "نتسح", cat: "kabbalah", level: 3 },
-  { id: "Hod", label: "Hod", labelFa: "هود", cat: "kabbalah", level: 3 },
+  { id: "Netzaj", label: "Netzaj", labelFa: "نتسح", labelEn: "Netzach", cat: "kabbalah", level: 3 },
+  { id: "Hod", label: "Hod", labelFa: "هود", labelEn: "Hod", cat: "kabbalah", level: 3 },
 ];
 
 export type TreePath = { from: string; to: string; letter: string; name: string; slug: string };
@@ -248,15 +248,15 @@ export const TREE_PATHS: TreePath[] = [
 // exacta); el "cananeo" de Arad era Amalek (Rashi/Tanjumá Jukat 18); el hilo→soga
 // de Is 5:18 es Rashi citando Sukká 52a (Rav Asi). Aristas solid/interp.
 export const STUDY2_NODES: BNode[] = [
-  { id: "Birurim", label: "Birurim", labelFa: "بیروریم (پالایش جرقه‌ها)", cat: "jashmal", level: 4, region: "occipital" },
-  { id: "Cuerdas de vanidad", label: "Cuerdas de vanidad", labelFa: "ریسمان‌های پوچی", cat: "jashmal", level: 4, region: "frontal" },
-  { id: "Números 21", label: "Números 21", labelFa: "اعداد ۲۱", cat: "tanakh", level: 3 },
-  { id: "Arad", label: "Arad (terquedad)", labelFa: "عَراد (لجاجت)", cat: "tema", level: 3 },
-  { id: "Kelipot", label: "Kelipot (cáscaras)", labelFa: "قلیپوت (پوسته‌ها)", cat: "kabbalah", level: 3 },
-  { id: "Ratzón", label: "Ratzón (deseo/voluntad)", labelFa: "راتسون (اراده/میل)", cat: "kabbalah", level: 3 },
-  { id: "Koaj HaMedameh", label: "Koaj HaMedameh (imaginación)", labelFa: "کوح هَمِدَمه (قوّهٔ خیال)", cat: "tema", level: 3 },
-  { id: "Reshimó", label: "Reshimó (la huella)", labelFa: "رِشیمو (ردِّ نور)", cat: "kabbalah", level: 3 },
-  { id: "Yetzer Hará", label: "Yetzer Hará", labelFa: "یِتسِر هَرَع (میل بد)", cat: "tema", level: 3 },
+  { id: "Birurim", label: "Birurim", labelFa: "بیروریم (پالایش جرقه‌ها)", labelEn: "Birurim (sifting the sparks)", cat: "jashmal", level: 4, region: "occipital" },
+  { id: "Cuerdas de vanidad", label: "Cuerdas de vanidad", labelFa: "ریسمان‌های پوچی", labelEn: "Cords of Vanity", cat: "jashmal", level: 4, region: "frontal" },
+  { id: "Números 21", label: "Números 21", labelFa: "اعداد ۲۱", labelEn: "Numbers 21", cat: "tanakh", level: 3 },
+  { id: "Arad", label: "Arad (terquedad)", labelFa: "عَراد (لجاجت)", labelEn: "Arad (stubbornness)", cat: "tema", level: 3 },
+  { id: "Kelipot", label: "Kelipot (cáscaras)", labelFa: "قلیپوت (پوسته‌ها)", labelEn: "Kelipot (husks)", cat: "kabbalah", level: 3 },
+  { id: "Ratzón", label: "Ratzón (deseo/voluntad)", labelFa: "راتسون (اراده/میل)", labelEn: "Ratzon (will/desire)", cat: "kabbalah", level: 3 },
+  { id: "Koaj HaMedameh", label: "Koaj HaMedameh (imaginación)", labelFa: "کوح هَمِدَمه (قوّهٔ خیال)", labelEn: "Koach HaMedameh (imagination)", cat: "tema", level: 3 },
+  { id: "Reshimó", label: "Reshimó (la huella)", labelFa: "رِشیمو (ردِّ نور)", labelEn: "Reshimu (the impression)", cat: "kabbalah", level: 3 },
+  { id: "Yetzer Hará", label: "Yetzer Hará", labelFa: "یِتسِر هَرَع (میل بد)", labelEn: "Yetzer Hara (evil inclination)", cat: "tema", level: 3 },
 ];
 
 export const STUDY2_EDGES: MaseiEdge[] = [
@@ -295,15 +295,15 @@ export const STUDY2_EDGES: MaseiEdge[] = [
 // (no Bereshit Rabá 19:7, que es 7 ascensos/7 descensos por los justos); Rashi a
 // Jueces 14:4 (toaná=pretexto) respalda lo de Sansón infiltrado; sulam=Sinaí=130.
 export const STUDY3_NODES: BNode[] = [
-  { id: "Tres oraciones", label: "Tres oraciones", labelFa: "سه نماز", cat: "jashmal", level: 4 },
-  { id: "Sansón", label: "Sansón (Shimshón)", labelFa: "شَمشون", cat: "jashmal", level: 4 },
-  { id: "Descensos de la Shejiná", label: "Descensos de la Shejiná", labelFa: "فرودهای شخینا", cat: "jashmal", level: 4 },
-  { id: "Shimshon", label: "Shimshón", labelFa: "شَمشون", cat: "figure", level: 3 },
-  { id: "Ester", label: "Ester", labelFa: "اِستر", cat: "figure", level: 3 },
-  { id: "Dagón", label: "Dagón (ídolo)", labelFa: "داگون (بت)", cat: "tema", level: 3 },
-  { id: "Sinaí", label: "Sinaí", labelFa: "سینای", cat: "tema", level: 3 },
-  { id: "Itaruta", label: "Itaruta (despertar arriba/abajo)", labelFa: "اِتعَروتا (بیداری از بالا و پایین)", cat: "kabbalah", level: 3 },
-  { id: "Shoftim", label: "Shoftim (Jueces)", labelFa: "شوفطیم (داوران)", cat: "tanakh", level: 2 },
+  { id: "Tres oraciones", label: "Tres oraciones", labelFa: "سه نماز", labelEn: "Three Prayers", cat: "jashmal", level: 4 },
+  { id: "Sansón", label: "Sansón (Shimshón)", labelFa: "شَمشون", labelEn: "Samson (Shimshon)", cat: "jashmal", level: 4 },
+  { id: "Descensos de la Shejiná", label: "Descensos de la Shejiná", labelFa: "فرودهای شخینا", labelEn: "Descents of the Shechinah", cat: "jashmal", level: 4 },
+  { id: "Shimshon", label: "Shimshón", labelFa: "شَمشون", labelEn: "Samson (Shimshon)", cat: "figure", level: 3 },
+  { id: "Ester", label: "Ester", labelFa: "اِستر", labelEn: "Esther", cat: "figure", level: 3 },
+  { id: "Dagón", label: "Dagón (ídolo)", labelFa: "داگون (بت)", labelEn: "Dagon (idol)", cat: "tema", level: 3 },
+  { id: "Sinaí", label: "Sinaí", labelFa: "سینای", labelEn: "Sinai", cat: "tema", level: 3 },
+  { id: "Itaruta", label: "Itaruta (despertar arriba/abajo)", labelFa: "اِتعَروتا (بیداری از بالا و پایین)", labelEn: "Itaruta (awakening above/below)", cat: "kabbalah", level: 3 },
+  { id: "Shoftim", label: "Shoftim (Jueces)", labelFa: "شوفطیم (داوران)", labelEn: "Shoftim (Judges)", cat: "tanakh", level: 2 },
 ];
 
 export const STUDY3_EDGES: MaseiEdge[] = [
@@ -351,18 +351,18 @@ export const STUDY3_EDGES: MaseiEdge[] = [
 // Aristas SÓLIDAS = fuente clásica directa; INTERPRETATIVAS = lectura meditativa.
 // NOTA: el nodo "Brit" (Pacto) y el núcleo "Torá" YA existen — se usan como destino.
 export const BRIT21_NODES: BNode[] = [
-  { id: "21 Pactos",        label: "21 Pactos (Britot)",        labelFa: "۲۱ پیمان",                  cat: "jashmal",  level: 4, url: "/21-pactos" },
-  { id: "Ehyé",             label: "Ehyé (Yo Seré) · 21",       labelFa: "اَهیه (خواهم بود) · ۲۱",     cat: "kabbalah", level: 3 },
-  { id: "Ehyé Asher Ehyé",  label: "Ehyé Asher Ehyé",           labelFa: "اَهیه اَشِر اَهیه",           cat: "tanakh",   level: 3 },
-  { id: "YHVH",             label: "YHVH · 26",                 labelFa: "یهوه · ۲۶",                  cat: "kabbalah", level: 3 },
-  { id: "Adonai",           label: "Adonai · 65",               labelFa: "اَدونای · ۶۵",                cat: "kabbalah", level: 3 },
-  { id: "Brit Milá",        label: "Brit Milá (circuncisión)",  labelFa: "بریت میلا (ختنه)",           cat: "tema",     level: 3 },
-  { id: "Pacto de Noé",     label: "Pacto de Noé (arcoíris)",   labelFa: "پیمان نوح (رنگین‌کمان)",      cat: "tema",     level: 3 },
-  { id: "Pacto davídico",   label: "Pacto davídico",            labelFa: "پیمان داوودی",                cat: "tema",     level: 3 },
-  { id: "Nuevo Pacto",      label: "Nuevo Pacto (en el corazón)", labelFa: "پیمان نو (در قلب)",         cat: "tema",     level: 3 },
-  { id: "Pacto de sal",     label: "Pacto de sal",              labelFa: "پیمان نمک",                  cat: "tema",     level: 3 },
-  { id: "Brit Shalom",      label: "Brit Shalom (Pinjás)",      labelFa: "بریت شالوم (پینحاس)",         cat: "tema",     level: 3 },
-  { id: "Arcoíris",         label: "Arcoíris (Késhet)",         labelFa: "رنگین‌کمان (قِشِت)",          cat: "tanakh",   level: 3 },
+  { id: "21 Pactos",        label: "21 Pactos (Britot)",        labelFa: "۲۱ پیمان", labelEn: "21 Covenants (Britot)",                  cat: "jashmal",  level: 4, url: "/21-pactos" },
+  { id: "Ehyé",             label: "Ehyé (Yo Seré) · 21",       labelFa: "اَهیه (خواهم بود) · ۲۱", labelEn: "Ehyeh (I Will Be) · 21",     cat: "kabbalah", level: 3 },
+  { id: "Ehyé Asher Ehyé",  label: "Ehyé Asher Ehyé",           labelFa: "اَهیه اَشِر اَهیه", labelEn: "Ehyeh Asher Ehyeh",           cat: "tanakh",   level: 3 },
+  { id: "YHVH",             label: "YHVH · 26",                 labelFa: "یهوه · ۲۶", labelEn: "YHVH · 26",                  cat: "kabbalah", level: 3 },
+  { id: "Adonai",           label: "Adonai · 65",               labelFa: "اَدونای · ۶۵", labelEn: "Adonai · 65",                cat: "kabbalah", level: 3 },
+  { id: "Brit Milá",        label: "Brit Milá (circuncisión)",  labelFa: "بریت میلا (ختنه)", labelEn: "Brit Milah (circumcision)",           cat: "tema",     level: 3 },
+  { id: "Pacto de Noé",     label: "Pacto de Noé (arcoíris)",   labelFa: "پیمان نوح (رنگین‌کمان)", labelEn: "Covenant of Noah (rainbow)",      cat: "tema",     level: 3 },
+  { id: "Pacto davídico",   label: "Pacto davídico",            labelFa: "پیمان داوودی", labelEn: "Davidic Covenant",                cat: "tema",     level: 3 },
+  { id: "Nuevo Pacto",      label: "Nuevo Pacto (en el corazón)", labelFa: "پیمان نو (در قلب)", labelEn: "New Covenant (on the heart)",         cat: "tema",     level: 3 },
+  { id: "Pacto de sal",     label: "Pacto de sal",              labelFa: "پیمان نمک", labelEn: "Covenant of Salt",                  cat: "tema",     level: 3 },
+  { id: "Brit Shalom",      label: "Brit Shalom (Pinjás)",      labelFa: "بریت شالوم (پینحاس)", labelEn: "Brit Shalom (Pinchas)",         cat: "tema",     level: 3 },
+  { id: "Arcoíris",         label: "Arcoíris (Késhet)",         labelFa: "رنگین‌کمان (قِشِت)", labelEn: "Rainbow (Keshet)",          cat: "tanakh",   level: 3 },
 ];
 
 export const BRIT21_EDGES: MaseiEdge[] = [
@@ -413,13 +413,13 @@ export const BRIT21_EDGES: MaseiEdge[] = [
 // "Linaje · Madres del Mashíaj"): NO se duplica aquí; solo se le tienden aristas.
 // Aristas SÓLIDAS = fuente clásica directa; INTERPRETATIVAS = lectura meditativa.
 export const MADRES_NODES: BNode[] = [
-  { id: "Tamar",          label: "Tamar",                                  labelFa: "تامار",                          cat: "figure", level: 4, url: "/tamar" },
-  { id: "Rut",            label: "Rut (la moabita)",                       labelFa: "روت (موآبی)",                    cat: "figure", level: 3, url: "/linaje" },
-  { id: "Betsabé",        label: "Betsabé (Bat-Sheva)",                    labelFa: "بَت‌شِبَع",                       cat: "figure", level: 3, url: "/linaje" },
-  { id: "Naamá",          label: "Naamá (la amonita)",                     labelFa: "نَعَما (عَمّونی)",                cat: "figure", level: 3, url: "/linaje" },
-  { id: "Yehudá",         label: "Yehudá",                                 labelFa: "یهودا",                          cat: "figure", level: 3, url: "/tamar" },
-  { id: "Fares",          label: "Fares (Péretz · brecha)",                labelFa: "پِرِص (شکاف)",                    cat: "figure", level: 3, url: "/tamar" },
-  { id: "Averá Lishmah",  label: "Averá Lishmah (transgresión por el Cielo)", labelFa: "عَوِرا لِشماه (گناه برای آسمان)", cat: "tema",   level: 3, url: "/linaje" },
+  { id: "Tamar",          label: "Tamar",                                  labelFa: "تامار", labelEn: "Tamar",                          cat: "figure", level: 4, url: "/tamar" },
+  { id: "Rut",            label: "Rut (la moabita)",                       labelFa: "روت (موآبی)", labelEn: "Ruth (the Moabite)",                    cat: "figure", level: 3, url: "/linaje" },
+  { id: "Betsabé",        label: "Betsabé (Bat-Sheva)",                    labelFa: "بَت‌شِبَع", labelEn: "Bathsheba (Bat-Sheva)",                       cat: "figure", level: 3, url: "/linaje" },
+  { id: "Naamá",          label: "Naamá (la amonita)",                     labelFa: "نَعَما (عَمّونی)", labelEn: "Naamah (the Ammonite)",                cat: "figure", level: 3, url: "/linaje" },
+  { id: "Yehudá",         label: "Yehudá",                                 labelFa: "یهودا", labelEn: "Judah (Yehudah)",                          cat: "figure", level: 3, url: "/tamar" },
+  { id: "Fares",          label: "Fares (Péretz · brecha)",                labelFa: "پِرِص (شکاف)", labelEn: "Perez (Peretz · breach)",                    cat: "figure", level: 3, url: "/tamar" },
+  { id: "Averá Lishmah",  label: "Averá Lishmah (transgresión por el Cielo)", labelFa: "عَوِرا لِشماه (گناه برای آسمان)", labelEn: "Aveirah Lishmah (transgression for the sake of Heaven)", cat: "tema",   level: 3, url: "/linaje" },
 ];
 
 export const MADRES_EDGES: MaseiEdge[] = [
@@ -462,10 +462,10 @@ export const MADRES_EDGES: MaseiEdge[] = [
 // son INTERPRETATIVAS (lectura meditativa); las del eje Tohu→Cabalá/Shevirá/
 // Nitzotzot/Tikún son sólidas porque ese es vocabulario cabalístico establecido.
 export const TOHU_NODES: BNode[] = [
-  { id: "Tohu",   label: "Tohu (caos primordial · תֹהוּ)", labelFa: "توهو (آشوب آغازین · תֹהוּ)", cat: "kabbalah", level: 4, url: "/tamar" },
-  { id: "Sello",  label: "Sello (Jotam · חותם → ת)",       labelFa: "مُهر (خوتام · חותם ← ת)",     cat: "tema",     level: 4, url: "/tamar" },
-  { id: "Cordón", label: "Cordón (Petil · פתיל → ה)",      labelFa: "بند (پتیل · פתיל ← ה)",       cat: "tema",     level: 4, url: "/tamar" },
-  { id: "Bastón", label: "Bastón (Maté · מטה → ו)",        labelFa: "عصا (مَطه · מטה ← ו)",        cat: "tema",     level: 4, url: "/tamar" },
+  { id: "Tohu",   label: "Tohu (caos primordial · תֹהוּ)", labelFa: "توهو (آشوب آغازین · תֹהוּ)", labelEn: "Tohu (primordial chaos · תֹהוּ)", cat: "kabbalah", level: 4, url: "/tamar" },
+  { id: "Sello",  label: "Sello (Jotam · חותם → ת)",       labelFa: "مُهر (خوتام · חותם ← ת)", labelEn: "Seal (Chotam · חותם → ת)",     cat: "tema",     level: 4, url: "/tamar" },
+  { id: "Cordón", label: "Cordón (Petil · פתיל → ה)",      labelFa: "بند (پتیل · פתיל ← ה)", labelEn: "Cord (Petil · פתיל → ה)",       cat: "tema",     level: 4, url: "/tamar" },
+  { id: "Bastón", label: "Bastón (Maté · מטה → ו)",        labelFa: "عصا (مَطه · מטה ← ו)", labelEn: "Staff (Mateh · מטה → ו)",        cat: "tema",     level: 4, url: "/tamar" },
 ];
 
 export const TOHU_EDGES: MaseiEdge[] = [
@@ -493,14 +493,14 @@ export const TOHU_EDGES: MaseiEdge[] = [
 // Sefer Yetzirá, midrash). La fuente exacta va en el comentario de cada arista.
 // Gematrías verificadas: אברם=243 · אברהם=248 (+ה=5) · חסד=72.
 export const AVRAHAM_KAB_NODES: BNode[] = [
-  { id: "Sefer Yetzirá",  label: "Sefer Yetzirá (Libro de la Formación)", labelFa: "سفر یِتسیرا (کتاب آفرینش)", cat: "kabbalah", level: 2 },
-  { id: "22 Letras",      label: "Las 22 letras",                          labelFa: "بیست‌ودو حرف",            cat: "kabbalah", level: 3 },
-  { id: "10 Pruebas",     label: "Las 10 pruebas de Abraham",              labelFa: "ده آزمایش ابراهیم",       cat: "tema",     level: 3 },
-  { id: "Birá Doleket",   label: "El palacio iluminado (Birá Doleket)",    labelFa: "کاخ روشن (بیرا دولِقِت)", cat: "tema",     level: 3 },
-  { id: "Hajnasat Orjim", label: "Hospitalidad (Hajnasat Orjim)",          labelFa: "مهمان‌نوازی",            cat: "tema",     level: 3 },
-  { id: "Malki-Tzedek",   label: "Malki-Tzedek",                           labelFa: "مَلכی‌صِدِق",             cat: "figure",   level: 3 },
-  { id: "Merkavá",        label: "Merkavá (la Carroza)",                   labelFa: "مرکبه (ارابه)",          cat: "kabbalah", level: 3 },
-  { id: "Nombre de 72",   label: "Nombre de 72 (Shem HaMforash)",          labelFa: "نام ۷۲ (شِم هَمفوراش)",   cat: "kabbalah", level: 3 },
+  { id: "Sefer Yetzirá",  label: "Sefer Yetzirá (Libro de la Formación)", labelFa: "سفر یِتسیرا (کتاب آفرینش)", labelEn: "Sefer Yetzirah (Book of Formation)", cat: "kabbalah", level: 2 },
+  { id: "22 Letras",      label: "Las 22 letras",                          labelFa: "بیست‌ودو حرف", labelEn: "The 22 Letters",            cat: "kabbalah", level: 3 },
+  { id: "10 Pruebas",     label: "Las 10 pruebas de Abraham",              labelFa: "ده آزمایش ابراهیم", labelEn: "The 10 Tests of Abraham",       cat: "tema",     level: 3 },
+  { id: "Birá Doleket",   label: "El palacio iluminado (Birá Doleket)",    labelFa: "کاخ روشن (بیرا دولِقِت)", labelEn: "The Illuminated Palace (Birah Doleket)", cat: "tema",     level: 3 },
+  { id: "Hajnasat Orjim", label: "Hospitalidad (Hajnasat Orjim)",          labelFa: "مهمان‌نوازی", labelEn: "Hospitality (Hachnasat Orchim)",            cat: "tema",     level: 3 },
+  { id: "Malki-Tzedek",   label: "Malki-Tzedek",                           labelFa: "مَلکی‌صِدِق", labelEn: "Melchizedek (Malki-Tzedek)",             cat: "figure",   level: 3 },
+  { id: "Merkavá",        label: "Merkavá (la Carroza)",                   labelFa: "مرکبه (ارابه)", labelEn: "Merkavah (the Chariot)",          cat: "kabbalah", level: 3 },
+  { id: "Nombre de 72",   label: "Nombre de 72 (Shem HaMforash)",          labelFa: "نام ۷۲ (شِم هَمفوراش)", labelEn: "72-Letter Name (Shem HaMephorash)",   cat: "kabbalah", level: 3 },
 ];
 export const AVRAHAM_KAB_EDGES: MaseiEdge[] = [
   // ── PRINCIPALES — autoridad clásica (estas son las aristas primarias) ──
@@ -539,24 +539,24 @@ export const AVRAHAM_KAB_EDGES: MaseiEdge[] = [
 // en el Arí (excluido); Naval cuelga del lado MALO de Abel, no de Caín.
 // Gematrías: נח=חן=58 · הלל=אדני=65 · משה=345 · שם=340.
 export const GILGUL_CAIN_HEVEL_NODES: BNode[] = [
-  { id: "Caín",             label: "Caín (Kayin)",            labelFa: "قائن (قابیل)",         cat: "figure",   level: 3 },
-  { id: "Abel",             label: "Abel (Hevel)",            labelFa: "هابیل (هِوِل)",        cat: "figure",   level: 3 },
-  { id: "Shet",             label: "Shet (Set)",              labelFa: "شیت (شِث)",            cat: "figure",   level: 3 },
-  { id: "Yitró",            label: "Yitró (Jetró)",           labelFa: "یِترو (یَترون)",       cat: "figure",   level: 3 },
-  { id: "Kóraj",            label: "Kóraj",                   labelFa: "قورَح",                cat: "figure",   level: 3 },
-  { id: "Rabí Akiva",       label: "Rabí Akiva",              labelFa: "ربی عَقیوا",           cat: "figure",   level: 3 },
-  { id: "Shmuel HaNavi",    label: "Shmuel HaNaví",           labelFa: "شموئل نبی",            cat: "figure",   level: 3 },
-  { id: "Jizkiyahu",        label: "Jizkiyahu (Ezequías)",    labelFa: "حِزقیاهو",             cat: "figure",   level: 3 },
-  { id: "Yejezkel",         label: "Yejezkel (Ezequiel)",     labelFa: "یِحِزقیئل",            cat: "figure",   level: 3 },
-  { id: "Nadav-Avihu",      label: "Nadav y Avihú",           labelFa: "نَداو و اَبیهو",       cat: "figure",   level: 3 },
-  { id: "Pinjás",           label: "Pinjás",                  labelFa: "پینحاس",               cat: "figure",   level: 3 },
-  { id: "Naval",            label: "Naval HaKarmelí",         labelFa: "ناوال کَرمِلی",        cat: "figure",   level: 3 },
-  { id: "Egipcio Ex2",      label: "El egipcio (Éx 2:12)",    labelFa: "مرد مصری (خروج ۲:۱۲)", cat: "figure",   level: 3 },
-  { id: "Gilgul",           label: "Gilgul (transmigración)", labelFa: "گیلگول (تناسخ)",       cat: "kabbalah", level: 3 },
-  { id: "Raíz de Caín",     label: "Raíz de Caín (guevurot)", labelFa: "ریشهٔ قائن (گبورا)",   cat: "kabbalah", level: 3 },
-  { id: "Raíz de Abel",     label: "Raíz de Abel (jasadim)",  labelFa: "ریشهٔ هابیل (خِسِد)",  cat: "kabbalah", level: 3 },
-  { id: "Shaar HaGilgulim", label: "Sha'ar HaGilgulim",       labelFa: "شَعَر هَگیلگولیم",      cat: "kabbalah", level: 2 },
-  { id: "Arí",              label: "Arí z\"l (Lurianismo)",   labelFa: "آری (لوریانی)",        cat: "kabbalah", level: 2 },
+  { id: "Caín",             label: "Caín (Kayin)",            labelFa: "قائن (قابیل)", labelEn: "Cain (Kayin)",         cat: "figure",   level: 3 },
+  { id: "Abel",             label: "Abel (Hevel)",            labelFa: "هابیل (هِوِل)", labelEn: "Abel (Hevel)",        cat: "figure",   level: 3 },
+  { id: "Shet",             label: "Shet (Set)",              labelFa: "شیت (شِث)", labelEn: "Seth (Shet)",            cat: "figure",   level: 3 },
+  { id: "Yitró",            label: "Yitró (Jetró)",           labelFa: "یِترو (یَترون)", labelEn: "Jethro (Yitro)",       cat: "figure",   level: 3 },
+  { id: "Kóraj",            label: "Kóraj",                   labelFa: "قورَح", labelEn: "Korach",                cat: "figure",   level: 3 },
+  { id: "Rabí Akiva",       label: "Rabí Akiva",              labelFa: "ربی عَقیوا", labelEn: "Rabbi Akiva",           cat: "figure",   level: 3 },
+  { id: "Shmuel HaNavi",    label: "Shmuel HaNaví",           labelFa: "شموئل نبی", labelEn: "Samuel the Prophet",            cat: "figure",   level: 3 },
+  { id: "Jizkiyahu",        label: "Jizkiyahu (Ezequías)",    labelFa: "حِزقیاهو", labelEn: "Hezekiah (Chizkiyahu)",             cat: "figure",   level: 3 },
+  { id: "Yejezkel",         label: "Yejezkel (Ezequiel)",     labelFa: "یِحِزقیئل", labelEn: "Ezekiel (Yechezkel)",            cat: "figure",   level: 3 },
+  { id: "Nadav-Avihu",      label: "Nadav y Avihú",           labelFa: "نَداو و اَبیهو", labelEn: "Nadav and Avihu",       cat: "figure",   level: 3 },
+  { id: "Pinjás",           label: "Pinjás",                  labelFa: "پینحاس", labelEn: "Phinehas (Pinchas)",               cat: "figure",   level: 3 },
+  { id: "Naval",            label: "Naval HaKarmelí",         labelFa: "ناوال کَرمِلی", labelEn: "Nabal the Carmelite",        cat: "figure",   level: 3 },
+  { id: "Egipcio Ex2",      label: "El egipcio (Éx 2:12)",    labelFa: "مرد مصری (خروج ۲:۱۲)", labelEn: "The Egyptian (Exodus 2:12)", cat: "figure",   level: 3 },
+  { id: "Gilgul",           label: "Gilgul (transmigración)", labelFa: "گیلگول (تناسخ)", labelEn: "Gilgul (transmigration)",       cat: "kabbalah", level: 3 },
+  { id: "Raíz de Caín",     label: "Raíz de Caín (guevurot)", labelFa: "ریشهٔ قائن (گبورا)", labelEn: "Root of Cain (gevurot)",   cat: "kabbalah", level: 3 },
+  { id: "Raíz de Abel",     label: "Raíz de Abel (jasadim)",  labelFa: "ریشهٔ هابیل (خِسِد)", labelEn: "Root of Abel (chasadim)",  cat: "kabbalah", level: 3 },
+  { id: "Shaar HaGilgulim", label: "Sha'ar HaGilgulim",       labelFa: "شَعَر هَگیلگولیم", labelEn: "Sha'ar HaGilgulim (Gate of Reincarnations)",      cat: "kabbalah", level: 2 },
+  { id: "Arí",              label: "Arí z\"l (Lurianismo)",   labelFa: "آری (لوریانی)", labelEn: "The Arizal (Lurianic Kabbalah)",        cat: "kabbalah", level: 2 },
 ];
 export const GILGUL_CAIN_HEVEL_EDGES: MaseiEdge[] = [
   // ── AUTORIDAD — explícito y localizado en Sha'ar HaGilgulim (ShG) ──
@@ -612,14 +612,14 @@ export const GILGUL_CAIN_HEVEL_EDGES: MaseiEdge[] = [
 // La SÍNTESIS (Najash=lectura caída del silencio; Mashíaj=hamtaká vía Biná) es
 // JIDUSH DE MARDAN → cat "jashmal", aristas interp. (matiz: מל=70 ≠ מי=50.)
 export const TIKUN_SILENCIO_NODES: BNode[] = [
-  { id: "Tikún del Silencio", label: "El Tikún del Silencio (נחש = משיח · 358)", labelFa: "تیکون سکوت (ناخاش = ماشیح · ۳۵۸)", cat: "jashmal",  level: 2, url: "/358" },
-  { id: "Jash",      label: "Jash · חש (silencio · 308)",       labelFa: "خَش · חש (سکوت · ۳۰۸)",        cat: "kabbalah", level: 3 },
-  { id: "Mi (Biná)", label: "Mi · מי (¿Quién? = Biná · 50)",    labelFa: "می · מי (کیست؟ = بینا · ۵۰)",   cat: "kabbalah", level: 3 },
-  { id: "Jashmal",   label: "Jashmal · חשמל (jash + mal)",      labelFa: "خَشمَل · חשמל (خَش + مَل)",     cat: "kabbalah", level: 3 },
-  { id: "Elohim",    label: "Elohim · אלהים (juicio · 86)",     labelFa: "اِلوهیم · אלהים (داوری · ۸۶)",  cat: "kabbalah", level: 3 },
-  { id: "Shemá",     label: "Shemá · la Unidad (ה' אחד)",       labelFa: "شِمَع · یگانگی (ה' אחد)",       cat: "kabbalah", level: 3 },
-  { id: "Jalal",     label: "Jalal · החלל (espacio vacío)",     labelFa: "خالال · فضای تهی",             cat: "kabbalah", level: 3 },
-  { id: "Hamtaká",   label: "Hamtaká (endulzar los juicios)",   labelFa: "هَمتاکا (شیرین‌سازی داوری‌ها)", cat: "kabbalah", level: 3 },
+  { id: "Tikún del Silencio", label: "El Tikún del Silencio (נחש = משיח · 358)", labelFa: "تیکون سکوت (ناخاش = ماشیح · ۳۵۸)", labelEn: "The Tikkun of Silence (נחש = משיח · 358)", cat: "jashmal",  level: 2, url: "/358" },
+  { id: "Jash",      label: "Jash · חש (silencio · 308)",       labelFa: "خَش · חש (سکوت · ۳۰۸)", labelEn: "Chash · חש (silence · 308)",        cat: "kabbalah", level: 3 },
+  { id: "Mi (Biná)", label: "Mi · מי (¿Quién? = Biná · 50)",    labelFa: "می · מי (کیست؟ = بینا · ۵۰)", labelEn: "Mi · מי (Who? = Binah · 50)",   cat: "kabbalah", level: 3 },
+  { id: "Jashmal",   label: "Jashmal · חשמל (jash + mal)",      labelFa: "خَشمَل · חשמל (خَش + مَل)", labelEn: "Chashmal · חשמל (chash + mal)",     cat: "kabbalah", level: 3 },
+  { id: "Elohim",    label: "Elohim · אלהים (juicio · 86)",     labelFa: "اِلوهیم · אלהים (داوری · ۸۶)", labelEn: "Elohim · אלהים (judgment · 86)",  cat: "kabbalah", level: 3 },
+  { id: "Shemá",     label: "Shemá · la Unidad (ה' אחד)",       labelFa: "شِمَع · یگانگی (ה' אחد)", labelEn: "Shema · the Oneness (ה' אחד)",       cat: "kabbalah", level: 3 },
+  { id: "Jalal",     label: "Jalal · החלל (espacio vacío)",     labelFa: "خالال · فضای تهی", labelEn: "Chalal · החלל (the empty space)",             cat: "kabbalah", level: 3 },
+  { id: "Hamtaká",   label: "Hamtaká (endulzar los juicios)",   labelFa: "هَمتاکا (شیرین‌سازی داوری‌ها)", labelEn: "Hamtakah (sweetening the judgments)", cat: "kabbalah", level: 3 },
 ];
 export const TIKUN_SILENCIO_EDGES: MaseiEdge[] = [
   // ── AUTORIDAD CLÁSICA (solid) — hecho verificado en la fuente ──
@@ -669,15 +669,15 @@ export const TIKUN_SILENCIO_EDGES: MaseiEdge[] = [
 // tiene música). Reusa el nodo "Janoj" (= Janoj/Metatrón, capa Gilgul) en vez de
 // duplicarlo; reusa "Tikún del Silencio" como puente temático jashmal.
 export const ENOCH_NODES: BNode[] = [
-  { id: "Janóoj-gracia", label: "Janóoj — la gracia que asciende (חנוך · 84)", labelFa: "حَنوخ — فیضی که بالا می‌رود (חنوך · ۸۴)", cat: "jashmal",  level: 2, url: "/enoch" },
-  { id: "Targum Yonatan", label: "Targum Yonatan",                  labelFa: "تَرگوم یوناتان",              cat: "midrash",  level: 2 },
-  { id: "Shaddai",        label: "Shaddai · שדי (314)",             labelFa: "شَدّای · שדי (۳۱۴)",          cat: "kabbalah", level: 3 },
-  { id: "Jen",            label: "Jen · חן (gracia · 58)",          labelFa: "خِن · חן (فیض · ۵۸)",         cat: "kabbalah", level: 3 },
-  { id: "Jinuj",          label: "Jinuj · חינוך (educación del alma)", labelFa: "خینوخ · חینוך (تربیت روح)", cat: "kabbalah", level: 3 },
-  { id: "Nigún",          label: "Nigún · ניגון (melodía · 119)",   labelFa: "نیگون · ניגون (نغمه · ۱۱۹)",   cat: "chasidut", level: 3 },
-  { id: "Kav",            label: "Kav · קו (la línea · 106)",       labelFa: "کاو · קו (خط · ۱۰۶)",         cat: "kabbalah", level: 3 },
-  { id: "Likutei Moharán", label: "Likutei Moharán (Rabí Najmán)",  labelFa: "لیکوطی موهَران (ربی نَحمان)", cat: "chasidut", level: 2 },
-  { id: "Olamot",         label: "Los 4 Mundos (Atzilut→Asiyá)",    labelFa: "چهار عالَم (آتسیلوت→عَسیّا)",  cat: "kabbalah", level: 3 },
+  { id: "Janóoj-gracia", label: "Janóoj — la gracia que asciende (חנוך · 84)", labelFa: "حَنوخ — فیضی که بالا می‌رود (חنوך · ۸۴)", labelEn: "Enoch — the Grace that Ascends (חנוך · 84)", cat: "jashmal",  level: 2, url: "/enoch" },
+  { id: "Targum Yonatan", label: "Targum Yonatan",                  labelFa: "تَرگوم یوناتان", labelEn: "Targum Yonatan",              cat: "midrash",  level: 2 },
+  { id: "Shaddai",        label: "Shaddai · שדי (314)",             labelFa: "شَدّای · שדי (۳۱۴)", labelEn: "Shaddai · שדי (314)",          cat: "kabbalah", level: 3 },
+  { id: "Jen",            label: "Jen · חן (gracia · 58)",          labelFa: "خِن · חן (فیض · ۵۸)", labelEn: "Chen · חן (grace · 58)",         cat: "kabbalah", level: 3 },
+  { id: "Jinuj",          label: "Jinuj · חינוך (educación del alma)", labelFa: "خینوخ · חینוך (تربیت روح)", labelEn: "Chinuch · חינוך (education of the soul)", cat: "kabbalah", level: 3 },
+  { id: "Nigún",          label: "Nigún · ניגון (melodía · 119)",   labelFa: "نیگون · ניגون (نغمه · ۱۱۹)", labelEn: "Niggun · ניגון (melody · 119)",   cat: "chasidut", level: 3 },
+  { id: "Kav",            label: "Kav · קו (la línea · 106)",       labelFa: "کاو · קו (خط · ۱۰۶)", labelEn: "Kav · קו (the line · 106)",         cat: "kabbalah", level: 3 },
+  { id: "Likutei Moharán", label: "Likutei Moharán (Rabí Najmán)",  labelFa: "لیکوطی موهَران (ربی نَحمان)", labelEn: "Likutei Moharan (Rabbi Nachman)", cat: "chasidut", level: 2 },
+  { id: "Olamot",         label: "Los 4 Mundos (Atzilut→Asiyá)",    labelFa: "چهار عالَم (آتسیلوت→عَسیّا)", labelEn: "The Four Worlds (Atzilut→Asiyah)",  cat: "kabbalah", level: 3 },
 ];
 export const ENOCH_EDGES: MaseiEdge[] = [
   // ── AUTORIDAD CLÁSICA (solid) — hecho verificado en la fuente ──
@@ -709,139 +709,139 @@ export const ENOCH_EDGES: MaseiEdge[] = [
 // labelEn no aplica al BNode (el render trilingüe del universo usa label/labelFa).
 export const GILGUL_VESSEL_NODES: BNode[] = [
   // — Raíz de CAÍN · cadena hasta Rabí Akiva (ShG 33/36) —
-  { id: "Kenán",            label: "Kenán",                       labelFa: "کِنان",                  cat: "figure", level: 4 },
-  { id: "Mahalalel",        label: "Mahalalel",                   labelFa: "مَهَلَلئیل",             cat: "figure", level: 4 },
-  { id: "Yshajar",          label: "Yshajar (hijo de Yaakov)",    labelFa: "یِساخار",                cat: "figure", level: 4 },
-  { id: "Najshón",          label: "Najshón ben Aminadav · 414",  labelFa: "نَحشون بن عَمیناداو · ۴۱۴", cat: "figure", level: 4 },
-  { id: "Yishai",           label: "Yishai (padre de David)",     labelFa: "ییشای (پدر داوود)",      cat: "figure", level: 4 },
-  { id: "Matityahu",        label: "Matityahu (Macabeo)",         labelFa: "مَتیتیاهو (مَکَّابی)",   cat: "figure", level: 4 },
-  { id: "Akavia",           label: "Akavia ben Mahalalel",        labelFa: "عَکَویا بن مَهَلَلئیل",  cat: "talmud", level: 4 },
-  { id: "Ribaz",            label: "Rabán Yojanán ben Zakai",     labelFa: "رَبان یوحانان بن زَکای", cat: "talmud", level: 4 },
-  { id: "Abaye",            label: "Abaye (Rav Yeiva Saba)",      labelFa: "اَبَیه (رَو ییوا سَبا)", cat: "talmud", level: 4 },
+  { id: "Kenán",            label: "Kenán",                       labelFa: "کِنان", labelEn: "Kenan",                  cat: "figure", level: 4 },
+  { id: "Mahalalel",        label: "Mahalalel",                   labelFa: "مَهَلَلئیل", labelEn: "Mahalalel",             cat: "figure", level: 4 },
+  { id: "Yshajar",          label: "Yshajar (hijo de Yaakov)",    labelFa: "یِساخار", labelEn: "Issachar (son of Jacob)",                cat: "figure", level: 4 },
+  { id: "Najshón",          label: "Najshón ben Aminadav · 414",  labelFa: "نَحشون بن عَمیناداو · ۴۱۴", labelEn: "Nachshon ben Aminadav · 414", cat: "figure", level: 4 },
+  { id: "Yishai",           label: "Yishai (padre de David)",     labelFa: "ییشای (پدر داوود)", labelEn: "Jesse (father of David)",      cat: "figure", level: 4 },
+  { id: "Matityahu",        label: "Matityahu (Macabeo)",         labelFa: "مَتیتیاهو (مَکَّابی)", labelEn: "Mattityahu (the Maccabee)",   cat: "figure", level: 4 },
+  { id: "Akavia",           label: "Akavia ben Mahalalel",        labelFa: "عَکَویا بن مَهَلَلئیل", labelEn: "Akavya ben Mahalalel",  cat: "talmud", level: 4 },
+  { id: "Ribaz",            label: "Rabán Yojanán ben Zakai",     labelFa: "رَبان یوحانان بن زَکای", labelEn: "Rabban Yochanan ben Zakkai", cat: "talmud", level: 4 },
+  { id: "Abaye",            label: "Abaye (Rav Yeiva Saba)",      labelFa: "اَبَیه (رَو ییوا سَبا)", labelEn: "Abaye (Rav Yeiva Saba)", cat: "talmud", level: 4 },
   // — Raíz de CAÍN · sub-rama de Pinjás → Eliyahu (Hakdamá 32; Berajot 4b) —
-  { id: "Elishá",           label: "Elishá HaNaví (Eliseo)",      labelFa: "اِلیشَع نبی",            cat: "figure", level: 4 },
-  { id: "Jiel",             label: "Jiel Bet-HaElí",              labelFa: "حیئل بیت‌الئیلی",        cat: "figure", level: 4 },
-  { id: "Mashíaj ben Yosef", label: "Mashíaj ben Yosef",          labelFa: "ماشیَخ بن یوسف",         cat: "figure", level: 4 },
+  { id: "Elishá",           label: "Elishá HaNaví (Eliseo)",      labelFa: "اِلیشَع نبی", labelEn: "Elisha the Prophet",            cat: "figure", level: 4 },
+  { id: "Jiel",             label: "Jiel Bet-HaElí",              labelFa: "حیئل بیت‌الئیلی", labelEn: "Hiel of Bethel (Chiel)",        cat: "figure", level: 4 },
+  { id: "Mashíaj ben Yosef", label: "Mashíaj ben Yosef",          labelFa: "ماشیَخ بن یوسف", labelEn: "Mashiach ben Yosef",         cat: "figure", level: 4 },
   // — Raíz de HEVEL · cadena hasta Moshé + Hillel/Shamai (34:1, 34:4-6) —
-  { id: "Shem",             label: "Shem ben Nóaj",               labelFa: "شیم بن نوح",             cat: "figure", level: 4 },
-  { id: "Hillel",           label: "Hillel HaZakén",              labelFa: "هیلِل هَزاکِن",          cat: "talmud", level: 4 },
-  { id: "Shamai",           label: "Shamai HaZakén",              labelFa: "شَمّای هَزاکِن",         cat: "talmud", level: 4 },
+  { id: "Shem",             label: "Shem ben Nóaj",               labelFa: "شیم بن نوح", labelEn: "Shem son of Noah",             cat: "figure", level: 4 },
+  { id: "Hillel",           label: "Hillel HaZakén",              labelFa: "هیلِل هَزاکِن", labelEn: "Hillel the Elder",          cat: "talmud", level: 4 },
+  { id: "Shamai",           label: "Shamai HaZakén",              labelFa: "شَمّای هَزاکِن", labelEn: "Shammai the Elder",         cat: "talmud", level: 4 },
   // — Raíz ZIHARÁ ILÁ'A · Janoj/Metatrón → R. Yishmael (36:54) —
-  { id: "Janoj",            label: "Janoj / Metatrón",            labelFa: "حَنوخ / مِطَطرون",       cat: "figure", level: 4 },
-  { id: "Ajiá HaShiloní",   label: "Ajiá HaShiloní",              labelFa: "اَخیا هَشیلونی",         cat: "figure", level: 4 },
-  { id: "Yehoshúa ben Perajiá", label: "Yehoshúa ben Perajiá",    labelFa: "یهوشع بن پِرَخیا",       cat: "talmud", level: 4 },
-  { id: "R. Yehoshúa ben Janania", label: "R. Yehoshúa ben Janania", labelFa: "ربی یهوشع بن حَنَنیا", cat: "talmud", level: 4 },
-  { id: "R. Yishmael",      label: "R. Yishmael ben Elishá (Kohén Gadol)", labelFa: "ربی یشمَعئیل بن اِلیشَع", cat: "talmud", level: 4 },
+  { id: "Janoj",            label: "Janoj / Metatrón",            labelFa: "حَنوخ / مِطَطرون", labelEn: "Enoch / Metatron",       cat: "figure", level: 4 },
+  { id: "Ajiá HaShiloní",   label: "Ajiá HaShiloní",              labelFa: "اَخیا هَشیلونی", labelEn: "Achiyah the Shilonite",         cat: "figure", level: 4 },
+  { id: "Yehoshúa ben Perajiá", label: "Yehoshúa ben Perajiá",    labelFa: "یهوشع بن پِرَخیا", labelEn: "Yehoshua ben Perachiah",       cat: "talmud", level: 4 },
+  { id: "R. Yehoshúa ben Janania", label: "R. Yehoshúa ben Janania", labelFa: "ربی یهوشع بن حَنَنیا", labelEn: "R. Yehoshua ben Chananiah", cat: "talmud", level: 4 },
+  { id: "R. Yishmael",      label: "R. Yishmael ben Elishá (Kohén Gadol)", labelFa: "ربی یشمَعئیل بن اِلیشَع", labelEn: "R. Yishmael ben Elisha (High Priest)", cat: "talmud", level: 4 },
   // — Raíz de HEVEL (sub-rama) · línea sacerdotal Harán → Zejariá (33:10-13) —
-  { id: "Harán",            label: "Harán (hermano de Avraham)",  labelFa: "هاران (برادر ابراهیم)",  cat: "figure", level: 4 },
-  { id: "Yaavetz",          label: "Yaavetz (juez)",              labelFa: "یَعبِص (داور)",          cat: "figure", level: 4 },
-  { id: "Tolá",             label: "Tolá ben Puá (juez)",         labelFa: "تولاع بن پووا (داور)",   cat: "figure", level: 4 },
-  { id: "Uriah HaKohén",    label: "Uriah HaKohén",               labelFa: "اوریاهِ کوهِن",          cat: "figure", level: 4 },
-  { id: "Zejariá",          label: "Zejariá ben Yeverejiahu",     labelFa: "زِخَریا بن یِوِرِخیاهو",  cat: "figure", level: 4 },
+  { id: "Harán",            label: "Harán (hermano de Avraham)",  labelFa: "هاران (برادر ابراهیم)", labelEn: "Haran (brother of Abraham)",  cat: "figure", level: 4 },
+  { id: "Yaavetz",          label: "Yaavetz (juez)",              labelFa: "یَعبِص (داور)", labelEn: "Yaavetz (judge)",          cat: "figure", level: 4 },
+  { id: "Tolá",             label: "Tolá ben Puá (juez)",         labelFa: "تولاع بن پووا (داور)", labelEn: "Tola ben Puah (judge)",   cat: "figure", level: 4 },
+  { id: "Uriah HaKohén",    label: "Uriah HaKohén",               labelFa: "اوریاهِ کوهِن", labelEn: "Uriah the Priest",          cat: "figure", level: 4 },
+  { id: "Zejariá",          label: "Zejariá ben Yeverejiahu",     labelFa: "زِخَریا بن یِوِرِخیاهو", labelEn: "Zechariah ben Yevarechyahu",  cat: "figure", level: 4 },
   // — Raíz OSCURA · Laván → Bilaam → Naval (36:76); נבל=לבן=82 —
-  { id: "Laván",            label: "Laván HaArami · 82",          labelFa: "لاوان هَاَرامی · ۸۲",    cat: "figure", level: 4 },
+  { id: "Laván",            label: "Laván HaArami · 82",          labelFa: "لاوان هَاَرامی · ۸۲", labelEn: "Laban the Aramean · 82",    cat: "figure", level: 4 },
   // — Raíz de YAAKOV · Yaakov → Yirmiahu → … → el Ran (ShG 36:52) —
-  { id: "Yirmiahu",         label: "Yirmiahu HaNaví",             labelFa: "یِرمیاهو نبی",           cat: "figure", level: 4 },
-  { id: "Daniel",           label: "Daniel",                      labelFa: "دانیال",                 cat: "figure", level: 4 },
-  { id: "Antígonos",        label: "Antígonos Ish Sojo",          labelFa: "اَنتیگونوس ایش سوخو",    cat: "talmud", level: 4 },
-  { id: "R. Eleazar ben Dahavai", label: "R. Eleazar ben Dahavai", labelFa: "ربی اِلعازار بن دَهَوای", cat: "talmud", level: 4 },
-  { id: "Rav Papa",         label: "Rav Papa",                    labelFa: "رَو پاپا",               cat: "talmud", level: 4 },
-  { id: "Ran",              label: "El Ran (R. Nissim / Rif)",    labelFa: "هَران (ربی نیسیم)",       cat: "talmud", level: 4 },
+  { id: "Yirmiahu",         label: "Yirmiahu HaNaví",             labelFa: "یِرمیاهو نبی", labelEn: "Jeremiah the Prophet",           cat: "figure", level: 4 },
+  { id: "Daniel",           label: "Daniel",                      labelFa: "دانیال", labelEn: "Daniel",                 cat: "figure", level: 4 },
+  { id: "Antígonos",        label: "Antígonos Ish Sojo",          labelFa: "اَنتیگونوس ایش سوخو", labelEn: "Antigonus of Socho",    cat: "talmud", level: 4 },
+  { id: "R. Eleazar ben Dahavai", label: "R. Eleazar ben Dahavai", labelFa: "ربی اِلعازار بن دَهَوای", labelEn: "R. Eleazar ben Dahavai", cat: "talmud", level: 4 },
+  { id: "Rav Papa",         label: "Rav Papa",                    labelFa: "رَو پاپا", labelEn: "Rav Papa",               cat: "talmud", level: 4 },
+  { id: "Ran",              label: "El Ran (R. Nissim / Rif)",    labelFa: "هَران (ربی نیسیم)", labelEn: "The Ran (R. Nissim / Rif)",       cat: "talmud", level: 4 },
   // — Raíz de ELIEZER · Eliezer → Kalev → Benaiahu → Zejariá ben Yehoiada (ShG 36:53) —
-  { id: "Eliezer",          label: "Eliezer (siervo de Avraham)", labelFa: "اِلیعِزِر (خادم ابراهیم)", cat: "figure", level: 4 },
-  { id: "Kalev",            label: "Kalev ben Yefuné · 52",       labelFa: "کالِب بن یِفونه · ۵۲",   cat: "figure", level: 4 },
-  { id: "Benaiahu",         label: "Benaiahu ben Yehoiada",       labelFa: "بِنایاهو بن یِهویاداع",  cat: "figure", level: 4 },
-  { id: "Zejariá ben Yehoiada", label: "Zejariá ben Yehoiada (el kohén)", labelFa: "زِخَریا بن یِهویاداع", cat: "figure", level: 4 },
+  { id: "Eliezer",          label: "Eliezer (siervo de Avraham)", labelFa: "اِلیعِزِر (خادم ابراهیم)", labelEn: "Eliezer (Abraham's servant)", cat: "figure", level: 4 },
+  { id: "Kalev",            label: "Kalev ben Yefuné · 52",       labelFa: "کالِب بن یِفونه · ۵۲", labelEn: "Caleb ben Yefuneh · 52",   cat: "figure", level: 4 },
+  { id: "Benaiahu",         label: "Benaiahu ben Yehoiada",       labelFa: "بِنایاهو بن یِهویاداع", labelEn: "Benaiah ben Yehoyada",  cat: "figure", level: 4 },
+  { id: "Zejariá ben Yehoiada", label: "Zejariá ben Yehoiada (el kohén)", labelFa: "زِخَریا بن یِهویاداع", labelEn: "Zechariah ben Yehoyada (the priest)", cat: "figure", level: 4 },
   // — Raíz de YOAV · Yoav → Yoash (ShG 36:59, at-bash) —
-  { id: "Yoav",             label: "Yoav ben Tzeruiá",            labelFa: "یوآو بن تصِرویا",        cat: "figure", level: 4 },
-  { id: "Yoash",            label: "Yoash HaMélej",               labelFa: "یوآش پادشاه",            cat: "figure", level: 4 },
+  { id: "Yoav",             label: "Yoav ben Tzeruiá",            labelFa: "یوآو بن تصِرویا", labelEn: "Joab ben Tzeruyah",        cat: "figure", level: 4 },
+  { id: "Yoash",            label: "Yoash HaMélej",               labelFa: "یوآش پادشاه", labelEn: "Joash the King",            cat: "figure", level: 4 },
 ];
 
 // ─── Nodos ───────────────────────────────────────────────────────────────
 export const BNODES: BNode[] = [
   // ── Nivel 0 — corazón (Torá y Tanaj UNIFICADOS: la Torá es el núcleo del Tanaj) ──
-  { id: "Torá", label: "Torá · Tanaj", labelFa: "تورات · تنخ", cat: "torah", level: 0 },
+  { id: "Torá", label: "Torá · Tanaj", labelFa: "تورات · تنخ", labelEn: "Torah · Tanakh", cat: "torah", level: 0 },
 
   // ── Nivel 1 — dominios ──
   // Neviim (Profetas) y Ketuvim (Escritos): las otras dos divisiones del Tanaj,
   // alrededor del núcleo Torá. Los 5 libros de la Torá cuelgan directo del núcleo.
-  { id: "Neviim",    label: "Neviim",    labelFa: "نِویئیم (انبیا)",   cat: "tanakh", level: 1 },
-  { id: "Ketuvim",   label: "Ketuvim",   labelFa: "کتوویم (مکتوبات)", cat: "tanakh", level: 1 },
-  { id: "Mishná",    label: "Mishná",    labelFa: "میشنا",  cat: "mishnah",    level: 1 },
-  { id: "Talmud",    label: "Talmud",    labelFa: "تلمود",  cat: "talmud",     level: 1 },
-  { id: "Midrash",   label: "Midrash",   labelFa: "میدراش", cat: "midrash",    level: 1 },
-  { id: "Cabalá",    label: "Cabalá",    labelFa: "کابالا", cat: "kabbalah",   level: 1 },
-  { id: "Jasidut",   label: "Jasidut",   labelFa: "حسیدوت", cat: "chasidut",   level: 1 },
-  { id: "Halajá",    label: "Halajá",    labelFa: "هلاخا",  cat: "halakhah",   level: 1 },
-  { id: "Filosofía", label: "Filosofía", labelFa: "فلسفه",  cat: "philosophy", level: 1 },
-  { id: "Ciencia",   label: "Ciencia",   labelFa: "علم",    cat: "science",    level: 1 },
+  { id: "Neviim",    label: "Neviim",    labelFa: "نِویئیم (انبیا)", labelEn: "Neviim (Prophets)",   cat: "tanakh", level: 1 },
+  { id: "Ketuvim",   label: "Ketuvim",   labelFa: "کتوویم (مکتوبات)", labelEn: "Ketuvim (Writings)", cat: "tanakh", level: 1 },
+  { id: "Mishná",    label: "Mishná",    labelFa: "میشنا", labelEn: "Mishnah",  cat: "mishnah",    level: 1 },
+  { id: "Talmud",    label: "Talmud",    labelFa: "تلمود", labelEn: "Talmud",  cat: "talmud",     level: 1 },
+  { id: "Midrash",   label: "Midrash",   labelFa: "میدراش", labelEn: "Midrash", cat: "midrash",    level: 1 },
+  { id: "Cabalá",    label: "Cabalá",    labelFa: "کابالا", labelEn: "Kabbalah", cat: "kabbalah",   level: 1 },
+  { id: "Jasidut",   label: "Jasidut",   labelFa: "حسیدوت", labelEn: "Chasidut", cat: "chasidut",   level: 1 },
+  { id: "Halajá",    label: "Halajá",    labelFa: "هلاخا", labelEn: "Halakhah",  cat: "halakhah",   level: 1 },
+  { id: "Filosofía", label: "Filosofía", labelFa: "فلسفه", labelEn: "Philosophy",  cat: "philosophy", level: 1 },
+  { id: "Ciencia",   label: "Ciencia",   labelFa: "علم", labelEn: "Science",    cat: "science",    level: 1 },
 
   // ── Nivel 2 — libros del Jumash (alrededor de la Torá) ──
-  { id: "Bereshit", label: "Bereshit", labelFa: "بِرِشیت (پیدایش)", cat: "tanakh", level: 2 },
-  { id: "Shemot",   label: "Shemot",   labelFa: "شِموت (خروج)",     cat: "tanakh", level: 2 },
-  { id: "Vayikrá",  label: "Vayikrá",  labelFa: "وَیِقرا (لاویان)", cat: "tanakh", level: 2 },
-  { id: "Bamidbar", label: "Bamidbar", labelFa: "بَمیدبار (اعداد)", cat: "tanakh", level: 2 },
-  { id: "Devarim",  label: "Devarim",  labelFa: "دِواریم (تثنیه)",  cat: "tanakh", level: 2 },
-  { id: "Tehilim",  label: "Tehilim",  labelFa: "مزامیر",           cat: "tanakh", level: 2 },
+  { id: "Bereshit", label: "Bereshit", labelFa: "بِرِشیت (پیدایش)", labelEn: "Bereshit (Genesis)", cat: "tanakh", level: 2 },
+  { id: "Shemot",   label: "Shemot",   labelFa: "شِموت (خروج)", labelEn: "Shemot (Exodus)",     cat: "tanakh", level: 2 },
+  { id: "Vayikrá",  label: "Vayikrá",  labelFa: "وَیِقرا (لاویان)", labelEn: "Vayikra (Leviticus)", cat: "tanakh", level: 2 },
+  { id: "Bamidbar", label: "Bamidbar", labelFa: "بَمیدبار (اعداد)", labelEn: "Bamidbar (Numbers)", cat: "tanakh", level: 2 },
+  { id: "Devarim",  label: "Devarim",  labelFa: "دِواریم (تثنیه)", labelEn: "Devarim (Deuteronomy)",  cat: "tanakh", level: 2 },
+  { id: "Tehilim",  label: "Tehilim",  labelFa: "مزامیر", labelEn: "Tehillim (Psalms)",           cat: "tanakh", level: 2 },
 
   // ── Nivel 2 — obras / tratados ──
-  { id: "Berajot",       label: "Berajot",       labelFa: "بِراخوت",   cat: "talmud",   level: 2 },
-  { id: "Rosh Hashaná",  label: "Rosh Hashaná",  labelFa: "روش هَشانا", cat: "mishnah",  level: 2 },
-  { id: "Bereshit Rabá", label: "Bereshit Rabá", labelFa: "بِرِشیت رَبا", cat: "midrash", level: 2 },
-  { id: "Zohar",         label: "Zohar",         labelFa: "زوهَر",     cat: "kabbalah", level: 2 },
-  { id: "Etz Jaim",      label: "Etz Jaim",      labelFa: "عِتص حَییم", cat: "kabbalah", level: 2 },
-  { id: "Tania",         label: "Tania",         labelFa: "تانیا",     cat: "chasidut", level: 2 },
-  { id: "Baal Shem Tov", label: "Baal Shem Tov", labelFa: "بَعل شِم طوב", cat: "chasidut", level: 2 },
-  { id: "Mishné Torá",   label: "Mishné Torá",   labelFa: "میشنه تورا", cat: "halakhah", level: 2 },
-  { id: "Moré Nevujim",  label: "Moré Nevujim",  labelFa: "دلالة الحائرین", cat: "philosophy", level: 2 },
-  { id: "Kuzari",        label: "Kuzari",        labelFa: "کوزاری",    cat: "philosophy", level: 2 },
-  { id: "Maharal",       label: "Maharal",       labelFa: "مَهَرال",   cat: "philosophy", level: 2 },
-  { id: "Física",        label: "Física",        labelFa: "فیزیک",     cat: "science",  level: 2 },
-  { id: "Matemática",    label: "Matemática",    labelFa: "ریاضیات",   cat: "science",  level: 2 },
-  { id: "Cosmología",    label: "Cosmología",    labelFa: "کیهان‌شناسی", cat: "science", level: 2 },
+  { id: "Berajot",       label: "Berajot",       labelFa: "بِراخوت", labelEn: "Berachot",   cat: "talmud",   level: 2 },
+  { id: "Rosh Hashaná",  label: "Rosh Hashaná",  labelFa: "روش هَشانا", labelEn: "Rosh Hashanah", cat: "mishnah",  level: 2 },
+  { id: "Bereshit Rabá", label: "Bereshit Rabá", labelFa: "بِرِشیت رَبا", labelEn: "Bereshit Rabbah", cat: "midrash", level: 2 },
+  { id: "Zohar",         label: "Zohar",         labelFa: "زوهَر", labelEn: "Zohar",     cat: "kabbalah", level: 2 },
+  { id: "Etz Jaim",      label: "Etz Jaim",      labelFa: "عِتص حَییم", labelEn: "Etz Chaim (Tree of Life)", cat: "kabbalah", level: 2 },
+  { id: "Tania",         label: "Tania",         labelFa: "تانیا", labelEn: "Tanya",     cat: "chasidut", level: 2 },
+  { id: "Baal Shem Tov", label: "Baal Shem Tov", labelFa: "بَعل شِم طوب", labelEn: "Baal Shem Tov", cat: "chasidut", level: 2 },
+  { id: "Mishné Torá",   label: "Mishné Torá",   labelFa: "میشنه تورا", labelEn: "Mishneh Torah", cat: "halakhah", level: 2 },
+  { id: "Moré Nevujim",  label: "Moré Nevujim",  labelFa: "دلالة الحائرین", labelEn: "The Guide for the Perplexed (Moreh Nevuchim)", cat: "philosophy", level: 2 },
+  { id: "Kuzari",        label: "Kuzari",        labelFa: "کوزاری", labelEn: "Kuzari",    cat: "philosophy", level: 2 },
+  { id: "Maharal",       label: "Maharal",       labelFa: "مَهَرال", labelEn: "Maharal",   cat: "philosophy", level: 2 },
+  { id: "Física",        label: "Física",        labelFa: "فیزیک", labelEn: "Physics",     cat: "science",  level: 2 },
+  { id: "Matemática",    label: "Matemática",    labelFa: "ریاضیات", labelEn: "Mathematics",   cat: "science",  level: 2 },
+  { id: "Cosmología",    label: "Cosmología",    labelFa: "کیهان‌شناسی", labelEn: "Cosmology", cat: "science", level: 2 },
 
   // ── Nivel 3 — temas / personajes / conceptos (Bereshit) ──
-  { id: "Adam HaRishon", label: "Adam HaRishon", labelFa: "آدَم هَریشون", cat: "tanakh", level: 3 },
-  { id: "Javá",          label: "Javá",          labelFa: "حَوا",        cat: "tanakh", level: 3 },
-  { id: "Najash",        label: "Najash",        labelFa: "ناخاش (مار)",  cat: "tanakh", level: 3 },
-  { id: "Gan Edén",      label: "Gan Edén",      labelFa: "گَن عِدِن",    cat: "tanakh", level: 3 },
-  { id: "Tzelem Elohim", label: "Tzelem Elohim", labelFa: "تصِلِم اِلوهیم", cat: "tanakh", level: 3 },
-  { id: "Teshuvá",       label: "Teshuvá",       labelFa: "تِشووا",      cat: "tanakh", level: 3 },
-  { id: "Akedá",         label: "Akedá",         labelFa: "عَقیدا",      cat: "tanakh", level: 3 },
+  { id: "Adam HaRishon", label: "Adam HaRishon", labelFa: "آدَم هَریشون", labelEn: "Adam HaRishon (the First Man)", cat: "tanakh", level: 3 },
+  { id: "Javá",          label: "Javá",          labelFa: "حَوا", labelEn: "Eve (Chavah)",        cat: "tanakh", level: 3 },
+  { id: "Najash",        label: "Najash",        labelFa: "ناخاش (مار)", labelEn: "Nachash (the Serpent)",  cat: "tanakh", level: 3 },
+  { id: "Gan Edén",      label: "Gan Edén",      labelFa: "گَن عِدِن", labelEn: "Gan Eden (Garden of Eden)",    cat: "tanakh", level: 3 },
+  { id: "Tzelem Elohim", label: "Tzelem Elohim", labelFa: "تصِلِم اِلوهیم", labelEn: "Tzelem Elohim (Image of God)", cat: "tanakh", level: 3 },
+  { id: "Teshuvá",       label: "Teshuvá",       labelFa: "تِشووا", labelEn: "Teshuvah (repentance)",      cat: "tanakh", level: 3 },
+  { id: "Akedá",         label: "Akedá",         labelFa: "عَقیدا", labelEn: "Akedah (the Binding of Isaac)",      cat: "tanakh", level: 3 },
 
   // ── Nivel 3 — sefirot / letras / conceptos cabalísticos ──
-  { id: "Keter",   label: "Keter",   labelFa: "کِتِر",   cat: "kabbalah", level: 3 },
-  { id: "Jojmá",   label: "Jojmá",   labelFa: "خوخما",   cat: "kabbalah", level: 3 },
-  { id: "Biná",    label: "Biná",    labelFa: "بینا",    cat: "kabbalah", level: 3 },
-  { id: "Jésed",   label: "Jésed",   labelFa: "خِسِد",   cat: "kabbalah", level: 3 },
-  { id: "Guevurá", label: "Guevurá", labelFa: "گِوورا",  cat: "kabbalah", level: 3 },
-  { id: "Tiféret", label: "Tiféret", labelFa: "تیفِرِت", cat: "kabbalah", level: 3 },
-  { id: "Yesod",   label: "Yesod",   labelFa: "یِسود",   cat: "kabbalah", level: 3 },
-  { id: "Maljut",  label: "Maljut",  labelFa: "مَلخوت",  cat: "kabbalah", level: 3 },
-  { id: "Tzimtzum", label: "Tzimtzum", labelFa: "تزیمتزوم", cat: "kabbalah", level: 3 },
-  { id: "Shevirá",  label: "Shevirat HaKelim", labelFa: "شِویرَت هَکِلیم", cat: "kabbalah", level: 3 },
-  { id: "Mashíaj",  label: "Mashíaj", labelFa: "ماشیَخ", cat: "kabbalah", level: 3 },
-  { id: "Álef",     label: "Álef",    labelFa: "اَلِف",  cat: "kabbalah", level: 3 },
-  { id: "Nun",      label: "Nun",     labelFa: "نون",    cat: "kabbalah", level: 3 },
-  { id: "Sámej",    label: "Sámej",   labelFa: "سامِخ",  cat: "kabbalah", level: 3 },
-  { id: "Yosef",    label: "Yosef",   labelFa: "یوسف",   cat: "tanakh",   level: 3 },
-  { id: "Nes",      label: "Nes",     labelFa: "نِس",    cat: "kabbalah", level: 3 },
+  { id: "Keter",   label: "Keter",   labelFa: "کِتِر", labelEn: "Keter",   cat: "kabbalah", level: 3 },
+  { id: "Jojmá",   label: "Jojmá",   labelFa: "خوخما", labelEn: "Chochmah",   cat: "kabbalah", level: 3 },
+  { id: "Biná",    label: "Biná",    labelFa: "بینا", labelEn: "Binah",    cat: "kabbalah", level: 3 },
+  { id: "Jésed",   label: "Jésed",   labelFa: "خِسِد", labelEn: "Chesed",   cat: "kabbalah", level: 3 },
+  { id: "Guevurá", label: "Guevurá", labelFa: "گِوورا", labelEn: "Gevurah",  cat: "kabbalah", level: 3 },
+  { id: "Tiféret", label: "Tiféret", labelFa: "تیفِرِت", labelEn: "Tiferet", cat: "kabbalah", level: 3 },
+  { id: "Yesod",   label: "Yesod",   labelFa: "یِسود", labelEn: "Yesod",   cat: "kabbalah", level: 3 },
+  { id: "Maljut",  label: "Maljut",  labelFa: "مَلخوت", labelEn: "Malchut",  cat: "kabbalah", level: 3 },
+  { id: "Tzimtzum", label: "Tzimtzum", labelFa: "تزیمتزوم", labelEn: "Tzimtzum", cat: "kabbalah", level: 3 },
+  { id: "Shevirá",  label: "Shevirat HaKelim", labelFa: "شِویرَت هَکِلیم", labelEn: "Shevirat HaKelim (Shattering of the Vessels)", cat: "kabbalah", level: 3 },
+  { id: "Mashíaj",  label: "Mashíaj", labelFa: "ماشیَخ", labelEn: "Mashiach (Messiah)", cat: "kabbalah", level: 3 },
+  { id: "Álef",     label: "Álef",    labelFa: "اَلِف", labelEn: "Alef",  cat: "kabbalah", level: 3 },
+  { id: "Nun",      label: "Nun",     labelFa: "نون", labelEn: "Nun",    cat: "kabbalah", level: 3 },
+  { id: "Sámej",    label: "Sámej",   labelFa: "سامِخ", labelEn: "Samech",  cat: "kabbalah", level: 3 },
+  { id: "Yosef",    label: "Yosef",   labelFa: "یوسف", labelEn: "Joseph (Yosef)",   cat: "tanakh",   level: 3 },
+  { id: "Nes",      label: "Nes",     labelFa: "نِس", labelEn: "Nes (miracle)",    cat: "kabbalah", level: 3 },
 
   // ── Nivel 3 — ciencia ──
-  { id: "Constante α", label: "Constante α (1/137)", labelFa: "ثابت آلفا", cat: "science", level: 3 },
-  { id: "Entanglement", label: "Entrelazamiento cuántico", labelFa: "درهم‌تنیدگی کوانتومی", cat: "science", level: 3 },
+  { id: "Constante α", label: "Constante α (1/137)", labelFa: "ثابت آلفا", labelEn: "Fine-Structure Constant α (1/137)", cat: "science", level: 3 },
+  { id: "Entanglement", label: "Entrelazamiento cuántico", labelFa: "درهم‌تنیدگی کوانتومی", labelEn: "Quantum Entanglement", cat: "science", level: 3 },
 
   // ── Nivel 4 — contenido de Jashmal (misterios con URL real) ──
-  { id: "137",                label: "137",                labelFa: "۱۳۷",        cat: "jashmal", level: 4, url: "/137",                region: "science" },
-  { id: "26",                 label: "26",                 labelFa: "۲۶",         cat: "jashmal", level: 4, url: "/26",                 region: "kabbalah" },
-  { id: "358",                label: "358",                labelFa: "۳۵۸",        cat: "jashmal", level: 4, url: "/358",                region: "kabbalah" },
-  { id: "Entrelazamiento",    label: "Entrelazamiento",    labelFa: "درهم‌تنیدگی", cat: "jashmal", level: 4, url: "/entrelazamiento",    region: "science" },
-  { id: "Serpiente de cobre", label: "Serpiente de cobre", labelFa: "مار مفرغی",   cat: "jashmal", level: 4, url: "/serpiente-de-cobre", region: "tanakh" },
-  { id: "Sanador",            label: "Sanador",            labelFa: "شفادهنده",    cat: "jashmal", level: 4, url: "/sanador",            region: "tanakh" },
-  { id: "Refael",             label: "Refael",             labelFa: "رِفائل",      cat: "jashmal", level: 4, url: "/refael",             region: "kabbalah" },
-  { id: "Refuá",              label: "Refuá",              labelFa: "رِفوآه",      cat: "jashmal", level: 4, url: "/refua",              region: "tanakh" },
-  { id: "Linaje",             label: "Linaje · Madres del Mashíaj", labelFa: "تبار · مادران ماشیح", cat: "jashmal", level: 4, url: "/linaje",             region: "kabbalah" },
-  { id: "Bilaam",             label: "Bilaam",             labelFa: "بَلعام",      cat: "jashmal", level: 4, url: "/bilaam",             region: "tanakh" },
+  { id: "137",                label: "137",                labelFa: "۱۳۷", labelEn: "137",        cat: "jashmal", level: 4, url: "/137",                region: "science" },
+  { id: "26",                 label: "26",                 labelFa: "۲۶", labelEn: "26",         cat: "jashmal", level: 4, url: "/26",                 region: "kabbalah" },
+  { id: "358",                label: "358",                labelFa: "۳۵۸", labelEn: "358",        cat: "jashmal", level: 4, url: "/358",                region: "kabbalah" },
+  { id: "Entrelazamiento",    label: "Entrelazamiento",    labelFa: "درهم‌تنیدگی", labelEn: "Entanglement", cat: "jashmal", level: 4, url: "/entrelazamiento",    region: "science" },
+  { id: "Serpiente de cobre", label: "Serpiente de cobre", labelFa: "مار مفرغی", labelEn: "The Copper Serpent",   cat: "jashmal", level: 4, url: "/serpiente-de-cobre", region: "tanakh" },
+  { id: "Sanador",            label: "Sanador",            labelFa: "شفادهنده", labelEn: "Healer",    cat: "jashmal", level: 4, url: "/sanador",            region: "tanakh" },
+  { id: "Refael",             label: "Refael",             labelFa: "رِفائل", labelEn: "Raphael",      cat: "jashmal", level: 4, url: "/refael",             region: "kabbalah" },
+  { id: "Refuá",              label: "Refuá",              labelFa: "رِفوآه", labelEn: "Refuah (healing)",      cat: "jashmal", level: 4, url: "/refua",              region: "tanakh" },
+  { id: "Linaje",             label: "Linaje · Madres del Mashíaj", labelFa: "تبار · مادران ماشیح", labelEn: "Lineage · Mothers of the Mashiach", cat: "jashmal", level: 4, url: "/linaje",             region: "kabbalah" },
+  { id: "Bilaam",             label: "Bilaam",             labelFa: "بَلعام", labelEn: "Balaam (Bilaam)",      cat: "jashmal", level: 4, url: "/bilaam",             region: "tanakh" },
 
   // ── Estudio Mas'ei / Nombre de 42 / Ana BeKoaj (verificado por el Sofer) ──
   ...MASEI_NODES,
