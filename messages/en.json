@@ -210,7 +210,7 @@
     "relaunch": "Show tutorial",
     "step1": {
       "title": "Welcome to Jashmal",
-      "desc": "This is your study room for Torah, Talmud and Kabbalah. Claude analyzes each passage using the PaRDeS method — in depth, in your language. Let me show you how it works."
+      "desc": "This is your study room for Torah, Talmud and Kabbalah. Jashmal analyzes each passage using the PaRDeS method — in depth, in your language. Let me show you how it works."
     },
     "step2": {
       "title": "Search any text",
@@ -222,11 +222,11 @@
     },
     "step4": {
       "title": "Analysis appears here",
-      "desc": "Once you choose a text and press Study, Claude generates a structured analysis: translation, classic commentators, PaRDeS and Chassidic synthesis."
+      "desc": "Once you choose a text and press Study, Jashmal generates a structured analysis: translation, classic commentators, PaRDeS and Chassidic synthesis."
     },
     "step5": {
       "title": "Your personal tutor",
-      "desc": "Have a question about a word or concept? Tap this button to open the tutor. Claude answers your questions in real time, without losing your place in the study."
+      "desc": "Have a question about a word or concept? Tap this button to open the tutor. Jashmal answers your questions in real time, without losing your place in the study."
     },
     "step6": {
       "title": "Change the language",

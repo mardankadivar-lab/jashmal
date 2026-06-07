@@ -210,7 +210,7 @@
     "relaunch": "Ver tutorial",
     "step1": {
       "title": "Bienvenido a Jashmal",
-      "desc": "Esta es tu sala de estudio para la Torá, el Talmud y la Cabalá. Claude analiza cada pasaje con el método PRDS — en profundidad, en tu idioma. Déjame mostrarte cómo funciona."
+      "desc": "Esta es tu sala de estudio para la Torá, el Talmud y la Cabalá. Jashmal analiza cada pasaje con el método PRDS — en profundidad, en tu idioma. Déjame mostrarte cómo funciona."
     },
     "step2": {
       "title": "Busca cualquier texto",
@@ -222,11 +222,11 @@
     },
     "step4": {
       "title": "El análisis aparece aquí",
-      "desc": "Una vez que elijas un texto y presiones <em>Estudiar</em>, Claude genera un análisis estructurado: traducción, comentaristas clásicos, PRDS y síntesis jasídica."
+      "desc": "Una vez que elijas un texto y presiones <em>Estudiar</em>, Jashmal genera un análisis estructurado: traducción, comentaristas clásicos, PRDS y síntesis jasídica."
     },
     "step5": {
       "title": "Tu tutor personal",
-      "desc": "¿Una duda sobre una palabra o un concepto? Toca este botón para abrir el tutor. Claude responde tus preguntas en tiempo real, sin perder tu lugar en el estudio."
+      "desc": "¿Una duda sobre una palabra o un concepto? Toca este botón para abrir el tutor. Jashmal responde tus preguntas en tiempo real, sin perder tu lugar en el estudio."
     },
     "step6": {
       "title": "Cambia el idioma",
