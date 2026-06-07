@@ -14,7 +14,8 @@
     "gematria": "Gematría",
     "brain": "Mente Cósmica",
     "community": "Comunidad",
-    "atlas": "Atlas"
+    "atlas": "Atlas",
+    "myStudies": "Mis Estudios"
   },
   "hero": {
     "kicker": "Cabalá y filosofía judía",
@@ -63,7 +64,27 @@
     "nextChapter": "Siguiente capítulo",
     "kabbalahMode": "Modo cabalístico",
     "sugText": "Texto",
-    "sugTopic": "Tema"
+    "sugTopic": "Tema",
+    "sugHistory": "Ya estudiado",
+    "sugNode": "Mente Cósmica",
+    "groupHistory": "Mis estudios",
+    "groupBrain": "Mente Cósmica",
+    "groupTexts": "Textos y temas",
+    "studyThisConcept": "Estudiar el concepto: “{q}”"
+  },
+  "myStudies": {
+    "title": "Mis Estudios",
+    "subtitle": "Aquí vuelven las enseñanzas que ya estudiaste. Ábrelas de nuevo al instante, sin volver a generarlas.",
+    "searchPlaceholder": "Busca en tus estudios por título, referencia o contenido...",
+    "loading": "Recuperando tus estudios...",
+    "empty": "Aún no has guardado ningún estudio. Cuando generes un estudio en el motor, aparecerá aquí para que puedas volver a él.",
+    "noMatch": "Ningún estudio coincide con tu búsqueda.",
+    "back": "Volver a la lista",
+    "savedNote": "Estudio guardado — se muestra tal cual lo generaste (no se regenera).",
+    "delete": "Quitar de mi historial",
+    "modeText": "Texto",
+    "modeConcept": "Concepto",
+    "modeLetter": "Letra"
   },
   "categories": {
     "Torah": "Torá",

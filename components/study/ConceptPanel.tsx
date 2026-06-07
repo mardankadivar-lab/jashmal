@@ -45,8 +45,8 @@ export default function ConceptPanel({
     setError(null);
     const body =
       target.kind === "letter"
-        ? { mode: "letter" as const, locale, letter: target.value }
-        : { mode: "concept" as const, locale, term: target.value };
+        ? { mode: "letter" as const, locale, letter: target.value, saveTitle: target.label }
+        : { mode: "concept" as const, locale, term: target.value, saveTitle: target.label };
     requestStudy(body)
       .then((res) => !cancelled && setStudy(res.study))
       .catch((err) => {

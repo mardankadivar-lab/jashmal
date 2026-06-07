@@ -1,6 +1,7 @@
 // Cliente del motor de estudio — lee la respuesta en streaming para que el
 // texto aparezca progresivamente (evita timeouts en Farsi y textos largos).
 import type { StudyMode } from "./anthropic";
+import { saveStudyHistory } from "./myStudies";
 
 export type StudyDepth = "quick" | "deep";
 
@@ -14,6 +15,7 @@ export interface StudyClientRequest {
   letter?: string;
   context?: string;    // "kabbalah" = modo cabalístico
   sefiraId?: string;  // id de la sefirá de origen
+  saveTitle?: string; // título legible para "Mis Estudios" (no se envía a la API)
 }
 
 export interface StudyResponse {
@@ -110,6 +112,18 @@ export async function requestStudy(
           ? body.term
           : body.ref;
     if (subject && study) {
+      // "Mis Estudios": guardar el estudio (localStorage siempre; servidor si
+      // hay sesión) para poder VOLVER a él sin regenerarlo. Nunca rompe el flujo.
+      try {
+        saveStudyHistory({
+          mode: body.mode,
+          ref: subject,
+          title: body.saveTitle || subject,
+          content: study,
+          lang: body.locale,
+        });
+      } catch { /* el historial nunca debe afectar al usuario */ }
+
       void fetch("/api/brain/harvest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

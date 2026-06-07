@@ -14,7 +14,8 @@
     "gematria": "Gematria",
     "brain": "Cosmic Mind",
     "community": "Community",
-    "atlas": "Atlas"
+    "atlas": "Atlas",
+    "myStudies": "My Studies"
   },
   "hero": {
     "kicker": "Kabbalah and Jewish philosophy",
@@ -63,7 +64,27 @@
     "nextChapter": "Next chapter",
     "kabbalahMode": "Kabbalistic mode",
     "sugText": "Text",
-    "sugTopic": "Topic"
+    "sugTopic": "Topic",
+    "sugHistory": "Already studied",
+    "sugNode": "Cosmic Mind",
+    "groupHistory": "My studies",
+    "groupBrain": "Cosmic Mind",
+    "groupTexts": "Texts & topics",
+    "studyThisConcept": "Study the concept: “{q}”"
+  },
+  "myStudies": {
+    "title": "My Studies",
+    "subtitle": "The teachings you have already studied return here. Reopen them instantly, without generating them again.",
+    "searchPlaceholder": "Search your studies by title, reference or content...",
+    "loading": "Retrieving your studies...",
+    "empty": "You haven't saved any study yet. When you generate a study in the engine, it will appear here so you can return to it.",
+    "noMatch": "No study matches your search.",
+    "back": "Back to the list",
+    "savedNote": "Saved study — shown exactly as you generated it (not regenerated).",
+    "delete": "Remove from my history",
+    "modeText": "Text",
+    "modeConcept": "Concept",
+    "modeLetter": "Letter"
   },
   "categories": {
     "Torah": "Torah",

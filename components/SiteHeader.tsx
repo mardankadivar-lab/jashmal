@@ -9,6 +9,7 @@ import ReadingControls from "./ReadingControls";
 
 const NAV: [string, string][] = [
   ["/estudio", "nav.study"],
+  ["/mis-estudios", "nav.myStudies"],
   ["/letras", "nav.letters"],
   ["/misterios", "nav.mysteries"],
   ["/gematrias", "nav.gematria"],

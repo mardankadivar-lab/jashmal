@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
+import { searchLocal, cidFor, type LocalStudy } from "@/lib/myStudies";
 import CategoryNav from "@/components/sefaria/CategoryNav";
 import BookBrowser from "@/components/sefaria/BookBrowser";
 import TextViewer from "@/components/sefaria/TextViewer";
@@ -20,9 +22,13 @@ import { requestStudy, StudyError } from "@/lib/studyClient";
 import { requestTranslation } from "@/lib/translateClient";
 import { getParashaHashavua, type ParashaInfo } from "@/lib/calendar";
 
+// Nodo de la Mente Cósmica para la búsqueda por concepto (subconjunto liviano).
+type NodeHit = { id: string; label: string; labelFa?: string; labelEn?: string; url?: string };
+
 export default function StudyEngine() {
   const locale = useLocale();
   const t = useTranslations("study");
+  const router = useRouter();
 
   const [category, setCategory] = useState<CategoryId | null>(null);
   const [book, setBook] = useState<CatBook | null>(null);
@@ -40,6 +46,12 @@ export default function StudyEngine() {
   // Autocompletado: sugerencias de Sefaria (refs, libros, temas, personas, lugares).
   const [suggestions, setSuggestions] = useState<NameSuggestion[]>([]);
   const [showSug, setShowSug] = useState(false);
+  // Búsqueda por concepto: historial del usuario + nodos de la Mente Cósmica.
+  const [historyHits, setHistoryHits] = useState<LocalStudy[]>([]);
+  const [nodeHits, setNodeHits] = useState<NodeHit[]>([]);
+  // Caché de los nodos de la Mente Cósmica (se baja una sola vez, al teclear).
+  const brainNodesRef = useRef<NodeHit[] | null>(null);
+  const brainLoadingRef = useRef(false);
 
   const [study, setStudy] = useState<string | null>(null);
   const [studyLoading, setStudyLoading] = useState(false);
@@ -234,19 +246,92 @@ export default function StudyEngine() {
     setShowSug(false);
   }
 
+  // Etiqueta de un nodo de la Mente Cósmica en el idioma activo (sin importar
+  // brainData.ts, que es pesado: la lógica es trivial y va inline aquí).
+  function nodeLabelLocal(n: NodeHit): string {
+    if (locale === "fa") return n.labelFa || n.label;
+    if (locale === "en") return n.labelEn || n.label;
+    return n.label;
+  }
+
+  // Baja los nodos de la Mente Cósmica una sola vez y los cachea. Si la BD no
+  // está, cae a la semilla estática que devuelve /api/brain — nunca vacía.
+  async function ensureBrainNodes(): Promise<NodeHit[]> {
+    if (brainNodesRef.current) return brainNodesRef.current;
+    if (brainLoadingRef.current) return [];
+    brainLoadingRef.current = true;
+    try {
+      const res = await fetch("/api/brain", { cache: "force-cache" });
+      const data = await res.json();
+      const nodes: NodeHit[] = Array.isArray(data?.nodes)
+        ? data.nodes.map((n: Record<string, unknown>) => ({
+            id: String(n.id),
+            label: String(n.label),
+            labelFa: n.labelFa ? String(n.labelFa) : undefined,
+            labelEn: n.labelEn ? String(n.labelEn) : undefined,
+            url: n.url ? String(n.url) : undefined,
+          }))
+        : [];
+      brainNodesRef.current = nodes;
+      return nodes;
+    } catch {
+      brainNodesRef.current = [];
+      return [];
+    } finally {
+      brainLoadingRef.current = false;
+    }
+  }
+
   // Buscar sugerencias mientras el usuario escribe (con debounce).
+  // Combina: (1) historial del usuario, (2) nodos de la Mente Cósmica,
+  // (3) textos/temas de Sefaria. El "estudiar este concepto" se añade al render.
   useEffect(() => {
     const q = search.trim();
-    if (q.length < 2) { setSuggestions([]); return; }
+    if (q.length < 2) {
+      setSuggestions([]);
+      setHistoryHits([]);
+      setNodeHits([]);
+      return;
+    }
+    // Historial: instantáneo (localStorage), sin esperar a la red.
+    setHistoryHits(searchLocal(q, 4));
+    setShowSug(true);
+
     let cancelled = false;
     const timer = setTimeout(async () => {
+      // Sefaria (textos y temas)
       try {
         const sug = await searchSuggestions(q);
         if (!cancelled) { setSuggestions(sug); setShowSug(true); }
       } catch { /* noop */ }
+      // Nodos de la Mente Cósmica
+      try {
+        const nodes = await ensureBrainNodes();
+        if (!cancelled) {
+          const needle = q.toLowerCase();
+          const hits = nodes
+            .filter((n) =>
+              n.label.toLowerCase().includes(needle) ||
+              (n.labelFa ?? "").toLowerCase().includes(needle) ||
+              (n.labelEn ?? "").toLowerCase().includes(needle))
+            .slice(0, 5);
+          setNodeHits(hits);
+        }
+      } catch { /* noop */ }
     }, 220);
     return () => { cancelled = true; clearTimeout(timer); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
+
+  // ¿Hay algún resultado de cualquier fuente? (para mostrar el dropdown)
+  const hasAnyHit =
+    suggestions.length > 0 || historyHits.length > 0 || nodeHits.length > 0 || search.trim().length >= 2;
+
+  // Abrir un estudio guardado del historial: va a Mis Estudios sin regenerar.
+  function openHistory(s: LocalStudy) {
+    setSearch(""); setSuggestions([]); setHistoryHits([]); setNodeHits([]); setShowSug(false);
+    router.push(`/mis-estudios?open=${encodeURIComponent(s.cid)}`);
+  }
 
   // Al elegir una sugerencia: texto → carga la ref; tema/persona/lugar → estudio de concepto.
   function pickSuggestion(s: NameSuggestion) {
@@ -354,7 +439,7 @@ export default function StudyEngine() {
               name="q"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              onFocus={() => suggestions.length > 0 && setShowSug(true)}
+              onFocus={() => hasAnyHit && setShowSug(true)}
               onBlur={() => setTimeout(() => setShowSug(false), 150)}
               placeholder={t("searchPlaceholder")}
               autoComplete="off"
@@ -363,24 +448,93 @@ export default function StudyEngine() {
               spellCheck={false}
               className="w-full rounded-md border border-gold/25 bg-white/[0.03] px-3 py-2 text-sm text-parchment placeholder:text-muted/70 focus:border-gold/60 focus:outline-none"
             />
-            {/* Dropdown de sugerencias */}
-            {showSug && suggestions.length > 0 && (
-              <ul className="absolute left-0 right-0 top-full z-30 mt-1 overflow-hidden rounded-md border border-gold/25 bg-ink/98 shadow-xl backdrop-blur-md">
-                {suggestions.map((s, i) => (
-                  <li key={i}>
+            {/* Dropdown de sugerencias — combina historial, Mente Cósmica,
+                textos de Sefaria y "estudiar este concepto" (nunca queda vacío). */}
+            {showSug && hasAnyHit && (
+              <div className="absolute left-0 right-0 top-full z-30 mt-1 max-h-[60vh] overflow-y-auto rounded-md border border-gold/25 bg-ink/98 shadow-xl backdrop-blur-md">
+                {/* Grupo 1 · Mis estudios (historial del usuario) */}
+                {historyHits.length > 0 && (
+                  <ul>
+                    <li className="px-3 pb-1 pt-2 font-cinzel text-[9px] uppercase tracking-widest text-gold/40">
+                      {t("groupHistory")}
+                    </li>
+                    {historyHits.map((s) => (
+                      <li key={`h-${s.cid}`}>
+                        <button
+                          type="button"
+                          onMouseDown={(e) => { e.preventDefault(); openHistory(s); }}
+                          className="flex w-full items-center justify-between gap-2 px-3 py-2 text-start text-sm text-parchment/90 transition-colors hover:bg-gold/10"
+                        >
+                          <span className="truncate">{s.title}</span>
+                          <span className="shrink-0 font-cinzel text-[9px] uppercase tracking-wider text-gold/55">
+                            {t("sugHistory")}
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* Grupo 2 · Mente Cósmica (nodos-concepto) */}
+                {nodeHits.length > 0 && (
+                  <ul className="border-t border-gold/10">
+                    <li className="px-3 pb-1 pt-2 font-cinzel text-[9px] uppercase tracking-widest text-gold/40">
+                      {t("groupBrain")}
+                    </li>
+                    {nodeHits.map((n) => (
+                      <li key={`n-${n.id}`}>
+                        <button
+                          type="button"
+                          onMouseDown={(e) => { e.preventDefault(); setSearch(""); setShowSug(false); openConcept(nodeLabelLocal(n)); }}
+                          className="flex w-full items-center justify-between gap-2 px-3 py-2 text-start text-sm text-parchment/90 transition-colors hover:bg-gold/10"
+                        >
+                          <span className="truncate">{nodeLabelLocal(n)}</span>
+                          <span className="shrink-0 font-cinzel text-[9px] uppercase tracking-wider text-gold/45">
+                            {t("sugNode")}
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* Grupo 3 · Textos y temas (Sefaria) */}
+                {suggestions.length > 0 && (
+                  <ul className="border-t border-gold/10">
+                    <li className="px-3 pb-1 pt-2 font-cinzel text-[9px] uppercase tracking-widest text-gold/40">
+                      {t("groupTexts")}
+                    </li>
+                    {suggestions.map((s, i) => (
+                      <li key={`s-${i}`}>
+                        <button
+                          type="button"
+                          onMouseDown={(e) => { e.preventDefault(); pickSuggestion(s); }}
+                          className="flex w-full items-center justify-between gap-2 px-3 py-2 text-start text-sm text-parchment/90 transition-colors hover:bg-gold/10"
+                        >
+                          <span className="truncate">{s.title}</span>
+                          <span className="shrink-0 font-cinzel text-[9px] uppercase tracking-wider text-gold/45">
+                            {s.kind === "ref" ? t("sugText") : t("sugTopic")}
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* Grupo 4 · Estudiar este concepto (siempre, para no quedar vacío) */}
+                {search.trim().length >= 2 && (
+                  <div className="border-t border-gold/15">
                     <button
                       type="button"
-                      onMouseDown={(e) => { e.preventDefault(); pickSuggestion(s); }}
-                      className="flex w-full items-center justify-between gap-2 px-3 py-2 text-start text-sm text-parchment/90 transition-colors hover:bg-gold/10"
+                      onMouseDown={(e) => { e.preventDefault(); const q = search.trim(); setSearch(""); setShowSug(false); openConcept(q); }}
+                      className="flex w-full items-center gap-2 px-3 py-2.5 text-start text-sm text-gold transition-colors hover:bg-gold/10"
                     >
-                      <span className="truncate">{s.title}</span>
-                      <span className="shrink-0 font-cinzel text-[9px] uppercase tracking-wider text-gold/45">
-                        {s.kind === "ref" ? t("sugText") : t("sugTopic")}
-                      </span>
+                      <span className="text-gold/60">✦</span>
+                      <span className="truncate">{t("studyThisConcept", { q: search.trim() })}</span>
                     </button>
-                  </li>
-                ))}
-              </ul>
+                  </div>
+                )}
+              </div>
             )}
           </div>
           <button
