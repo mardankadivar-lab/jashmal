@@ -40,6 +40,12 @@ const nextConfig: NextConfig = {
       { source: "/en/mente-cosmica", destination: "/en/cosmic-mind", permanent: true },
       { source: "/fa/mente-cosmica", destination: "/fa/cosmic-mind", permanent: true },
 
+      // Link corto para el CTA del video en inglés (TikTok/Instagram).
+      // jashmal.org/cosmic → la Mente Cósmica en inglés. Va en redirects()
+      // para disparar ANTES del middleware de next-intl (si no, /cosmic se
+      // convierte en /es/cosmic y da 404).
+      { source: "/cosmic", destination: "/en/cosmic-mind", permanent: true },
+
       { source: "/universo", destination: "/mente-cosmica", permanent: true },
       { source: "/es/universo", destination: "/es/mente-cosmica", permanent: true },
       { source: "/fa/universo", destination: "/fa/cosmic-mind", permanent: true },
