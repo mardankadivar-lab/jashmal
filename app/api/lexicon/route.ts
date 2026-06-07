@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type Anthropic from "@anthropic-ai/sdk";
-import { anthropic } from "@/lib/anthropic";
+import { anthropic, LIGHT_MODEL } from "@/lib/anthropic";
 import { getClassicLexicon, stripNiqud, LETTER_NAMES } from "@/lib/lexicon";
 import { wordToPaleo, depiction, type PaleoLetter } from "@/lib/paleo";
 import { checkRateLimit, clientIp } from "@/lib/rateLimit";
@@ -8,7 +8,7 @@ import { checkRateLimit, clientIp } from "@/lib/rateLimit";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const MYSTIC_MODEL = "claude-haiku-4-5-20251001";
+const MYSTIC_MODEL = LIGHT_MODEL;
 
 // Descripción enfática del idioma de salida. Para farsi insistimos en persa y
 // NO árabe, porque comparten alfabeto y el modelo a veces se desvía al árabe.

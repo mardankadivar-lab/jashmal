@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { anthropic } from "@/lib/anthropic";
+import { anthropic, LIGHT_MODEL } from "@/lib/anthropic";
 import { checkRateLimit, clientIp } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
-const MODEL = "claude-haiku-4-5-20251001";
+const MODEL = LIGHT_MODEL;
 
 const LANG: Record<string, string> = {
   es: "español",

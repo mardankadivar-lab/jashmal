@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
-import { anthropic } from "@/lib/anthropic";
+import { anthropic, LIGHT_MODEL } from "@/lib/anthropic";
 import { checkRateLimit, clientIp } from "@/lib/rateLimit";
 import { SEFIROT } from "@/lib/sefirot";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
-const HAIKU = "claude-haiku-4-5-20251001";
+// Sonnet: contenido cabalístico luriánico con citas exactas (Zóhar/Etz Jaim).
+// Salida corta; Sonnet da mejor rigor que Haiku sin el costo de Opus.
+const HAIKU = LIGHT_MODEL;
 
 const LANG: Record<string, string> = {
   es: "español",

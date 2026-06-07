@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
-import { anthropic } from "@/lib/anthropic";
+import { anthropic, LIGHT_MODEL } from "@/lib/anthropic";
 import { checkRateLimit, clientIp } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
-const MODEL = "claude-haiku-4-5-20251001";
+// Sonnet: métodos del Zóhar + gematría con fuentes exactas. Mejor rigor que
+// Haiku para no fabricar folios/cálculos, sin el costo de Opus.
+const MODEL = LIGHT_MODEL;
 
 const LANG: Record<string, string> = {
   es: "español",

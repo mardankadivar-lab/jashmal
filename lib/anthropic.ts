@@ -4,7 +4,14 @@ export const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+// ─── Enrutamiento de modelos (decidido en UN solo lugar) ─────────
+// STUDY_MODEL: Opus — la joya. Solo para el estudio profundo (PaRDeS) y
+//   el estudio de conceptos, que SÍ necesitan la profundidad de Opus.
+// LIGHT_MODEL: Sonnet — modelo ligero para todo lo demás (tutor, resúmenes,
+//   léxico, gematría, traducción, expansión del cerebro, heijalot, zohar).
+//   Mucho más barato que Opus sin perder calidad para esas tareas.
 export const STUDY_MODEL = "claude-opus-4-8";
+export const LIGHT_MODEL = "claude-sonnet-4-6";
 
 // ─── Prompt de estudio cabalístico (desde el Árbol de la Vida) ────
 // Se activa cuando el estudio viene de hacer clic en una referencia de una sefirá.
@@ -74,15 +81,16 @@ export type StudyMode = "text" | "letter" | "concept";
 // ─── Prompt de traducción al PERSA del texto fuente ──────────────
 // Para usuarios en farsi: el texto sagrado se muestra en hebreo original + persa
 // (en vez del inglés de Sefaria, que no entienden). Traducción FIEL, no interpretación.
-// Usa el mismo modelo del estudio (alias del proyecto). La salida es corta
-// (solo el array de traducciones), así que el costo y la latencia son bajos.
-export const TRANSLATE_MODEL = STUDY_MODEL;
+// Usa el modelo ligero (Sonnet): la salida es corta (solo el array de
+// traducciones) y no requiere la profundidad de Opus, así que el costo baja.
+export const TRANSLATE_MODEL = LIGHT_MODEL;
 
 // ─── Sofer investigador: expansión recursiva del cerebro ──────────
 // Dado un nodo (tema), un Sofer del dominio devuelve los conceptos / fuentes /
 // personajes / comentarios REALES conectados → el cerebro se abre en más capas.
 // Salida: SOLO JSON estricto (sin prosa). Cada item con su categoría y nivel.
-export const EXPAND_MODEL = STUDY_MODEL;
+// Tarea estructurada (JSON), no estudio profundo → modelo ligero (Sonnet).
+export const EXPAND_MODEL = LIGHT_MODEL;
 
 const SOFER_BY_CAT: Record<string, string> = {
   torah: "Sofer HaTanakh", tanakh: "Sofer HaTanakh",
