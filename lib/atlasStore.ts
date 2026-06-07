@@ -179,6 +179,18 @@ export async function setPlaceStatus(
   await sql`UPDATE atlas_places SET status = ${status}, updated_at = now() WHERE id = ${id}`;
 }
 
+// Borra del todo una localidad COSECHADA (nunca una semilla). A diferencia de
+// 'reject' (que la oculta), esto la elimina: si luego se estudia, se enciende
+// de nuevo desde cero. Útil para limpiar falsos positivos o pruebas.
+export async function deletePlace(id: string): Promise<number> {
+  const sql = getSql();
+  if (!sql) return 0;
+  const r = (await sql`
+    DELETE FROM atlas_places WHERE id = ${id} AND source IS DISTINCT FROM 'seed' RETURNING id
+  `) as unknown[];
+  return r.length;
+}
+
 export async function countHarvested(): Promise<number> {
   const sql = getSql();
   if (!sql) return 0;

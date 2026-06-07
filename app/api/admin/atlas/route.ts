@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured } from "@/lib/db";
-import { listHarvestedPlaces, setPlaceStatus } from "@/lib/atlasStore";
+import { listHarvestedPlaces, setPlaceStatus, deletePlace } from "@/lib/atlasStore";
 
 export const runtime = "nodejs";
 
@@ -24,8 +24,8 @@ export async function GET(req: Request) {
   return NextResponse.json({ configured: true, places });
 }
 
-// POST /api/admin/atlas { action:"approve"|"reject", id }
-// reject → oculta la localidad del Atlas; approve → la vuelve a encender.
+// POST /api/admin/atlas { action:"approve"|"reject"|"delete", id }
+//   approve → enciende · reject → oculta · delete → elimina (puede re-encenderse).
 export async function POST(req: Request) {
   if (!authorized(req)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -39,8 +39,15 @@ export async function POST(req: Request) {
   } catch {
     return NextResponse.json({ error: "invalid_body" }, { status: 400 });
   }
+  if (!body.id) {
+    return NextResponse.json({ error: "invalid_action" }, { status: 400 });
+  }
+  if (body.action === "delete") {
+    const n = await deletePlace(body.id);
+    return NextResponse.json({ ok: true, deleted: n });
+  }
   const status = body.action === "approve" ? "approved" : body.action === "reject" ? "rejected" : null;
-  if (!status || !body.id) {
+  if (!status) {
     return NextResponse.json({ error: "invalid_action" }, { status: 400 });
   }
   await setPlaceStatus(body.id, status);
