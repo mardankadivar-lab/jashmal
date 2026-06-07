@@ -21,6 +21,8 @@ import {
   BNODES,
   BEDGES,
   BRAIN_CATS,
+  nodeLabel,
+  catLabel,
   BRAIN_SCALE,
   GALAXY_CATS,
   GALAXY_DISK,
@@ -247,7 +249,7 @@ function StarField() {
 }
 
 // ── Nebulosa + núcleo + nombre de cada galaxia (disciplina) ───────────────
-function Nebulae({ isFa }: { isFa: boolean }) {
+function Nebulae({ locale }: { locale: string }) {
   const tex = useMemo(() => glowTexture(), []);
   return (
     <>
@@ -277,7 +279,7 @@ function Nebulae({ isFa }: { isFa: boolean }) {
                   opacity: 0.82,
                 }}
               >
-                {isFa ? BRAIN_CATS[cat]?.labelFa : BRAIN_CATS[cat]?.label}
+                {catLabel(cat, locale)}
               </div>
             </Html>
           </group>
@@ -499,7 +501,7 @@ function Synapse({
   intensity,
   showLabel,
   sizeBoost = 1,
-  isFa,
+  locale,
   onClick,
   onDouble,
   onHover,
@@ -509,7 +511,7 @@ function Synapse({
   intensity: number; // 0..1.4 — cuánto está "despierta"
   showLabel: boolean;
   sizeBoost?: number; // >1 → la sinapsis se agranda (vecino directo del foco)
-  isFa: boolean;
+  locale: string;
   onClick: (additive: boolean) => void;
   onDouble: () => void;
   onHover: (h: boolean) => void;
@@ -578,7 +580,7 @@ function Synapse({
               textShadow: "0 1px 3px #000, 0 0 6px #000, 0 0 11px #000, 0 0 2px #000",
             }}
           >
-            {isFa ? node.labelFa : node.label}
+            {nodeLabel(node, locale)}
           </div>
         </Html>
       )}
@@ -729,7 +731,7 @@ function FocusEdges({
   focusId,
   hotKey,
   nodeMap,
-  isFa,
+  locale,
   filterCat,
   onHover,
   onPick,
@@ -738,7 +740,7 @@ function FocusEdges({
   focusId: string;
   hotKey: string | null;
   nodeMap: Map<string, BNode>;
-  isFa: boolean;
+  locale: string;
   filterCat: string | null; // chip-filtro activo → solo aristas hacia esa disciplina
   onHover: (info: { key: string; toLabel: string; kind: "solid" | "interp" } | null) => void;
   onPick: (c: EdgeCurve) => void;
@@ -779,7 +781,7 @@ function FocusEdges({
             colB={colorOf(toN?.cat)}
             isHot={hotKey === key}
             onHover={(h) =>
-              onHover(h ? { key, toLabel: toN ? (isFa ? toN.labelFa : toN.label) : oriented.b, kind: oriented.kind } : null)
+              onHover(h ? { key, toLabel: toN ? nodeLabel(toN, locale) : oriented.b, kind: oriented.kind } : null)
             }
             onPick={() => onPick(oriented)}
           />
@@ -1142,7 +1144,7 @@ function BrainScene({
 
       {/* el universo: estrellas de fondo + nebulosas con nombre por galaxia */}
       <StarField />
-      <Nebulae isFa={isFa} />
+      <Nebulae locale={locale} />
 
       {/* La selección NUNCA se suelta al tocar el fondo, arrastrar, hacer zoom ni
           al fallar un clic cerca de un nodo. Solo se cierra con acciones explícitas:
@@ -1168,7 +1170,7 @@ function BrainScene({
             focusId={focusId}
             hotKey={hotEdge}
             nodeMap={nodeMap}
-            isFa={isFa}
+            locale={locale}
             filterCat={selected ? filterCat : null}
             onHover={(info) => { setHotEdge(info?.key ?? null); onEdgeHint(info ? { toLabel: info.toLabel, kind: info.kind } : null); }}
             onPick={(c) => onPickEdge(c.a, c.b, c.pts)}
@@ -1199,7 +1201,7 @@ function BrainScene({
               intensity={intensityOf(n)}
               showLabel={showLabelOf(n)}
               sizeBoost={boostOf(n)}
-              isFa={isFa}
+              locale={locale}
               onClick={(additive) => onSelect(n.id, additive)}
               onDouble={() => onDouble(n)}
               onHover={(h) => onHover(h ? n.id : null)}
@@ -1302,12 +1304,12 @@ export default function GrafoPage() {
     const rootNode = graph.nodes.find((n) => n.id === gilgulRoot);
     return {
       root: gilgulRoot,
-      label: rootNode ? (isFa ? rootNode.labelFa : rootNode.label) : gilgulRoot,
+      label: rootNode ? nodeLabel(rootNode, locale) : gilgulRoot,
       source: chain?.source ?? "Sha'ar HaGilgulim",
       vessels: Math.max(0, reach.size - 1), // vasijas además de la raíz
       provisional: chain?.provisional ?? false,
     };
-  }, [gilgulRoot, graph.nodes, isFa]);
+  }, [gilgulRoot, graph.nodes, locale]);
 
   // huella de conexiones del nodo seleccionado: total + desglose por dominio
   const selConnections = useMemo(() => {
@@ -1349,7 +1351,7 @@ export default function GrafoPage() {
   const norm = (s: string) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
   // término ACTUAL = lo escrito después del último "+" → sugerencias para mezclas
   const currentTerm = searchQ.split("+").pop() ?? "";
-  type Sugg = { key: string; label: string; labelFa: string; cat: string; kind: "node" | "cat" | "gilgul" };
+  type Sugg = { key: string; label: string; labelFa?: string; labelEn?: string; cat: string; kind: "node" | "cat" | "gilgul" };
   // raíces de alma conocidas (ids) → para ofrecer "+ Gilgul" cuando aplica
   const gilgulRootIds = useMemo(() => new Set(getGilgulModel().byRoot.keys()), []);
   // Sugerencias del término actual: galaxias (disciplinas) + conceptos (nodos).
@@ -1359,18 +1361,18 @@ export default function GrafoPage() {
     const cats: Sugg[] = Object.entries(BRAIN_CATS)
       .filter(([k, v]) => k !== "torah" && k !== "jashmal" && (norm(k).includes(q) || norm(v.label).includes(q)))
       .slice(0, 3)
-      .map(([k, v]) => ({ key: k, label: v.label, labelFa: v.labelFa, cat: k, kind: "cat" }));
+      .map(([k, v]) => ({ key: k, label: v.label, labelFa: v.labelFa, labelEn: v.labelEn, cat: k, kind: "cat" }));
     const matched = graph.nodes
       .filter((n) => norm(n.label).includes(q) || norm(n.id).includes(q) || (n.labelFa ?? "").includes(currentTerm.trim()))
       .sort((a, b) => norm(a.label).indexOf(q) - norm(b.label).indexOf(q));
     const nodes: Sugg[] = matched
       .slice(0, 7)
-      .map((n) => ({ key: n.id, label: n.label, labelFa: n.labelFa, cat: n.cat, kind: "node" }));
+      .map((n) => ({ key: n.id, label: n.label, labelFa: n.labelFa, labelEn: n.labelEn, cat: n.cat, kind: "node" }));
     // si NO hay "+" todavía y el primer nodo es una raíz de alma → ofrece "+ Gilgul"
     const gilguls: Sugg[] = [];
     if (!searchQ.includes("+")) {
       const rootHit = matched.find((n) => gilgulRootIds.has(n.id));
-      if (rootHit) gilguls.push({ key: rootHit.id, label: rootHit.label, labelFa: rootHit.labelFa, cat: rootHit.cat, kind: "gilgul" });
+      if (rootHit) gilguls.push({ key: rootHit.id, label: rootHit.label, labelFa: rootHit.labelFa, labelEn: rootHit.labelEn, cat: rootHit.cat, kind: "gilgul" });
     }
     return [...gilguls, ...cats, ...nodes].slice(0, 8);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1584,7 +1586,7 @@ export default function GrafoPage() {
   }, [compare, graph.edges]);
   const labelOf = (id: string) => {
     const n = graph.nodes.find((x) => x.id === id);
-    return n ? (isFa ? n.labelFa : n.label) : id;
+    return n ? nodeLabel(n, locale) : id;
   };
 
   // destinos del chip-filtro: vecinos del nodo en foco que pertenecen a la disciplina
@@ -1595,20 +1597,20 @@ export default function GrafoPage() {
     const out: { id: string; label: string; cat: string }[] = [];
     for (const id of nbrs) {
       const n = graph.nodes.find((x) => x.id === id);
-      if (n && n.cat === filterCat) out.push({ id, label: isFa ? n.labelFa : n.label, cat: n.cat });
+      if (n && n.cat === filterCat) out.push({ id, label: nodeLabel(n, locale), cat: n.cat });
     }
     out.sort((a, b) => a.label.localeCompare(b.label));
     return out;
-  }, [selected, filterCat, graph.edges, graph.nodes, isFa]);
+  }, [selected, filterCat, graph.edges, graph.nodes, locale]);
 
   // migaja: el camino recorrido (ids del historial → etiquetas localizadas)
   const breadcrumb = useMemo(
     () =>
       history.stack.map((id) => {
         const n = graph.nodes.find((x) => x.id === id);
-        return { id, label: n ? (isFa ? n.labelFa : n.label) : id };
+        return { id, label: n ? nodeLabel(n, locale) : id };
       }),
-    [history.stack, graph.nodes, isFa],
+    [history.stack, graph.nodes, locale],
   );
 
   // Expansión recursiva: el Sofer del dominio investiga el nodo → el cerebro crece.
@@ -1721,14 +1723,11 @@ export default function GrafoPage() {
               }}
             />
             <span className="truncate font-cinzel text-sm text-parchment">
-              {isFa ? hovNode.labelFa : hovNode.label}
+              {nodeLabel(hovNode, locale)}
             </span>
           </div>
           <p className="mt-0.5 ps-[18px] text-[10px] uppercase tracking-wide text-muted/60">
-            {(() => {
-              const c = hovNode.cat === "torah" ? "tanakh" : hovNode.cat;
-              return (isFa ? BRAIN_CATS[c]?.labelFa : BRAIN_CATS[c]?.label) ?? c;
-            })()}
+            {catLabel(hovNode.cat === "torah" ? "tanakh" : hovNode.cat, locale)}
           </p>
         </div>
       )}
@@ -1778,7 +1777,7 @@ export default function GrafoPage() {
                       >
                         <span className="text-sm leading-none" style={{ filter: "drop-shadow(0 0 6px #ffd66b)" }}>✦</span>
                         <span className="truncate text-sm text-gold">
-                          {isFa ? `${s.labelFa} + گیلگول` : `${s.label} + Gilgul`}
+                          {`${nodeLabel(s, locale)} + ${isFa ? "گیلگول" : "Gilgul"}`}
                         </span>
                         <span className="ms-auto shrink-0 text-[10px] uppercase tracking-wide text-gold/55">
                           {isFa ? "تبارِ روح" : locale === "en" ? "soul lineage" : "linaje de alma"}
@@ -1794,9 +1793,9 @@ export default function GrafoPage() {
                       className="flex w-full items-center gap-2 px-4 py-2 text-start transition-colors hover:bg-gold/10"
                     >
                       <span className="inline-block h-2 w-2 shrink-0 rounded-full" style={{ background: c, boxShadow: `0 0 6px ${c}` }} />
-                      <span className="truncate text-sm text-[#e8e4d8]">{isFa ? s.labelFa : s.label}</span>
+                      <span className="truncate text-sm text-[#e8e4d8]">{nodeLabel(s, locale)}</span>
                       <span className="ms-auto shrink-0 text-[10px] uppercase tracking-wide text-muted/40">
-                        {s.kind === "cat" ? (isFa ? "کهکشان" : "galaxia") : (BRAIN_CATS[disc]?.label ?? "")}
+                        {s.kind === "cat" ? (isFa ? "کهکشان" : locale === "en" ? "galaxy" : "galaxia") : catLabel(disc, locale)}
                       </span>
                     </button>
                   </li>

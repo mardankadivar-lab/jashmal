@@ -18,8 +18,9 @@
 
 export type BNode = {
   id: string;
-  label: string;
-  labelFa: string;
+  label: string;     // español (canónico — base para búsqueda y fallback)
+  labelFa?: string;  // farsi (opcional; si falta cae al español)
+  labelEn?: string;  // inglés (opcional; lo completa el Sofer en Fase 2)
   cat: string;     // clave de BRAIN_CATS
   level: 0 | 1 | 2 | 3 | 4;
   url?: string;    // atajo real del sitio (solo donde existe)
@@ -28,22 +29,41 @@ export type BNode = {
 };
 
 // ─── Paleta de categorías (color = LUZ; permanente, nunca cambia al tocar) ──
-export const BRAIN_CATS: Record<string, { c: string; label: string; labelFa: string }> = {
-  torah:      { c: "#e8b923", label: "Torá",      labelFa: "تورات" },   // oro profundo
-  tanakh:     { c: "#f0d878", label: "Tanaj",     labelFa: "تنخ" },     // oro claro
-  mishnah:    { c: "#3f7bff", label: "Mishná",    labelFa: "میشنا" },   // azul eléctrico
-  talmud:     { c: "#e0a93f", label: "Talmud",    labelFa: "تلمود" },   // ámbar cálido
-  midrash:    { c: "#9b6cff", label: "Midrash",   labelFa: "میدراش" },  // violeta
-  kabbalah:   { c: "#1fd8e0", label: "Cabalá",    labelFa: "کابالا" },  // cian eléctrico
-  chasidut:   { c: "#9ad6a0", label: "Jasidut",   labelFa: "حسیدوت" },  // verde cálido
-  halakhah:   { c: "#cfe0ff", label: "Halajá",    labelFa: "هلاخا" },   // blanco-azul
-  philosophy: { c: "#7fd488", label: "Filosofía", labelFa: "فلسفه" },   // verde suave
-  science:    { c: "#a8c4e8", label: "Ciencia",   labelFa: "علم" },     // plata-azul
-  figure:     { c: "#e0795c", label: "Personajes", labelFa: "شخصیت‌ها" }, // personajes bíblicos (terracota)
-  tema:       { c: "#c98bd6", label: "Temas",     labelFa: "موضوعات" },   // dominios temáticos (lavanda)
-  jashmal:    { c: "#f4cf5a", label: "Jashmal",   labelFa: "خَשمَل" },  // contenido propio (oro)
-  comunidad:  { c: "#e08aa8", label: "Comunidad", labelFa: "جامعه" },   // jidushim de estudiantes (rosa)
+export const BRAIN_CATS: Record<string, { c: string; label: string; labelFa?: string; labelEn?: string }> = {
+  torah:      { c: "#e8b923", label: "Torá",      labelFa: "تورات", labelEn: "Torah" },   // oro profundo
+  tanakh:     { c: "#f0d878", label: "Tanaj",     labelFa: "تنخ", labelEn: "Tanakh" },     // oro claro
+  mishnah:    { c: "#3f7bff", label: "Mishná",    labelFa: "میشنا", labelEn: "Mishnah" },   // azul eléctrico
+  talmud:     { c: "#e0a93f", label: "Talmud",    labelFa: "تلمود", labelEn: "Talmud" },   // ámbar cálido
+  midrash:    { c: "#9b6cff", label: "Midrash",   labelFa: "میدراش", labelEn: "Midrash" },  // violeta
+  kabbalah:   { c: "#1fd8e0", label: "Cabalá",    labelFa: "کابالا", labelEn: "Kabbalah" },  // cian eléctrico
+  chasidut:   { c: "#9ad6a0", label: "Jasidut",   labelFa: "حسیدوت", labelEn: "Chasidut" },  // verde cálido
+  halakhah:   { c: "#cfe0ff", label: "Halajá",    labelFa: "هلاخا", labelEn: "Halakhah" },   // blanco-azul
+  philosophy: { c: "#7fd488", label: "Filosofía", labelFa: "فلسفه", labelEn: "Philosophy" },   // verde suave
+  science:    { c: "#a8c4e8", label: "Ciencia",   labelFa: "علم", labelEn: "Science" },     // plata-azul
+  figure:     { c: "#e0795c", label: "Personajes", labelFa: "شخصیت‌ها", labelEn: "Characters" }, // personajes bíblicos (terracota)
+  tema:       { c: "#c98bd6", label: "Temas",     labelFa: "موضوعات", labelEn: "Topics" },   // dominios temáticos (lavanda)
+  jashmal:    { c: "#f4cf5a", label: "Jashmal",   labelFa: "خَشمَل", labelEn: "Jashmal" },  // contenido propio (oro)
+  comunidad:  { c: "#e08aa8", label: "Comunidad", labelFa: "جامعه", labelEn: "Community" },   // jidushim de estudiantes (rosa)
 };
+
+// ─── Resolución de etiqueta TRILINGÜE (es/fa/en) — el mecanismo del Universo ──
+// Fallback SIEMPRE al español: si falta la traducción (p.ej. un nodo aún sin
+// labelEn que el Sofer llenará en Fase 2), cae a `label` y nunca muestra vacío.
+export function nodeLabel(
+  n: { label: string; labelFa?: string; labelEn?: string },
+  locale: string,
+): string {
+  if (locale === "fa") return n.labelFa || n.label;
+  if (locale === "en") return n.labelEn || n.label;
+  return n.label;
+}
+export function catLabel(catKey: string, locale: string): string {
+  const c = BRAIN_CATS[catKey];
+  if (!c) return catKey;
+  if (locale === "fa") return c.labelFa || c.label;
+  if (locale === "en") return c.labelEn || c.label;
+  return c.label;
+}
 
 // ─── Estudio: 42 estaciones (Mas'ei) · Nombre de 42 · Ana BeKoaj ──────────
 // Verificado por el Sofer (editor-erudito). Cada arista marcada SÓLIDA (fuente

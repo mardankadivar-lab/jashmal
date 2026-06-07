@@ -65,7 +65,7 @@ export async function seedBrain(): Promise<{ nodes: number; edges: number }> {
   // ── Nodos: una sola consulta con unnest (rápido, sin riesgo de timeout) ──
   const ids = BNODES.map((n) => n.id);
   const labels = BNODES.map((n) => n.label);
-  const labelFas = BNODES.map((n) => n.labelFa);
+  const labelFas = BNODES.map((n) => n.labelFa ?? n.label); // labelFa es opcional → cae al español
   const cats = BNODES.map((n) => n.cat);
   const levels = BNODES.map((n) => n.level);
   const urls = BNODES.map((n) => n.url ?? null);

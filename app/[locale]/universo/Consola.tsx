@@ -14,9 +14,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@/i18n/navigation";
-import { BRAIN_CATS, type BNode } from "@/lib/brainData";
+import { BRAIN_CATS, catLabel, nodeLabel, type BNode } from "@/lib/brainData";
 
-type Cat = { c: string; label: string; labelFa: string };
+type Cat = { c: string; label: string; labelFa?: string; labelEn?: string };
 
 export type ConsolaProps = {
   isFa: boolean;
@@ -149,13 +149,7 @@ export default function Consola(props: ConsolaProps) {
   const rowPad = isMobile ? "py-2.5" : "py-1";
 
   const catColor = selNode ? BRAIN_CATS[selNode.cat]?.c ?? "#c9a43e" : "#c9a43e";
-  const catLabel = (cat: string) => (isFa ? BRAIN_CATS[cat]?.labelFa : BRAIN_CATS[cat]?.label) ?? cat;
-  const discLabel = selNode
-    ? (() => {
-        const c = selNode.cat === "torah" ? "tanakh" : selNode.cat;
-        return (isFa ? BRAIN_CATS[c]?.labelFa : BRAIN_CATS[c]?.label) ?? selNode.cat;
-      })()
-    : "";
+  const discLabel = selNode ? catLabel(selNode.cat === "torah" ? "tanakh" : selNode.cat, locale) : "";
 
   // ── línea de "peek" (lo que se ve con la hoja colapsada) ──
   const peekLine = (() => {
@@ -177,7 +171,7 @@ export default function Consola(props: ConsolaProps) {
         <span className="flex items-center gap-2 text-sm">
           <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: catColor, boxShadow: `0 0 8px ${catColor}` }} />
           <span className="truncate font-cinzel" style={{ color: catColor }}>
-            {isFa ? selNode!.labelFa : selNode!.label}
+            {nodeLabel(selNode!, locale)}
           </span>
         </span>
       );
@@ -215,7 +209,7 @@ export default function Consola(props: ConsolaProps) {
               className={`flex items-center gap-2 rounded-md px-2 ${rowPad} text-start transition-colors ${on ? "bg-gold/15" : "hover:bg-gold/10"}`}
             >
               <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: v.c, boxShadow: `0 0 8px ${v.c}` }} />
-              <span className={`text-[13px] leading-tight ${on ? "font-medium text-parchment" : "text-muted/85"}`}>{isFa ? v.labelFa : v.label}</span>
+              <span className={`text-[13px] leading-tight ${on ? "font-medium text-parchment" : "text-muted/85"}`}>{nodeLabel(v, locale)}</span>
             </button>
           );
         })}
@@ -244,7 +238,7 @@ export default function Consola(props: ConsolaProps) {
           <div className="flex items-center gap-2">
             <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: catColor, boxShadow: `0 0 8px ${catColor}` }} />
             <p className="truncate font-cinzel text-base" style={{ color: catColor }}>
-              {isFa ? selNode.labelFa : selNode.label}
+              {nodeLabel(selNode, locale)}
             </p>
           </div>
           <p className="mt-0.5 ps-[18px] text-[10px] uppercase tracking-wide text-muted/50">{discLabel}</p>
@@ -283,7 +277,7 @@ export default function Consola(props: ConsolaProps) {
         <div className="mt-2.5 border-t border-gold/10 pt-2.5">
           <p className="mb-1 text-[11px] text-parchment/80">
             <span className="font-cinzel text-sm text-gold">{selConnections.total}</span>{" "}
-            {isFa ? "اتصال" : selConnections.total === 1 ? "conexión" : "conexiones"}
+            {isFa ? "اتصال" : locale === "en" ? (selConnections.total === 1 ? "connection" : "connections") : selConnections.total === 1 ? "conexión" : "conexiones"}
           </p>
           {(selConnections.solid > 0 || selConnections.interp > 0) && (
             <p
@@ -315,7 +309,7 @@ export default function Consola(props: ConsolaProps) {
                   }}
                 >
                   <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: cc }} />
-                  {catLabel(cat)} <span className="opacity-70">{n}</span>
+                  {catLabel(cat, locale)} <span className="opacity-70">{n}</span>
                 </button>
               );
             })}
@@ -325,7 +319,7 @@ export default function Consola(props: ConsolaProps) {
           {filterCat && (
             <div className="mt-2.5 rounded-lg border border-gold/15 bg-gold/[0.04] p-2">
               <p className="mb-1.5 text-[10px] text-parchment/70">
-                {tri("Viajar a", "سفر به", "Travel to")} <span style={{ color: filterColor }}>{catLabel(filterCat)}</span>:
+                {tri("Viajar a", "سفر به", "Travel to")} <span style={{ color: filterColor }}>{catLabel(filterCat, locale)}</span>:
               </p>
               {destinations.length === 0 ? (
                 <p className="text-[11px] italic text-muted/50">—</p>

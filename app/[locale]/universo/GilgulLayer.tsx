@@ -30,7 +30,7 @@ import {
   GILGUL_CONFIDENCE_COLOR,
   type GilgulLink,
 } from "@/lib/gilgul";
-import { BRAIN_SCALE, type BNode } from "@/lib/brainData";
+import { BRAIN_SCALE, nodeLabel, type BNode } from "@/lib/brainData";
 import type { GilgulHint } from "./GilgulTooltip";
 
 type Vec3 = [number, number, number];
@@ -430,7 +430,7 @@ export default function GilgulLayer({
   const labelOf = (id: string) => {
     const n = nodeMap.get(id);
     if (!n) return id;
-    return lang === "fa" ? n.labelFa : n.label;
+    return nodeLabel(n, lang);
   };
 
   return (
