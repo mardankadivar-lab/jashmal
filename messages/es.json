@@ -257,5 +257,37 @@
       "title": "Comienza tu estudio",
       "desc": "Eso es todo. Escribe una referencia o elige una categoría y presiona <em>Estudiar</em>. Si alguna vez quieres volver a ver este recorrido, toca el botón <strong>?</strong> en la esquina inferior."
     }
+  },
+  "letra": {
+    "back": "Las letras",
+    "scroll": "Desliza para revelar",
+    "name": "Nombre",
+    "nameHe": "שֵׁם",
+    "form": "Forma",
+    "formHe": "צוּרָה",
+    "number": "Número",
+    "numberHe": "מִסְפָּר",
+    "worlds": "Mundos",
+    "worldsHe": "עוֹלָמוֹת",
+    "souls": "Almas",
+    "soulsHe": "נְשָׁמוֹת",
+    "divinity": "Divinidad",
+    "divinityHe": "אֱלֹהוּת",
+    "map": "Mapa de conocimiento",
+    "mapHe": "מַפָּה",
+    "mapHint": "La letra como nodo multidimensional.",
+    "connections": "Conexiones",
+    "connectionsHe": "קְשָׁרִים",
+    "connectionsHint": "Senderos luminosos hacia el Universo del estudio.",
+    "value": "Valor",
+    "sources": "Fuentes",
+    "openStudy": "Abrir en el Universo",
+    "disc": {
+      "tanaj": "Tanaj",
+      "talmud": "Talmud",
+      "midrash": "Midrash",
+      "cabala": "Cabalá",
+      "jasidut": "Jasidut"
+    }
   }
 }

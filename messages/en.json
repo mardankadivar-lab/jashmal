@@ -257,5 +257,37 @@
       "title": "Begin your study",
       "desc": "That's it. Type a reference or pick a category and press <em>Study</em>. Whenever you want to see this tour again, tap the <strong>?</strong> button in the corner."
     }
+  },
+  "letra": {
+    "back": "The letters",
+    "scroll": "Scroll to reveal",
+    "name": "Name",
+    "nameHe": "שֵׁם",
+    "form": "Form",
+    "formHe": "צוּרָה",
+    "number": "Number",
+    "numberHe": "מִסְפָּר",
+    "worlds": "Worlds",
+    "worldsHe": "עוֹלָמוֹת",
+    "souls": "Souls",
+    "soulsHe": "נְשָׁמוֹת",
+    "divinity": "Divinity",
+    "divinityHe": "אֱלֹהוּת",
+    "map": "Knowledge map",
+    "mapHe": "מַפָּה",
+    "mapHint": "The letter as a multidimensional node.",
+    "connections": "Connections",
+    "connectionsHe": "קְשָׁרִים",
+    "connectionsHint": "Luminous paths into the study Universe.",
+    "value": "Value",
+    "sources": "Sources",
+    "openStudy": "Open in the Universe",
+    "disc": {
+      "tanaj": "Tanakh",
+      "talmud": "Talmud",
+      "midrash": "Midrash",
+      "cabala": "Kabbalah",
+      "jasidut": "Chasidut"
+    }
   }
 }
