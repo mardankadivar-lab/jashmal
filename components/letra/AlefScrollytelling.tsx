@@ -278,7 +278,7 @@ export default function AlefScrollytelling() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_44%,rgba(201,164,62,0.18),transparent_46%)]" />
 
         <svg
-          className="relative z-10 h-[min(74vh,760px)] w-[min(88vw,760px)] overflow-visible"
+          className="relative z-10 h-[min(44vh,430px)] w-[min(56vw,430px)] overflow-visible"
           viewBox="0 0 1254 1254"
           role="img"
           aria-label="A pinned scrollytelling revelation of the Hebrew letter Alef"
