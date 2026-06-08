@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -79,6 +80,12 @@ export default function AlefScrollytelling() {
         window.history.scrollRestoration = previousScrollRestoration;
       };
     }
+
+    const lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
+    lenis.on("scroll", ScrollTrigger.update);
+    const lenisRaf = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(lenisRaf);
+    gsap.ticker.lagSmoothing(0);
 
     const ctx = gsap.context(() => {
       gsap.set(["#labelUpperYud", "#labelLowerYud", "#labelVav", "#numberEquation"], {
@@ -265,6 +272,8 @@ export default function AlefScrollytelling() {
 
     return () => {
       ctx.revert();
+      gsap.ticker.remove(lenisRaf);
+      lenis.destroy();
       document.documentElement.style.backgroundColor = htmlBackground;
       document.body.style.backgroundColor = bodyBackground;
       document.body.style.overflowX = bodyOverflowX;
