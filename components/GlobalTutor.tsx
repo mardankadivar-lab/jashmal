@@ -19,6 +19,7 @@ function selfMountsTutor(seg: string): boolean {
     seg === "misterio" ||
     seg === "misterios" ||
     seg === "gematrias" ||
+    seg === "alef" ||
     seg === "admin"
   );
 }
