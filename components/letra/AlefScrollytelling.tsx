@@ -416,6 +416,7 @@ export default function AlefScrollytelling() {
             10 + 10 + 6 = 26
           </text>
 
+          <g transform="translate(628 1086) scale(1.7) translate(-628 -1086)">
           <g
             id="divineName"
             opacity="0"
@@ -459,6 +460,7 @@ export default function AlefScrollytelling() {
           >
             10 + 5 + 6 + 5 = 26
           </text>
+          </g>
         </svg>
 
         <div
