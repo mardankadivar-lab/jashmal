@@ -551,13 +551,15 @@ export default function AlefScrollytelling() {
 
         <section
           id="sceneName"
-          className="teachingScene pointer-events-none absolute left-1/2 top-[9vh] z-30 w-[min(43rem,88vw)] -translate-x-1/2 text-center"
+          className="teachingScene pointer-events-none absolute inset-x-0 top-0 z-30 flex h-full flex-col items-center justify-between py-[7vh] text-center"
         >
+          <div className="px-4">
           <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Nombre · אלף</p>
           <h2 className="teachingLine mt-3 font-cinzel text-2xl font-light tracking-[0.08em] text-white sm:text-3xl">
             Lo callado se vuelve palabra
           </h2>
-          <div className="mt-5 grid gap-3 text-sm leading-6 text-white/70 sm:grid-cols-4">
+          </div>
+          <div className="grid w-[min(43rem,90vw)] gap-3 px-4 text-sm leading-6 text-white/70 sm:grid-cols-4">
             <p className="teachingPill"><span className="font-cinzel text-[#d8ad4f]">Aluf</span><br />Soberano y maestro.</p>
             <p className="teachingPill"><span className="font-cinzel text-[#d8ad4f]">Élef</span><br />El Uno contiene el mil.</p>
             <p className="teachingPill"><span className="font-cinzel text-[#d8ad4f]">Le'alef</span><br />Ser primero es enseñar.</p>
@@ -567,13 +569,15 @@ export default function AlefScrollytelling() {
 
         <section
           id="sceneMilui"
-          className="teachingScene pointer-events-none absolute bottom-[8vh] left-1/2 z-30 w-[min(42rem,88vw)] -translate-x-1/2 text-center"
+          className="teachingScene pointer-events-none absolute inset-x-0 top-0 z-30 flex h-full flex-col items-center justify-between py-[7vh] text-center"
         >
+          <div className="px-4">
           <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Milui · א ל ף</p>
           <p className="teachingLine mx-auto mt-3 max-w-xl text-sm leading-6 text-white/68">
             Álef, Lámed, Pe: lo Uno oculto se eleva, enseña y finalmente se revela en la boca.
           </p>
-          <div className="mt-5 grid gap-2 sm:grid-cols-3">
+          </div>
+          <div className="grid w-[min(42rem,90vw)] gap-2 px-4 sm:grid-cols-3">
             {worldSoulDivinity.map(([label, text]) => (
               <p key={label} className="teachingPill text-xs leading-5 text-white/58">
                 <span className="font-cinzel text-[#d8ad4f]">{label}</span> · {text}
@@ -584,8 +588,9 @@ export default function AlefScrollytelling() {
 
         <section
           id="sceneConnections"
-          className="teachingScene pointer-events-none absolute left-1/2 top-[12vh] z-30 w-[min(40rem,86vw)] -translate-x-1/2 text-center"
+          className="teachingScene pointer-events-none absolute inset-x-0 top-0 z-30 flex h-full flex-col items-center justify-between py-[7vh] text-center"
         >
+          <div className="px-4">
           <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">
             Senderos al universo
           </p>
@@ -595,7 +600,9 @@ export default function AlefScrollytelling() {
           <p className="teachingLine mx-auto mt-4 max-w-lg text-sm leading-6 text-white/68">
             Tanaj, Talmud, Midrash, Cabalá y Jasidut regresan al mismo centro: el Álef de Anojí, la raíz muda de toda Torá.
           </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-3">
+          </div>
+          <div className="w-[min(40rem,90vw)] px-4">
+          <div className="flex flex-wrap justify-center gap-x-5 gap-y-3">
             {connections.map(([label, source]) => (
               <span key={label} className="teachingPill text-center">
                 <span className="block font-cinzel text-[0.68rem] uppercase tracking-[0.18em] text-white/55">
@@ -610,6 +617,7 @@ export default function AlefScrollytelling() {
           <p className="teachingLine mx-auto mt-6 max-w-lg text-[0.68rem] leading-5 text-white/34">
             Ginsburgh · Séfer Yetzirá · Zóhar · Shabat 104a · Génesis 1:6-7 · Job 33:33
           </p>
+          </div>
         </section>
 
       </div>
