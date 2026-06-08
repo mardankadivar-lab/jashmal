@@ -519,7 +519,7 @@ export default function AlefScrollytelling() {
           </p>
           <div className="mt-5 grid gap-2 max-sm:hidden">
             {formWorldSoulDivinity.map(([label, text]) => (
-              <p key={label} className="teachingPill border-t border-white/12 pt-2 text-xs leading-5 text-white/62">
+              <p key={label} className="teachingPill text-xs leading-5 text-white/62">
                 <span className="font-cinzel text-[#d8ad4f]">{label}</span> · {text}
               </p>
             ))}
@@ -542,7 +542,7 @@ export default function AlefScrollytelling() {
           </p>
           <div className="mt-5 grid gap-2 max-sm:hidden">
             {numberWorldSoulDivinity.map(([label, text]) => (
-              <p key={label} className="teachingPill border-t border-white/12 pt-2 text-xs leading-5 text-white/62">
+              <p key={label} className="teachingPill text-xs leading-5 text-white/62">
                 <span className="font-cinzel text-[#d8ad4f]">{label}</span> · {text}
               </p>
             ))}
@@ -569,20 +569,26 @@ export default function AlefScrollytelling() {
 
         <section
           id="sceneMilui"
-          className="teachingScene pointer-events-none absolute inset-x-0 top-0 z-30 flex h-full flex-col items-center justify-between py-[7vh] text-center"
+          className="teachingScene pointer-events-none absolute inset-0 z-30"
         >
-          <div className="px-4">
-          <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Milui · א ל ף</p>
-          <p className="teachingLine mx-auto mt-3 max-w-xl text-sm leading-6 text-white/68">
-            Álef, Lámed, Pe: lo Uno oculto se eleva, enseña y finalmente se revela en la boca.
-          </p>
+          {/* título arriba del todo */}
+          <div className="absolute left-1/2 top-[6vh] w-[min(34rem,88vw)] -translate-x-1/2 px-4 text-center">
+            <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Milui · א ל ף</p>
+            <p className="teachingLine mx-auto mt-2 max-w-xl text-sm leading-6 text-white/68">
+              Álef, Lámed, Pe: lo Uno oculto se eleva, enseña y se revela en la boca.
+            </p>
           </div>
-          <div className="grid w-[min(42rem,90vw)] gap-2 px-4 sm:grid-cols-3">
-            {worldSoulDivinity.map(([label, text]) => (
-              <p key={label} className="teachingPill text-xs leading-5 text-white/58">
-                <span className="font-cinzel text-[#d8ad4f]">{label}</span> · {text}
-              </p>
-            ))}
+          {/* Divinidad — arriba (lo más alto) */}
+          <div className="absolute left-1/2 top-[21vh] w-[min(22rem,82vw)] -translate-x-1/2 px-4 text-center">
+            <p className="teachingPill text-xs leading-5 text-white/66"><span className="font-cinzel text-[#d8ad4f]">Divinidad</span> · El Uno rige y excede todo entendimiento.</p>
+          </div>
+          {/* Almas — al lado (el alma entre el mundo y la divinidad) */}
+          <div className="absolute left-[5vw] top-1/2 w-[min(14rem,38vw)] -translate-y-1/2 text-left">
+            <p className="teachingPill text-xs leading-5 text-white/66"><span className="font-cinzel text-[#d8ad4f]">Almas</span> · Aprender empieza en el asombro.</p>
+          </div>
+          {/* Mundos — abajo (lo más bajo) */}
+          <div className="absolute bottom-[11vh] left-1/2 w-[min(22rem,82vw)] -translate-x-1/2 px-4 text-center">
+            <p className="teachingPill text-xs leading-5 text-white/66"><span className="font-cinzel text-[#d8ad4f]">Mundos</span> · Un origen gobierna toda multiplicidad.</p>
           </div>
         </section>
 
