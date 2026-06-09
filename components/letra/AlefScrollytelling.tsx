@@ -357,7 +357,25 @@ export default function AlefScrollytelling() {
           duration: 1.35,
         }, "<")
         .add(connectionsTypingScene())
-        .to({}, { duration: 1.4 });
+        // Alef vuelve al centro tras la última palabra (אהיה)
+        .to(["#upperYud", "#lowerYud", "#vav"], {
+          autoAlpha: 1,
+          y: 0,
+          fill: "#e8c87a",
+          filter: "url(#goldGlow)",
+          duration: 1.5,
+          ease: "power2.out",
+        })
+        .to("#alefGlow", { scale: 1.5, opacity: 1, duration: 1.5, ease: "power2.out" }, "<")
+        // Respira hondo: se expande lentamente y se queda más grande, esperando la Bet
+        .to("#alefArtifact", {
+          scale: 1.13,
+          transformOrigin: "50% 50%",
+          duration: 3.2,
+          ease: "sine.inOut",
+        })
+        .to("#alefGlow", { scale: 1.85, opacity: 1, duration: 3.2, ease: "sine.inOut" }, "<")
+        .to({}, { duration: 2.2 });
     }, root);
 
     // Una vez fijados los estados iniciales por GSAP, desvanece el loader (sin flash).
