@@ -120,8 +120,8 @@ export default function AlefScrollytelling() {
       });
       gsap.set([".teachingLine", ".teachingPill"], {
         autoAlpha: 0,
-        y: 12,
-        scale: 0.98,
+        clipPath: "inset(100% 0% -6% 0%)",
+        y: 26,
       });
 
       const tl = gsap.timeline({
@@ -140,17 +140,19 @@ export default function AlefScrollytelling() {
           .to(selector, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.85 })
           .to(`${selector} .teachingLine`, {
             autoAlpha: 1,
+            clipPath: "inset(0% 0% -6% 0%)",
             y: 0,
-            scale: 1,
-            duration: 0.64,
-            stagger: 0.12,
+            duration: 0.85,
+            stagger: 0.1,
+            ease: "power3.out",
           }, "<0.12")
           .to(`${selector} .teachingPill`, {
             autoAlpha: 1,
+            clipPath: "inset(0% 0% -6% 0%)",
             y: 0,
-            scale: 1,
-            duration: 0.56,
-            stagger: 0.1,
+            duration: 0.72,
+            stagger: 0.09,
+            ease: "power3.out",
           }, "<0.12")
           .to({}, { duration: hold })
           .to(selector, { autoAlpha: 0, y: -18, filter: "blur(8px)", duration: 0.75 });
