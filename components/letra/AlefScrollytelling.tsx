@@ -131,6 +131,10 @@ export default function AlefScrollytelling() {
       gsap.set(".numberMark", { autoAlpha: 0, y: 10, scale: 0.9, transformOrigin: "50% 50%" });
       gsap.set(".sacredSpark", { autoAlpha: 0, transformOrigin: "50% 50%" });
       gsap.set(["#upperYud", "#lowerYud", "#vav"], { fill: "#e8c87a", filter: "url(#softGoldGlow)" });
+      // Transición Álef → Bet: luz, chispa y la Bet ocultas al inicio (anti-glitch).
+      gsap.set("#transitionLight", { autoAlpha: 0, scale: 0.2, transformOrigin: "50% 50%" });
+      gsap.set("#transitionSpark", { autoAlpha: 0 });
+      gsap.set(["#betTop", "#betRight", "#betBottom"], { autoAlpha: 0, scale: 0.55, transformOrigin: "50% 50%" });
       gsap.set(".teachingScene", {
         autoAlpha: 0,
         y: 24,
@@ -398,7 +402,29 @@ export default function AlefScrollytelling() {
           ease: "sine.inOut",
         })
         .to("#alefGlow", { scale: 1.85, opacity: 1, duration: 3.2, ease: "sine.inOut" }, "<")
-        .to({}, { duration: 2.2 });
+        .to({}, { duration: 1.2 })
+
+        // ═══════ TRANSICIÓN ÁLEF → BET — cosmogonía: luz → tzimtzum → chispa → casa ═══════
+        // Fase 2-3: la Álef brilla desde dentro y se DISUELVE en su propia luz (Or Ein Sof)
+        .to("#alefArtifact", { scale: 1.22, duration: 1.6, ease: "power1.in" })
+        .to("#alefGlow", { scale: 2.6, opacity: 1, duration: 1.6, ease: "power2.in" }, "<")
+        .to("#transitionLight", { autoAlpha: 1, scale: 1.5, duration: 2.0, ease: "power2.in" }, "<0.4")
+        .to("#alefArtifact", { autoAlpha: 0, duration: 1.3 }, "<0.5")
+        .to("#alefGlow", { autoAlpha: 0, duration: 1.0 }, "<0.4")
+        // Fase 4: TZIMTZUM — la luz se contrae hacia el centro; vuelve el negro profundo
+        .to("#transitionLight", { scale: 0.04, duration: 2.4, ease: "power2.inOut" })
+        // Fase 5: la CHISPA queda en el centro, respirando (Reshimu, semilla de luz)
+        .to("#transitionLight", { autoAlpha: 0, duration: 0.5 }, ">-0.4")
+        .to("#transitionSpark", { autoAlpha: 1, duration: 0.6 }, "<0.1")
+        .to("#transitionSpark", { scale: 1.25, duration: 1.3, ease: "sine.inOut", yoyo: true, repeat: 1 })
+        // Fase 6: la chispa CRECE y la Bet se forma (vav_top → vav_right → vav_bottom)
+        .to("#transitionSpark", { scale: 3, autoAlpha: 0.5, duration: 1.3, ease: "power2.out" })
+        .to("#transitionSpark", { autoAlpha: 0, duration: 0.7 }, "<0.5")
+        .to("#betTop", { autoAlpha: 1, scale: 1, duration: 0.7, ease: "power2.out" }, "<0.1")
+        .to("#betRight", { autoAlpha: 1, scale: 1, duration: 0.7, ease: "power2.out" }, ">-0.35")
+        .to("#betBottom", { autoAlpha: 1, scale: 1, duration: 0.7, ease: "power2.out" }, ">-0.35")
+        // Fase 7: BET revelada — estable, luminosa, lista para su propio viaje
+        .to({}, { duration: 2.4 });
     }, root);
 
     // Una vez fijados los estados iniciales por GSAP, desvanece el loader (sin flash).
@@ -416,7 +442,7 @@ export default function AlefScrollytelling() {
   }, []);
 
   return (
-    <main ref={rootRef} className="relative isolate h-[2400vh] bg-black text-white">
+    <main ref={rootRef} className="relative isolate h-[2800vh] bg-black text-white">
       {/* Loader ceremonial: cubre el flash de slides superpuestos al refrescar; se desvanece
           cuando GSAP ya fijó los estados iniciales. Álef dorada que respira sobre negro. */}
       <div
@@ -605,6 +631,35 @@ export default function AlefScrollytelling() {
           >
             10 + 5 + 6 + 5 = 26
           </text>
+          </g>
+        </svg>
+
+        {/* ═══ Capas de la transición Álef → Bet (ocultas hasta el final del scroll) ═══ */}
+        {/* La luz que la Álef libera al disolverse (Or Ein Sof) y que luego se contrae (Tzimtzum). */}
+        <div
+          id="transitionLight"
+          className="pointer-events-none absolute left-1/2 top-1/2 z-[12] -translate-x-1/2 -translate-y-1/2 rounded-full"
+          style={{ width: "135vmax", height: "135vmax", background: "radial-gradient(circle, rgba(255,249,228,0.98) 0%, rgba(244,222,160,0.62) 28%, rgba(232,200,122,0.22) 50%, transparent 68%)" }}
+        />
+        {/* La chispa central (Reshimu / semilla de luz) de la que nace la Bet. */}
+        <div
+          id="transitionSpark"
+          className="pointer-events-none absolute left-1/2 top-1/2 z-[13] h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(255,251,238,1) 0%, rgba(240,214,150,0.92) 45%, transparent 78%)", boxShadow: "0 0 36px 8px rgba(232,200,122,0.65)" }}
+        />
+        {/* La Bet — mismo viewBox 1254 que el Álef, mismo centro. Sus 3 vavs nacen de la chispa. */}
+        <svg
+          id="betGlyph"
+          className="pointer-events-none absolute left-1/2 top-1/2 z-[14] h-[min(44vh,430px)] w-[min(56vw,430px)] -translate-x-1/2 -translate-y-1/2 overflow-visible"
+          viewBox="0 0 1254 1254"
+          role="img"
+          aria-label="Bet · בּ"
+          style={{ filter: "drop-shadow(0 0 22px rgba(232,200,122,0.5))" }}
+        >
+          <g id="betArtifact" fill="#e8c87a">
+            <path id="betTop" d="M 398 328 L 397 349 L 400 369 L 404 381 L 416 402 L 432 419 L 443 427 L 462 436 L 475 439 L 658 440 L 709 446 L 710 429 L 759 429 L 760 404 L 884 404 L 867 374 L 843 347 L 814 326 L 786 313 L 745 302 L 703 297 L 507 296 L 493 294 L 477 289 L 461 279 L 449 266 L 437 240 L 434 241 L 409 292 Z"/>
+            <path id="betRight" d="M 884 405 L 760 405 L 759 430 L 710 430 L 710 447 L 728 452 L 747 461 L 776 483 L 797 511 L 809 540 L 816 585 L 815 789 L 819 789 L 820 754 L 906 754 L 905 499 L 899 452 Z"/>
+            <path id="betBottom" d="M 979 812 L 951 805 L 933 795 L 916 778 L 906 755 L 820 755 L 820 789 L 815 790 L 814 816 L 449 815 L 331 955 L 332 957 L 924 957 Z"/>
           </g>
         </svg>
 
