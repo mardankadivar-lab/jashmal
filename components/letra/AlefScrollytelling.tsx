@@ -171,6 +171,7 @@ export default function AlefScrollytelling() {
 
       tl.to({}, { duration: 0.9 })
         .add(scene("#sceneLetter", 2.3))
+        .to("#alefGlyph", { rotation: 360, transformOrigin: "50% 50%", duration: 0.9, ease: "power3.inOut" }, ">")
         .to("#upperYud", { y: -82, duration: 2.2 }, ">")
         .to("#lowerYud", { y: 82, duration: 2.2 }, "<")
         .to("#vav", {
@@ -301,6 +302,7 @@ export default function AlefScrollytelling() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_44%,rgba(201,164,62,0.18),transparent_46%)]" />
 
         <svg
+          id="alefGlyph"
           className="relative z-10 h-[min(44vh,430px)] w-[min(56vw,430px)] overflow-visible"
           viewBox="0 0 1254 1254"
           role="img"
