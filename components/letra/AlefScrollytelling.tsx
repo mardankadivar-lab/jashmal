@@ -141,6 +141,8 @@ export default function AlefScrollytelling() {
       gsap.set("#sceneBetIntro .introLine, #sceneBetForm .formLine, #sceneBetValue .valueLine, #sceneBetVavin .vavinLabel, #sceneBetVavin .vavinSeal", { autoAlpha: 0, y: 14 });
       gsap.set(["#gimelHead", "#gimelBody", "#gimelLeg"], { autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%" });
       gsap.set(["#bgCopy1", "#bgCopy2", "#bgCopy3", "#bgCopy4"], { autoAlpha: 0 });
+      gsap.set(["#sceneGimelIntro", "#sceneGimelForm", "#sceneGimelValue"], { autoAlpha: 0 });
+      gsap.set("#sceneGimelIntro .gIntroLine, #sceneGimelForm .gFormLine, #sceneGimelValue .gValueLine", { autoAlpha: 0, y: 14 });
       gsap.set(".teachingScene", {
         autoAlpha: 0,
         y: 24,
@@ -499,7 +501,24 @@ export default function AlefScrollytelling() {
         .to("#bgCopy4", { autoAlpha: 1, duration: 1.0 }, ">")
         .to({}, { duration: 2.4 })
         .to("#bgCopy4", { autoAlpha: 0, duration: 0.9 })
-        .to({}, { duration: 1.2 });
+        .to({}, { duration: 1.0 })
+
+        // ═══════ INTRODUCCIÓN DE LA GUÍMEL — el comienzo de su enseñanza (la luz que sale a dar) ═══════
+        .to("#sceneGimelIntro", { autoAlpha: 1, duration: 0.9 })
+        .to("#sceneGimelIntro .gIntroLine", { autoAlpha: 1, y: 0, duration: 1.0, stagger: 0.3, ease: "power2.out" }, "<0.2")
+        .to({}, { duration: 2.4 })
+        .to("#sceneGimelIntro", { autoAlpha: 0, y: -14, duration: 0.8 })
+        // La forma: una letra de pie, con un pie (Shabat 104a)
+        .to("#sceneGimelForm", { autoAlpha: 1, duration: 0.5 }, ">-0.2")
+        .to("#sceneGimelForm .gFormLine", { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.22, ease: "power2.out" }, "<0.1")
+        .to({}, { duration: 2.4 })
+        .to("#sceneGimelForm", { autoAlpha: 0, y: -14, duration: 0.8 })
+        // El número: 3, el tercero que es camino
+        .to("#sceneGimelValue", { autoAlpha: 1, duration: 0.5 }, ">-0.2")
+        .to("#sceneGimelValue .gValueLine", { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.22, ease: "power2.out" }, "<0.1")
+        .to({}, { duration: 2.4 })
+        .to("#sceneGimelValue", { autoAlpha: 0, y: -14, duration: 0.8 })
+        .to({}, { duration: 1.0 });
     }, root);
 
     // Una vez fijados los estados iniciales por GSAP, desvanece el loader (sin flash).
@@ -517,7 +536,7 @@ export default function AlefScrollytelling() {
   }, []);
 
   return (
-    <main ref={rootRef} className="relative isolate h-[5000vh] bg-black text-white">
+    <main ref={rootRef} className="relative isolate h-[5800vh] bg-black text-white">
       {/* Loader ceremonial: cubre el flash de slides superpuestos al refrescar; se desvanece
           cuando GSAP ya fijó los estados iniciales. Álef dorada que respira sobre negro. */}
       <div
@@ -549,6 +568,23 @@ export default function AlefScrollytelling() {
           <p className="valueLine font-cinzel text-xl text-parchment/90 sm:text-2xl">El primer «otro»</p>
           <p className="valueLine max-w-md text-sm leading-relaxed text-white/70">Con el dos nace el tú. Y solo entre dos cabe la bendición.</p>
           <p className="valueLine text-sm italic text-[#e8c87a]/85">Dos mundos: este y el que viene.</p>
+        </div>
+
+        {/* ═══ INTRODUCCIÓN de la Guímel — la luz que sale a dar (después de la transición Bet→Guímel) ═══ */}
+        <div id="sceneGimelIntro" className="pointer-events-none absolute inset-x-0 bottom-[10vh] z-40 flex flex-col items-center gap-3 px-6 text-center">
+          <p className="gIntroLine font-cinzel text-[0.62rem] uppercase tracking-[0.4em] text-[#d8ad4f]">Guímel · <span className="hebrew">גִּימֶל</span></p>
+          <p className="gIntroLine max-w-lg text-2xl italic leading-relaxed text-[#efe6d0] sm:text-3xl" style={{ fontFamily: "var(--font-cormorant, serif)" }}>La casa guardó la luz.<br/>La primera palabra que sale de ella es <span className="text-[#e8c87a]">dar</span>.</p>
+        </div>
+        <div id="sceneGimelForm" className="pointer-events-none absolute inset-x-0 bottom-[12vh] z-40 flex flex-col items-center gap-2.5 px-6 text-center">
+          <p className="gFormLine font-cinzel text-[0.6rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Forma</p>
+          <p className="gFormLine font-cinzel text-xl text-parchment/90 sm:text-2xl">Una letra de pie, con un pie</p>
+          <p className="gFormLine max-w-md text-sm leading-relaxed text-white/70">Cuerpo erguido, un paso hacia adelante. No mira atrás: corre hacia el que falta.</p>
+          <p className="gFormLine font-cinzel text-[10px] uppercase tracking-widest text-gold/45">Talmud · Shabat 104a</p>
+        </div>
+        <div id="sceneGimelValue" className="pointer-events-none absolute inset-x-0 bottom-[12vh] z-40 flex flex-col items-center gap-2.5 px-6 text-center">
+          <p className="gValueLine font-cinzel text-[0.6rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Número · <span className="hebrew">ג</span> = 3</p>
+          <p className="gValueLine font-cinzel text-xl text-parchment/90 sm:text-2xl">El tercero: el camino</p>
+          <p className="gValueLine max-w-md text-sm leading-relaxed text-white/70">Del Uno (א) y la casa (ב) nace el movimiento. Dos crean al «otro»; tres es ir hacia él.</p>
         </div>
 
         {/* Disección de la Bet: al separarse los 3 trazos, se revela 3 vavin = 18 = חי (Vida).
