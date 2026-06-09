@@ -137,6 +137,8 @@ export default function AlefScrollytelling() {
       gsap.set(["#betTop", "#betRight", "#betBottom"], { autoAlpha: 0, scale: 0.55, transformOrigin: "50% 50%" });
       gsap.set(["#betMiluiBet", "#betMiluiYud", "#betMiluiTav"], { autoAlpha: 0, y: 30, scale: 0.94, transformOrigin: "50% 50%" });
       gsap.set(["#betMiluiBetValue", "#betMiluiYudValue", "#betMiluiTavValue", "#betMiluiEquation"], { autoAlpha: 0, y: -20, scale: 0.92, transformOrigin: "50% 50%" });
+      gsap.set("#sceneBetVavin", { autoAlpha: 0 });
+      gsap.set("#sceneBetVavin .vavinLine", { autoAlpha: 0, y: 14 });
       gsap.set(".teachingScene", {
         autoAlpha: 0,
         y: 24,
@@ -430,6 +432,21 @@ export default function AlefScrollytelling() {
         .to(["#alefGlow", "#transitionLight", "#transitionSpark"], { autoAlpha: 0, duration: 0.8, ease: "power2.out" }, ">")
         .to({}, { duration: 1.2 })
 
+        // ═══════ DISECCIÓN DE LA BET — ¿de qué está hecha la casa? 3 vavin = 18 = חי (Vida) ═══════
+        // Los 3 trazos se separan (igual que el Álef abría su Yud-Vav-Yud). Drash de forma, verificado por el Sofer.
+        .to("#betTop", { y: -150, duration: 1.3, ease: "power2.inOut" })
+        .to("#betRight", { x: 155, duration: 1.3, ease: "power2.inOut" }, "<")
+        .to("#betBottom", { y: 150, duration: 1.3, ease: "power2.inOut" }, "<")
+        .to("#sceneBetVavin", { autoAlpha: 1, duration: 0.6 }, "<0.55")
+        .to("#sceneBetVavin .vavinLine", { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.3, ease: "power2.out" }, "<0.1")
+        .to({}, { duration: 2.2 })
+        // Los 3 vavin vuelven a unirse: la casa se reconstruye
+        .to("#sceneBetVavin", { autoAlpha: 0, y: -10, duration: 0.7 })
+        .to("#betTop", { y: 0, duration: 1.3, ease: "power2.inOut" }, "<0.2")
+        .to("#betRight", { x: 0, duration: 1.3, ease: "power2.inOut" }, "<")
+        .to("#betBottom", { y: 0, duration: 1.3, ease: "power2.inOut" }, "<")
+        .to({}, { duration: 1.0 })
+
         // ═══════ ENSEÑANZA DE LA BET — el milui בית se destila hacia abajo (igual que el Álef) ═══════
         // La Bet abre su nombre: Bet · Yud · Tav nacen bajo la letra
         .to(["#betMiluiBet", "#betMiluiYud", "#betMiluiTav"], { autoAlpha: 1, y: 0, scale: 1, duration: 0.9, stagger: 0.28, ease: "power2.out" })
@@ -455,7 +472,7 @@ export default function AlefScrollytelling() {
   }, []);
 
   return (
-    <main ref={rootRef} className="relative isolate h-[3200vh] bg-black text-white">
+    <main ref={rootRef} className="relative isolate h-[3600vh] bg-black text-white">
       {/* Loader ceremonial: cubre el flash de slides superpuestos al refrescar; se desvanece
           cuando GSAP ya fijó los estados iniciales. Álef dorada que respira sobre negro. */}
       <div
@@ -466,6 +483,16 @@ export default function AlefScrollytelling() {
       </div>
       <div ref={pinRef} className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-[#0a0604]">
         <div id="alefGlow" className="absolute inset-0 bg-[radial-gradient(circle_at_50%_44%,rgba(201,164,62,0.18),transparent_46%)]" />
+
+        {/* Disección de la Bet: al separarse los 3 trazos, se revela 3 vavin = 18 = חי (Vida).
+            Lectura de la forma (drash), verificada por el Sofer — no es cita del Zohar. */}
+        <div id="sceneBetVavin" className="pointer-events-none absolute inset-x-0 bottom-[13vh] z-40 flex flex-col items-center gap-2.5 px-6 text-center">
+          <p className="vavinLine font-cinzel text-[0.6rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Tres vavin · <span className="hebrew">שְׁלוֹשָׁה וָוִין</span></p>
+          <p className="vavinLine hebrew text-3xl text-[#efe6d0]">ו + ו + ו</p>
+          <p className="vavinLine font-cinzel text-base tracking-wide text-[#f0e7d0]/90">6 + 6 + 6 = 18</p>
+          <p className="vavinLine font-cinzel text-2xl text-[#e8c87a]" style={{ textShadow: "0 0 18px rgba(232,200,122,0.5)" }}>18 = <span className="hebrew">חַי</span> · Vida</p>
+          <p className="vavinLine max-w-md text-sm italic leading-relaxed text-white/70">La casa está hecha de Vida: tres ganchos que unen el cielo y la tierra.</p>
+        </div>
 
         <svg
           id="alefGlyph"
