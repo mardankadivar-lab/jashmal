@@ -485,7 +485,7 @@ export default function AlefScrollytelling() {
           style={{ right: "max(1.5rem, calc(50% - 23rem))" }}
         >
           <p className="font-cinzel text-[0.68rem] uppercase tracking-[0.22em] text-[#d8ad4f]">Yud superior</p>
-          <p className="mt-2 text-sm leading-snug text-white/72">Las aguas de arriba. Lo oculto junto a la Fuente.</p>
+          <p className="mt-2 text-sm leading-snug text-white/85">Las aguas de arriba. Lo oculto junto a la Fuente.</p>
         </div>
 
         <div
@@ -494,7 +494,7 @@ export default function AlefScrollytelling() {
           style={{ left: "max(1.5rem, calc(50% - 23rem))" }}
         >
           <p className="font-cinzel text-[0.68rem] uppercase tracking-[0.22em] text-[#d8ad4f]">Yud inferior</p>
-          <p className="mt-2 text-sm leading-snug text-white/72">Las aguas de abajo. El mundo que anhela volver.</p>
+          <p className="mt-2 text-sm leading-snug text-white/85">Las aguas de abajo. El mundo que anhela volver.</p>
         </div>
 
         <div
@@ -503,7 +503,7 @@ export default function AlefScrollytelling() {
           style={{ left: "max(1.5rem, calc(50% - 24rem))" }}
         >
           <p className="font-cinzel text-[0.68rem] uppercase tracking-[0.22em] text-[#d8ad4f]">Vav</p>
-          <p className="mt-2 text-sm leading-snug text-white/72">El firmamento. La fe que separa y une.</p>
+          <p className="mt-2 text-sm leading-snug text-white/85">El firmamento. La fe que separa y une.</p>
         </div>
 
         <section
@@ -513,10 +513,10 @@ export default function AlefScrollytelling() {
           <p className="teachingLine font-cinzel text-[0.65rem] uppercase tracking-[0.38em] text-[#d8ad4f]">
             Nivel 1 — La letra
           </p>
-          <h1 className="teachingLine mt-4 font-cinzel text-3xl font-light tracking-[0.18em] text-white sm:text-5xl">
+          <h1 className="teachingLine mt-4 font-cinzel text-[2.9rem] font-normal tracking-[0.05em] text-white sm:text-[4.4rem] leading-[1.03]">
             Álef
           </h1>
-          <p className="teachingLine mx-auto mt-5 max-w-md text-sm leading-7 text-white/76 sm:text-base">
+          <p className="teachingLine mx-auto mt-5 max-w-md text-sm leading-7 text-white/90 sm:text-base">
             No suena. Es el silencio que respira antes de la primera palabra.
           </p>
           <p className="teachingLine mt-4 font-cinzel text-[0.68rem] uppercase tracking-[0.22em] text-white/54">
@@ -529,10 +529,10 @@ export default function AlefScrollytelling() {
           className="teachingScene pointer-events-none absolute right-[5vw] top-[12vh] z-30 w-[min(22rem,42vw)] text-right max-sm:left-1/2 max-sm:right-auto max-sm:top-[5vh] max-sm:w-[82vw] max-sm:-translate-x-1/2 max-sm:text-center"
         >
           <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Forma</p>
-          <h2 className="teachingLine mt-3 font-cinzel text-2xl font-light tracking-[0.08em] text-white max-sm:mt-2 max-sm:text-[1.15rem] max-sm:leading-6">
+          <h2 className="teachingLine mt-3 font-cinzel text-[2.2rem] sm:text-[3rem] font-normal tracking-[0.015em] leading-[1.07] text-white max-sm:mt-2 max-sm:text-[1.15rem] max-sm:leading-6">
             Dos aguas, un puente
           </h2>
-          <p className="teachingLine mt-4 text-sm leading-6 text-white/70 max-sm:mt-2 max-sm:text-xs max-sm:leading-5">
+          <p className="teachingLine mt-4 text-sm leading-6 text-white/85 max-sm:mt-2 max-sm:text-xs max-sm:leading-5">
             Yud arriba. Vav diagonal. Yud abajo. La fe sostiene que lo sublime y lo terrenal son uno.
           </p>
           <div className="mt-5 grid gap-2 max-sm:hidden">
@@ -549,10 +549,10 @@ export default function AlefScrollytelling() {
           className="teachingScene pointer-events-none absolute left-[5vw] top-[12vh] z-30 w-[min(23rem,42vw)] text-left max-sm:left-1/2 max-sm:top-[5vh] max-sm:w-[82vw] max-sm:-translate-x-1/2 max-sm:text-center"
         >
           <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Número</p>
-          <h2 className="teachingLine mt-3 font-cinzel text-2xl font-light tracking-[0.08em] text-white max-sm:mt-2 max-sm:text-[1.15rem] max-sm:leading-6">
+          <h2 className="teachingLine mt-3 font-cinzel text-[2.2rem] sm:text-[3rem] font-normal tracking-[0.015em] leading-[1.07] text-white max-sm:mt-2 max-sm:text-[1.15rem] max-sm:leading-6">
             El Uno contiene el Nombre
           </h2>
-          <p className="teachingLine mt-4 text-sm leading-6 text-white/70 max-sm:mt-2 max-sm:text-xs max-sm:leading-5">
+          <p className="teachingLine mt-4 text-sm leading-6 text-white/85 max-sm:mt-2 max-sm:text-xs max-sm:leading-5">
             Álef = 1. Su forma revela 10 + 6 + 10 = 26, el Nombre en silencio.
           </p>
           <p className="teachingLine mt-3 text-xs leading-5 text-white/52 max-sm:hidden">
@@ -573,11 +573,11 @@ export default function AlefScrollytelling() {
         >
           <div className="px-4">
           <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Nombre · אלף</p>
-          <h2 className="teachingLine mt-3 font-cinzel text-2xl font-light tracking-[0.08em] text-white sm:text-3xl">
+          <h2 className="teachingLine mt-3 font-cinzel text-[2.2rem] sm:text-[3rem] font-normal tracking-[0.015em] leading-[1.07] text-white">
             Lo callado se vuelve palabra
           </h2>
           </div>
-          <div className="grid w-[min(43rem,90vw)] gap-3 px-4 text-sm leading-6 text-white/70 sm:grid-cols-4">
+          <div className="grid w-[min(43rem,90vw)] gap-3 px-4 text-sm leading-6 text-white/85 sm:grid-cols-4">
             <p className="teachingPill"><span className="font-cinzel text-[#d8ad4f]">Aluf</span><br />Soberano y maestro.</p>
             <p className="teachingPill"><span className="font-cinzel text-[#d8ad4f]">Élef</span><br />El Uno contiene el mil.</p>
             <p className="teachingPill"><span className="font-cinzel text-[#d8ad4f]">Le'alef</span><br />Ser primero es enseñar.</p>
@@ -592,7 +592,7 @@ export default function AlefScrollytelling() {
           {/* título arriba del todo */}
           <div className="absolute left-1/2 top-[6vh] w-[min(34rem,88vw)] -translate-x-1/2 px-4 text-center">
             <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Milui · א ל ף</p>
-            <p className="teachingLine mx-auto mt-2 max-w-xl text-sm leading-6 text-white/68">
+            <p className="teachingLine mx-auto mt-2 max-w-xl text-sm leading-6 text-white/85">
               Álef, Lámed, Pe: lo Uno oculto se eleva, enseña y se revela en la boca.
             </p>
           </div>
@@ -618,10 +618,10 @@ export default function AlefScrollytelling() {
           <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">
             Senderos al universo
           </p>
-          <h2 className="teachingLine mt-3 font-cinzel text-2xl font-light tracking-[0.08em] text-white">
+          <h2 className="teachingLine mt-3 font-cinzel text-[2.2rem] sm:text-[3rem] font-normal tracking-[0.015em] leading-[1.07] text-white">
             El silencio vuelve a ocultarse
           </h2>
-          <p className="teachingLine mx-auto mt-4 max-w-lg text-sm leading-6 text-white/68">
+          <p className="teachingLine mx-auto mt-4 max-w-lg text-sm leading-6 text-white/85">
             Tanaj, Talmud, Midrash, Cabalá y Jasidut regresan al mismo centro: el Álef de Anojí, la raíz muda de toda Torá.
           </p>
           </div>
