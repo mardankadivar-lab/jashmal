@@ -63,6 +63,17 @@ export const MISTERIOS: Misterio[] = [
     orden: 3.5,
   },
   {
+    slug: "lot",
+    he: "לוֹט",
+    titulo: "Lot — Las dos hijas sin nombre",
+    tituloFa: "لوط — دو دخترِ بی‌نام",
+    gancho: "Las dos mujeres de las que nace el linaje del Rey David no tienen nombre… y lo que hicieron rompió todo tabú. Del barro más bajo —una cueva, tras el fin de un mundo— el Cielo sacó la corona del Mashíaj.",
+    ganchoFa: "دو زنی که تبارِ داوودِ پادشاه از آنان زاده می‌شود، نامی ندارند… و آنچه کردند هر تابویی را شکست. از پست‌ترین گِل، خدا تاجِ ماشیح را برآورد.",
+    serie: "dos-filos",
+    color: "#d8a24a",
+    orden: 3.7,
+  },
+  {
     slug: "linaje",
     he: "עֲבֵרָה לִשְׁמָהּ",
     titulo: "El linaje prohibido del Mashíaj",
