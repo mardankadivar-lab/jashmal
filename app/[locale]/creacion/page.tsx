@@ -78,6 +78,13 @@ export default function CreacionPage() {
     "0 2px 10px rgba(0,0,0,0.95), 0 0 26px rgba(0,0,0,0.75), 0 1px 3px rgba(0,0,0,0.98)";
   const textHalo = isLight ? lightHalo : darkHalo;
 
+  // Transición CONTINUA entre escenas: el texto se desvanece cerca de los
+  // bordes de cada etapa (su contenido cambia mientras está invisible), así
+  // las escenas se funden como un solo descenso, sin "pop" abrupto.
+  const stageProgress = Math.max(0, Math.min(1, scrollProgress * TOTAL - activeStage));
+  const textOpacity =
+    Math.min(1, stageProgress / 0.16) * Math.min(1, (1 - stageProgress) / 0.16);
+
   return (
     <div className="always-dark fixed inset-0 z-50 overflow-hidden" style={{ background: bgColor, transition: "background 1.2s ease" }}>
       {/* Canvas Three.js — fijo, ocupa toda la pantalla */}
@@ -115,10 +122,13 @@ export default function CreacionPage() {
       />
 
       {/* ── Overlay de texto — sticky, centrado ──────────────────── */}
-      <div className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center px-6 py-24 sm:py-16">
+      <div
+        className="pointer-events-none absolute inset-0 z-20 flex flex-col items-center justify-center px-6 py-24 sm:py-16"
+        style={{ opacity: textOpacity, transition: "opacity 0.1s linear" }}
+      >
 
         {/* Nombre de la etapa */}
-        <div className="text-center" style={{ animation: "fadeIn 0.8s ease" }} key={stage.id}>
+        <div className="text-center">
           <p
             className="mb-2 font-cinzel text-[12px] uppercase tracking-[0.35em] sm:text-[13px]"
             style={{ color: dimColor, textShadow: textHalo }}
@@ -154,10 +164,8 @@ export default function CreacionPage() {
         {/* Cita */}
         <p
           className="mt-6 max-w-[34rem] text-center leading-relaxed sm:max-w-2xl"
-          key={stage.id + "-quote"}
           style={{
             color: bodyColor,
-            animation: "fadeIn 1.2s ease",
             direction: locale === "fa" ? "rtl" : "ltr",
             fontSize: "clamp(16px, 2.3vw, 20px)",
             textShadow: textHalo,
