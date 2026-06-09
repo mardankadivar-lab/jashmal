@@ -118,6 +118,7 @@ export default function AlefScrollytelling() {
         y: 24,
         filter: "blur(10px)",
       });
+      gsap.set(".connItem", { autoAlpha: 0, y: 28 });
       // "Emana del Álef": cada texto nace en el centro de la letra y vuela a su lugar
       const emanaTargets = gsap.utils.toArray(".teachingLine, .teachingPill") as HTMLElement[];
       emanaTargets.forEach((el) => {
@@ -168,6 +169,26 @@ export default function AlefScrollytelling() {
           }, "<0.05")
           .to({}, { duration: hold })
           .to(selector, { autoAlpha: 0, y: -18, filter: "blur(8px)", duration: 0.75 });
+
+      // Conexiones: statement fijo (izq) + desfile de referencias (der), una a una
+      const connectionsScene = () => {
+        const tlc = gsap.timeline({ defaults: { ease: "power2.inOut" } });
+        tlc
+          .to("#sceneConnections", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.85 })
+          .to("#sceneConnections .teachingLine", {
+            autoAlpha: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)",
+            duration: 1.0, stagger: 0.13, ease: "power2.out",
+          }, "<0.05");
+        const items = gsap.utils.toArray("#sceneConnections .connItem") as HTMLElement[];
+        items.forEach((item, i) => {
+          tlc
+            .fromTo(item, { autoAlpha: 0, y: 28 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" }, i === 0 ? ">0.3" : ">0.14")
+            .to({}, { duration: 0.55 })
+            .to(item, { autoAlpha: 0, y: -28, duration: 0.4, ease: "power2.in" });
+        });
+        tlc.to("#sceneConnections", { autoAlpha: 0, y: -18, filter: "blur(8px)", duration: 0.8 }, ">0.3");
+        return tlc;
+      };
 
       tl.to({}, { duration: 0.9 })
         .add(scene("#sceneLetter", 2.3))
@@ -281,7 +302,7 @@ export default function AlefScrollytelling() {
           opacity: 1,
           duration: 1.35,
         }, "<")
-        .add(scene("#sceneConnections", 2.6))
+        .add(connectionsScene())
         .to({}, { duration: 1.4 });
     }, root);
 
@@ -612,35 +633,39 @@ export default function AlefScrollytelling() {
 
         <section
           id="sceneConnections"
-          className="teachingScene pointer-events-none absolute inset-x-0 top-0 z-30 flex h-full flex-col items-center justify-between py-[7vh] text-center"
+          className="teachingScene pointer-events-none absolute inset-0 z-30"
         >
-          <div className="px-4">
-          <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">
-            Senderos al universo
-          </p>
-          <h2 className="teachingLine mt-3 font-cinzel text-[2.2rem] sm:text-[3rem] font-normal tracking-[0.015em] leading-[1.07] text-white">
-            El silencio vuelve a ocultarse
-          </h2>
-          <p className="teachingLine mx-auto mt-4 max-w-lg text-sm leading-6 text-white/85">
-            Tanaj, Talmud, Midrash, Cabalá y Jasidut regresan al mismo centro: el Álef de Anojí, la raíz muda de toda Torá.
-          </p>
+          {/* Título arriba (monumental) */}
+          <div className="absolute left-1/2 top-[6vh] w-[min(60rem,92vw)] -translate-x-1/2 px-4 text-center">
+            <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">
+              Senderos al universo
+            </p>
+            <h2 className="teachingLine mt-3 font-cinzel text-[2.2rem] font-normal leading-[1.07] tracking-[0.015em] text-white sm:text-[3rem]">
+              El silencio vuelve a ocultarse
+            </h2>
           </div>
-          <div className="w-[min(40rem,90vw)] px-4">
-          <div className="flex flex-wrap justify-center gap-x-5 gap-y-3">
+
+          {/* Statement — IZQUIERDA */}
+          <div className="absolute left-[5vw] top-1/2 w-[min(19rem,32vw)] -translate-y-1/2 text-left">
+            <p className="teachingLine text-base leading-7 text-white/80">
+              Todos los escritos vuelven al
+            </p>
+            <p className="teachingLine mt-1 font-cinzel text-[2rem] leading-[1.08] text-[#d8ad4f]">
+              Álef de Anojí
+            </p>
+            <p className="teachingLine mt-2 font-cinzel text-sm uppercase tracking-[0.32em] text-[#d8ad4f]/70">
+              «Yo soy»
+            </p>
+          </div>
+
+          {/* Desfile de referencias — DERECHA (una a una al scroll) */}
+          <div className="absolute right-[5vw] top-1/2 h-[11rem] w-[min(19rem,32vw)] -translate-y-1/2">
             {connections.map(([label, source]) => (
-              <span key={label} className="teachingPill text-center">
-                <span className="block font-cinzel text-[0.68rem] uppercase tracking-[0.18em] text-white/55">
-                  {label}
-                </span>
-                <span className="mt-1 block text-[0.68rem] text-white/34">
-                  {source}
-                </span>
-              </span>
+              <div key={label} className="connItem absolute inset-0 flex flex-col justify-center text-right">
+                <p className="font-cinzel text-[2.1rem] leading-[1.08] text-[#d8ad4f]">{label}</p>
+                <p className="mt-2 text-sm tracking-wide text-white/70">{source}</p>
+              </div>
             ))}
-          </div>
-          <p className="teachingLine mx-auto mt-6 max-w-lg text-[0.68rem] leading-5 text-white/34">
-            Ginsburgh · Séfer Yetzirá · Zóhar · Shabat 104a · Génesis 1:6-7 · Job 33:33
-          </p>
           </div>
         </section>
 
