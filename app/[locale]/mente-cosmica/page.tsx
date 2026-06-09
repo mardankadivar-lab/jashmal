@@ -1336,9 +1336,9 @@ export default function GrafoPage() {
     subtitle: tri("La Mente Cósmica de Jashmal", "ذهنِ کیهانیِ خَشمَل", "The Cosmic Mind of Jashmal"),
     back: tri("Volver al inicio", "بازگشت به خانه", "Back to home"),
     hint: tri(
-      "Arrastra para girar · rueda o pellizca para acercar · clic en una sinapsis · doble clic para estudiar",
-      "بکشید برای چرخش · اسکرول/پینچ برای زوم · کلیک روی سیناپس · دوبار کلیک برای مطالعه",
-      "Drag to rotate · Scroll or pinch to zoom · Click a synapse · Double-click to study",
+      "Arrastra para girar la mente · haz zoom para entrar en una galaxia · clic en un nodo para revelar conexiones · doble clic para estudiar",
+      "بکشید برای چرخشِ ذهن · زوم کنید تا به یک کهکشان وارد شوید · روی یک گره کلیک کنید تا پیوندها آشکار شوند · دوبار کلیک برای مطالعه",
+      "Drag to rotate the mind · zoom to enter a galaxy · click a node to reveal its connections · double-click to study",
     ),
     legend: tri("Dominios del saber", "دامنه‌های دانش", "Domains of knowledge"),
     study: tri("Estudiar →", "مطالعه ←", "Study →"),
@@ -1661,8 +1661,9 @@ export default function GrafoPage() {
     >
       <Suspense
         fallback={
-          <div className="flex h-full items-center justify-center">
-            <p className="animate-pulse font-cinzel text-gold/50">{tri("Despertando la mente…", "در حال بیدار شدن…", "Awakening the mind…")}</p>
+          <div className="flex h-full flex-col items-center justify-center gap-5">
+            <span className="hebrew animate-pulse text-6xl text-[#e8c87a]" style={{ textShadow: "0 0 44px rgba(232,200,122,0.6), 0 0 16px rgba(232,200,122,0.45)" }}>חַשְׁמַל</span>
+            <p className="font-cinzel text-xs uppercase tracking-[0.32em] text-gold/40">{tri("Despertando la mente…", "در حال بیدار شدن…", "Awakening the mind…")}</p>
           </div>
         }
       >
