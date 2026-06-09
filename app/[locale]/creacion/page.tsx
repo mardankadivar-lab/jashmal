@@ -18,6 +18,8 @@ export default function CreacionPage() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeStage, setActiveStage] = useState(0);
+  // Loader ceremonial: cubre el pop-in del canvas 3D al refrescar (anti-glitch).
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -48,9 +50,13 @@ export default function CreacionPage() {
     };
     rafId = requestAnimationFrame(raf);
 
+    // Fallback: si el canvas 3D no avisa (onCreated) en 2.5s, retira el loader igual.
+    const readyFallback = setTimeout(() => setReady(true), 2500);
+
     return () => {
       el.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(rafId);
+      clearTimeout(readyFallback);
       lenis.destroy();
     };
   }, []);
@@ -87,10 +93,22 @@ export default function CreacionPage() {
 
   return (
     <div className="always-dark fixed inset-0 z-50 overflow-hidden" style={{ background: bgColor, transition: "background 1.2s ease" }}>
+      {/* ── Loader ceremonial: cubre el pop-in del canvas 3D al refrescar; se desvanece
+            lento (como un respiro del Ein Sof) cuando el 3D ya está listo. ── */}
+      <div
+        className={`pointer-events-none absolute inset-0 z-[60] flex items-center justify-center bg-[#05050a] transition-opacity duration-1000 ${ready ? "opacity-0" : "opacity-100"}`}
+        aria-hidden="true"
+      >
+        <div
+          className="h-28 w-28 rounded-full"
+          style={{ background: "radial-gradient(circle, rgba(201,164,62,0.45), transparent 70%)", animation: "creacionBreath 2.4s ease-in-out infinite" }}
+        />
+      </div>
+
       {/* Canvas Three.js — fijo, ocupa toda la pantalla */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <Suspense fallback={null}>
-          <Canvas camera={{ position: [0, 0, 14], fov: 52 }} gl={{ antialias: true }} style={{ width: "100%", height: "100%" }}>
+          <Canvas camera={{ position: [0, 0, 14], fov: 52 }} gl={{ antialias: true }} style={{ width: "100%", height: "100%" }} onCreated={() => setReady(true)}>
             <CosmologyScene scrollProgress={scrollProgress} />
           </Canvas>
         </Suspense>
@@ -280,6 +298,7 @@ export default function CreacionPage() {
       {/* CSS animations */}
       <style>{`
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes creacionBreath { 0%, 100% { opacity: 0.35; transform: scale(0.9); } 50% { opacity: 0.85; transform: scale(1.1); } }
         div::-webkit-scrollbar { display: none; }
       `}</style>
     </div>

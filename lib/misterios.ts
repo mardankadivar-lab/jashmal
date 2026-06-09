@@ -74,6 +74,17 @@ export const MISTERIOS: Misterio[] = [
     orden: 3.7,
   },
   {
+    slug: "yehuda",
+    he: "צָדְקָה מִמֶּנִּי",
+    titulo: "Yehudá — El rey que se declaró culpable",
+    tituloFa: "یهودا — پادشاهی که خود را گناهکار خواند",
+    gancho: "Pudo callar y dejarla arder. En cambio dijo dos palabras —«ella es más justa que yo»— y se hundió en público para salvarla. Esa confesión le ganó el cetro eterno, el Nombre de Dios dentro de su nombre, y la línea directa del Mashíaj ben David.",
+    ganchoFa: "می‌توانست خاموش بماند و بگذارد بسوزد. اما دو واژه گفت —«او از من پارساتر است»— و در برابر همگان خود را فروشکست تا او را برهاند. آن اعتراف، عصای جاودان، نامِ خدا را در نامش، و تبارِ مستقیمِ ماشیح بن داوود را به او بخشید.",
+    serie: "dos-filos",
+    color: "#caa23f",
+    orden: 3.8,
+  },
+  {
     slug: "linaje",
     he: "עֲבֵרָה לִשְׁמָהּ",
     titulo: "El linaje prohibido del Mashíaj",

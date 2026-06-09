@@ -25,6 +25,7 @@ const nextConfig: NextConfig = {
       { source: "/21-pactos", destination: "/es/misterio/21-pactos" },
       { source: "/enoch", destination: "/es/misterio/enoch" },
       { source: "/lot", destination: "/es/misterio/lot" },
+      { source: "/yehuda", destination: "/es/misterio/yehuda" },
     ];
   },
   async redirects() {
