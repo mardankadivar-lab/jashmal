@@ -363,40 +363,30 @@ export default function AlefScrollytelling() {
         .add(connectionsTypingScene())
         // El título se va, el Alef de אהיה se queda solo
         .to("#sceneConnections .teachingLine", { autoAlpha: 0, y: -10, duration: 0.55 })
-        // Las letras ה־י־ה (ya invisibles) COLAPSAN su ancho: la palabra se re-centra y el
-        // Álef de אהיה se desliza al centro REAL del viewport. Sin esto, el Álef queda a la
-        // derecha del centro y el SVG emerge en el centro → se veían DOS álefs.
-        .to("#sceneConnections .alefRest:last-child .alefRestChar", {
-          width: 0,
-          marginRight: 0,
-          autoAlpha: 0,
-          duration: 2.0,
-          ease: "power2.inOut",
-        }, "<")
-        // El mismo Alef crece hacia el centro — continuidad visual con el SVG
+        // ── ROBUSTO anti-dos-álefs ──
+        // El Álef de texto se DISUELVE EN LUZ por completo (crece y se desvanece mientras el
+        // glow se aviva) ANTES de que aparezca el SVG. Nunca hay dos álefs visibles a la vez.
+        .to("#sceneConnections .alefRest:last-child .alefRestChar", { autoAlpha: 0, duration: 0.3 }, "<")
         .to("#sceneConnections .alefRest:last-child .alefRestAlef", {
-          scale: 2.6,
+          scale: 1.9,
+          autoAlpha: 0,
           transformOrigin: "50% 50%",
-          duration: 2.0,
-          ease: "power2.inOut",
+          duration: 1.6,
+          ease: "power2.in",
         }, "<")
-        // El SVG Alef emerge AL CENTRO una vez que el texto YA llegó al centro: ahora se
-        // superponen exactos → crossfade de UN solo álef (no dos en posiciones distintas).
+        // El glow se aviva: el centro queda LLENO DE LUZ mientras el texto se disuelve.
+        .to("#alefGlow", { scale: 1.55, opacity: 1, duration: 1.6, ease: "power2.out" }, "<")
+        // La escena de texto se va por completo: no queda ningún rastro del Álef de texto.
+        .to("#sceneConnections", { autoAlpha: 0, duration: 0.5 }, ">-0.3")
+        // RECIÉN AHORA, con el texto ya ido, el SVG Alef SE RECONSTITUYE desde la luz, al centro.
         .to(["#upperYud", "#lowerYud", "#vav"], {
           autoAlpha: 1,
           y: 0,
           fill: "#e8c87a",
           filter: "url(#goldGlow)",
-          duration: 1.2,
+          duration: 1.3,
           ease: "power2.out",
         }, ">")
-        .to("#alefGlow", { scale: 1.5, opacity: 1, duration: 1.2, ease: "power2.out" }, "<")
-        // El texto desaparece: el SVG ya tomó su lugar
-        .to("#sceneConnections .alefRest:last-child .alefRestAlef", {
-          autoAlpha: 0,
-          duration: 0.65,
-        }, "<0.35")
-        .to("#sceneConnections", { autoAlpha: 0, duration: 0.4 }, ">0.1")
         // Respira hondo: crece lentamente, más glow, esperando la Bet
         .to("#alefArtifact", {
           scale: 1.13,
