@@ -378,6 +378,16 @@ html.study-mode .always-dark canvas { opacity: 0.4; transition: opacity 0.5s eas
 .letra-reveal[data-delay="3"] { transition-delay: 0.4s; }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Baseline de accesibilidad: respeta a quien pide menos movimiento. Anula
+     animaciones y transiciones CSS en TODO el sitio (loaders, fades, reveals y
+     pulsos se vuelven instantáneos). El movimiento JS pesado (scroll suave Lenis,
+     escenas 3D) se atenuará por página en un ciclo posterior, con revisión visual. */
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
   .letra-reveal {
     transition-duration: 0.01ms;
     transform: none;
