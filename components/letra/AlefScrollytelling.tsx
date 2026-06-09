@@ -136,6 +136,7 @@ export default function AlefScrollytelling() {
       });
       gsap.set(".cycleItem", { autoAlpha: 0, y: 28 });
       gsap.set("#alefGlow", { opacity: 0.7, transformOrigin: "50% 44%" });
+      gsap.set([".alefWord", ".alefChar", ".alefRef"], { autoAlpha: 0 });
       gsap.set([".alefRestChar", ".alefLabel"], { autoAlpha: 0 });
       // "Emana del Álef": cada texto nace en el centro de la letra y vuela a su lugar
       const emanaTargets = gsap.utils.toArray(".teachingLine, .teachingPill") as HTMLElement[];
@@ -208,6 +209,35 @@ export default function AlefScrollytelling() {
         });
         tlc.to(selector, { autoAlpha: 0, y: -18, filter: "blur(8px)", duration: 0.8 }, ">0.3");
         return tlc;
+      };
+
+      // Conexiones: cada escrito se ESCRIBE desde el Álef; el Álef se desliza a la derecha y vuelve al centro
+      const connectionsTypingScene = () => {
+        const tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
+        tl
+          .to("#alefGlow", { scale: 1.16, opacity: 1, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0)
+          .to("#sceneConnections", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.85 })
+          .to("#sceneConnections .teachingLine", {
+            autoAlpha: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)",
+            duration: 1.0, stagger: 0.13, ease: "power2.out",
+          }, "<0.05");
+        const lefts = gsap.utils.toArray("#sceneConnections .alefWord") as HTMLElement[];
+        const rights = gsap.utils.toArray("#sceneConnections .alefHebrew") as HTMLElement[];
+        lefts.forEach((left, i) => {
+          const right = rights[i];
+          const chars = right.querySelectorAll(".alefChar");
+          const ref = right.querySelector(".alefRef") as Element;
+          tl
+            .to("#alefGlyph", { x: 150, duration: 0.5, ease: "power2.inOut" }, i === 0 ? ">0.25" : ">0.12")
+            .to(left, { autoAlpha: 1, duration: 0.4 }, "<0.1")
+            .to(chars, { autoAlpha: 1, duration: 0.14, stagger: 0.18, ease: "none" }, "<0.05")
+            .to(ref, { autoAlpha: 1, duration: 0.4 }, ">0.05")
+            .to({}, { duration: 0.7 })
+            .to([...chars, ref, left], { autoAlpha: 0, duration: 0.35 })
+            .to("#alefGlyph", { x: 0, duration: 0.45, ease: "power2.inOut" }, "<");
+        });
+        tl.to("#sceneConnections", { autoAlpha: 0, y: -18, filter: "blur(8px)", duration: 0.8 }, ">0.3");
+        return tl;
       };
 
       // Conexiones: cada escrito se ESCRIBE desde el Álef; el Álef se desliza a la derecha y vuelve al centro
