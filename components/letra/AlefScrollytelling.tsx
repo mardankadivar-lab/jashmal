@@ -139,6 +139,8 @@ export default function AlefScrollytelling() {
       gsap.set(["#betMiluiBetValue", "#betMiluiYudValue", "#betMiluiTavValue", "#betMiluiEquation"], { autoAlpha: 0, y: -20, scale: 0.92, transformOrigin: "50% 50%" });
       gsap.set(["#sceneBetIntro", "#sceneBetForm", "#sceneBetValue", "#sceneBetVavin"], { autoAlpha: 0 });
       gsap.set("#sceneBetIntro .introLine, #sceneBetForm .formLine, #sceneBetValue .valueLine, #sceneBetVavin .vavinLabel, #sceneBetVavin .vavinSeal", { autoAlpha: 0, y: 14 });
+      gsap.set(["#gimelHead", "#gimelBody", "#gimelLeg"], { autoAlpha: 0, scale: 0.6, transformOrigin: "50% 50%" });
+      gsap.set(["#bgCopy1", "#bgCopy2", "#bgCopy3", "#bgCopy4"], { autoAlpha: 0 });
       gsap.set(".teachingScene", {
         autoAlpha: 0,
         y: 24,
@@ -472,7 +474,32 @@ export default function AlefScrollytelling() {
         .to(["#betMiluiBetValue", "#betMiluiYudValue", "#betMiluiTavValue"], { autoAlpha: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.22, ease: "power2.out" }, ">-0.15")
         // La gematría se sella: 2 + 10 + 400 = 412 (verificado por el Sofer)
         .to("#betMiluiEquation", { autoAlpha: 1, y: 0, scale: 1, duration: 0.9, ease: "power2.out" }, ">0.15")
-        .to({}, { duration: 2.6 });
+        .to({}, { duration: 2.0 })
+
+        // ═══════ TRANSICIÓN BET → GUÍMEL — la casa no guarda la luz: la deja salir. Bet contiene · Guímel da. ═══════
+        // El milui se desvanece; la Bet queda limpia
+        .to(["#betMiluiBet", "#betMiluiYud", "#betMiluiTav", "#betMiluiBetValue", "#betMiluiYudValue", "#betMiluiTavValue", "#betMiluiEquation"], { autoAlpha: 0, duration: 1.0 })
+        .to("#bgCopy1", { autoAlpha: 1, duration: 0.9 }, "<0.3")
+        // Una luz crece dentro de la casa — la bendición no puede quedarse encerrada
+        .to("#transitionLight", { autoAlpha: 1, scale: 0.38, duration: 1.8, ease: "power2.in" }, ">0.2")
+        .to("#bgCopy1", { autoAlpha: 0, duration: 0.6 }, ">0.4")
+        .to("#bgCopy2", { autoAlpha: 1, duration: 0.9 }, "<")
+        // La Bet se disuelve mientras la luz se concentra en un sendero
+        .to(["#betTop", "#betRight", "#betBottom"], { autoAlpha: 0, scale: 0.92, duration: 1.7, ease: "power2.in", stagger: 0.18 })
+        .to("#transitionLight", { scale: 0.22, duration: 1.6, ease: "power2.inOut" }, "<")
+        .to("#bgCopy2", { autoAlpha: 0, duration: 0.6 }, ">0.2")
+        .to("#bgCopy3", { autoAlpha: 1, duration: 0.9 }, "<")
+        // La Guímel se forma desde la luz: el pie (el paso) → el cuerpo → la cabeza
+        .to("#gimelLeg", { autoAlpha: 1, scale: 1, duration: 1.2, ease: "power2.out" }, ">0.2")
+        .to("#gimelBody", { autoAlpha: 1, scale: 1, duration: 1.1, ease: "power2.out" }, ">-0.4")
+        .to("#gimelHead", { autoAlpha: 1, scale: 1, duration: 1.1, ease: "power2.out" }, ">-0.4")
+        .to("#transitionLight", { autoAlpha: 0, duration: 1.3 }, "<")
+        .to("#bgCopy3", { autoAlpha: 0, duration: 0.6 }, ">-0.3")
+        // Guímel revelada: dar es la primera expansión de la casa
+        .to("#bgCopy4", { autoAlpha: 1, duration: 1.0 }, ">")
+        .to({}, { duration: 2.4 })
+        .to("#bgCopy4", { autoAlpha: 0, duration: 0.9 })
+        .to({}, { duration: 1.2 });
     }, root);
 
     // Una vez fijados los estados iniciales por GSAP, desvanece el loader (sin flash).
@@ -490,7 +517,7 @@ export default function AlefScrollytelling() {
   }, []);
 
   return (
-    <main ref={rootRef} className="relative isolate h-[4400vh] bg-black text-white">
+    <main ref={rootRef} className="relative isolate h-[5000vh] bg-black text-white">
       {/* Loader ceremonial: cubre el flash de slides superpuestos al refrescar; se desvanece
           cuando GSAP ya fijó los estados iniciales. Álef dorada que respira sobre negro. */}
       <div
@@ -777,6 +804,27 @@ export default function AlefScrollytelling() {
             </g>
           </g>
         </svg>
+
+        {/* ═══ La Guímel — nace de la luz que sale de la Bet (Bet contiene · Guímel da). viewBox 1254, mismo centro. ═══ */}
+        <svg
+          id="gimelGlyph"
+          className="pointer-events-none absolute left-1/2 top-1/2 z-[15] h-[min(46vh,440px)] w-[min(56vw,440px)] -translate-x-1/2 -translate-y-1/2 overflow-visible"
+          viewBox="0 0 1254 1254"
+          role="img"
+          aria-label="Gimel · ג"
+          style={{ filter: "drop-shadow(0 0 22px rgba(232,200,122,0.5))" }}
+        >
+          <g id="gimelArtifact" fill="#e8c87a">
+            <path id="gimelHead" d="M 480 186 L 450 276 L 447 292 L 447 323 L 453 347 L 460 361 L 467 371 L 482 385 L 497 394 L 514 400 L 541 404 L 663 404 L 678 406 L 690 410 L 800 410 L 817 352 L 808 333 L 798 318 L 772 293 L 741 277 L 708 269 L 687 267 L 586 267 L 550 261 L 525 249 L 507 232 L 493 208 L 486 186 Z"/>
+            <path id="gimelBody" d="M 690 270 L 650 390 L 683 408 L 702 414 L 717 426 L 724 429 L 726 439 L 731 450 L 736 485 L 736 531 L 760 742 L 764 760 L 765 757 L 768 758 L 775 787 L 796 850 L 806 887 L 814 943 L 813 1003 L 814 1007 L 817 1007 L 849 988 L 870 967 L 880 952 L 887 937 L 892 922 L 895 904 L 895 877 L 889 844 L 880 816 L 847 735 L 837 699 L 831 667 L 827 626 L 827 401 L 824 377 L 817 352 L 808 333 L 793 312 L 776 296 L 761 286 L 732 274 Z"/>
+            <path id="gimelLeg" d="M 736 604 L 736 658 L 733 685 L 726 706 L 708 735 L 674 771 L 650 790 L 612 814 L 582 829 L 547 843 L 520 852 L 477 862 L 449 930 L 415 1001 L 416 1006 L 456 1005 L 511 996 L 601 959 L 671 848 L 780 700 Z"/>
+          </g>
+        </svg>
+        {/* Copy ceremonial de la transición Bet → Guímel (cada frase aparece a su tiempo) */}
+        <p id="bgCopy1" className="pointer-events-none absolute inset-x-0 bottom-[13vh] z-[41] mx-auto max-w-lg px-6 text-center text-xl italic leading-relaxed text-[#efe6d0] sm:text-2xl" style={{ fontFamily: "var(--font-cormorant, serif)" }}>La bendición no puede quedarse encerrada.</p>
+        <p id="bgCopy2" className="pointer-events-none absolute inset-x-0 bottom-[13vh] z-[41] mx-auto max-w-lg px-6 text-center text-xl italic leading-relaxed text-[#efe6d0] sm:text-2xl" style={{ fontFamily: "var(--font-cormorant, serif)" }}>La luz se convierte en camino.</p>
+        <p id="bgCopy3" className="pointer-events-none absolute inset-x-0 bottom-[13vh] z-[41] mx-auto max-w-lg px-6 text-center text-xl italic leading-relaxed text-[#efe6d0] sm:text-2xl" style={{ fontFamily: "var(--font-cormorant, serif)" }}>El recipiente aprende a caminar.</p>
+        <p id="bgCopy4" className="pointer-events-none absolute inset-x-0 bottom-[13vh] z-[41] mx-auto max-w-lg px-6 text-center text-lg leading-relaxed text-[#e8c87a]" style={{ fontFamily: "var(--font-cinzel, serif)" }}><span className="hebrew text-2xl">ג</span> · Dar es la primera expansión de la casa.</p>
 
         <div
           id="labelUpperYud"

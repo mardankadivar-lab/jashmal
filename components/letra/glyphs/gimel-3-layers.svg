@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1254 1254" width="1254" height="1254">
+  <title>Hebrew Gimel - 3 animated layers</title>
+  <desc>Vectorized from reference PNG. Three named layers: gimel_head, gimel_body, gimel_leg.</desc>
+  <defs>
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <g id="gimel" fill="#ffffff" filter="url(#softGlow)">
+    <g id="gimel_head" data-layer="head_yud">
+      <path d="M 480 186 L 450 276 L 447 292 L 447 323 L 453 347 L 460 361 L 467 371 L 482 385 L 497 394 L 514 400 L 541 404 L 663 404 L 678 406 L 690 410 L 800 410 L 817 352 L 808 333 L 798 318 L 772 293 L 741 277 L 708 269 L 687 267 L 586 267 L 550 261 L 525 249 L 507 232 L 493 208 L 486 186 Z"/>
+    </g>
+    <g id="gimel_body" data-layer="main_vav">
+      <path d="M 690 270 L 650 390 L 683 408 L 702 414 L 717 426 L 724 429 L 726 439 L 731 450 L 736 485 L 736 531 L 760 742 L 764 760 L 765 757 L 768 758 L 775 787 L 796 850 L 806 887 L 814 943 L 813 1003 L 814 1007 L 817 1007 L 849 988 L 870 967 L 880 952 L 887 937 L 892 922 L 895 904 L 895 877 L 889 844 L 880 816 L 847 735 L 837 699 L 831 667 L 827 626 L 827 401 L 824 377 L 817 352 L 808 333 L 793 312 L 776 296 L 761 286 L 732 274 Z"/>
+    </g>
+    <g id="gimel_leg" data-layer="moving_leg">
+      <path d="M 736 604 L 736 658 L 733 685 L 726 706 L 708 735 L 674 771 L 650 790 L 612 814 L 582 829 L 547 843 L 520 852 L 477 862 L 449 930 L 415 1001 L 416 1006 L 456 1005 L 511 996 L 601 959 L 671 848 L 780 700 Z"/>
+    </g>
+  </g>
+  <g id="full_gimel_reference" display="none">
+    <path fill="#ffffff" d="M 481 185 L 452 268 L 447 292 L 447 323 L 450 338 L 460 361 L 467 371 L 478 382 L 493 392 L 523 402 L 541 404 L 663 404 L 686 408 L 698 412 L 707 417 L 721 430 L 725 436 L 733 458 L 736 485 L 735 672 L 729 699 L 721 716 L 711 731 L 698 747 L 674 771 L 650 790 L 612 814 L 566 836 L 520 852 L 476 863 L 449 930 L 415 1001 L 415 1005 L 418 1007 L 465 1004 L 492 1000 L 528 992 L 556 983 L 578 974 L 611 957 L 637 940 L 664 918 L 686 896 L 716 858 L 735 827 L 753 790 L 764 758 L 767 757 L 778 797 L 796 850 L 806 887 L 810 907 L 814 943 L 814 986 L 812 1005 L 814 1007 L 817 1007 L 836 997 L 849 988 L 866 972 L 877 957 L 885 942 L 892 922 L 895 904 L 895 877 L 891 852 L 883 824 L 854 755 L 843 722 L 831 667 L 827 626 L 827 401 L 823 372 L 815 347 L 801 322 L 782 301 L 761 286 L 732 274 L 708 269 L 687 267 L 574 266 L 557 263 L 537 256 L 521 246 L 507 232 L 500 222 L 493 208 L 486 186 Z"/>
+  </g>
+</svg>
