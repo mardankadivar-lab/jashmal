@@ -7,6 +7,13 @@ import Lenis from "lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const CYCLE_SLOTS = [
+  "right-[6vw] top-[40vh] w-[min(17rem,30vw)] text-right",
+  "left-[6vw] top-[40vh] w-[min(17rem,30vw)] text-left",
+  "inset-x-0 bottom-[10vh] mx-auto w-[min(26rem,82vw)] text-center",
+  "inset-x-0 top-[19vh] mx-auto w-[min(26rem,82vw)] text-center",
+];
+
 const sparks = [
   [430, 430, 424, 1048],
   [468, 402, 454, 1096],
@@ -118,7 +125,7 @@ export default function AlefScrollytelling() {
         y: 24,
         filter: "blur(10px)",
       });
-      gsap.set(".connItem", { autoAlpha: 0, y: 28 });
+      gsap.set(".cycleItem", { autoAlpha: 0, y: 28 });
       // "Emana del Álef": cada texto nace en el centro de la letra y vuela a su lugar
       const emanaTargets = gsap.utils.toArray(".teachingLine, .teachingPill") as HTMLElement[];
       emanaTargets.forEach((el) => {
@@ -170,29 +177,28 @@ export default function AlefScrollytelling() {
           .to({}, { duration: hold })
           .to(selector, { autoAlpha: 0, y: -18, filter: "blur(8px)", duration: 0.75 });
 
-      // Conexiones: statement fijo (izq) + desfile de referencias (der), una a una
-      const connectionsScene = () => {
+      // Desfile generico: titulo fijo + items que aparecen/desaparecen uno a uno
+      const cycleScene = (selector: string, holdItem = 0.55) => {
         const tlc = gsap.timeline({ defaults: { ease: "power2.inOut" } });
         tlc
-          .to("#sceneConnections", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.85 })
-          .to("#sceneConnections .teachingLine", {
+          .to(selector, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.85 })
+          .to(`${selector} .teachingLine`, {
             autoAlpha: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)",
             duration: 1.0, stagger: 0.13, ease: "power2.out",
           }, "<0.05");
-        const items = gsap.utils.toArray("#sceneConnections .connItem") as HTMLElement[];
+        const items = gsap.utils.toArray(`${selector} .cycleItem`) as HTMLElement[];
         items.forEach((item, i) => {
           tlc
             .fromTo(item, { autoAlpha: 0, y: 28 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" }, i === 0 ? ">0.3" : ">0.14")
-            .to({}, { duration: 0.55 })
+            .to({}, { duration: holdItem })
             .to(item, { autoAlpha: 0, y: -28, duration: 0.4, ease: "power2.in" });
         });
-        tlc.to("#sceneConnections", { autoAlpha: 0, y: -18, filter: "blur(8px)", duration: 0.8 }, ">0.3");
+        tlc.to(selector, { autoAlpha: 0, y: -18, filter: "blur(8px)", duration: 0.8 }, ">0.3");
         return tlc;
       };
 
       tl.to({}, { duration: 0.9 })
         .add(scene("#sceneLetter", 2.3))
-        .to("#alefGlyph", { rotation: 360, transformOrigin: "50% 50%", duration: 0.9, ease: "power3.inOut" }, ">")
         .to("#upperYud", { y: -82, duration: 2.2 }, ">")
         .to("#lowerYud", { y: 82, duration: 2.2 }, "<")
         .to("#vav", {
@@ -246,7 +252,7 @@ export default function AlefScrollytelling() {
           filter: "url(#whiteGlow)",
           duration: 2.0,
         }, "<")
-        .add(scene("#sceneName", 2.35))
+        .add(cycleScene("#sceneName"))
         .to({}, { duration: 0.9 })
         .to(".sacredSpark", {
           autoAlpha: 1,
@@ -302,7 +308,7 @@ export default function AlefScrollytelling() {
           opacity: 1,
           duration: 1.35,
         }, "<")
-        .add(connectionsScene())
+        .add(cycleScene("#sceneConnections"))
         .to({}, { duration: 1.4 });
     }, root);
 
@@ -529,7 +535,7 @@ export default function AlefScrollytelling() {
 
         <section
           id="sceneLetter"
-          className="teachingScene pointer-events-none absolute left-1/2 top-[11vh] z-30 w-[min(34rem,84vw)] -translate-x-1/2 text-center"
+          className="teachingScene pointer-events-none absolute left-1/2 top-[2vh] z-30 w-[min(34rem,84vw)] -translate-x-1/2 text-center"
         >
           <p className="teachingLine font-cinzel text-[0.65rem] uppercase tracking-[0.38em] text-[#d8ad4f]">
             Nivel 1 — La letra
@@ -590,20 +596,25 @@ export default function AlefScrollytelling() {
 
         <section
           id="sceneName"
-          className="teachingScene pointer-events-none absolute inset-x-0 top-0 z-30 flex h-full flex-col items-center justify-between py-[7vh] text-center"
+          className="teachingScene pointer-events-none absolute inset-0 z-30"
         >
-          <div className="px-4">
-          <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Nombre · אלף</p>
-          <h2 className="teachingLine mt-3 font-cinzel text-[2.2rem] sm:text-[3rem] font-normal tracking-[0.015em] leading-[1.07] text-white">
-            Lo callado se vuelve palabra
-          </h2>
+          <div className="absolute left-1/2 top-[6vh] w-[min(60rem,92vw)] -translate-x-1/2 px-4 text-center">
+            <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Nombre · אלף</p>
+            <h2 className="teachingLine mt-3 font-cinzel text-[2.2rem] sm:text-[3rem] font-normal tracking-[0.015em] leading-[1.07] text-white">
+              Lo callado se vuelve palabra
+            </h2>
           </div>
-          <div className="grid w-[min(43rem,90vw)] gap-3 px-4 text-sm leading-6 text-white/85 sm:grid-cols-4">
-            <p className="teachingPill"><span className="font-cinzel text-[#d8ad4f]">Aluf</span><br />Soberano y maestro.</p>
-            <p className="teachingPill"><span className="font-cinzel text-[#d8ad4f]">Élef</span><br />El Uno contiene el mil.</p>
-            <p className="teachingPill"><span className="font-cinzel text-[#d8ad4f]">Le'alef</span><br />Ser primero es enseñar.</p>
-            <p className="teachingPill"><span className="font-cinzel text-[#d8ad4f]">Péle</span><br />El nombre es maravilla.</p>
-          </div>
+          {[
+            ["Aluf", "Soberano y maestro."],
+            ["Élef", "El Uno contiene el mil."],
+            ["Le'alef", "Ser primero es enseñar."],
+            ["Péle", "El nombre es maravilla."],
+          ].map(([word, gloss], i) => (
+            <div key={word} className={`cycleItem absolute ${CYCLE_SLOTS[i % CYCLE_SLOTS.length]}`}>
+              <p className="font-cinzel text-[2rem] leading-tight text-[#d8ad4f]">{word}</p>
+              <p className="mt-2 text-base leading-7 text-white/80">{gloss}</p>
+            </div>
+          ))}
         </section>
 
         <section
@@ -661,7 +672,7 @@ export default function AlefScrollytelling() {
           {/* Desfile de referencias — DERECHA (una a una al scroll) */}
           <div className="absolute right-[5vw] top-1/2 h-[11rem] w-[min(19rem,32vw)] -translate-y-1/2">
             {connections.map(([label, source]) => (
-              <div key={label} className="connItem absolute inset-0 flex flex-col justify-center text-right">
+              <div key={label} className="cycleItem absolute inset-0 flex flex-col justify-center text-right">
                 <p className="font-cinzel text-[2.1rem] leading-[1.08] text-[#d8ad4f]">{label}</p>
                 <p className="mt-2 text-sm tracking-wide text-white/70">{source}</p>
               </div>
