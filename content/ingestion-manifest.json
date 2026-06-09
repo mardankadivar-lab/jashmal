@@ -1,0 +1,48 @@
+{
+  "_doc": "Manifiesto de ingesta de la biblioteca de Jashmal. Rastrea el progreso de incorporar textos sagrados completos (hebreo + traduccion + comentario Jashmal + metadata) a una biblioteca local navegable, dia por dia, de forma idempotente.",
+  "_audit_dia_1": {
+    "fecha": "2026-06-09",
+    "hallazgo": "El proyecto consulta Sefaria EN VIVO (lib/sefaria.ts: getText/getName/searchSuggestions/buildRef). NO hay textos guardados localmente todavia. Existe lib/catalog.generated.ts (catalogo de textos disponibles via Sefaria).",
+    "sefaria_verificado": "El index de 'Sefer Etz Chaim' responde (Kabbalah / Arizal and Chaim Vital). Estructura: nodo 'Shaar HaKlalim' (depth 2) + Shaarim con Gate/Chapter/Paragraph (depth 3).",
+    "decision_arquitectonica_para_mardan": "El spec pide biblioteca GUARDADA (ingestar+almacenar como JSON en /content/texts/). Esto es una adicion grande sobre el modelo actual (live-fetch). Construir incremental, unidad por unidad. Pendiente: confirmar formato de almacenamiento y si las paginas de lectura son nuevas rutas (/texto/[...]) o se integran al motor /estudio existente."
+  },
+  "last_run": "2026-06-09 — Dia 1: auditoria + manifest",
+  "next_run_target": "Dia 2: extender lib/sefaria.ts con fetchIndex/normalize para ingesta; import de PRUEBA de 1 unidad (Sefer Etz Chaim, primera seccion) guardada como JSON en /content/texts/kabbalah/etz-chaim/ con estado needs_review.",
+  "priority_queue": ["etz-chaim", "tanya", "shaar-hagilgulim", "shaar-hakavanot", "zohar"],
+  "texts": {
+    "etz-chaim": {
+      "status": "pending",
+      "sefaria_ref": "Sefer Etz Chaim",
+      "categories": ["Kabbalah", "Arizal and Chaim Vital"],
+      "structure": "Shaar HaKlalim (depth 2: Chapter/Paragraph) + Shaarim (depth 3: Gate/Chapter/Paragraph)",
+      "total_units": 50,
+      "imported_units": 0,
+      "pending_units": ["Shaar HaKlalim", "(enumerar los Shaarim restantes via Sefaria index en Dia 2)"],
+      "review_needed": [],
+      "source": "Sefaria API (verificado: el index responde)",
+      "license_note": "Hebreo clasico = dominio publico. Traducciones modernas: verificar licencia por version, por separado."
+    },
+    "pri-etz-chaim": {
+      "status": "pending", "sefaria_ref": "Pri Etz Chaim", "total_units": 34, "imported_units": 0,
+      "source": "Sefaria API", "license_note": "Hebreo clasico dominio publico."
+    },
+    "tanya": {
+      "status": "pending",
+      "sefaria_ref": "Tanya",
+      "categories": ["Chasidut", "Chabad"],
+      "structure": "Likutei Amarim · Shaar HaYichud VeHaEmunah · Iggeret HaTeshuvah · Iggeret HaKodesh · Kuntres Acharon",
+      "total_units": 0,
+      "imported_units": 0,
+      "pending_units": [],
+      "review_needed": [],
+      "source": "Sefaria API (confirmar refs exactos por seccion en Dia 2)",
+      "license_note": "Hebreo dominio publico; traduccion 'Lessons in Tanya' y otras: verificar licencia antes de almacenar."
+    }
+  },
+  "rules": {
+    "idempotente": "Antes de guardar: revisar canonical_ref + content_hash; si existe igual, no duplicar; si cambio, marcar needs_review.",
+    "review_humano": "Texto fuente con licencia clara puede publicarse; comentario Jashmal y traducciones generadas quedan needs_review.",
+    "copyright": "No importar traducciones propietarias sin permiso. Si hay duda legal: solo metadata + resumen propio + link externo.",
+    "calidad": "No mutilar el hebreo, no cambiar numeracion, separar siempre fuente / traduccion / comentario propio."
+  }
+}
