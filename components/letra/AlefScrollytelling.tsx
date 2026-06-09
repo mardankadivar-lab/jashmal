@@ -363,6 +363,16 @@ export default function AlefScrollytelling() {
         .add(connectionsTypingScene())
         // El título se va, el Alef de אהיה se queda solo
         .to("#sceneConnections .teachingLine", { autoAlpha: 0, y: -10, duration: 0.55 })
+        // Las letras ה־י־ה (ya invisibles) COLAPSAN su ancho: la palabra se re-centra y el
+        // Álef de אהיה se desliza al centro REAL del viewport. Sin esto, el Álef queda a la
+        // derecha del centro y el SVG emerge en el centro → se veían DOS álefs.
+        .to("#sceneConnections .alefRest:last-child .alefRestChar", {
+          width: 0,
+          marginRight: 0,
+          autoAlpha: 0,
+          duration: 2.0,
+          ease: "power2.inOut",
+        }, "<")
         // El mismo Alef crece hacia el centro — continuidad visual con el SVG
         .to("#sceneConnections .alefRest:last-child .alefRestAlef", {
           scale: 2.6,
@@ -370,7 +380,8 @@ export default function AlefScrollytelling() {
           duration: 2.0,
           ease: "power2.inOut",
         }, "<")
-        // El SVG Alef emerge desde atrás mientras el texto crece
+        // El SVG Alef emerge AL CENTRO una vez que el texto YA llegó al centro: ahora se
+        // superponen exactos → crossfade de UN solo álef (no dos en posiciones distintas).
         .to(["#upperYud", "#lowerYud", "#vav"], {
           autoAlpha: 1,
           y: 0,
@@ -378,7 +389,7 @@ export default function AlefScrollytelling() {
           filter: "url(#goldGlow)",
           duration: 1.2,
           ease: "power2.out",
-        }, "<0.7")
+        }, ">")
         .to("#alefGlow", { scale: 1.5, opacity: 1, duration: 1.2, ease: "power2.out" }, "<")
         // El texto desaparece: el SVG ya tomó su lugar
         .to("#sceneConnections .alefRest:last-child .alefRestAlef", {
