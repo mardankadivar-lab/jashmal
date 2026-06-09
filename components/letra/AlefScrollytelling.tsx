@@ -232,16 +232,20 @@ export default function AlefScrollytelling() {
           const alefSpan = rest.querySelector(".alefRestAlef");
           const chars = rest.querySelectorAll(".alefRestChar");
           const label = labels[i];
+          const isLast = i === rests.length - 1;
           tl
-            // El Álef dorado de la palabra NACE primero, luego se escriben las demás letras hacia la izquierda
             .to(alefSpan, { autoAlpha: 1, duration: 0.4 }, i === 0 ? ">0.2" : ">0.12")
             .to(label, { autoAlpha: 1, duration: 0.45 }, "<")
             .to(chars, { autoAlpha: 1, duration: 0.16, stagger: 0.22, ease: "none" }, "<0.12")
-            .to({}, { duration: 0.7 })
-            // Se borra la palabra completa antes de pasar a la siguiente
-            .to([alefSpan, ...chars, label], { autoAlpha: 0, duration: 0.38 });
+            .to({}, { duration: 0.7 });
+          if (isLast) {
+            // Las otras letras y etiqueta desaparecen — el Alef de אהיה se queda solo
+            tl.to([...chars, label], { autoAlpha: 0, duration: 0.38 });
+          } else {
+            tl.to([alefSpan, ...chars, label], { autoAlpha: 0, duration: 0.38 });
+          }
         });
-        tl.to("#sceneConnections", { autoAlpha: 0, y: -18, filter: "blur(8px)", duration: 0.8 }, ">0.3");
+        // No fade out #sceneConnections aquí — el main timeline maneja el viaje de regreso
         return tl;
       };
 
@@ -357,17 +361,32 @@ export default function AlefScrollytelling() {
           duration: 1.35,
         }, "<")
         .add(connectionsTypingScene())
-        // Alef vuelve al centro tras la última palabra (אהיה)
+        // El título se va, el Alef de אהיה se queda solo
+        .to("#sceneConnections .teachingLine", { autoAlpha: 0, y: -10, duration: 0.55 })
+        // El mismo Alef crece hacia el centro — continuidad visual con el SVG
+        .to("#sceneConnections .alefRest:last-child .alefRestAlef", {
+          scale: 2.6,
+          transformOrigin: "50% 50%",
+          duration: 2.0,
+          ease: "power2.inOut",
+        }, "<")
+        // El SVG Alef emerge desde atrás mientras el texto crece
         .to(["#upperYud", "#lowerYud", "#vav"], {
           autoAlpha: 1,
           y: 0,
           fill: "#e8c87a",
           filter: "url(#goldGlow)",
-          duration: 1.5,
+          duration: 1.2,
           ease: "power2.out",
-        })
-        .to("#alefGlow", { scale: 1.5, opacity: 1, duration: 1.5, ease: "power2.out" }, "<")
-        // Respira hondo: se expande lentamente y se queda más grande, esperando la Bet
+        }, "<0.7")
+        .to("#alefGlow", { scale: 1.5, opacity: 1, duration: 1.2, ease: "power2.out" }, "<")
+        // El texto desaparece: el SVG ya tomó su lugar
+        .to("#sceneConnections .alefRest:last-child .alefRestAlef", {
+          autoAlpha: 0,
+          duration: 0.65,
+        }, "<0.35")
+        .to("#sceneConnections", { autoAlpha: 0, duration: 0.4 }, ">0.1")
+        // Respira hondo: crece lentamente, más glow, esperando la Bet
         .to("#alefArtifact", {
           scale: 1.13,
           transformOrigin: "50% 50%",
