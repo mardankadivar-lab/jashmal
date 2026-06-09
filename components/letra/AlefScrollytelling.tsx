@@ -138,7 +138,7 @@ export default function AlefScrollytelling() {
       gsap.set(["#betMiluiBet", "#betMiluiYud", "#betMiluiTav"], { autoAlpha: 0, y: 30, scale: 0.94, transformOrigin: "50% 50%" });
       gsap.set(["#betMiluiBetValue", "#betMiluiYudValue", "#betMiluiTavValue", "#betMiluiEquation"], { autoAlpha: 0, y: -20, scale: 0.92, transformOrigin: "50% 50%" });
       gsap.set(["#sceneBetIntro", "#sceneBetForm", "#sceneBetValue", "#sceneBetVavin"], { autoAlpha: 0 });
-      gsap.set("#sceneBetIntro .introLine, #sceneBetForm .formLine, #sceneBetValue .valueLine, #sceneBetVavin .vavinLine", { autoAlpha: 0, y: 14 });
+      gsap.set("#sceneBetIntro .introLine, #sceneBetForm .formLine, #sceneBetValue .valueLine, #sceneBetVavin .vavinLabel, #sceneBetVavin .vavinSeal", { autoAlpha: 0, y: 14 });
       gsap.set(".teachingScene", {
         autoAlpha: 0,
         y: 24,
@@ -455,8 +455,9 @@ export default function AlefScrollytelling() {
         .to("#betRight", { x: 155, duration: 1.3, ease: "power2.inOut" }, "<")
         .to("#betBottom", { y: 150, duration: 1.3, ease: "power2.inOut" }, "<")
         .to("#sceneBetVavin", { autoAlpha: 1, duration: 0.6 }, "<0.55")
-        .to("#sceneBetVavin .vavinLine", { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.3, ease: "power2.out" }, "<0.1")
-        .to({}, { duration: 2.2 })
+        .to("#sceneBetVavin .vavinLabel", { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.28, ease: "power2.out" }, "<0.1")
+        .to("#sceneBetVavin .vavinSeal", { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, ">-0.1")
+        .to({}, { duration: 2.8 })
         // Los 3 vavin vuelven a unirse: la casa se reconstruye
         .to("#sceneBetVavin", { autoAlpha: 0, y: -10, duration: 0.7 })
         .to("#betTop", { y: 0, duration: 1.3, ease: "power2.inOut" }, "<0.2")
@@ -525,12 +526,32 @@ export default function AlefScrollytelling() {
 
         {/* Disección de la Bet: al separarse los 3 trazos, se revela 3 vavin = 18 = חי (Vida).
             Lectura de la forma (drash), verificada por el Sofer — no es cita del Zohar. */}
-        <div id="sceneBetVavin" className="pointer-events-none absolute inset-x-0 bottom-[13vh] z-40 flex flex-col items-center gap-2.5 px-6 text-center">
-          <p className="vavinLine font-cinzel text-[0.6rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Tres vavin · <span className="hebrew">שְׁלוֹשָׁה וָוִין</span></p>
-          <p className="vavinLine hebrew text-3xl text-[#efe6d0]">ו + ו + ו</p>
-          <p className="vavinLine font-cinzel text-base tracking-wide text-[#f0e7d0]/90">6 + 6 + 6 = 18</p>
-          <p className="vavinLine font-cinzel text-2xl text-[#e8c87a]" style={{ textShadow: "0 0 18px rgba(232,200,122,0.5)" }}>18 = <span className="hebrew">חַי</span> · Vida</p>
-          <p className="vavinLine max-w-md text-sm italic leading-relaxed text-white/70">La casa está hecha de Vida: tres ganchos que unen el cielo y la tierra.</p>
+        <div id="sceneBetVavin" className="pointer-events-none absolute inset-0 z-40">
+          {/* TECHO (vav de arriba) — la Torá como autoridad y protección */}
+          <div className="vavinLabel absolute left-1/2 top-[18%] w-[min(15rem,46vw)] -translate-x-1/2 text-center">
+            <p className="font-cinzel text-[0.62rem] uppercase tracking-[0.18em] text-[#e8c87a]"><span className="hebrew text-sm">ו</span> · La Torá: autoridad y protección</p>
+            <p className="mt-0.5 text-xs italic leading-snug text-white/60">el techo que cubre la casa</p>
+          </div>
+          {/* VERTICAL (la pared) — conecta cielo y tierra; la memoria */}
+          <div className="vavinLabel absolute right-[5vw] top-1/2 w-[min(13rem,40vw)] -translate-y-1/2 text-left">
+            <p className="font-cinzel text-[0.62rem] uppercase tracking-[0.18em] text-[#e8c87a]"><span className="hebrew text-sm">ו</span> · La Torá: conecta cielo y tierra</p>
+            <p className="mt-0.5 text-xs italic leading-snug text-white/60">la memoria; el gancho que sostiene (Éx 27:10)</p>
+          </div>
+          {/* PISO (vav de abajo) — la Torá como fundamento */}
+          <div className="vavinLabel absolute left-1/2 bottom-[18%] w-[min(15rem,46vw)] -translate-x-1/2 text-center">
+            <p className="font-cinzel text-[0.62rem] uppercase tracking-[0.18em] text-[#e8c87a]"><span className="hebrew text-sm">ו</span> · La Torá: el fundamento</p>
+            <p className="mt-0.5 text-xs italic leading-snug text-white/60">sobre ella se sostiene la casa (Avot 1:2)</p>
+          </div>
+          {/* APERTURA (el lado abierto, izquierda) — hacia adelante */}
+          <div className="vavinLabel absolute left-[5vw] top-1/2 w-[min(11rem,34vw)] -translate-y-1/2 text-right">
+            <p className="font-cinzel text-[0.6rem] uppercase tracking-[0.18em] text-[#d8ad4f]/75">La única apertura →</p>
+            <p className="mt-0.5 text-xs italic leading-snug text-white/50">hacia adelante, al mundo y al mañana</p>
+          </div>
+          {/* SELLO — 3 vavin = 18 = חי = Torá = Vida */}
+          <div className="vavinSeal absolute inset-x-0 bottom-[6vh] flex flex-col items-center gap-1 px-6 text-center">
+            <p className="font-cinzel text-base text-[#f0e7d0]/90">3 × <span className="hebrew">ו</span> = 18 = <span className="hebrew text-[#e8c87a]">חַי</span></p>
+            <p className="font-cinzel text-sm text-[#e8c87a]" style={{ textShadow: "0 0 16px rgba(232,200,122,0.5)" }}>Una casa de Torá — y la Torá es Vida</p>
+          </div>
         </div>
 
         <svg
