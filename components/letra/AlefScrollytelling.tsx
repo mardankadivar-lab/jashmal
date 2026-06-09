@@ -14,6 +14,15 @@ const CYCLE_SLOTS = [
   "inset-x-0 top-[19vh] mx-auto w-[min(26rem,82vw)] text-center",
 ];
 
+const ALEF_WORDS = [
+  { translit: "Anojí", meaning: "Yo soy", source: "Éx 20:2", letters: ["א", "נ", "כ", "י"] },
+  { translit: "Ejad", meaning: "Uno", source: "Dt 6:4", letters: ["א", "ח", "ד"] },
+  { translit: "Or", meaning: "Luz", source: "Gén 1:3", letters: ["א", "ו", "ר"] },
+  { translit: "Emet", meaning: "Verdad", source: "Shabat 55a", letters: ["א", "מ", "ת"] },
+  { translit: "Ahavá", meaning: "Amor", source: "Cant 8:6", letters: ["א", "ה", "ב", "ה"] },
+  { translit: "Ehyé", meaning: "Seré", source: "Éx 3:14", letters: ["א", "ה", "י", "ה"] },
+];
+
 const sparks = [
   [430, 430, 424, 1048],
   [468, 402, 454, 1096],
@@ -127,6 +136,7 @@ export default function AlefScrollytelling() {
       });
       gsap.set(".cycleItem", { autoAlpha: 0, y: 28 });
       gsap.set("#alefGlow", { opacity: 0.7, transformOrigin: "50% 44%" });
+      gsap.set([".alefWord", ".alefChar", ".alefRef"], { autoAlpha: 0 });
       // "Emana del Álef": cada texto nace en el centro de la letra y vuela a su lugar
       const emanaTargets = gsap.utils.toArray(".teachingLine, .teachingPill") as HTMLElement[];
       emanaTargets.forEach((el) => {
@@ -198,6 +208,35 @@ export default function AlefScrollytelling() {
         });
         tlc.to(selector, { autoAlpha: 0, y: -18, filter: "blur(8px)", duration: 0.8 }, ">0.3");
         return tlc;
+      };
+
+      // Conexiones: cada escrito se ESCRIBE desde el Álef; el Álef se desliza a la derecha y vuelve al centro
+      const connectionsTypingScene = () => {
+        const tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
+        tl
+          .to("#alefGlow", { scale: 1.16, opacity: 1, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0)
+          .to("#sceneConnections", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.85 })
+          .to("#sceneConnections .teachingLine", {
+            autoAlpha: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)",
+            duration: 1.0, stagger: 0.13, ease: "power2.out",
+          }, "<0.05");
+        const lefts = gsap.utils.toArray("#sceneConnections .alefWord") as HTMLElement[];
+        const rights = gsap.utils.toArray("#sceneConnections .alefHebrew") as HTMLElement[];
+        lefts.forEach((left, i) => {
+          const right = rights[i];
+          const chars = right.querySelectorAll(".alefChar");
+          const ref = right.querySelector(".alefRef") as Element;
+          tl
+            .to("#alefGlyph", { x: 150, duration: 0.5, ease: "power2.inOut" }, i === 0 ? ">0.25" : ">0.12")
+            .to(left, { autoAlpha: 1, duration: 0.4 }, "<0.1")
+            .to(chars, { autoAlpha: 1, duration: 0.14, stagger: 0.18, ease: "none" }, "<0.05")
+            .to(ref, { autoAlpha: 1, duration: 0.4 }, ">0.05")
+            .to({}, { duration: 0.7 })
+            .to([...chars, ref, left], { autoAlpha: 0, duration: 0.35 })
+            .to("#alefGlyph", { x: 0, duration: 0.45, ease: "power2.inOut" }, "<");
+        });
+        tl.to("#sceneConnections", { autoAlpha: 0, y: -18, filter: "blur(8px)", duration: 0.8 }, ">0.3");
+        return tl;
       };
 
       tl.to({}, { duration: 0.9 })
@@ -311,7 +350,7 @@ export default function AlefScrollytelling() {
           opacity: 1,
           duration: 1.35,
         }, "<")
-        .add(cycleScene("#sceneConnections"))
+        .add(connectionsTypingScene())
         .to({}, { duration: 1.4 });
     }, root);
 
@@ -670,27 +709,39 @@ export default function AlefScrollytelling() {
             </h2>
           </div>
 
-          {/* Statement — IZQUIERDA */}
-          <div className="absolute left-[5vw] top-1/2 w-[min(19rem,32vw)] -translate-y-1/2 text-left">
+          {/* IZQUIERDA: statement fijo + la palabra que cambia */}
+          <div className="absolute left-[5vw] top-1/2 w-[min(20rem,34vw)] -translate-y-1/2 text-left">
             <p className="teachingLine text-base leading-7 text-white/80">
               Todos los escritos vuelven al
             </p>
-            <p className="teachingLine mt-1 font-cinzel text-[2rem] leading-[1.08] text-[#d8ad4f]">
-              Álef de Anojí
-            </p>
-            <p className="teachingLine mt-2 font-cinzel text-sm uppercase tracking-[0.32em] text-[#d8ad4f]/70">
-              «Yo soy»
-            </p>
+            <div className="relative mt-2 h-[5.5rem]">
+              {ALEF_WORDS.map((w) => (
+                <div key={w.translit} className="alefWord absolute inset-0">
+                  <p className="font-cinzel text-[2rem] leading-[1.08] text-[#d8ad4f]">Álef de {w.translit}</p>
+                  <p className="mt-2 font-cinzel text-sm uppercase tracking-[0.32em] text-[#d8ad4f]/70">«{w.meaning}»</p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Desfile de referencias — DERECHA (una a una al scroll) */}
-          <div className="absolute right-[5vw] top-1/2 h-[11rem] w-[min(19rem,32vw)] -translate-y-1/2">
-            {connections.map(([label, source]) => (
-              <div key={label} className="cycleItem absolute inset-0 flex flex-col justify-center text-right">
-                <p className="font-cinzel text-[2.1rem] leading-[1.08] text-[#d8ad4f]">{label}</p>
-                <p className="mt-2 text-sm tracking-wide text-white/70">{source}</p>
-              </div>
-            ))}
+          {/* DERECHA: la palabra hebrea SE ESCRIBE letra por letra desde el Álef + referencia */}
+          <div className="absolute right-[5vw] top-1/2 w-[min(22rem,36vw)] -translate-y-1/2 text-right">
+            <div className="relative h-[9rem]">
+              {ALEF_WORDS.map((w) => (
+                <div key={w.translit} className="alefHebrew absolute inset-0 flex flex-col items-end justify-center">
+                  <p
+                    dir="rtl"
+                    className="text-[3.4rem] leading-none text-[#d8ad4f]"
+                    style={{ fontFamily: "var(--font-hebrew), 'Frank Ruhl Libre', serif" }}
+                  >
+                    {w.letters.map((ch, j) => (
+                      <span key={j} className="alefChar inline-block">{ch}</span>
+                    ))}
+                  </p>
+                  <p className="alefRef mt-4 text-sm tracking-wide text-white/70">{w.source}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
