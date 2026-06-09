@@ -143,6 +143,8 @@ export default function AlefScrollytelling() {
       gsap.set(["#bgCopy1", "#bgCopy2", "#bgCopy3", "#bgCopy4"], { autoAlpha: 0 });
       gsap.set(["#sceneGimelIntro", "#sceneGimelForm", "#sceneGimelValue"], { autoAlpha: 0 });
       gsap.set("#sceneGimelIntro .gIntroLine, #sceneGimelForm .gFormLine, #sceneGimelValue .gValueLine", { autoAlpha: 0, y: 14 });
+      gsap.set(["#gimelDaletGhost", "#sceneGimelDissect"], { autoAlpha: 0 });
+      gsap.set("#sceneGimelDissect .gDissectLabel, #sceneGimelDissect .gDissectSeal", { autoAlpha: 0, y: 14 });
       gsap.set(".teachingScene", {
         autoAlpha: 0,
         y: 24,
@@ -518,6 +520,20 @@ export default function AlefScrollytelling() {
         .to("#sceneGimelValue .gValueLine", { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.22, ease: "power2.out" }, "<0.1")
         .to({}, { duration: 2.4 })
         .to("#sceneGimelValue", { autoAlpha: 0, y: -14, duration: 0.8 })
+        .to({}, { duration: 0.8 })
+
+        // ═══════ DISECCIÓN DE LA GUÍMEL — Vav (cuerpo) + Yud (pie); el pie corre hacia la Dálet (Shabat 104a) ═══════
+        // El pie (Yud) se separa y se estira hacia abajo-izquierda, hacia la Dálet
+        .to("#gimelLeg", { x: -55, y: 45, duration: 1.4, ease: "power2.inOut" })
+        .to("#gimelDaletGhost", { autoAlpha: 1, duration: 1.2 }, "<0.3")
+        .to("#sceneGimelDissect", { autoAlpha: 1, duration: 0.5 }, "<")
+        .to("#sceneGimelDissect .gDissectLabel", { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.3, ease: "power2.out" }, "<0.1")
+        .to("#sceneGimelDissect .gDissectSeal", { autoAlpha: 1, y: 0, duration: 0.8, ease: "power2.out" }, ">-0.1")
+        .to({}, { duration: 2.8 })
+        // El pie vuelve; la Dálet se desvanece (la Guímel sigue su camino)
+        .to("#sceneGimelDissect", { autoAlpha: 0, y: -10, duration: 0.7 })
+        .to("#gimelDaletGhost", { autoAlpha: 0, duration: 0.8 }, "<")
+        .to("#gimelLeg", { x: 0, y: 0, duration: 1.3, ease: "power2.inOut" }, "<0.2")
         .to({}, { duration: 1.0 });
     }, root);
 
@@ -536,7 +552,7 @@ export default function AlefScrollytelling() {
   }, []);
 
   return (
-    <main ref={rootRef} className="relative isolate h-[5800vh] bg-black text-white">
+    <main ref={rootRef} className="relative isolate h-[6200vh] bg-black text-white">
       {/* Loader ceremonial: cubre el flash de slides superpuestos al refrescar; se desvanece
           cuando GSAP ya fijó los estados iniciales. Álef dorada que respira sobre negro. */}
       <div
@@ -585,6 +601,24 @@ export default function AlefScrollytelling() {
           <p className="gValueLine font-cinzel text-[0.6rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Número · <span className="hebrew">ג</span> = 3</p>
           <p className="gValueLine font-cinzel text-xl text-parchment/90 sm:text-2xl">El tercero: el camino</p>
           <p className="gValueLine max-w-md text-sm leading-relaxed text-white/70">Del Uno (א) y la casa (ב) nace el movimiento. Dos crean al «otro»; tres es ir hacia él.</p>
+        </div>
+
+        {/* Una Dálet tenue hacia donde corre el pie de la Guímel (el pobre, el receptor) */}
+        <div id="gimelDaletGhost" className="pointer-events-none absolute left-[23%] top-1/2 z-[13] -translate-y-1/2 text-[7rem] leading-none text-[#d8ad4f]/25 sm:text-[9rem]" style={{ fontFamily: "var(--font-hebrew), serif" }}>ד</div>
+        {/* Disección de la Guímel: Vav (cuerpo) + Yud (pie); el pie se estira hacia la Dálet (Shabat 104a) */}
+        <div id="sceneGimelDissect" className="pointer-events-none absolute inset-0 z-40">
+          <div className="gDissectLabel absolute right-[6vw] top-[33%] w-[min(12rem,36vw)] text-left">
+            <p className="font-cinzel text-[0.62rem] uppercase tracking-[0.18em] text-[#e8c87a]"><span className="hebrew text-sm">ו</span> · El cuerpo erguido · 6</p>
+            <p className="mt-0.5 text-xs italic leading-snug text-white/60">la Vav: la persona de pie</p>
+          </div>
+          <div className="gDissectLabel absolute left-[6vw] bottom-[27%] w-[min(12rem,36vw)] text-right">
+            <p className="font-cinzel text-[0.62rem] uppercase tracking-[0.18em] text-[#e8c87a]"><span className="hebrew text-sm">י</span> · El pie que se da · 10</p>
+            <p className="mt-0.5 text-xs italic leading-snug text-white/60">el Yud: el paso hacia el otro</p>
+          </div>
+          <div className="gDissectSeal absolute inset-x-0 bottom-[6.5vh] flex flex-col items-center gap-1.5 px-6 text-center">
+            <p className="max-w-md text-sm italic leading-relaxed text-[#f0e7d0]/85">El pie se estira hacia la <span className="hebrew text-[#e8c87a]">ד</span>: así corre el que hace bondad tras el pobre.</p>
+            <p className="font-cinzel text-[10px] uppercase tracking-widest text-[#d8ad4f]/70"><span className="hebrew">גְּמוֹל דַּלִּים</span> · Talmud · Shabat 104a</p>
+          </div>
         </div>
 
         {/* Disección de la Bet: al separarse los 3 trazos, se revela 3 vavin = 18 = חי (Vida).
