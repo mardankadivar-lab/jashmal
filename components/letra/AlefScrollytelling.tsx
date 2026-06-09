@@ -425,8 +425,10 @@ export default function AlefScrollytelling() {
         .to("#betTop", { autoAlpha: 1, scale: 1, duration: 0.7, ease: "power2.out" }, "<0.1")
         .to("#betRight", { autoAlpha: 1, scale: 1, duration: 0.7, ease: "power2.out" }, ">-0.35")
         .to("#betBottom", { autoAlpha: 1, scale: 1, duration: 0.7, ease: "power2.out" }, ">-0.35")
-        // Fase 7: BET revelada — estable, luminosa
-        .to({}, { duration: 1.4 })
+        // Fase 7: BET revelada. La luz YA NO queda dentro de la casa: se apaga TODO el
+        // resplandor de la transición (glow ambiente + capa de luz + chispa). La Bet queda limpia.
+        .to(["#alefGlow", "#transitionLight", "#transitionSpark"], { autoAlpha: 0, duration: 0.8, ease: "power2.out" }, ">")
+        .to({}, { duration: 1.2 })
 
         // ═══════ ENSEÑANZA DE LA BET — el milui בית se destila hacia abajo (igual que el Álef) ═══════
         // La Bet abre su nombre: Bet · Yud · Tav nacen bajo la letra
