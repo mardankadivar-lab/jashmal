@@ -366,7 +366,10 @@ export default function AlefScrollytelling() {
         // ── ROBUSTO anti-dos-álefs ──
         // El Álef de texto se DISUELVE EN LUZ por completo (crece y se desvanece mientras el
         // glow se aviva) ANTES de que aparezca el SVG. Nunca hay dos álefs visibles a la vez.
-        .to("#sceneConnections .alefRest:last-child .alefRestChar", { autoAlpha: 0, duration: 0.3 }, "<")
+        // Las letras ה־י־ה COLAPSAN su ancho: la palabra se re-centra y el Álef de texto se
+        // desliza al centro REAL mientras se disuelve (verificado en browser: cx 643→506≈centro).
+        // Así NO "salta" de posición: el Álef nace exactamente donde reaparecerá el SVG.
+        .to("#sceneConnections .alefRest:last-child .alefRestChar", { width: 0, marginRight: 0, autoAlpha: 0, duration: 1.1, ease: "power2.inOut" }, "<")
         .to("#sceneConnections .alefRest:last-child .alefRestAlef", {
           scale: 1.9,
           autoAlpha: 0,
