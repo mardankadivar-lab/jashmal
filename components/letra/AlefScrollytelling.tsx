@@ -279,7 +279,7 @@ export default function AlefScrollytelling() {
         .to("#miluiLamedValue", { autoAlpha: 1, y: 0, scale: 1, duration: 0.42 })
         .to("#miluiPeiValue", { autoAlpha: 1, y: 0, scale: 1, duration: 0.42 })
         .to("#miluiEquation", { autoAlpha: 1, y: 0, scale: 1, duration: 0.6 })
-        .add(scene("#sceneMilui", 2.1))
+        .add(cycleScene("#sceneMilui"))
         .to({}, { duration: 1.6 })
         .to(["#miluiAlef", "#miluiLamed", "#miluiPei", "#miluiAlefValue", "#miluiLamedValue", "#miluiPeiValue", "#miluiEquation"], {
           autoAlpha: 0,
@@ -417,6 +417,7 @@ export default function AlefScrollytelling() {
             ))}
           </g>
 
+          <g transform="translate(594 1056) scale(1.7) translate(-594 -1056)">
           <g
             id="miluiLetters"
             fill="#d8ad4f"
@@ -442,6 +443,7 @@ export default function AlefScrollytelling() {
             <text id="miluiLamedValue" opacity="0" x="628" y="1156" textAnchor="middle">30</text>
             <text id="miluiPeiValue" opacity="0" x="460" y="1156" textAnchor="middle">80</text>
             <text id="miluiEquation" opacity="0" x="627" y="1224" textAnchor="middle">1 + 30 + 80 = 111</text>
+          </g>
           </g>
 
           <text
@@ -628,18 +630,17 @@ export default function AlefScrollytelling() {
               Álef, Lámed, Pe: lo Uno oculto se eleva, enseña y se revela en la boca.
             </p>
           </div>
-          {/* Divinidad — arriba (lo más alto) */}
-          <div className="absolute left-1/2 top-[21vh] w-[min(22rem,82vw)] -translate-x-1/2 px-4 text-center">
-            <p className="teachingPill text-xs leading-5 text-white/66"><span className="font-cinzel text-[#d8ad4f]">Divinidad</span> · El Uno rige y excede todo entendimiento.</p>
-          </div>
-          {/* Almas — al lado (el alma entre el mundo y la divinidad) */}
-          <div className="absolute left-[5vw] top-1/2 w-[min(14rem,38vw)] -translate-y-1/2 text-left">
-            <p className="teachingPill text-xs leading-5 text-white/66"><span className="font-cinzel text-[#d8ad4f]">Almas</span> · Aprender empieza en el asombro.</p>
-          </div>
-          {/* Mundos — abajo (lo más bajo) */}
-          <div className="absolute bottom-[11vh] left-1/2 w-[min(22rem,82vw)] -translate-x-1/2 px-4 text-center">
-            <p className="teachingPill text-xs leading-5 text-white/66"><span className="font-cinzel text-[#d8ad4f]">Mundos</span> · Un origen gobierna toda multiplicidad.</p>
-          </div>
+          {/* Las 3 dimensiones DESFILAN en orden cósmico: Divinidad arriba · Almas al lado · Mundos abajo */}
+          {[
+            ["Divinidad", "El Uno rige y excede todo entendimiento.", "inset-x-0 top-[20vh] mx-auto w-[min(26rem,82vw)] text-center"],
+            ["Almas", "Aprender empieza en el asombro.", "left-[6vw] top-[42vh] w-[min(17rem,30vw)] text-left"],
+            ["Mundos", "Un origen gobierna toda multiplicidad.", "inset-x-0 bottom-[11vh] mx-auto w-[min(26rem,82vw)] text-center"],
+          ].map(([label, text, slot]) => (
+            <div key={label} className={`cycleItem absolute ${slot}`}>
+              <p className="font-cinzel text-[1.7rem] leading-tight text-[#d8ad4f]">{label}</p>
+              <p className="mt-2 text-base leading-7 text-white/80">{text}</p>
+            </div>
+          ))}
         </section>
 
         <section
