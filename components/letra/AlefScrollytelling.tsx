@@ -126,6 +126,7 @@ export default function AlefScrollytelling() {
         filter: "blur(10px)",
       });
       gsap.set(".cycleItem", { autoAlpha: 0, y: 28 });
+      gsap.set("#alefGlow", { opacity: 0.7, transformOrigin: "50% 44%" });
       // "Emana del Álef": cada texto nace en el centro de la letra y vuela a su lugar
       const emanaTargets = gsap.utils.toArray(".teachingLine, .teachingPill") as HTMLElement[];
       emanaTargets.forEach((el) => {
@@ -153,6 +154,7 @@ export default function AlefScrollytelling() {
       });
 
       const scene = (selector: string, hold = 1.8) => gsap.timeline({ defaults: { ease: "power2.inOut" } })
+          .to("#alefGlow", { scale: 1.16, opacity: 1, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0)
           .to(selector, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.85 })
           .to(`${selector} .teachingLine`, {
             autoAlpha: 1,
@@ -181,6 +183,7 @@ export default function AlefScrollytelling() {
       const cycleScene = (selector: string, holdItem = 0.55) => {
         const tlc = gsap.timeline({ defaults: { ease: "power2.inOut" } });
         tlc
+          .to("#alefGlow", { scale: 1.16, opacity: 1, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0)
           .to(selector, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.85 })
           .to(`${selector} .teachingLine`, {
             autoAlpha: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)",
@@ -221,7 +224,7 @@ export default function AlefScrollytelling() {
         .to({}, { duration: 1.35 })
         .to("#labelVav", { autoAlpha: 0, y: -10, duration: 0.35 })
         .to(["#upperYud", "#lowerYud"], { opacity: 0.86, duration: 0.35 }, "<")
-        .add(scene("#sceneForm", 2.25))
+        .add(cycleScene("#sceneForm"))
         .to("#upperTen", { autoAlpha: 1, y: 0, scale: 1, duration: 0.45 })
         .to("#lowerTen", { autoAlpha: 1, y: 0, scale: 1, duration: 0.45 })
         .to("#vavSix", { autoAlpha: 1, y: 0, scale: 1, duration: 0.45 })
@@ -235,7 +238,7 @@ export default function AlefScrollytelling() {
         .to("#divineName", { autoAlpha: 1, y: 0, scale: 1, duration: 0.65 })
         .to("#divineNameValues", { autoAlpha: 1, y: 0, scale: 1, duration: 0.5 })
         .to("#divineNameEquation", { autoAlpha: 1, y: 0, scale: 1, duration: 0.5 })
-        .add(scene("#sceneNumber", 2.4))
+        .add(cycleScene("#sceneNumber"))
         .to({}, { duration: 1.35 })
         .to(".numberMark", { autoAlpha: 0, y: -8, duration: 0.35 })
         .to("#numberEquation", { autoAlpha: 0, y: -12, duration: 0.45 }, "<")
@@ -326,7 +329,7 @@ export default function AlefScrollytelling() {
   return (
     <main ref={rootRef} className="relative isolate h-[2400vh] bg-black text-white">
       <div ref={pinRef} className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-[#0a0604]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_44%,rgba(201,164,62,0.18),transparent_46%)]" />
+        <div id="alefGlow" className="absolute inset-0 bg-[radial-gradient(circle_at_50%_44%,rgba(201,164,62,0.18),transparent_46%)]" />
 
         <svg
           id="alefGlyph"
@@ -555,45 +558,55 @@ export default function AlefScrollytelling() {
 
         <section
           id="sceneForm"
-          className="teachingScene pointer-events-none absolute right-[5vw] top-[12vh] z-30 w-[min(22rem,42vw)] text-right max-sm:left-1/2 max-sm:right-auto max-sm:top-[5vh] max-sm:w-[82vw] max-sm:-translate-x-1/2 max-sm:text-center"
+          className="teachingScene pointer-events-none absolute inset-0 z-30"
         >
-          <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Forma</p>
-          <h2 className="teachingLine mt-3 font-cinzel text-[2.2rem] sm:text-[3rem] font-normal tracking-[0.015em] leading-[1.07] text-white max-sm:mt-2 max-sm:text-[1.15rem] max-sm:leading-6">
-            Dos aguas, un puente
-          </h2>
-          <p className="teachingLine mt-4 text-sm leading-6 text-white/85 max-sm:mt-2 max-sm:text-xs max-sm:leading-5">
-            Yud arriba. Vav diagonal. Yud abajo. La fe sostiene que lo sublime y lo terrenal son uno.
-          </p>
-          <div className="mt-5 grid gap-2 max-sm:hidden">
-            {formWorldSoulDivinity.map(([label, text]) => (
-              <p key={label} className="teachingPill text-xs leading-5 text-white/62">
-                <span className="font-cinzel text-[#d8ad4f]">{label}</span> · {text}
-              </p>
-            ))}
+          <div className="absolute left-1/2 top-[6vh] w-[min(60rem,92vw)] -translate-x-1/2 px-4 text-center">
+            <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Forma</p>
+            <h2 className="teachingLine mt-3 font-cinzel text-[2.2rem] sm:text-[3rem] font-normal tracking-[0.015em] leading-[1.07] text-white">
+              Dos aguas, un puente
+            </h2>
+            <p className="teachingLine mx-auto mt-3 max-w-xl text-sm leading-6 text-white/80">
+              Yud arriba. Vav diagonal. Yud abajo. La fe sostiene que lo sublime y lo terrenal son uno.
+            </p>
           </div>
+          {[
+            ["Mundos", "El cosmos toma forma de Álef.", "left-[6vw] top-[42vh] w-[min(17rem,30vw)] text-left"],
+            ["Almas", "Alma arriba, cuerpo abajo, fe en medio.", "right-[6vw] top-[42vh] w-[min(17rem,30vw)] text-right"],
+            ["Divinidad", "Arriba y abajo: Hashem Ejad.", "inset-x-0 bottom-[11vh] mx-auto w-[min(26rem,82vw)] text-center"],
+          ].map(([label, text, slot]) => (
+            <div key={label} className={`cycleItem absolute ${slot}`}>
+              <p className="font-cinzel text-[1.7rem] leading-tight text-[#d8ad4f]">{label}</p>
+              <p className="mt-2 text-base leading-7 text-white/80">{text}</p>
+            </div>
+          ))}
         </section>
 
         <section
           id="sceneNumber"
-          className="teachingScene pointer-events-none absolute left-[5vw] top-[12vh] z-30 w-[min(23rem,42vw)] text-left max-sm:left-1/2 max-sm:top-[5vh] max-sm:w-[82vw] max-sm:-translate-x-1/2 max-sm:text-center"
+          className="teachingScene pointer-events-none absolute inset-0 z-30"
         >
-          <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Número</p>
-          <h2 className="teachingLine mt-3 font-cinzel text-[2.2rem] sm:text-[3rem] font-normal tracking-[0.015em] leading-[1.07] text-white max-sm:mt-2 max-sm:text-[1.15rem] max-sm:leading-6">
-            El Uno contiene el Nombre
-          </h2>
-          <p className="teachingLine mt-4 text-sm leading-6 text-white/85 max-sm:mt-2 max-sm:text-xs max-sm:leading-5">
-            Álef = 1. Su forma revela 10 + 6 + 10 = 26, el Nombre en silencio.
-          </p>
-          <p className="teachingLine mt-3 text-xs leading-5 text-white/52 max-sm:hidden">
-            26 = 13 + 13: Ejad, unidad; Ahavá, amor.
-          </p>
-          <div className="mt-5 grid gap-2 max-sm:hidden">
-            {numberWorldSoulDivinity.map(([label, text]) => (
-              <p key={label} className="teachingPill text-xs leading-5 text-white/62">
-                <span className="font-cinzel text-[#d8ad4f]">{label}</span> · {text}
-              </p>
-            ))}
+          <div className="absolute left-1/2 top-[6vh] w-[min(60rem,92vw)] -translate-x-1/2 px-4 text-center">
+            <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Número</p>
+            <h2 className="teachingLine mt-3 font-cinzel text-[2.2rem] sm:text-[3rem] font-normal tracking-[0.015em] leading-[1.07] text-white">
+              El Uno contiene el Nombre
+            </h2>
+            <p className="teachingLine mx-auto mt-3 max-w-xl text-sm leading-6 text-white/80">
+              Álef = 1. Su forma revela 10 + 6 + 10 = 26, el Nombre en silencio.
+            </p>
+            <p className="teachingLine mx-auto mt-2 max-w-xl text-xs leading-5 text-white/60">
+              26 = 13 + 13: Ejad, unidad; Ahavá, amor.
+            </p>
           </div>
+          {[
+            ["Mundos", "Crear traduce el 1 al 26.", "left-[6vw] top-[42vh] w-[min(17rem,30vw)] text-left"],
+            ["Almas", "Unificar devuelve la dispersión al Uno.", "right-[6vw] top-[42vh] w-[min(17rem,30vw)] text-right"],
+            ["Divinidad", "El 1 y el 26 son una sola fe.", "inset-x-0 bottom-[11vh] mx-auto w-[min(26rem,82vw)] text-center"],
+          ].map(([label, text, slot]) => (
+            <div key={label} className={`cycleItem absolute ${slot}`}>
+              <p className="font-cinzel text-[1.7rem] leading-tight text-[#d8ad4f]">{label}</p>
+              <p className="mt-2 text-base leading-7 text-white/80">{text}</p>
+            </div>
+          ))}
         </section>
 
         <section
