@@ -36,8 +36,10 @@ export default function CreacionPage() {
     const lenis = new Lenis({
       wrapper: el,
       content: el.firstElementChild as HTMLElement,
-      lerp: 0.075,
+      lerp: 0.055,
+      wheelMultiplier: 0.85,
       smoothWheel: true,
+      syncTouch: true,
     });
     let rafId = 0;
     const raf = (time: number) => {

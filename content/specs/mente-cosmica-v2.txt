@@ -1,0 +1,242 @@
+Redesign the Jashmal Cosmic Mind page as an immersive 3D knowledge universe.
+
+Current page:
+https://jashmal.org/es/mente-cosmica
+
+Current concept:
+The page is called “La Mente Cósmica de Jashmal”.
+It allows the user to drag to rotate, zoom in/out, click a synapse, and double click to study.
+It includes domains such as Tanaj, Mishnah, Talmud, Midrash, Kabbalah, Chasidut, Halakhah, Philosophy, Science, Characters, Themes and Community.
+
+Goal:
+Transform this page from a simple interactive graph into a living cosmic-neural mind.
+
+The user must feel that they are inside the intelligence of Jashmal:
+- Every text is a neuron.
+- Every concept is a spark.
+- Every connection is a synapse between worlds.
+- Every domain is a galaxy of knowledge.
+
+Visual direction:
+- Pure black background.
+- Central luminous core with חַשְׁמַל.
+- Around the core, create knowledge galaxies:
+  Tanaj
+  Mishnah
+  Talmud
+  Midrash
+  Kabbalah
+  Chasidut
+  Halakhah
+  Philosophy
+  Science
+  Characters
+  Themes
+  Community
+- Each galaxy should have a distinct subtle color and spatial identity.
+- Nodes should look like luminous stars/neurons.
+- Connections should look like fiber-optic synapses.
+- Avoid a childish sci-fi look. It must feel sacred, premium, mystical and intelligent.
+
+Core text:
+חַשְׁמַל
+La voz del silencio
+
+Hero copy:
+La Mente Cósmica de Jashmal
+
+Cada texto es una neurona.
+Cada concepto, una chispa.
+Cada conexión, una sinapsis entre mundos.
+
+Gira la mente.
+Acércate a una chispa.
+Entra en el conocimiento.
+
+Interactions:
+1. Drag to rotate the cosmic mind.
+2. Scroll or pinch to zoom.
+3. Click a node to reveal its immediate connections.
+4. Hover a node to illuminate connected paths.
+5. Double click a node to enter study mode.
+6. Click a connection/synapse to understand why two concepts are linked.
+7. Search should highlight matching nodes and dim unrelated galaxies.
+
+Terminology:
+- Node = concept, source, person, book or theme.
+- Synapse = connection between two nodes.
+- Galaxy = knowledge domain.
+- Core = Jashmal.
+
+Fix instruction text:
+Replace:
+“Arrastra para girar · rueda o pellizca para acercar · clic en una sinapsis · doble clic para estudiar”
+
+With:
+“Arrastra para girar la mente · haz zoom para entrar en una galaxia · clic en un nodo para revelar conexiones · doble clic para estudiar”
+
+Node behavior:
+On hover:
+- Node increases glow.
+- Connected edges light up.
+- Related nodes softly pulse.
+- Show a small tooltip with:
+  Hebrew name
+  transliteration
+  short definition
+  domain
+
+On click:
+Open an elegant side panel with:
+- Hebrew title
+- Transliteration
+- Spanish title
+- Domain
+- Short description
+- Connected nodes
+- Main sources
+- Button: “Estudiar este nodo”
+
+On double click:
+Transition into study mode:
+- Camera moves into the selected node.
+- Background network fades.
+- A study panel/page opens with:
+  Hebrew source
+  Spanish translation
+  Pshat
+  Remez
+  Drash
+  Sod
+  Chasidic interpretation
+  Gematria
+  Personal application
+  Related nodes
+
+Synapse behavior:
+When clicking a connection between two nodes, show:
+- Node A
+- Node B
+- Why they are connected
+- Shared word/root/gematria/theme/source
+- Suggested study path
+
+Search behavior:
+The search bar should feel like asking the mind a question.
+When the user searches “Najash Mashiaj 358”:
+- Highlight Najash
+- Highlight Mashiaj
+- Highlight Gematria 358
+- Highlight Jashmal if relevant
+- Draw glowing paths between them
+- Dim unrelated nodes
+
+Suggested domain colors:
+- Tanaj: gold-white
+- Mishnah: warm ivory
+- Talmud: amber
+- Midrash: violet
+- Kabbalah: sapphire and gold
+- Chasidut: inner warm flame
+- Halakhah: clean white
+- Philosophy: deep silver
+- Science: electric blue
+- Characters: crimson-gold
+- Themes: emerald-gold
+- Community: soft rose-gold
+
+Technology:
+Use:
+- Next.js 14+ App Router
+- React
+- TypeScript
+- Tailwind CSS
+- React Three Fiber
+- Three.js
+- Drei
+- Zustand for state management
+- Framer Motion for UI panels and text transitions
+- GSAP optional for camera transitions
+- Fuse.js for local fuzzy search
+- Force graph layout logic, but visually refined and manually clustered by domain
+- Dynamic imports for Three.js components
+- Performance optimization for mobile
+
+Suggested components:
+- CosmicMindPage.tsx
+- CosmicMindCanvas.tsx
+- KnowledgeGalaxy.tsx
+- KnowledgeNode.tsx
+- SynapseLine.tsx
+- NodeTooltip.tsx
+- NodeDetailPanel.tsx
+- SynapseDetailPanel.tsx
+- CosmicSearch.tsx
+- DomainFilter.tsx
+- StudyMode.tsx
+- mindGraphData.ts
+
+Data structure:
+Each node should include:
+- id
+- type: text | concept | person | book | theme | practice
+- domain
+- title_es
+- title_he
+- transliteration
+- short_description
+- sources
+- connections
+- gematria if relevant
+- pardes tags
+- x, y, z position or cluster reference
+
+Each edge/synapse should include:
+- source
+- target
+- relationship_type
+- explanation
+- shared_source
+- shared_root
+- shared_gematria
+- strength
+
+Camera:
+- Initial camera shows the whole cosmic mind.
+- Clicking a galaxy moves camera closer to that domain.
+- Clicking a node focuses the camera on that node.
+- Double clicking enters the node.
+- Escape or Back returns to the full mind.
+
+Mobile:
+- Use simplified particle count.
+- Replace large side panel with bottom sheet.
+- Allow pinch to zoom and swipe to rotate.
+- Keep search sticky at bottom or top.
+- Keep controls minimal.
+
+Performance:
+- Limit visible nodes initially.
+- Use level of detail:
+  far view = galaxies only
+  medium view = main nodes
+  close view = subnodes
+- Render labels only on hover or when close.
+- Use instanced meshes for many nodes.
+- Use memoized geometry.
+- Reduce DPR on mobile.
+- Support prefers-reduced-motion.
+
+Accessibility:
+- Add keyboard search.
+- Add list view fallback.
+- Add aria labels for nodes and buttons.
+- Allow “Study mode” without 3D interaction.
+
+Final feeling:
+This should not feel like a graph.
+It should feel like entering a living cosmic brain of Torah, Kabbalah, philosophy and science.
+
+The core principle:
+Jashmal does not only organize knowledge.
+Jashmal reveals the hidden synapses between worlds.
