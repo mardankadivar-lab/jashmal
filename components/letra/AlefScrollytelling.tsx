@@ -137,8 +137,8 @@ export default function AlefScrollytelling() {
       gsap.set(["#betTop", "#betRight", "#betBottom"], { autoAlpha: 0, scale: 0.55, transformOrigin: "50% 50%" });
       gsap.set(["#betMiluiBet", "#betMiluiYud", "#betMiluiTav"], { autoAlpha: 0, y: 30, scale: 0.94, transformOrigin: "50% 50%" });
       gsap.set(["#betMiluiBetValue", "#betMiluiYudValue", "#betMiluiTavValue", "#betMiluiEquation"], { autoAlpha: 0, y: -20, scale: 0.92, transformOrigin: "50% 50%" });
-      gsap.set("#sceneBetVavin", { autoAlpha: 0 });
-      gsap.set("#sceneBetVavin .vavinLine", { autoAlpha: 0, y: 14 });
+      gsap.set(["#sceneBetIntro", "#sceneBetForm", "#sceneBetValue", "#sceneBetVavin"], { autoAlpha: 0 });
+      gsap.set("#sceneBetIntro .introLine, #sceneBetForm .formLine, #sceneBetValue .valueLine, #sceneBetVavin .vavinLine", { autoAlpha: 0, y: 14 });
       gsap.set(".teachingScene", {
         autoAlpha: 0,
         y: 24,
@@ -432,6 +432,23 @@ export default function AlefScrollytelling() {
         .to(["#alefGlow", "#transitionLight", "#transitionSpark"], { autoAlpha: 0, duration: 0.8, ease: "power2.out" }, ">")
         .to({}, { duration: 1.2 })
 
+        // ═══════ INTRODUCCIÓN DE LA BET — el comienzo de su enseñanza (antes de descomponerla) ═══════
+        // Apertura: el silencio (Álef) se vuelve palabra/casa (Bet)
+        .to("#sceneBetIntro", { autoAlpha: 1, duration: 0.9 })
+        .to("#sceneBetIntro .introLine", { autoAlpha: 1, y: 0, duration: 1.0, stagger: 0.3, ease: "power2.out" }, "<0.2")
+        .to({}, { duration: 2.4 })
+        .to("#sceneBetIntro", { autoAlpha: 0, y: -14, duration: 0.8 })
+        // La forma: una casa de tres muros (Bereshit Rabá 1:10)
+        .to("#sceneBetForm", { autoAlpha: 1, duration: 0.5 }, ">-0.2")
+        .to("#sceneBetForm .formLine", { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.22, ease: "power2.out" }, "<0.1")
+        .to({}, { duration: 2.4 })
+        .to("#sceneBetForm", { autoAlpha: 0, y: -14, duration: 0.8 })
+        // El número: 2, el primer "otro" (los dos mundos)
+        .to("#sceneBetValue", { autoAlpha: 1, duration: 0.5 }, ">-0.2")
+        .to("#sceneBetValue .valueLine", { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.22, ease: "power2.out" }, "<0.1")
+        .to({}, { duration: 2.4 })
+        .to("#sceneBetValue", { autoAlpha: 0, y: -14, duration: 0.8 })
+
         // ═══════ DISECCIÓN DE LA BET — ¿de qué está hecha la casa? 3 vavin = 18 = חי (Vida) ═══════
         // Los 3 trazos se separan (igual que el Álef abría su Yud-Vav-Yud). Drash de forma, verificado por el Sofer.
         .to("#betTop", { y: -150, duration: 1.3, ease: "power2.inOut" })
@@ -472,7 +489,7 @@ export default function AlefScrollytelling() {
   }, []);
 
   return (
-    <main ref={rootRef} className="relative isolate h-[3600vh] bg-black text-white">
+    <main ref={rootRef} className="relative isolate h-[4400vh] bg-black text-white">
       {/* Loader ceremonial: cubre el flash de slides superpuestos al refrescar; se desvanece
           cuando GSAP ya fijó los estados iniciales. Álef dorada que respira sobre negro. */}
       <div
@@ -483,6 +500,28 @@ export default function AlefScrollytelling() {
       </div>
       <div ref={pinRef} className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-[#0a0604]">
         <div id="alefGlow" className="absolute inset-0 bg-[radial-gradient(circle_at_50%_44%,rgba(201,164,62,0.18),transparent_46%)]" />
+
+        {/* ═══ INTRODUCCIÓN de la Bet — el comienzo de su enseñanza, antes de descomponerla
+              (como el Álef tuvo su intro antes del milui). Contenido verificado por el Sofer. ═══ */}
+        {/* Apertura: el silencio (Álef) se vuelve palabra/casa (Bet) */}
+        <div id="sceneBetIntro" className="pointer-events-none absolute inset-0 z-40 flex flex-col items-center justify-center gap-4 px-6 text-center">
+          <p className="introLine font-cinzel text-[0.62rem] uppercase tracking-[0.4em] text-[#d8ad4f]">Bet · <span className="hebrew">בֵּית</span></p>
+          <p className="introLine max-w-lg text-2xl italic leading-relaxed text-[#efe6d0] sm:text-3xl" style={{ fontFamily: "var(--font-cormorant, serif)" }}>El Uno calló. Después dijo.<br/>La primera palabra fue una <span className="text-[#e8c87a]">casa</span>.</p>
+        </div>
+        {/* La forma: una casa de tres muros, abierta hacia adelante */}
+        <div id="sceneBetForm" className="pointer-events-none absolute inset-x-0 bottom-[12vh] z-40 flex flex-col items-center gap-2.5 px-6 text-center">
+          <p className="formLine font-cinzel text-[0.6rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Forma</p>
+          <p className="formLine font-cinzel text-xl text-parchment/90 sm:text-2xl">Una casa de tres muros</p>
+          <p className="formLine max-w-md text-sm leading-relaxed text-white/70">Cerrada atrás, arriba y abajo; abierta hacia adelante. No preguntes lo que fue antes — entra en lo que viene.</p>
+          <p className="formLine font-cinzel text-[10px] uppercase tracking-widest text-gold/45">Bereshit Rabá 1:10</p>
+        </div>
+        {/* El número: 2, el primer "otro" */}
+        <div id="sceneBetValue" className="pointer-events-none absolute inset-x-0 bottom-[12vh] z-40 flex flex-col items-center gap-2.5 px-6 text-center">
+          <p className="valueLine font-cinzel text-[0.6rem] uppercase tracking-[0.34em] text-[#d8ad4f]">Número · <span className="hebrew">ב</span> = 2</p>
+          <p className="valueLine font-cinzel text-xl text-parchment/90 sm:text-2xl">El primer «otro»</p>
+          <p className="valueLine max-w-md text-sm leading-relaxed text-white/70">Con el dos nace el tú. Y solo entre dos cabe la bendición.</p>
+          <p className="valueLine text-sm italic text-[#e8c87a]/85">Dos mundos: este y el que viene.</p>
+        </div>
 
         {/* Disección de la Bet: al separarse los 3 trazos, se revela 3 vavin = 18 = חי (Vida).
             Lectura de la forma (drash), verificada por el Sofer — no es cita del Zohar. */}
