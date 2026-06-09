@@ -1,0 +1,357 @@
+Quiero rediseñar la página de Jashmal Creation como una experiencia inmersiva de scrollytelling cabalístico sobre el proceso de la Creación según Etz Chaim.
+
+URL actual:
+https://jashmal.org/en/creacion
+
+Objetivo:
+Transformar la página en una experiencia visual, espiritual e interactiva. No debe sentirse como un artículo ni como una página educativa común. Debe sentirse como entrar dentro del proceso secreto de la Creación: Ein Sof, Tzimtzum, Chalal Panui, Kav, Adam Kadmon, Shevirat HaKelim, Nitzotzot, Tikkun y los Cuatro Mundos.
+
+La experiencia debe ser tipo Apple scrollytelling:
+- Scroll vertical largo, suave e inmersivo.
+- El elemento central permanece fijo/pinned mientras el usuario hace scroll.
+- Cada sección transforma visualmente la escena anterior.
+- La creación debe sentirse como una sola continuidad, no como slides separados.
+- El usuario debe sentir que desciende dentro de la luz, el vacío, las vasijas, las chispas y los mundos.
+
+IMPORTANTE:
+No quiero una página estática.
+No quiero tarjetas comunes.
+No quiero bloques largos de texto.
+Quiero una experiencia cinematográfica interactiva.
+
+TECNOLOGÍA RECOMENDADA:
+
+Frontend:
+- Next.js 14+ con App Router.
+- React.
+- TypeScript.
+- Tailwind CSS.
+- Framer Motion para animaciones de UI, textos, fades y transiciones.
+- GSAP + ScrollTrigger para controlar el scroll, secciones pinned y transformaciones precisas.
+- Lenis para smooth scrolling premium.
+- React Three Fiber / Three.js para escenas 3D, partículas, luz, esferas, cosmos y profundidad.
+- Drei para helpers de Three.js.
+- Zustand para controlar el estado activo de la escena.
+- SVG para símbolos hebreos, líneas, círculos y geometría sagrada.
+- Rive o Lottie opcional para microanimaciones exportadas.
+- Dynamic imports para cargar Three.js solo en cliente.
+- prefers-reduced-motion para accesibilidad.
+
+Arquitectura visual:
+Crear una experiencia de scroll continuo con una escena central fija.
+
+Estructura técnica:
+- Componente principal: CreationExperience.tsx
+- Componente de escena 3D: CreationCanvas.tsx
+- Componente de texto flotante: SceneCopy.tsx
+- Componente de navegación lateral: SceneProgress.tsx
+- Componente de panel profundo: StudyPanel.tsx
+- Data source: creationScenes.ts
+
+La página debe tener 14 escenas:
+
+1. Ein Sof — אֵין סוֹף
+2. Or Ein Sof — אוֹר אֵין סוֹף
+3. Tzimtzum — צִמְצוּם
+4. Chalal Panui — חָלָל פָּנוּי
+5. Reshimu — רְשִׁימוּ
+6. Kav — קַו
+7. Adam Kadmon — אָדָם קַדְמוֹן
+8. Akudim — עֲקוּדִים
+9. Nekudim — נְקוּדִים
+10. Shevirat HaKelim — שְׁבִירַת הַכֵּלִים
+11. Nitzotzot — נִיצוֹצוֹת
+12. Tikkun — תִּיקּוּן
+13. Four Worlds — Atzilut, Beriah, Yetzirah, Asiyah
+14. Human Participation — The soul as partner in Tikkun
+
+EXPERIENCIA DE SCROLL:
+
+El scroll debe sentirse casi infinito, como una inmersión continua.
+
+Implementación:
+- Usar Lenis para smooth scroll.
+- Usar GSAP ScrollTrigger para crear un contenedor pinned de gran altura.
+- La escena 3D permanece fija en el centro.
+- El progreso del scroll controla el estado visual.
+- Cada escena ocupa aproximadamente 100vh o 150vh.
+- Las transiciones entre escenas deben ser graduales.
+- Al final, la experiencia puede hacer una transición circular: las chispas del Tikkun vuelven a formar una luz superior, conectando nuevamente con Ein Sof. Esto da sensación de ciclo infinito.
+
+Ejemplo conceptual:
+Ein Sof → Luz infinita → Contracción → Vacío → Huella → Línea → Vasijas → Ruptura → Chispas → Reparación → Mundos → Alma humana → Retorno a la Luz.
+
+VISUALES POR ESCENA:
+
+1. Ein Sof
+Pantalla casi totalmente negra.
+No mostrar estrellas todavía.
+Solo una respiración sutil de luz invisible.
+Texto:
+אֵין סוֹף
+Before form, before time, before worlds —
+there was only the Infinite.
+
+2. Or Ein Sof
+La pantalla se llena de luz blanca/dorada.
+No hay objetos. Solo luz.
+Texto:
+The light did not illuminate something.
+The light was everything.
+
+3. Tzimtzum
+La luz se retrae desde el centro.
+Aparece un círculo oscuro.
+Texto:
+For a world to exist,
+the light concealed itself.
+
+4. Chalal Panui
+Vacío circular profundo.
+Luz infinita alrededor.
+Texto:
+The void was not absence.
+It was possibility.
+
+5. Reshimu
+Dentro del vacío queda polvo dorado, una memoria de luz.
+Texto:
+Even after concealment,
+a trace remained.
+
+6. Kav
+Un rayo vertical entra desde arriba hacia el vacío.
+Texto:
+A single line entered the empty space —
+infinite light measured into form.
+
+7. Adam Kadmon
+La línea empieza a formar una estructura humana abstracta hecha de luz, geometría y sefirot.
+No debe parecer un cuerpo literal.
+Texto:
+The first configuration of light
+was called Adam Kadmon.
+
+8. Akudim
+Luces múltiples atadas dentro de una sola vasija.
+Texto:
+Many lights.
+One vessel.
+
+9. Nekudim
+Puntos de luz separados, intensos e inestables.
+Texto:
+The light divided into points.
+Each point carried more than it could contain.
+
+10. Shevirat HaKelim
+Clímax visual.
+Vasijas luminosas se fracturan.
+Chispas caen hacia abajo.
+Texto:
+The vessels shattered.
+The light descended in fragments.
+
+11. Nitzotzot
+Miles de chispas atrapadas en oscuridad.
+Texto:
+Every fragment hid a spark.
+Every spark waits to be lifted.
+
+12. Tikkun
+Las chispas empiezan a reorganizarse.
+Aparecen líneas, armonía, reparación.
+Texto:
+Creation does not end in rupture.
+It begins in repair.
+
+13. Four Worlds
+Cuatro capas descendentes:
+Atzilut
+Beriah
+Yetzirah
+Asiyah
+
+Visual:
+Cuatro planos transparentes de luz descendiendo.
+Texto:
+The light descended through worlds
+until it touched matter.
+
+14. Human Participation
+Una silueta humana abstracta, o una Alef formada por chispas.
+Texto:
+The human being appears not as an accident,
+but as a partner in Tikkun.
+
+Final:
+The world was not created finished.
+It was created to be repaired.
+
+CTA:
+Begin the Study
+
+ESTÉTICA:
+
+Paleta:
+- Fondo negro absoluto.
+- Blanco místico.
+- Oro suave.
+- Ámbar.
+- Azul zafiro oscuro.
+- Violeta casi negro.
+
+Estilo:
+- Minimalista.
+- Sagrado.
+- Cinematográfico.
+- Apple-like.
+- Kabbalistic cosmic interface.
+- Nada sobrecargado.
+- Nada infantil.
+- Nada tipo videojuego.
+- Debe sentirse premium, espiritual y profundo.
+
+TIPOGRAFÍA:
+- Para títulos: serif elegante, tipo Cormorant Garamond, Cinzel, Spectral o Playfair Display.
+- Para interfaz: Inter, Manrope o Geist.
+- Para hebreo: usar una fuente hebrea elegante y legible.
+- Los títulos hebreos deben ser grandes, respirados, centrados y con presencia sagrada.
+
+INTERFAZ:
+
+Debe existir una navegación lateral muy sutil:
+- Pequeños puntos verticales representando las 14 escenas.
+- El punto activo brilla.
+- Al hacer hover, muestra el nombre de la escena.
+- No debe distraer del centro.
+
+Debe haber un botón:
+“Study in depth”
+
+Al hacer click:
+Abrir un panel lateral o modal elegante con:
+- Hebrew source
+- Translation
+- Source reference
+- Pshat
+- Remez
+- Drash
+- Sod
+- Chasidic interpretation
+- Personal application
+
+Este panel debe abrirse sin romper la experiencia inmersiva.
+
+ANIMACIONES:
+
+Usar:
+- fade in
+- fade out
+- slow scale
+- blur transition
+- glowing lines
+- particle drift
+- camera depth movement
+- pinned object transformation
+- scroll-controlled morphing
+
+Evitar:
+- animaciones rápidas
+- rebotes caricaturescos
+- exceso de colores
+- textos largos visibles al mismo tiempo
+- secciones separadas con fondos diferentes
+
+SCROLL INFINITO / CONTINUO:
+
+Quiero que la experiencia tenga sensación de scroll infinito espiritual.
+
+Implementación sugerida:
+- Crear un scroll container de 14 escenas con altura total de 1400vh a 2100vh.
+- Usar ScrollTrigger para fijar la escena visual principal.
+- El progreso del scroll controla un timeline maestro.
+- Cada escena representa un rango de progreso.
+- Al llegar al final, las partículas del Tikkun deben reorganizarse en una luz circular que recuerda al Ein Sof.
+- Opcional: agregar botón “Return to Ein Sof” que hace smooth scroll al inicio.
+- Opcional: crear un pequeño loop visual donde las chispas finales vuelven a convertirse en luz superior, para sugerir que la creación es un proceso cíclico de ocultamiento y revelación.
+
+PERFORMANCE:
+
+Optimizar para mobile y desktop:
+- Limitar número de partículas en móvil.
+- Usar devicePixelRatio controlado en Three.js.
+- Lazy load del canvas.
+- Pausar animaciones fuera de viewport.
+- Usar CSS transform y opacity para animaciones simples.
+- Mantener el texto como HTML accesible, no dentro del canvas.
+- Usar aria-labels en botones.
+- Agregar prefers-reduced-motion.
+
+RESPONSIVE:
+
+Desktop:
+- Escena central grande.
+- Texto a la izquierda o debajo según la escena.
+- Navegación lateral derecha.
+
+Mobile:
+- Escena central ocupa la parte superior/media.
+- Texto aparece abajo.
+- Navegación lateral reducida o convertida en progress bar inferior.
+- Botón “Study in depth” visible pero discreto.
+
+COPY PRINCIPAL:
+
+Inicio:
+אֵין סוֹף
+
+Before form,
+before time,
+before worlds —
+there was only the Infinite.
+
+Scroll to enter the mystery of Creation.
+
+Final:
+The world was not created finished.
+It was created to be repaired.
+
+Every spark waits for a hand.
+Every vessel waits for harmony.
+Every soul is called to participate in Tikkun.
+
+CTA:
+Begin the Study
+
+IDIOMA:
+
+Corregir consistencia de idioma:
+- Si la página está en inglés, usar /en/creation y textos en inglés.
+- Si la página está en español, usar /es/creacion y textos en español.
+No mezclar /en/ con contenido español.
+
+ENTREGABLE:
+
+Genera el código completo y modular para esta experiencia:
+- Next.js
+- TypeScript
+- Tailwind
+- Framer Motion
+- GSAP ScrollTrigger
+- Lenis
+- React Three Fiber
+- Zustand
+
+Incluye:
+1. Estructura de componentes.
+2. Archivo de datos creationScenes.ts.
+3. Canvas visual con estados por escena.
+4. Smooth scroll con Lenis.
+5. ScrollTrigger timeline.
+6. Textos animados.
+7. Panel “Study in depth”.
+8. Navegación/progress indicator.
+9. Responsive mobile.
+10. Performance optimizations.
+11. Accesibilidad básica.

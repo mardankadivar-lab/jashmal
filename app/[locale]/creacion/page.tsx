@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { Suspense, useEffect, useRef, useState } from "react";
+import Lenis from "lenis";
 import { useLocale } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { COSMOLOGY_STAGES } from "@/lib/cosmologyStages";
@@ -29,7 +30,27 @@ export default function CreacionPage() {
       setActiveStage(Math.min(Math.floor(progress * TOTAL), TOTAL - 1));
     };
     el.addEventListener("scroll", onScroll, { passive: true });
-    return () => el.removeEventListener("scroll", onScroll);
+
+    // Lenis: scroll suave premium (estilo Apple) sobre el contenedor del viaje.
+    // El descenso por la Creación se siente continuo, con inercia, no a saltos.
+    const lenis = new Lenis({
+      wrapper: el,
+      content: el.firstElementChild as HTMLElement,
+      lerp: 0.075,
+      smoothWheel: true,
+    });
+    let rafId = 0;
+    const raf = (time: number) => {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    };
+    rafId = requestAnimationFrame(raf);
+
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+    };
   }, []);
 
   const stage = COSMOLOGY_STAGES[activeStage];

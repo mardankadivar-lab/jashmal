@@ -1,0 +1,59 @@
+Redesign the Jashmal Tree of Life page into a cinematic sacred interactive experience.
+
+The current page explains the 10 Sefirot and 22 paths, with click interactions and zoom/descend behavior. Keep that functionality, but transform the visual language from a technical diagram into a mystical Apple-style scrollytelling interface.
+
+Visual direction:
+- Pure black cosmic background.
+- Subtle gold, white, sapphire and amber light.
+- The Tree of Life appears as a living luminous structure.
+- Each Sefira is a glowing sphere, slowly breathing.
+- The 22 paths are thin luminous fiber-optic lines.
+- Very subtle particles float in the background.
+- Hebrew letters appear faintly, almost hidden, like sacred inscriptions.
+- No clutter. The Tree must remain the protagonist.
+
+Opening sequence:
+1. Start with a black screen.
+2. Show חַשְׁמַל in the center.
+3. Split it subtly into חַשׁ / silence and מל / speech.
+4. Fade into the phrase: “From silence, the Tree speaks.”
+5. Reveal עֵץ חַיִּים and then the Tree of Life.
+
+Hero copy:
+עֵץ חַיִּים
+The Living Tree
+
+You are not looking at a diagram.
+You are entering the hidden architecture of creation.
+
+From Ein Sof descend the Sefirot.
+From the Sefirot emerge the paths.
+From the paths awaken the letters.
+And in every letter, a gate.
+
+CTA:
+Enter the Tree
+
+Interaction:
+- Hovering a Sefira makes it glow and shows its Hebrew name, transliteration, and one poetic sentence.
+- Clicking a Sefira opens rays of textual references: Torah, Zohar, Etz Chaim, Chasidut, Personal Application.
+- Each ray should animate outward from the Sefira.
+- The user can click “Enter this Sefira” to zoom into an inner Tree, because each Sefira contains all 10 Sefirot.
+- Keep breadcrumb navigation: Ein Sof → Tree of Life → Keter → Inner Tree.
+
+Design style:
+- Apple-style minimalism.
+- Sacred geometry.
+- Kabbalistic cosmic atmosphere.
+- Elegant typography.
+- Smooth Framer Motion animations.
+- Responsive mobile-first layout.
+- No heavy paragraphs on the first screen.
+- Use progressive disclosure: reveal depth only after interaction.
+
+Technical preference:
+- React / Next.js.
+- SVG for the Tree structure.
+- Framer Motion for transitions.
+- Canvas or lightweight particle background if performance allows.
+- Keep accessibility labels for each Sefira.

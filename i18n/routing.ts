@@ -19,6 +19,14 @@ export const pathnames = {
     en: "/cosmic-mind",
     fa: "/cosmic-mind",
   },
+  // El Viaje de Creación: la carpeta interna es /creacion, pero la URL pública
+  // se localiza por idioma → es: /creacion · en: /creation · fa: /creation.
+  // El middleware redirige /en/creacion → /en/creation (una sola URL canónica).
+  "/creacion": {
+    es: "/creacion",
+    en: "/creation",
+    fa: "/creation",
+  },
 } as const;
 
 // Routing CANÓNICO (con pathnames): lo usan el middleware y la navegación
