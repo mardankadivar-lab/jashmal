@@ -135,6 +135,8 @@ export default function AlefScrollytelling() {
       gsap.set("#transitionLight", { autoAlpha: 0, scale: 0.2, transformOrigin: "50% 50%" });
       gsap.set("#transitionSpark", { autoAlpha: 0 });
       gsap.set(["#betTop", "#betRight", "#betBottom"], { autoAlpha: 0, scale: 0.55, transformOrigin: "50% 50%" });
+      gsap.set(["#betMiluiBet", "#betMiluiYud", "#betMiluiTav"], { autoAlpha: 0, y: 30, scale: 0.94, transformOrigin: "50% 50%" });
+      gsap.set(["#betMiluiBetValue", "#betMiluiYudValue", "#betMiluiTavValue", "#betMiluiEquation"], { autoAlpha: 0, y: -20, scale: 0.92, transformOrigin: "50% 50%" });
       gsap.set(".teachingScene", {
         autoAlpha: 0,
         y: 24,
@@ -423,8 +425,17 @@ export default function AlefScrollytelling() {
         .to("#betTop", { autoAlpha: 1, scale: 1, duration: 0.7, ease: "power2.out" }, "<0.1")
         .to("#betRight", { autoAlpha: 1, scale: 1, duration: 0.7, ease: "power2.out" }, ">-0.35")
         .to("#betBottom", { autoAlpha: 1, scale: 1, duration: 0.7, ease: "power2.out" }, ">-0.35")
-        // Fase 7: BET revelada — estable, luminosa, lista para su propio viaje
-        .to({}, { duration: 2.4 });
+        // Fase 7: BET revelada — estable, luminosa
+        .to({}, { duration: 1.4 })
+
+        // ═══════ ENSEÑANZA DE LA BET — el milui בית se destila hacia abajo (igual que el Álef) ═══════
+        // La Bet abre su nombre: Bet · Yud · Tav nacen bajo la letra
+        .to(["#betMiluiBet", "#betMiluiYud", "#betMiluiTav"], { autoAlpha: 1, y: 0, scale: 1, duration: 0.9, stagger: 0.28, ease: "power2.out" })
+        // Sus valores aparecen debajo
+        .to(["#betMiluiBetValue", "#betMiluiYudValue", "#betMiluiTavValue"], { autoAlpha: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.22, ease: "power2.out" }, ">-0.15")
+        // La gematría se sella: 2 + 10 + 400 = 412 (verificado por el Sofer)
+        .to("#betMiluiEquation", { autoAlpha: 1, y: 0, scale: 1, duration: 0.9, ease: "power2.out" }, ">0.15")
+        .to({}, { duration: 2.6 });
     }, root);
 
     // Una vez fijados los estados iniciales por GSAP, desvanece el loader (sin flash).
@@ -442,7 +453,7 @@ export default function AlefScrollytelling() {
   }, []);
 
   return (
-    <main ref={rootRef} className="relative isolate h-[2800vh] bg-black text-white">
+    <main ref={rootRef} className="relative isolate h-[3200vh] bg-black text-white">
       {/* Loader ceremonial: cubre el flash de slides superpuestos al refrescar; se desvanece
           cuando GSAP ya fijó los estados iniciales. Álef dorada que respira sobre negro. */}
       <div
@@ -660,6 +671,21 @@ export default function AlefScrollytelling() {
             <path id="betTop" d="M 398 328 L 397 349 L 400 369 L 404 381 L 416 402 L 432 419 L 443 427 L 462 436 L 475 439 L 658 440 L 709 446 L 710 429 L 759 429 L 760 404 L 884 404 L 867 374 L 843 347 L 814 326 L 786 313 L 745 302 L 703 297 L 507 296 L 493 294 L 477 289 L 461 279 L 449 266 L 437 240 L 434 241 L 409 292 Z"/>
             <path id="betRight" d="M 884 405 L 760 405 L 759 430 L 710 430 L 710 447 L 728 452 L 747 461 L 776 483 L 797 511 L 809 540 L 816 585 L 815 789 L 819 789 L 820 754 L 906 754 L 905 499 L 899 452 Z"/>
             <path id="betBottom" d="M 979 812 L 951 805 L 933 795 L 916 778 L 906 755 L 820 755 L 820 789 L 815 790 L 814 816 L 449 815 L 331 955 L 332 957 L 924 957 Z"/>
+          </g>
+          {/* El milui de la Bet (בית = Bet·Yud·Tav) se destila hacia abajo — paralelo al del Álef.
+              Gematría verificada por el Sofer: 2 + 10 + 400 = 412 (nistar 410 = kadosh). */}
+          <g id="betMilui" transform="translate(594 1056) scale(1.55) translate(-594 -1056)" style={{ filter: "drop-shadow(0 0 6px rgba(216,173,79,0.55))" }}>
+            <g fill="#d8ad4f" fontFamily="var(--font-hebrew), Frank Ruhl Libre, serif" fontSize="104" fontWeight="500">
+              <text id="betMiluiBet" opacity="0" x="760" y="1088">ב</text>
+              <text id="betMiluiYud" opacity="0" x="596" y="1088">י</text>
+              <text id="betMiluiTav" opacity="0" x="428" y="1088">ת</text>
+            </g>
+            <g fill="#d8ad4f" fontFamily="var(--font-cinzel), serif" fontSize="30">
+              <text id="betMiluiBetValue" opacity="0" x="788" y="1156" textAnchor="middle">2</text>
+              <text id="betMiluiYudValue" opacity="0" x="628" y="1156" textAnchor="middle">10</text>
+              <text id="betMiluiTavValue" opacity="0" x="460" y="1156" textAnchor="middle">400</text>
+              <text id="betMiluiEquation" opacity="0" x="627" y="1224" textAnchor="middle">2 + 10 + 400 = 412</text>
+            </g>
           </g>
         </svg>
 
