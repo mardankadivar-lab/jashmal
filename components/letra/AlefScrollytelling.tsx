@@ -118,10 +118,18 @@ export default function AlefScrollytelling() {
         y: 24,
         filter: "blur(10px)",
       });
-      gsap.set([".teachingLine", ".teachingPill"], {
-        autoAlpha: 0,
-        clipPath: "inset(100% 0% -6% 0%)",
-        y: 26,
+      // "Emana del Álef": cada texto nace en el centro de la letra y vuela a su lugar
+      const emanaTargets = gsap.utils.toArray(".teachingLine, .teachingPill") as HTMLElement[];
+      emanaTargets.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        gsap.set(el, {
+          autoAlpha: 0,
+          scale: 0.18,
+          filter: "blur(7px)",
+          transformOrigin: "50% 50%",
+          x: window.innerWidth / 2 - (r.left + r.width / 2),
+          y: window.innerHeight * 0.46 - (r.top + r.height / 2),
+        });
       });
 
       const tl = gsap.timeline({
@@ -140,20 +148,24 @@ export default function AlefScrollytelling() {
           .to(selector, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.85 })
           .to(`${selector} .teachingLine`, {
             autoAlpha: 1,
-            clipPath: "inset(0% 0% -6% 0%)",
+            x: 0,
             y: 0,
-            duration: 0.85,
-            stagger: 0.1,
-            ease: "power3.out",
-          }, "<0.12")
+            scale: 1,
+            filter: "blur(0px)",
+            duration: 1.0,
+            stagger: 0.13,
+            ease: "power2.out",
+          }, "<0.05")
           .to(`${selector} .teachingPill`, {
             autoAlpha: 1,
-            clipPath: "inset(0% 0% -6% 0%)",
+            x: 0,
             y: 0,
-            duration: 0.72,
-            stagger: 0.09,
-            ease: "power3.out",
-          }, "<0.12")
+            scale: 1,
+            filter: "blur(0px)",
+            duration: 0.9,
+            stagger: 0.11,
+            ease: "power2.out",
+          }, "<0.05")
           .to({}, { duration: hold })
           .to(selector, { autoAlpha: 0, y: -18, filter: "blur(8px)", duration: 0.75 });
 
