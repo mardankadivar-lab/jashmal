@@ -712,7 +712,7 @@ export default function AlefScrollytelling() {
               <p
                 key={w.translit}
                 dir="rtl"
-                className="alefRest absolute right-0 top-1/2 -translate-y-1/2 whitespace-nowrap text-[9rem] leading-none text-[#efe6d0]"
+                className="alefRest absolute right-0 top-1/2 -translate-y-1/2 whitespace-nowrap text-[clamp(2.6rem,13vw,9rem)] leading-none text-[#efe6d0]"
                 style={{ fontFamily: "var(--font-hebrew), 'Frank Ruhl Libre', serif" }}
               >
                 {w.letters.slice(1).map((ch, j) => (

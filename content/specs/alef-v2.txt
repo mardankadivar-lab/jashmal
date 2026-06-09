@@ -1,0 +1,224 @@
+Necesito corregir y mejorar la experiencia de scroll de la página de letras hebreas de Jashmal.
+
+Problema actual:
+En mobile, cuando el scroll llega a palabras como אהבה / Ahavá, אנכי / Anojí, אהיה / Ehyeh, אמת / Emet, etc., la palabra queda cortada en los bordes de la pantalla. La Alef aparece grande y centrada, pero cuando se revelan las demás letras, no hay suficiente espacio horizontal y parte de la palabra se sale del viewport.
+
+Experiencia deseada:
+La Alef debe sentirse como el origen de la palabra. Al inicio solo aparece la letra א grande, dorada, centrada.
+
+Cuando el usuario hace scroll hacia la siguiente escena, no quiero que aparezca la palabra completa de golpe. Quiero que se forme como si alguien estuviera escribiendo en una máquina de escribir, pero sincronizado con el scroll.
+
+Importante:
+Como el hebreo se escribe de derecha a izquierda, la Alef debe mantenerse como la primera letra visual del lado derecho. Al empezar la palabra, la Alef debe desplazarse suavemente hacia la derecha para hacer espacio, y las demás letras deben aparecer una por una hacia la izquierda.
+
+Ejemplo con אהבה / Ahavá:
+
+Estado inicial:
+א
+
+Al hacer scroll:
+א se desplaza suavemente hacia la derecha.
+
+Luego aparece:
+אה
+
+Luego:
+אהב
+
+Luego:
+אהבה
+
+La palabra debe quedar perfectamente centrada y completa dentro del viewport, sin cortarse.
+
+Después, cuando el usuario sigue haciendo scroll, debe ocurrir el proceso inverso:
+אהבה
+אהב
+אה
+א
+
+Es decir:
+Las letras se borran una por una, de izquierda a derecha visualmente, hasta que queda solamente la Alef otra vez.
+
+Después de eso, comienza la siguiente palabra con el mismo sistema.
+
+Ejemplo siguiente:
+אהיה / Ehyeh
+
+Estado inicial:
+א
+
+Scroll:
+א se mueve a la derecha.
+Aparece ה.
+Luego י.
+Luego ה.
+
+Resultado final:
+אהיה
+
+Luego al seguir scroll:
+אהיה
+אהי
+אה
+א
+
+Después pasa a la próxima palabra.
+
+Quiero que esto se repita para cada palabra relacionada con la Alef:
+
+1. אהיה — Ehyeh — “Seré”
+2. אהבה — Ahavá — “Amor”
+3. אמת — Emet — “Verdad”
+4. אנכי — Anojí — “Yo soy”
+5. פלא — Péle — “Maravilla”
+6. אלף — Alef — nombre de la letra
+7. א + ל + ף — valor 1 + 30 + 80 = 111
+
+Dirección visual:
+- Fondo negro profundo.
+- Alef dorada como letra central sagrada.
+- Las letras adicionales deben aparecer con glow suave.
+- El efecto typing debe sentirse elegante, no mecánico barato.
+- Cada letra debe aparecer con fade-in + pequeño desplazamiento + brillo.
+- Al borrar, cada letra debe hacer fade-out + desaparecer como polvo de luz.
+- No usar efectos caricaturescos.
+- Debe sentirse premium, místico, Apple-style, ceremonial.
+
+Comportamiento técnico deseado:
+- La palabra hebrea debe estar dentro de un contenedor seguro:
+  width: 100%;
+  max-width: 92vw en mobile;
+  overflow: visible o controlado;
+  text-align: center;
+- Nunca debe cortarse por los lados.
+- Usar font-size responsive con clamp().
+- En mobile, reducir automáticamente el tamaño de la palabra si es demasiado larga.
+- La palabra debe estar centrada visualmente, aunque la Alef se desplace hacia la derecha.
+- Usar dir="rtl" para las palabras hebreas.
+- Cada letra debe ser un span independiente para poder animarla individualmente.
+- No renderizar la palabra completa de golpe.
+- No usar una imagen fija para la palabra completa; debe construirse letra por letra.
+
+Lógica de animación:
+Cada palabra debe tener un timeline de scroll propio:
+
+Para cada palabra:
+1. Mostrar solo א centrada.
+2. Mover א hacia la derecha para hacer espacio.
+3. Revelar la segunda letra.
+4. Revelar la tercera letra.
+5. Revelar la cuarta letra si existe.
+6. Mantener la palabra completa unos momentos.
+7. Borrar la última letra.
+8. Borrar la penúltima.
+9. Borrar hasta volver a א.
+10. Pasar a la siguiente palabra.
+
+La animación debe estar sincronizada con el scroll, no con tiempo automático.
+
+Tecnologías recomendadas:
+- GSAP ScrollTrigger para controlar el progreso del scroll.
+- Framer Motion opcional para fade-in/fade-out de textos.
+- React / Next.js.
+- Cada palabra debe venir de un array de datos.
+
+Ejemplo de estructura de datos:
+
+const alefWords = [
+  {
+    hebrew: "אהיה",
+    transliteration: "Ehyeh",
+    meaning: "Seré",
+    reference: "Éx 3:14"
+  },
+  {
+    hebrew: "אהבה",
+    transliteration: "Ahavá",
+    meaning: "Amor",
+    reference: "Cant 8:6"
+  },
+  {
+    hebrew: "אמת",
+    transliteration: "Emet",
+    meaning: "Verdad",
+    reference: "Shabat 55a"
+  },
+  {
+    hebrew: "אנכי",
+    transliteration: "Anojí",
+    meaning: "Yo soy",
+    reference: "Éx 20:2"
+  },
+  {
+    hebrew: "פלא",
+    transliteration: "Péle",
+    meaning: "Maravilla",
+    reference: ""
+  }
+];
+
+Nota importante:
+Aunque palabras como פלא no empiezan visualmente con Alef a la derecha, quiero que la Alef siga funcionando como letra raíz/misterio, pero la transición debe respetar la forma correcta de la palabra hebrea.
+
+Corrección del glitch al refrescar la página:
+Actualmente, cuando hago refresh, por un segundo aparecen todos los textos/slides superpuestos en la pantalla. Parece que todas las escenas están renderizadas con opacity visible antes de que cargue la animación. Luego se corrige, pero el primer segundo se ve como un glitch.
+
+Hay que corregir eso.
+
+Solución técnica:
+- Todos los slides/textos deben iniciar ocultos por CSS antes de que JavaScript/GSAP cargue.
+- No depender solo de GSAP para ocultarlos después, porque al refresh hay un flash inicial.
+- Aplicar estado inicial en CSS:
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+- Solo el primer slide activo debe tener:
+  opacity: 1;
+  visibility: visible;
+- Usar una clase como .is-ready cuando la página ya terminó de montar.
+- Antes de .is-ready, ocultar todos los slides.
+- En React/Next.js, usar useLayoutEffect para inicializar GSAP antes del paint cuando sea posible.
+- Usar gsap.set() inmediatamente para definir estados iniciales.
+- Usar gsap.context() para limpiar animaciones al desmontar.
+- Llamar ScrollTrigger.refresh() después de que carguen fuentes, imágenes y SVG.
+- Evitar que todos los elementos position:absolute/fixed estén visibles al mismo tiempo.
+- Evitar hydration mismatch.
+- Si la página usa Next.js, el componente de animación debe correr solo en cliente con dynamic import y ssr:false si es necesario.
+
+CSS sugerido:
+
+.letter-scene {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+html.is-ready .letter-scene.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+[data-animated-letter] {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+}
+
+También:
+- Añadir un loader mínimo o pantalla negra inicial de 300ms máximo mientras se inicializan las animaciones.
+- El loader debe ser elegante: fondo negro y una Alef dorada pequeña respirando.
+- Cuando todo esté listo, hacer fade-in del primer estado.
+
+Resultado esperado:
+Al hacer refresh, no debe aparecer ningún texto superpuesto.
+La pantalla debe iniciar limpia.
+Luego aparece la Alef.
+Al hacer scroll, la Alef se desplaza hacia la derecha y las palabras se escriben letra por letra.
+Al seguir scroll, las letras se borran letra por letra.
+Las palabras nunca deben cortarse en mobile.
+La experiencia debe sentirse sagrada, lenta, precisa y cinematográfica.
+
+La Alef no debe compartir espacio con una palabra ya formada. La Alef debe abrir espacio. La palabra debe nacer de ella.
+
+No quiero slides de palabras. Quiero que cada palabra sea una emanación progresiva desde la Alef.
