@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -69,6 +69,8 @@ const connections = [
 export default function AlefScrollytelling() {
   const rootRef = useRef<HTMLElement | null>(null);
   const pinRef = useRef<HTMLDivElement | null>(null);
+  // Loader: oculta el flash de slides superpuestos al refrescar (hasta que GSAP fija los estados).
+  const [ready, setReady] = useState(false);
 
   useLayoutEffect(() => {
     const root = rootRef.current;
@@ -358,6 +360,9 @@ export default function AlefScrollytelling() {
         .to({}, { duration: 1.4 });
     }, root);
 
+    // Una vez fijados los estados iniciales por GSAP, desvanece el loader (sin flash).
+    requestAnimationFrame(() => requestAnimationFrame(() => setReady(true)));
+
     return () => {
       ctx.revert();
       gsap.ticker.remove(lenisRaf);
@@ -371,6 +376,14 @@ export default function AlefScrollytelling() {
 
   return (
     <main ref={rootRef} className="relative isolate h-[2400vh] bg-black text-white">
+      {/* Loader ceremonial: cubre el flash de slides superpuestos al refrescar; se desvanece
+          cuando GSAP ya fijó los estados iniciales. Álef dorada que respira sobre negro. */}
+      <div
+        className={`fixed inset-0 z-[70] flex items-center justify-center bg-[#05050a] transition-opacity duration-700 ${ready ? "pointer-events-none opacity-0" : "opacity-100"}`}
+        aria-hidden="true"
+      >
+        <span className="hebrew animate-pulse text-7xl text-[#e8c87a]" style={{ textShadow: "0 0 34px rgba(232,200,122,0.5)" }}>א</span>
+      </div>
       <div ref={pinRef} className="relative flex h-screen w-full items-center justify-center overflow-hidden bg-[#0a0604]">
         <div id="alefGlow" className="absolute inset-0 bg-[radial-gradient(circle_at_50%_44%,rgba(201,164,62,0.18),transparent_46%)]" />
 
