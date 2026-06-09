@@ -137,7 +137,7 @@ export default function AlefScrollytelling() {
       gsap.set(".cycleItem", { autoAlpha: 0, y: 28 });
       gsap.set("#alefGlow", { opacity: 0.7, transformOrigin: "50% 44%" });
       gsap.set([".alefWord", ".alefChar", ".alefRef"], { autoAlpha: 0 });
-      gsap.set([".alefRestChar", ".alefLabel"], { autoAlpha: 0 });
+      gsap.set([".alefRestAlef", ".alefRestChar", ".alefLabel"], { autoAlpha: 0 });
       // "Emana del Álef": cada texto nace en el centro de la letra y vuela a su lugar
       const emanaTargets = gsap.utils.toArray(".teachingLine, .teachingPill") as HTMLElement[];
       emanaTargets.forEach((el) => {
@@ -216,6 +216,9 @@ export default function AlefScrollytelling() {
         const tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
         tl
           .to("#alefGlow", { scale: 1.16, opacity: 1, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0)
+          // El Álef SVG (la letra grande) se desvanece: la palabra-texto centrada lo sustituye
+          // (en mobile el SVG es demasiado grande para que algo quepa a su lado).
+          .to(["#upperYud", "#lowerYud", "#vav"], { autoAlpha: 0, duration: 0.7 }, 0)
           .to("#sceneConnections", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.85 })
           .to("#sceneConnections .teachingLine", {
             autoAlpha: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)",
@@ -224,13 +227,17 @@ export default function AlefScrollytelling() {
         const rests = gsap.utils.toArray("#sceneConnections .alefRest") as HTMLElement[];
         const labels = gsap.utils.toArray("#sceneConnections .alefLabel") as HTMLElement[];
         rests.forEach((rest, i) => {
+          const alefSpan = rest.querySelector(".alefRestAlef");
           const chars = rest.querySelectorAll(".alefRestChar");
           const label = labels[i];
           tl
-            .to(label, { autoAlpha: 1, duration: 0.45 }, i === 0 ? ">0.25" : ">0.12")
-            .to(chars, { autoAlpha: 1, duration: 0.14, stagger: 0.2, ease: "none" }, "<0.05")
-            .to({}, { duration: 0.75 })
-            .to([...chars, label], { autoAlpha: 0, duration: 0.35 });
+            // El Álef dorado de la palabra NACE primero, luego se escriben las demás letras hacia la izquierda
+            .to(alefSpan, { autoAlpha: 1, duration: 0.4 }, i === 0 ? ">0.2" : ">0.12")
+            .to(label, { autoAlpha: 1, duration: 0.45 }, "<")
+            .to(chars, { autoAlpha: 1, duration: 0.16, stagger: 0.22, ease: "none" }, "<0.12")
+            .to({}, { duration: 0.7 })
+            // Se borra la palabra completa antes de pasar a la siguiente
+            .to([alefSpan, ...chars, label], { autoAlpha: 0, duration: 0.38 });
         });
         tl.to("#sceneConnections", { autoAlpha: 0, y: -18, filter: "blur(8px)", duration: 0.8 }, ">0.3");
         return tl;
@@ -706,17 +713,25 @@ export default function AlefScrollytelling() {
             </h2>
           </div>
 
-          {/* Las DEMÁS letras (sin el Álef) se escriben a la IZQUIERDA del Álef: más pequeñas y en crema */}
-          <div className="absolute right-[57%] top-[47%] -translate-y-1/2">
+          {/* La palabra CENTRADA y RESPONSIVE: Álef grande dorado + las demás letras (crema)
+              más pequeñas. El tamaño se reduce solo (clamp) y nunca pasa de 92vw → jamás se
+              corta ni se monta, ni en mobile. El Álef SVG se desvanece y esta palabra lo sustituye. */}
+          <div className="absolute left-1/2 top-[46%] w-[min(92vw,44rem)] -translate-x-1/2 -translate-y-1/2 text-center">
             {ALEF_WORDS.map((w) => (
               <p
                 key={w.translit}
                 dir="rtl"
-                className="alefRest absolute right-0 top-1/2 -translate-y-1/2 whitespace-nowrap text-[clamp(2.6rem,13vw,9rem)] leading-none text-[#efe6d0]"
-                style={{ fontFamily: "var(--font-hebrew), 'Frank Ruhl Libre', serif" }}
+                className="alefRest absolute inset-x-0 top-1/2 -translate-y-1/2 whitespace-nowrap leading-none"
+                style={{ fontFamily: "var(--font-hebrew), 'Frank Ruhl Libre', serif", fontSize: "clamp(3.4rem, 23vw, 9rem)" }}
               >
+                <span
+                  className="alefRestAlef inline-block text-[1.4em] text-[#e8c87a]"
+                  style={{ textShadow: "0 0 26px rgba(232,200,122,0.65), 0 0 10px rgba(232,200,122,0.5)" }}
+                >
+                  {w.letters[0]}
+                </span>
                 {w.letters.slice(1).map((ch, j) => (
-                  <span key={j} className="alefRestChar mr-[0.1em] inline-block">{ch}</span>
+                  <span key={j} className="alefRestChar mr-[0.12em] inline-block text-[#efe6d0]">{ch}</span>
                 ))}
               </p>
             ))}
