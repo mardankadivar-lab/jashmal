@@ -567,7 +567,7 @@ export default function AlefScrollytelling() {
         {/* ═══ INTRODUCCIÓN de la Bet — el comienzo de su enseñanza, antes de descomponerla
               (como el Álef tuvo su intro antes del milui). Contenido verificado por el Sofer. ═══ */}
         {/* Apertura: el silencio (Álef) se vuelve palabra/casa (Bet) */}
-        <div id="sceneBetIntro" className="pointer-events-none absolute inset-0 z-40 flex flex-col items-center justify-center gap-4 px-6 text-center">
+        <div id="sceneBetIntro" className="pointer-events-none absolute inset-x-0 bottom-[10vh] z-40 flex flex-col items-center gap-3 px-6 text-center">
           <p className="introLine font-cinzel text-[0.62rem] uppercase tracking-[0.4em] text-[#d8ad4f]">Bet · <span className="hebrew">בֵּית</span></p>
           <p className="introLine max-w-lg text-2xl italic leading-relaxed text-[#efe6d0] sm:text-3xl" style={{ fontFamily: "var(--font-cormorant, serif)" }}>El Uno calló. Después dijo.<br/>La primera palabra fue una <span className="text-[#e8c87a]">casa</span>.</p>
         </div>
