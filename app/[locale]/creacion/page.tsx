@@ -6,6 +6,7 @@ import Lenis from "lenis";
 import { useLocale } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { COSMOLOGY_STAGES } from "@/lib/cosmologyStages";
+import { COSMOLOGY_STUDY } from "@/lib/cosmologyStudy";
 
 const Canvas = dynamic(() => import("@react-three/fiber").then((m) => m.Canvas), { ssr: false });
 const CosmologyScene = dynamic(() => import("@/components/cosmologia/CosmologyJourney"), { ssr: false });
@@ -20,6 +21,8 @@ export default function CreacionPage() {
   const [activeStage, setActiveStage] = useState(0);
   // Loader ceremonial: cubre el pop-in del canvas 3D al refrescar (anti-glitch).
   const [ready, setReady] = useState(false);
+  // Panel "Estudiar en profundidad": guarda la etapa capturada al abrir (null = cerrado).
+  const [studyStage, setStudyStage] = useState<(typeof COSMOLOGY_STAGES)[number] | null>(null);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -211,13 +214,10 @@ export default function CreacionPage() {
           </p>
         )}
 
-        {/* Botón estudio profundo (etapas clave) */}
-        {stage.studyRef && (activeStage === 0 || activeStage === 7 || activeStage === 10 || activeStage === 13) && (
+        {/* Botón estudio profundo: abre el panel PaRDeS de la etapa activa (todas tienen contenido) */}
+        {COSMOLOGY_STUDY[stage.id] && (
           <button
-            onClick={() => {
-              const params = new URLSearchParams({ ref: stage.studyRef!, context: "kabbalah" });
-              router.push(`/estudio?${params.toString()}`);
-            }}
+            onClick={() => setStudyStage(stage)}
             className={`pointer-events-auto mt-8 rounded-full border px-6 py-2.5 font-cinzel text-sm uppercase tracking-widest backdrop-blur-sm transition-all ${
               isLight
                 ? "border-[#0b0712]/45 bg-[#0b0712]/[0.06] text-[#0b0712] hover:border-[#0b0712] hover:bg-[#0b0712]/10"
@@ -294,6 +294,52 @@ export default function CreacionPage() {
           <div style={{ width: 1, height: 24, background: "linear-gradient(to bottom, #2a2008, transparent)" }} />
         </div>
       )}
+
+      {/* ── Panel "Estudiar en profundidad": PaRDeS de la etapa, sin salir del viaje.
+            Bottom-sheet en mobile, modal centrado en desktop. ── */}
+      {studyStage && (() => {
+        const sd = COSMOLOGY_STUDY[studyStage.id];
+        if (!sd) return null;
+        const rows = [
+          { he: "פְּשָׁט", name: "Pshat", txt: sd.pshat },
+          { he: "סוֹד", name: "Sod", txt: sd.sod },
+          { he: "חֲסִידוּת", name: "Jasidut", txt: sd.jasidut },
+          { he: "מַעֲשֶׂה", name: locale === "fa" ? "کاربرد" : "Aplicación", txt: sd.aplicacion },
+        ];
+        return (
+          <div className="pointer-events-auto fixed inset-0 z-[80] flex items-end justify-center sm:items-center" role="dialog" aria-modal="true">
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setStudyStage(null)} />
+            <div className="relative z-10 max-h-[86vh] w-full overflow-y-auto rounded-t-3xl border border-gold/25 bg-[#0a0712]/[0.97] p-6 backdrop-blur-xl sm:max-w-lg sm:rounded-3xl" style={{ boxShadow: "0 -10px 60px rgba(0,0,0,0.6)" }}>
+              <div className="mb-4 flex items-start justify-between gap-4">
+                <div>
+                  <p className="hebrew text-4xl leading-none text-gold" style={{ textShadow: "0 0 18px #c9a43e66" }}>{studyStage.nameHe}</p>
+                  <p className="mt-1.5 font-cinzel text-sm uppercase tracking-[0.18em] text-parchment/85">{locale === "fa" ? studyStage.nameFa : studyStage.nameEs}</p>
+                </div>
+                <button onClick={() => setStudyStage(null)} aria-label="Cerrar" className="shrink-0 rounded-full border border-gold/30 px-3 py-1 font-cinzel text-sm text-gold/70 transition-colors hover:border-gold hover:text-gold">✕</button>
+              </div>
+              <p className="mb-4 font-cinzel text-[10px] uppercase tracking-widest text-gold/45">{sd.fuente}</p>
+              <div className="space-y-3">
+                {rows.map((r) => (
+                  <div key={r.name} className="rounded-2xl border border-gold/15 bg-white/[0.02] p-4">
+                    <p className="font-cinzel text-xs font-bold uppercase tracking-widest text-gold/70">
+                      <span className="hebrew me-2 text-base text-gold/80">{r.he}</span>{r.name}
+                    </p>
+                    <p className="mt-1.5 text-sm leading-relaxed text-parchment/85" dir={locale === "fa" ? "rtl" : "ltr"}>{r.txt}</p>
+                  </div>
+                ))}
+              </div>
+              {studyStage.studyRef && (
+                <button
+                  onClick={() => router.push(`/estudio?ref=${encodeURIComponent(studyStage.studyRef!)}&context=kabbalah`)}
+                  className="mt-5 w-full rounded-full border border-gold/40 bg-gold/10 px-6 py-3 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:bg-gold/20"
+                >
+                  {locale === "fa" ? "مطالعهٔ کامل در موتور" : "Estudio completo en el motor"} →
+                </button>
+              )}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* CSS animations */}
       <style>{`
