@@ -289,5 +289,20 @@
       "cabala": "Kabbalah",
       "jasidut": "Chasidut"
     }
+  },
+  "misterios": {
+    "title": "Mysteries",
+    "intro": "Studies that open the hidden layers of the text — gematria, letter permutation, and secrets of the Zohar. Each one is a doorway into the study engine.",
+    "thread": "The thread that binds them: «Two Edges» (שְׁנֵי פִּיּוֹת) — the same act, depending on the angle, can be the fall or the redemption.",
+    "startStudy": "Begin study →",
+    "read": "read →",
+    "more": "More mysteries coming",
+    "availableIn": "Available in",
+    "availableInFull": "This study isn't in your language yet. You can read it in these languages.",
+    "cat": {
+      "dosFilos": "Two Edges",
+      "gematria": "Gematria",
+      "sanidad": "Healing"
+    }
   }
 }

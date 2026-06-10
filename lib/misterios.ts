@@ -6,10 +6,12 @@ export interface Misterio {
   slug: string;          // ruta: /misterio/{slug} y atajo /{slug}
   numero?: string;       // número/gematría destacado (ej. "358")
   he: string;            // término hebreo central
-  titulo: string;        // título en español
+  titulo: string;        // título en español (canónico)
   tituloFa: string;
+  tituloEn?: string;     // inglés — lo llena el Sofer por fases ([[i18n-audit]])
   gancho: string;        // una línea de gancho (español)
   ganchoFa: string;
+  ganchoEn?: string;     // inglés — lo llena el Sofer por fases
   serie?: string;        // nombre de la serie (para agrupar)
   color: string;
   orden: number;         // orden de aparición (menor = primero)

@@ -289,5 +289,20 @@
       "cabala": "Cabalá",
       "jasidut": "Jasidut"
     }
+  },
+  "misterios": {
+    "title": "Misterios",
+    "intro": "Estudios que abren las capas ocultas del texto — gematría, permutación de letras y secretos del Zohar. Cada uno es una puerta al motor de estudio.",
+    "thread": "El hilo que los une: «Dos Filos» (שְׁנֵי פִּיּוֹת) — lo mismo, según el ángulo, puede ser la caída o la redención.",
+    "startStudy": "Comenzar estudio →",
+    "read": "leer →",
+    "more": "Más misterios en camino",
+    "availableIn": "Disponible en",
+    "availableInFull": "Este estudio aún no está en tu idioma. Puedes leerlo en estos idiomas.",
+    "cat": {
+      "dosFilos": "Dos Filos",
+      "gematria": "Gematría",
+      "sanidad": "Sanidad"
+    }
   }
 }

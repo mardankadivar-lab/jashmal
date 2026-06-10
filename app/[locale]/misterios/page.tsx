@@ -1,15 +1,26 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
 import { MISTERIOS_ORDENADOS } from "@/lib/misterios";
+import { tri } from "@/lib/i18nContent";
+import type { Locale } from "@/i18n/routing";
 import MisterioTutor from "@/components/MisterioTutor";
 import MisterioLangToggle from "@/components/MisterioLangToggle";
+import TranslationBadge from "@/components/TranslationBadge";
 
 export default function MisteriosPage() {
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
+  const t = useTranslations("misterios");
   const router = useRouter();
   const fa = locale === "fa";
+
+  // Categorías (su rótulo viene del diccionario, no hardcodeado por idioma).
+  const cats: { serie: string; key: "dosFilos" | "gematria" | "sanidad"; he: string }[] = [
+    { serie: "dos-filos", key: "dosFilos", he: "שְׁנֵי פִּיּוֹת" },
+    { serie: "gematria", key: "gematria", he: "גִּימַטְרִיָּה" },
+    { serie: "sanidad", key: "sanidad", he: "רְפוּאָה" },
+  ];
 
   return (
     <div className="always-dark min-h-screen bg-ink" dir={fa ? "rtl" : "ltr"}>
@@ -30,7 +41,7 @@ export default function MisteriosPage() {
               onClick={() => router.push("/estudio")}
               className="rounded-full border border-gold/30 px-4 py-1.5 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/10"
             >
-              {fa ? "شروع مطالعه" : "Comenzar estudio →"}
+              {t("startStudy")}
             </button>
           </div>
         </div>
@@ -43,27 +54,19 @@ export default function MisteriosPage() {
           סוֹדוֹת
         </p>
         <h1 className="font-cinzel text-2xl font-bold tracking-wide text-parchment sm:text-3xl">
-          {fa ? "اسرار" : "Misterios"}
+          {t("title")}
         </h1>
         <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-muted">
-          {fa
-            ? "مطالعه‌هایی که لایه‌های پنهانِ متن را می‌گشایند — گیماتریا، صرافِ حروف، و رازهای زوهر. هر مطالعه دری است به‌سوی موتورِ کاوش."
-            : "Estudios que abren las capas ocultas del texto — gematría, permutación de letras y secretos del Zohar. Cada uno es una puerta al motor de estudio."}
+          {t("intro")}
         </p>
         {/* El hilo que los une: la paradoja — שְׁנֵי פִּיּוֹת */}
         <p className="mx-auto mt-3 max-w-md text-xs italic leading-relaxed text-gold/50">
-          {fa
-            ? "نخی که آن‌ها را پیوند می‌دهد: «دو لبه» (שְׁנֵי פִּיּוֹת) — همان چیز، بسته به زاویه، می‌تواند سقوط باشد یا رستگاری."
-            : "El hilo que los une: «Dos Filos» (שְׁנֵי פִּיּוֹת) — lo mismo, según el ángulo, puede ser la caída o la redención."}
+          {t("thread")}
         </p>
       </div>
 
       {/* Misterios agrupados por categoría */}
-      {[
-        { serie: "dos-filos", es: "Dos Filos", fa: "دو لبه", he: "שְׁנֵי פִּיּוֹת" },
-        { serie: "gematria", es: "Gematría", fa: "گیماتریا", he: "גִּימַטְרִיָּה" },
-        { serie: "sanidad", es: "Sanidad", fa: "شفا", he: "רְפוּאָה" },
-      ].map((cat) => {
+      {cats.map((cat) => {
         const items = MISTERIOS_ORDENADOS.filter((m) => m.serie === cat.serie);
         if (items.length === 0) return null;
         return (
@@ -72,14 +75,17 @@ export default function MisteriosPage() {
             <div className="mb-5 flex items-center gap-3">
               <span className="hebrew text-lg text-gold/70">{cat.he}</span>
               <h2 className="font-cinzel text-sm font-bold uppercase tracking-[0.3em] text-gold/80">
-                {fa ? cat.fa : cat.es}
+                {t(`cat.${cat.key}`)}
               </h2>
               <span className="h-px flex-1 bg-gold/15" />
             </div>
 
             {/* Rejilla de la categoría */}
             <div className="grid gap-5 sm:grid-cols-2">
-              {items.map((m) => (
+              {items.map((m) => {
+                const titulo = tri(locale, m.titulo, m.tituloFa, m.tituloEn);
+                const gancho = tri(locale, m.gancho, m.ganchoFa, m.ganchoEn);
+                return (
                 <button
                   key={m.slug}
                   onClick={() => router.push(`/misterio/${m.slug}`)}
@@ -110,24 +116,28 @@ export default function MisteriosPage() {
                     {m.he}
                   </span>
 
-                  {/* Título */}
-                  <h3 className="mt-3 font-cinzel text-base font-bold tracking-wide" style={{ color: m.color }}>
-                    {fa ? m.tituloFa : m.titulo}
-                  </h3>
+                  {/* Título + aviso honesto si aún no está en el idioma activo */}
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <h3 className="font-cinzel text-base font-bold tracking-wide" style={{ color: m.color }}>
+                      {titulo.value}
+                    </h3>
+                    {titulo.missing && <TranslationBadge available={titulo.available} />}
+                  </div>
 
                   {/* Gancho */}
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-muted/90">
-                    {fa ? m.ganchoFa : m.gancho}
+                    {gancho.value}
                   </p>
 
                   {/* Pie */}
                   <div className="mt-4 flex items-center justify-end">
                     <span className="font-cinzel text-xs text-gold/60 transition-colors group-hover:text-gold">
-                      {fa ? "خواندن ←" : "leer →"}
+                      {t("read")}
                     </span>
                   </div>
                 </button>
-              ))}
+                );
+              })}
             </div>
           </section>
         );
@@ -135,7 +145,7 @@ export default function MisteriosPage() {
 
       {/* Nota: más por venir */}
       <p className="mt-12 text-center font-cinzel text-xs uppercase tracking-widest text-muted/40">
-        {fa ? "اسرارِ بیشتر در راه‌اند" : "Más misterios en camino"}
+        {t("more")}
       </p>
 
       {/* Tutor flotante */}
