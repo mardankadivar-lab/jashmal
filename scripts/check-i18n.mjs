@@ -31,7 +31,22 @@ const STRICT = process.argv.includes("--strict");
 const HEBREW = /[֐-׿]/; // bloque hebreo — texto que SÍ debe ser igual en todo idioma
 
 const read = (p) => readFileSync(join(ROOT, p), "utf8");
-const has = (p) => existsSync(join(ROOT, p));
+
+// A prueba de reorganización: lib/ se ordena por dominios (lib/content, lib/nodes,
+// lib/study…) y los archivos se mueven. Localizamos cada uno por su NOMBRE, sin
+// importar en qué subcarpeta viva, para que la auditoría no se rompa al reordenar.
+function findInLib(basename) {
+  const stack = [join(ROOT, "lib")];
+  while (stack.length) {
+    const dir = stack.pop();
+    for (const e of readdirSync(dir)) {
+      const p = join(dir, e);
+      if (statSync(p).isDirectory()) stack.push(p);
+      else if (e === basename) return p;
+    }
+  }
+  return null;
+}
 
 let errores = 0;   // huecos de inglés (bloquean por defecto)
 let avisos = 0;    // huecos de farsi / leaks (informativos, o bloquean con --strict)
@@ -85,16 +100,17 @@ console.log("\n② CONTENIDO CURADO  ·  lib/*.ts");
 
 // Cada fuente define: el campo base (es), su par farsi y su par inglés.
 const fuentes = [
-  { file: "lib/misterios.ts",      base: "titulo",  fa: "tituloFa", en: "tituloEn", nombre: "Misterios (títulos del menú)" },
-  { file: "lib/brainData.ts",      base: "label",   fa: "labelFa",  en: "labelEn",  nombre: "Universo (nodos del grafo)" },
-  { file: "lib/gematrias.ts",      base: "titulo",  fa: "tituloFa", en: "tituloEn", nombre: "Gematrías" },
-  { file: "lib/cosmologyStages.ts",base: "titulo",  fa: "tituloFa", en: "tituloEn", nombre: "Cosmología (etapas)" },
-  { file: "lib/sefirot.ts",        base: "nombre",  fa: "nombreFa", en: "nombreEn", nombre: "Sefirot" },
+  { basename: "misterios.ts",       base: "titulo", fa: "tituloFa", en: "tituloEn", nombre: "Misterios (títulos del menú)" },
+  { basename: "brainData.ts",       base: "label",  fa: "labelFa",  en: "labelEn",  nombre: "Universo (nodos del grafo)" },
+  { basename: "gematrias.ts",       base: "titulo", fa: "tituloFa", en: "tituloEn", nombre: "Gematrías" },
+  { basename: "cosmologyStages.ts", base: "titulo", fa: "tituloFa", en: "tituloEn", nombre: "Cosmología (etapas)" },
+  { basename: "sefirot.ts",         base: "nombre", fa: "nombreFa", en: "nombreEn", nombre: "Sefirot" },
 ];
 
 for (const f of fuentes) {
-  if (!has(f.file)) continue;
-  const txt = read(f.file);
+  const fp = findInLib(f.basename);
+  if (!fp) continue;
+  const txt = readFileSync(fp, "utf8");
   const nBase = (txt.match(new RegExp(`\\b${f.base}:`, "g")) || []).length;
   const nFa = (txt.match(new RegExp(`\\b${f.fa}:`, "g")) || []).length;
   const nEn = (txt.match(new RegExp(`\\b${f.en}:`, "g")) || []).length;

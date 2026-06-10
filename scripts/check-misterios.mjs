@@ -4,7 +4,7 @@
  *  GUARDIÁN DEL MENÚ DE MISTERIOS
  * ─────────────────────────────────────────────────────────────────────────
  *  Evita el problema de "links perdidos": páginas /misterio/{slug} que existen
- *  pero NO están en el menú (lib/misterios.ts) y por tanto son imposibles de
+ *  pero NO están en el menú (lib/content/misterios.ts) y por tanto son imposibles de
  *  encontrar en el sitio.
  *
  *  Detecta tres fallas:
@@ -23,7 +23,7 @@ import { dirname, join } from "node:path";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MISTERIO_DIR = join(ROOT, "app", "[locale]", "misterio");
-const CATALOGO = join(ROOT, "lib", "misterios.ts");
+const CATALOGO = join(ROOT, "lib", "content", "misterios.ts");
 const INDICE = join(ROOT, "app", "[locale]", "misterios", "page.tsx");
 
 // 1. Slugs de las páginas que existen físicamente (carpetas con page.tsx).
@@ -33,7 +33,7 @@ const paginas = readdirSync(MISTERIO_DIR)
     return statSync(p).isDirectory();
   });
 
-// 2. Slugs y series registrados en el catálogo (lib/misterios.ts).
+// 2. Slugs y series registrados en el catálogo (lib/content/misterios.ts).
 const catTxt = readFileSync(CATALOGO, "utf8");
 const catSlugs = [...catTxt.matchAll(/slug:\s*"([^"]+)"/g)].map((m) => m[1]);
 const catSeries = new Set(
@@ -60,7 +60,7 @@ console.log(`\n🔎 Misterios — páginas: ${paginas.length} · catálogo: ${ca
 if (huerfanas.length) {
   fallas += huerfanas.length;
   console.log("❌ HUÉRFANAS (página existe, falta en el menú → invisible):");
-  huerfanas.forEach((s) => console.log(`     /misterio/${s}  →  agrégala a lib/misterios.ts`));
+  huerfanas.forEach((s) => console.log(`     /misterio/${s}  →  agrégala a lib/content/misterios.ts`));
   console.log("");
 }
 
