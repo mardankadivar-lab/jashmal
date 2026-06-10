@@ -225,7 +225,7 @@ export default function VeintiunPactosPage() {
               <Section key={p.n} delay={Math.min(i, 8) * 35}>
                 <button
                   onClick={() => p.sefariaRef && router.push(`/estudio?ref=${encodeURIComponent(p.sefariaRef)}`)}
-                  className="group flex w-full items-start gap-4 rounded-2xl border border-gold/15 p-4 text-left transition-all hover:border-gold/40 hover:bg-gold/[0.04]"
+                  className="group flex w-full items-start gap-4 rounded-2xl border border-gold/15 p-4 text-start transition-all hover:border-gold/40 hover:bg-gold/[0.04]"
                   style={{ background: dark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)" }}
                 >
                   <span className="hebrew shrink-0 font-bold leading-none"
