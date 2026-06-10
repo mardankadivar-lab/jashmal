@@ -96,6 +96,18 @@ export const MISTERIOS: Misterio[] = [
     orden: 3.9,
   },
   {
+    slug: "chispas-en-las-naciones",
+    numero: "288",
+    he: "רפ״ח נִיצוֹצוֹת",
+    titulo: "Las chispas del Mashíaj en las naciones",
+    tituloFa: "جرقه‌های ماشیح در میان ملت‌ها",
+    gancho: "El linaje del Mashíaj no es «puro»: Rut la moabita, Rajav la cananea, Naamá la amonita, Yitró el midianita. Las chispas más altas cayeron más lejos —entre las naciones— y la redención es recogerlas. El converso es una chispa que vuelve a casa.",
+    ganchoFa: "تبارِ ماشیح «پاک» نیست: روتِ موآبی، راحاوِ کنعانی، نَعَمای عَمّونی، یترُوی مدیانی. برترین جرقه‌ها دورتر افتادند — میان ملت‌ها — و رستگاری یعنی گردآوریِ آن‌ها. گِر (نوكیش) جرقه‌ای است که به خانه بازمی‌گردد.",
+    serie: "dos-filos",
+    color: "#dcae46",
+    orden: 4.5,
+  },
+  {
     slug: "linaje",
     he: "עֲבֵרָה לִשְׁמָהּ",
     titulo: "El linaje prohibido del Mashíaj",
