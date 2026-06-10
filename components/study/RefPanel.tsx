@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { getText, type SefariaTextResult } from "@/lib/sefaria";
-import { segmentText } from "@/lib/refDetector";
+import { getText, type SefariaTextResult } from "@/lib/sources/sefaria";
+import { segmentText } from "@/lib/relations/refDetector";
 
 interface RefPanelEntry {
   ref: string;

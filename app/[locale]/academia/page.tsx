@@ -1,4 +1,4 @@
-import { getSession } from "@/lib/communitySession";
+import { getSession } from "@/lib/community/communitySession";
 import { getUmbral } from "@/lib/academia/umbral";
 import UmbralWizard from "@/components/academia/UmbralWizard";
 

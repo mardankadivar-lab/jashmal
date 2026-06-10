@@ -10,8 +10,8 @@
 //   'rejected'  → ocultada por el Sofer
 // ─────────────────────────────────────────────────────────────────────────
 
-import { getSql } from "./db";
-import { PLACES, type Place } from "./atlasData";
+import { getSql } from "@/lib/infra/db";
+import { PLACES, type Place } from "@/lib/atlas/atlasData";
 
 // ── Crear la tabla (idempotente) ──────────────────────────────────────────
 export async function ensureAtlasTables(): Promise<boolean> {

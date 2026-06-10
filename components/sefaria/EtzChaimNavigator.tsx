@@ -1,8 +1,8 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { ETZ_CHAIM_SECTIONS, type EtzChaimSection } from "@/lib/catalogOverrides";
-import type { RichBook } from "@/lib/catalogOverrides";
+import { ETZ_CHAIM_SECTIONS, type EtzChaimSection } from "@/lib/sources/catalogOverrides";
+import type { RichBook } from "@/lib/sources/catalogOverrides";
 
 interface EtzChaimNavigatorProps {
   onSelectSection: (book: RichBook) => void;

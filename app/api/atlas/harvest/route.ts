@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { dbConfigured, getSql } from "@/lib/db";
-import { ensureAtlasTables, seedAtlasPlaces, addPlace, recordPlaceHit } from "@/lib/atlasStore";
-import { harvestPlacesFromStudy } from "@/lib/atlasHarvest";
-import { gazetteerById } from "@/lib/atlasGazetteer";
+import { dbConfigured, getSql } from "@/lib/infra/db";
+import { ensureAtlasTables, seedAtlasPlaces, addPlace, recordPlaceHit } from "@/lib/atlas/atlasStore";
+import { harvestPlacesFromStudy } from "@/lib/atlas/atlasHarvest";
+import { gazetteerById } from "@/lib/atlas/atlasGazetteer";
 
 export const runtime = "nodejs";
 

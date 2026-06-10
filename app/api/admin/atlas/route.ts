@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { dbConfigured } from "@/lib/db";
-import { listHarvestedPlaces, setPlaceStatus, deletePlace } from "@/lib/atlasStore";
+import { dbConfigured } from "@/lib/infra/db";
+import { listHarvestedPlaces, setPlaceStatus, deletePlace } from "@/lib/atlas/atlasStore";
 
 export const runtime = "nodejs";
 

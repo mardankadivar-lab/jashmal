@@ -4,8 +4,8 @@
 // Extiende InteractiveText añadiendo detección de refs bíblicas/talmúdicas.
 
 import React from "react";
-import { parseHyperlinks } from "@/lib/hyperlinks";
-import { segmentText } from "@/lib/refDetector";
+import { parseHyperlinks } from "@/lib/relations/hyperlinks";
+import { segmentText } from "@/lib/relations/refDetector";
 
 const HEBREW = /[֐-׿]/;
 

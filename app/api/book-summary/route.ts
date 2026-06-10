@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import type Anthropic from "@anthropic-ai/sdk";
-import { anthropic, LIGHT_MODEL } from "@/lib/anthropic";
-import { getBookInfo } from "@/lib/bookInfo";
-import { checkRateLimit, clientIp } from "@/lib/rateLimit";
+import { anthropic, LIGHT_MODEL } from "@/lib/engine/anthropic";
+import { getBookInfo } from "@/lib/sources/bookInfo";
+import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;

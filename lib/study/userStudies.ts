@@ -9,7 +9,7 @@
 // fecha en vez de duplicar la fila.
 // ─────────────────────────────────────────────────────────────────────────
 import { createHash } from "crypto";
-import { getSql } from "./db";
+import { getSql } from "@/lib/infra/db";
 
 export type StoredStudy = {
   key: string;          // id determinista (hash de user|mode|ref|lang)

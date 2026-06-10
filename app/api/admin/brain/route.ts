@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { dbConfigured } from "@/lib/db";
-import { listPending, setNodeStatus, setEdgeStatus, setAllPending, rejectNodeIds, approveNodeIds } from "@/lib/brainStore";
+import { dbConfigured } from "@/lib/infra/db";
+import { listPending, setNodeStatus, setEdgeStatus, setAllPending, rejectNodeIds, approveNodeIds } from "@/lib/nodes/brainStore";
 
 export const runtime = "nodejs";
 

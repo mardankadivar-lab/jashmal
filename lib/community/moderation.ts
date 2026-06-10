@@ -1,4 +1,4 @@
-import { anthropic } from "./anthropic";
+import { anthropic } from "@/lib/engine/anthropic";
 
 // Moderación de reflexiones del Beit Midrash. Dos capas:
 //   1. Pre-filtro determinista (rápido, no depende de la IA): spam evidente.

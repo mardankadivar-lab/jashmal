@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { dbConfigured, getSql } from "@/lib/db";
-import { ensureAtlasTables, seedAtlasPlaces, getAtlasPlaces } from "@/lib/atlasStore";
-import { PLACES } from "@/lib/atlasData";
+import { dbConfigured, getSql } from "@/lib/infra/db";
+import { ensureAtlasTables, seedAtlasPlaces, getAtlasPlaces } from "@/lib/atlas/atlasStore";
+import { PLACES } from "@/lib/atlas/atlasData";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

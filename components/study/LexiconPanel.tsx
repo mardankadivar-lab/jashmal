@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import Inline from "./InteractiveText";
-import { requestLexicon, type LexiconResponse } from "@/lib/lexiconClient";
+import { requestLexicon, type LexiconResponse } from "@/lib/sources/lexiconClient";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 
 interface LexiconPanelProps {

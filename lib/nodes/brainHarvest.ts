@@ -6,10 +6,10 @@
 // del estudio. Reutiliza nodos existentes (match por nombre) para no duplicar.
 // ─────────────────────────────────────────────────────────────────────────
 
-import { parseHyperlinks } from "./hyperlinks";
-import { addNode, addEdge, existingNodeIds, hasPersianArabic } from "./brainStore";
-import { resolveHebrewLetter } from "./hebrewLetters";
-import type { BNode } from "./brainData";
+import { parseHyperlinks } from "@/lib/relations/hyperlinks";
+import { addNode, addEdge, existingNodeIds, hasPersianArabic } from "@/lib/nodes/brainStore";
+import { resolveHebrewLetter } from "@/lib/nodes/hebrewLetters";
+import type { BNode } from "@/lib/nodes/brainData";
 
 function titleCase(s: string): string {
   const t = s.trim();

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { createReflection, listReflections } from "@/lib/reflections";
-import { moderate } from "@/lib/moderation";
-import { dbConfigured } from "@/lib/db";
-import { checkRateLimit, clientIp } from "@/lib/rateLimit";
+import { createReflection, listReflections } from "@/lib/study/reflections";
+import { moderate } from "@/lib/community/moderation";
+import { dbConfigured } from "@/lib/infra/db";
+import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
 
 export const runtime = "nodejs";
 

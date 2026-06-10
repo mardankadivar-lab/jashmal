@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { anthropic, buildExpandPrompt, EXPAND_MODEL } from "@/lib/anthropic";
-import { dbConfigured } from "@/lib/db";
-import { addNode, addEdge, existingNodeIds, edgeKey, hasPersianArabic } from "@/lib/brainStore";
-import { clientIp } from "@/lib/rateLimit";
-import type { BNode } from "@/lib/brainData";
+import { anthropic, buildExpandPrompt, EXPAND_MODEL } from "@/lib/engine/anthropic";
+import { dbConfigured } from "@/lib/infra/db";
+import { addNode, addEdge, existingNodeIds, edgeKey, hasPersianArabic } from "@/lib/nodes/brainStore";
+import { clientIp } from "@/lib/infra/rateLimit";
+import type { BNode } from "@/lib/nodes/brainData";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;

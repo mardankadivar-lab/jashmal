@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { dbConfigured } from "@/lib/db";
+import { dbConfigured } from "@/lib/infra/db";
 import {
   ensureCommunityTables,
   listSoferReview,
@@ -8,8 +8,8 @@ import {
   rejectSubmissionRow,
   incrementUserStats,
   decrementUserStats,
-} from "@/lib/community";
-import { ensureBrainTables, addCommunityStar, getBrainGraph, setNodeStatus, listCommunityStars } from "@/lib/brainStore";
+} from "@/lib/community/community";
+import { ensureBrainTables, addCommunityStar, getBrainGraph, setNodeStatus, listCommunityStars } from "@/lib/nodes/brainStore";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

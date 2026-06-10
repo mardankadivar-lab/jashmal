@@ -3,7 +3,7 @@
 // Carga DATABASE_URL desde .env.local y crea/siembra las tablas (idempotente).
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { ensureBrainTables, seedBrain, getBrainGraph } from "../lib/brainStore";
+import { ensureBrainTables, seedBrain, getBrainGraph } from "../lib/nodes/brainStore";
 
 // cargar .env.local en process.env (sin pisar lo ya definido)
 try {

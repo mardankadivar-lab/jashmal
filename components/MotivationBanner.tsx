@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
-import { quoteOfTheDay, quoteText, type Quote } from "@/lib/motivation";
+import { quoteOfTheDay, quoteText, type Quote } from "@/lib/study/motivation";
 
 // Banda de motivación: una cita de las fuentes sagradas, rota cada día.
 // Se muestra al abrir la página, como invitación al estudio.

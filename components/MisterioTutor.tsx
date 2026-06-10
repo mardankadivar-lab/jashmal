@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import StudyChat from "@/components/study/StudyChat";
-import { MISTERIOS } from "@/lib/misterios";
+import { MISTERIOS } from "@/lib/content/misterios";
 
 // Tutor flotante para las páginas de Misterios. Detecta qué misterio se está
 // leyendo (por la URL) y le pasa ese contexto al tutor, para que sus respuestas

@@ -5,8 +5,8 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import Lenis from "lenis";
 import { useLocale } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { COSMOLOGY_STAGES } from "@/lib/cosmologyStages";
-import { COSMOLOGY_STUDY } from "@/lib/cosmologyStudy";
+import { COSMOLOGY_STAGES } from "@/lib/study/cosmologyStages";
+import { COSMOLOGY_STUDY } from "@/lib/study/cosmologyStudy";
 
 const Canvas = dynamic(() => import("@react-three/fiber").then((m) => m.Canvas), { ssr: false });
 const CosmologyScene = dynamic(() => import("@/components/cosmologia/CosmologyJourney"), { ssr: false });

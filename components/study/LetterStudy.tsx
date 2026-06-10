@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import StudyResult from "./StudyResult";
-import { requestStudy, StudyError } from "@/lib/studyClient";
-import { resolveHebrewLetter } from "@/lib/hebrewLetters";
+import { requestStudy, StudyError } from "@/lib/study/studyClient";
+import { resolveHebrewLetter } from "@/lib/nodes/hebrewLetters";
 
 export default function LetterStudy({ letter }: { letter: string }) {
   const locale = useLocale();

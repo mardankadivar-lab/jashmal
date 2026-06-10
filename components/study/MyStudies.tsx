@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import StudyResult from "./StudyResult";
-import { listLocal, deleteLocal, cidFor, type LocalStudy } from "@/lib/myStudies";
+import { listLocal, deleteLocal, cidFor, type LocalStudy } from "@/lib/study/myStudies";
 
 type Item = {
   cid: string;

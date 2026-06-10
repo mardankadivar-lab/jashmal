@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { dbConfigured } from "@/lib/db";
-import { harvestFromStudy } from "@/lib/brainHarvest";
-import type { BNode } from "@/lib/brainData";
+import { dbConfigured } from "@/lib/infra/db";
+import { harvestFromStudy } from "@/lib/nodes/brainHarvest";
+import type { BNode } from "@/lib/nodes/brainData";
 
 export const runtime = "nodejs";
 

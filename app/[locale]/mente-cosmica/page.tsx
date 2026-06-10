@@ -36,9 +36,9 @@ import {
   edgeKind,
   TREE_PATHS,
   type BNode,
-} from "@/lib/brainData";
-import { gilgulChainForRoot, traverseGilgul, getGilgulModel, GILGUL_ERAS } from "@/lib/gilgul";
-import { getEdgeData, type OrientedEdgeData } from "@/lib/edgeData";
+} from "@/lib/nodes/brainData";
+import { gilgulChainForRoot, traverseGilgul, getGilgulModel, GILGUL_ERAS } from "@/lib/nodes/gilgul";
+import { getEdgeData, type OrientedEdgeData } from "@/lib/relations/edgeData";
 import type { GilgulMode } from "./GilgulLayer";
 import Consola from "./Consola";
 import EdgeTooltip, { type EdgeHint } from "./EdgeTooltip";

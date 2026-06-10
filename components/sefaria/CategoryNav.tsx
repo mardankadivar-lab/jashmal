@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { CATALOG, type CategoryId } from "@/lib/categories";
+import { CATALOG, type CategoryId } from "@/lib/sources/categories";
 
 interface CategoryNavProps {
   selected: CategoryId | null;

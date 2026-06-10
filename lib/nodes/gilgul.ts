@@ -16,7 +16,7 @@
 //   en lib/brainData.ts (o nodos nuevos que el Sofer agregue allí).
 // ─────────────────────────────────────────────────────────────────────────
 
-import { GILGUL_CAIN_HEVEL_EDGES, type BNode } from "@/lib/brainData";
+import { GILGUL_CAIN_HEVEL_EDGES, type BNode } from "@/lib/nodes/brainData";
 
 // ── Modelo de datos ────────────────────────────────────────────────────────
 

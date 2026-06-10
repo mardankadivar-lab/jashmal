@@ -16,7 +16,7 @@
 // más localidades; infraestructura solo construye el MECANISMO + una base razonable.
 // ─────────────────────────────────────────────────────────────────────────
 
-import { PLACES, type Place } from "./atlasData";
+import { PLACES, type Place } from "@/lib/atlas/atlasData";
 
 // Localidades adicionales (no están en la semilla visible). Coordenadas según las
 // identificaciones tradicionales/arqueológicas estándar; las disputadas llevan `warn`.

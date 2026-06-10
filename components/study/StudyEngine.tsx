@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { searchLocal, cidFor, type LocalStudy } from "@/lib/myStudies";
+import { searchLocal, cidFor, type LocalStudy } from "@/lib/study/myStudies";
 import CategoryNav from "@/components/sefaria/CategoryNav";
 import BookBrowser from "@/components/sefaria/BookBrowser";
 import TextViewer from "@/components/sefaria/TextViewer";
@@ -16,11 +16,11 @@ import AudioPlayer from "./AudioPlayer";
 import WordMenu, { type WordMenuAnchor } from "./WordMenu";
 import RefPanel from "./RefPanel";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
-import { bookRef, type CatBook, type CategoryId } from "@/lib/categories";
-import { getText, searchSuggestions, type SefariaTextResult, type NameSuggestion } from "@/lib/sefaria";
-import { requestStudy, StudyError } from "@/lib/studyClient";
-import { requestTranslation } from "@/lib/translateClient";
-import { getParashaHashavua, type ParashaInfo } from "@/lib/calendar";
+import { bookRef, type CatBook, type CategoryId } from "@/lib/sources/categories";
+import { getText, searchSuggestions, type SefariaTextResult, type NameSuggestion } from "@/lib/sources/sefaria";
+import { requestStudy, StudyError } from "@/lib/study/studyClient";
+import { requestTranslation } from "@/lib/i18n/translateClient";
+import { getParashaHashavua, type ParashaInfo } from "@/lib/infra/calendar";
 
 // Nodo de la Mente Cósmica para la búsqueda por concepto (subconjunto liviano).
 type NodeHit = { id: string; label: string; labelFa?: string; labelEn?: string; url?: string };

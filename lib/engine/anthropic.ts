@@ -92,7 +92,7 @@ export type ConnectionInfo = {
 export function buildConnectionStudyPrompt(
   locale: string,
   conn: ConnectionInfo,
-  curated: import("./edgeData").OrientedEdgeData | null,
+  curated: import("@/lib/relations/edgeData").OrientedEdgeData | null,
 ): string {
   const lang = LANG_NAME[locale] ?? LANG_NAME.es;
   const rtl = RTL_NOTE[locale] ?? "";

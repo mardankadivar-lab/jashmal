@@ -1,4 +1,4 @@
-import { getSql } from "./db";
+import { getSql } from "@/lib/infra/db";
 
 // Capa de datos del Beit Midrash: reflexiones que los estudiantes comparten
 // bajo un estudio concreto (study_ref). Anónimas y públicas en la v1.

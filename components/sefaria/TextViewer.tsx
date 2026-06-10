@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { SefariaTextResult } from "@/lib/sefaria";
+import type { SefariaTextResult } from "@/lib/sources/sefaria";
 import ClickableHebrew, { type WordAnchor, type WordMenuAnchorEvt } from "./ClickableHebrew";
 
 type StudyDepth = "quick" | "deep";

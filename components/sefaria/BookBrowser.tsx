@@ -8,11 +8,11 @@ import {
   subLabel,
   type CatBook,
   type CategoryId,
-} from "@/lib/categories";
+} from "@/lib/sources/categories";
 import BookSummary from "./BookSummary";
 import ZoharNavigator from "./ZoharNavigator";
 import EtzChaimNavigator from "./EtzChaimNavigator";
-import type { RichBook } from "@/lib/catalogOverrides";
+import type { RichBook } from "@/lib/sources/catalogOverrides";
 
 interface BookBrowserProps {
   category: CategoryId;

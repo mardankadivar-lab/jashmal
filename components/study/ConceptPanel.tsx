@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import StudyResult from "./StudyResult";
-import { requestStudy, StudyError } from "@/lib/studyClient";
+import { requestStudy, StudyError } from "@/lib/study/studyClient";
 
 export interface ConceptTarget {
   kind: "concept" | "letter" | "connection";

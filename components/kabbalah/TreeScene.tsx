@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Stars, Html, Line, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
-import { SEFIROT, PATHS, getSefira, sefiraLabel, type Sefira } from "@/lib/sefirot";
+import { SEFIROT, PATHS, getSefira, sefiraLabel, type Sefira } from "@/lib/nodes/sefirot";
 
 // Posiciones 3D de los sefirot
 function to3D(x2d: number, y2d: number): [number, number, number] {

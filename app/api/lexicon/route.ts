@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import type Anthropic from "@anthropic-ai/sdk";
-import { anthropic, LIGHT_MODEL } from "@/lib/anthropic";
-import { getClassicLexicon, stripNiqud, LETTER_NAMES } from "@/lib/lexicon";
-import { wordToPaleo, depiction, type PaleoLetter } from "@/lib/paleo";
-import { checkRateLimit, clientIp } from "@/lib/rateLimit";
+import { anthropic, LIGHT_MODEL } from "@/lib/engine/anthropic";
+import { getClassicLexicon, stripNiqud, LETTER_NAMES } from "@/lib/sources/lexicon";
+import { wordToPaleo, depiction, type PaleoLetter } from "@/lib/sources/paleo";
+import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;

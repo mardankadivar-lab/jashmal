@@ -2,8 +2,8 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
-import { MISTERIOS_ORDENADOS } from "@/lib/misterios";
-import { tri } from "@/lib/i18nContent";
+import { MISTERIOS_ORDENADOS } from "@/lib/content/misterios";
+import { tri } from "@/lib/i18n/i18nContent";
 import type { Locale } from "@/i18n/routing";
 import MisterioTutor from "@/components/MisterioTutor";
 import MisterioLangToggle from "@/components/MisterioLangToggle";

@@ -29,8 +29,8 @@ import {
   gilgulBranches,
   GILGUL_CONFIDENCE_COLOR,
   type GilgulLink,
-} from "@/lib/gilgul";
-import { BRAIN_SCALE, nodeLabel, type BNode } from "@/lib/brainData";
+} from "@/lib/nodes/gilgul";
+import { BRAIN_SCALE, nodeLabel, type BNode } from "@/lib/nodes/brainData";
 import type { GilgulHint } from "./GilgulTooltip";
 
 type Vec3 = [number, number, number];

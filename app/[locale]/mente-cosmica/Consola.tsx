@@ -14,8 +14,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@/i18n/navigation";
-import { BRAIN_CATS, catLabel, nodeLabel, type BNode } from "@/lib/brainData";
-import { directionalLabelFor, type OrientedEdgeData } from "@/lib/edgeData";
+import { BRAIN_CATS, catLabel, nodeLabel, type BNode } from "@/lib/nodes/brainData";
+import { directionalLabelFor, type OrientedEdgeData } from "@/lib/relations/edgeData";
 
 type Cat = { c: string; label: string; labelFa?: string; labelEn?: string };
 
