@@ -23,6 +23,15 @@ const ALEF_WORDS = [
   { translit: "Ehyé", meaning: "Seré", source: "Éx 3:14", letters: ["א", "ה", "י", "ה"] },
 ];
 
+const BET_WORDS = [
+  { translit: "Bereshit", meaning: "En el principio", source: "Gén 1:1", letters: ["ב", "ר", "א", "ש", "י", "ת"] },
+  { translit: "Bará", meaning: "creó", source: "Gén 1:1", letters: ["ב", "ר", "א"] },
+  { translit: "Bayit", meaning: "casa", source: "Éx 25:8", letters: ["ב", "י", "ת"] },
+  { translit: "Berajá", meaning: "bendición", source: "Gén 12:2", letters: ["ב", "ר", "כ", "ה"] },
+  { translit: "Ben", meaning: "hijo", source: "Gén 22:2", letters: ["ב", "ן"] },
+  { translit: "Biná", meaning: "entendimiento", source: "Prov 4:5", letters: ["ב", "י", "נ", "ה"] },
+];
+
 const sparks = [
   [430, 430, 424, 1048],
   [468, 402, 454, 1096],
@@ -154,6 +163,8 @@ export default function AlefScrollytelling() {
       gsap.set("#alefGlow", { opacity: 0.7, transformOrigin: "50% 44%" });
       gsap.set([".alefWord", ".alefChar", ".alefRef"], { autoAlpha: 0 });
       gsap.set([".alefRestAlef", ".alefRestChar", ".alefLabel"], { autoAlpha: 0 });
+      gsap.set([".betRestBet", ".betRestChar", ".betLabel"], { autoAlpha: 0 });
+      gsap.set("#sceneBetConnections", { autoAlpha: 0 });
       // "Emana del Álef": cada texto nace en el centro de la letra y vuela a su lugar
       const emanaTargets = gsap.utils.toArray(".teachingLine, .teachingPill") as HTMLElement[];
       emanaTargets.forEach((el) => {
@@ -260,6 +271,40 @@ export default function AlefScrollytelling() {
           }
         });
         // No fade out #sceneConnections aquí — el main timeline maneja el viaje de regreso
+        return tl;
+      };
+
+      // Conexiones de la BET: réplica de la escena del Álef — cada palabra se ESCRIBE desde la
+      // ב dorada (la letra compartida); las demás letras (crema) se tipean a su izquierda.
+      // Diferencia con el Álef: al final se desvanecen TODAS las palabras (incluida la última);
+      // no hay handoff de "se queda la última letra" — eso era específico del paso Álef→Bet.
+      const betConnectionsTypingScene = () => {
+        const tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
+        tl
+          .to("#alefGlow", { scale: 1.16, opacity: 1, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0)
+          // El Bet SVG (la letra grande) se desvanece: la palabra-texto centrada lo sustituye
+          // (en mobile el SVG es demasiado grande para que algo quepa a su lado).
+          .to(["#betTop", "#betRight", "#betBottom"], { autoAlpha: 0, duration: 0.7 }, 0)
+          .to("#sceneBetConnections", { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 0.85 })
+          .to("#sceneBetConnections .teachingLine", {
+            autoAlpha: 1, x: 0, y: 0, scale: 1, filter: "blur(0px)",
+            duration: 1.0, stagger: 0.13, ease: "power2.out",
+          }, "<0.05");
+        const rests = gsap.utils.toArray("#sceneBetConnections .betRest") as HTMLElement[];
+        const labels = gsap.utils.toArray("#sceneBetConnections .betLabel") as HTMLElement[];
+        rests.forEach((rest, i) => {
+          const betSpan = rest.querySelector(".betRestBet");
+          const chars = rest.querySelectorAll(".betRestChar");
+          const label = labels[i];
+          tl
+            .to(betSpan, { autoAlpha: 1, duration: 0.4 }, i === 0 ? ">0.2" : ">0.12")
+            .to(label, { autoAlpha: 1, duration: 0.45 }, "<")
+            .to(chars, { autoAlpha: 1, duration: 0.16, stagger: 0.22, ease: "none" }, "<0.12")
+            .to({}, { duration: 0.7 })
+            // Se desvanece TODA la palabra (la ב incluida) — sin handoff de última letra
+            .to([betSpan, ...chars, label], { autoAlpha: 0, duration: 0.38 });
+        });
+        // No fade out #sceneBetConnections aquí — el main timeline maneja el regreso al glyph
         return tl;
       };
 
@@ -480,6 +525,16 @@ export default function AlefScrollytelling() {
         .to("#betMiluiEquation", { autoAlpha: 1, y: 0, scale: 1, duration: 0.9, ease: "power2.out" }, ">0.15")
         .to({}, { duration: 2.0 })
 
+        // ═══════ SENDEROS DE LA BET — lo que empieza en la casa (réplica de las conexiones del Álef) ═══════
+        // El milui se va; el Bet glyph se desvanece dentro de la escena de tipeo y vuelve al final.
+        .to(["#betMiluiBet", "#betMiluiYud", "#betMiluiTav", "#betMiluiBetValue", "#betMiluiYudValue", "#betMiluiTavValue", "#betMiluiEquation"], { autoAlpha: 0, duration: 0.9 })
+        .add(betConnectionsTypingScene())
+        // La escena de palabras se va por completo
+        .to("#sceneBetConnections", { autoAlpha: 0, duration: 0.5 }, ">-0.2")
+        // El Bet glyph SE RE-REVELA, listo para la transición hacia la Guímel
+        .to(["#betTop", "#betRight", "#betBottom"], { autoAlpha: 1, scale: 1, duration: 0.8, ease: "power2.out" }, ">")
+        .to({}, { duration: 1.0 })
+
         // ═══════ TRANSICIÓN BET → GUÍMEL — la casa no guarda la luz: la deja salir. Bet contiene · Guímel da. ═══════
         // El milui se desvanece; la Bet queda limpia
         .to(["#betMiluiBet", "#betMiluiYud", "#betMiluiTav", "#betMiluiBetValue", "#betMiluiYudValue", "#betMiluiTavValue", "#betMiluiEquation"], { autoAlpha: 0, duration: 1.0 })
@@ -552,7 +607,7 @@ export default function AlefScrollytelling() {
   }, []);
 
   return (
-    <main ref={rootRef} className="relative isolate h-[6200vh] bg-black text-white">
+    <main ref={rootRef} className="relative isolate h-[7000vh] bg-black text-white">
       {/* Loader ceremonial: cubre el flash de slides superpuestos al refrescar; se desvanece
           cuando GSAP ya fijó los estados iniciales. Álef dorada que respira sobre negro. */}
       <div
@@ -1085,6 +1140,60 @@ export default function AlefScrollytelling() {
               <div key={w.translit} className="alefLabel absolute inset-0">
                 <p className="font-cinzel text-[1.7rem] leading-tight text-[#d8ad4f]">
                   Álef de {w.translit} <span className="text-[#d8ad4f]/70">· «{w.meaning}»</span>
+                </p>
+                <p className="mt-2 text-sm tracking-wide text-white/60">{w.source}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ═══ SENDEROS DE LA BET — réplica exacta de #sceneConnections, con las 6 palabras
+            que empiezan en la casa (verificadas por el Sofer). La ב dorada es la letra
+            compartida; las demás letras (crema) se tipean a su izquierda. ═══ */}
+        <section
+          id="sceneBetConnections"
+          className="teachingScene pointer-events-none absolute inset-0 z-30"
+        >
+          {/* Título arriba (monumental) */}
+          <div className="absolute left-1/2 top-[6vh] w-[min(60rem,92vw)] -translate-x-1/2 px-4 text-center">
+            <p className="teachingLine font-cinzel text-[0.62rem] uppercase tracking-[0.34em] text-[#d8ad4f]">
+              Senderos de la casa
+            </p>
+            <h2 className="teachingLine mt-3 font-cinzel text-[2.2rem] font-normal leading-[1.07] tracking-[0.015em] text-white sm:text-[3rem]">
+              Lo que empieza en la casa
+            </h2>
+          </div>
+
+          {/* La palabra CENTRADA y RESPONSIVE: ב grande dorada + las demás letras (crema)
+              más pequeñas. El tamaño se reduce solo (clamp) y nunca pasa de 92vw → jamás se
+              corta ni se monta, ni en mobile. El Bet SVG se desvanece y esta palabra lo sustituye. */}
+          <div className="absolute left-1/2 top-[46%] w-[min(92vw,44rem)] -translate-x-1/2 -translate-y-1/2 text-center">
+            {BET_WORDS.map((w) => (
+              <p
+                key={w.translit}
+                dir="rtl"
+                className="betRest absolute inset-x-0 top-1/2 -translate-y-1/2 whitespace-nowrap leading-none"
+                style={{ fontFamily: "var(--font-hebrew), 'Frank Ruhl Libre', serif", fontSize: "clamp(3.4rem, 23vw, 9rem)" }}
+              >
+                <span
+                  className="betRestBet inline-block text-[1.4em] text-[#e8c87a]"
+                  style={{ textShadow: "0 0 26px rgba(232,200,122,0.65), 0 0 10px rgba(232,200,122,0.5)" }}
+                >
+                  {w.letters[0]}
+                </span>
+                {w.letters.slice(1).map((ch, j) => (
+                  <span key={j} className="betRestChar mr-[0.12em] inline-block text-[#efe6d0]">{ch}</span>
+                ))}
+              </p>
+            ))}
+          </div>
+
+          {/* Etiqueta por palabra (abajo): Bet de [palabra] · «significado» · fuente */}
+          <div className="absolute bottom-[11vh] left-1/2 h-[4.5rem] w-[min(42rem,90vw)] -translate-x-1/2 text-center">
+            {BET_WORDS.map((w) => (
+              <div key={w.translit} className="betLabel absolute inset-0">
+                <p className="font-cinzel text-[1.7rem] leading-tight text-[#d8ad4f]">
+                  Bet de {w.translit} <span className="text-[#d8ad4f]/70">· «{w.meaning}»</span>
                 </p>
                 <p className="mt-2 text-sm tracking-wide text-white/60">{w.source}</p>
               </div>
