@@ -24,18 +24,68 @@ export const EXTRA_BOOKS: Record<string, RichBook[]> = {};
 
 // Parche de etiqueta/ref para libros que YA están en el catálogo generado.
 // Etz Chaim (Árbol de la Vida) del Arí: la exposición sistemática de la Cabalá
-// luriana, primera en el orden de estudio. Ref por portales (Gate).
+// luriana, primera en el orden de estudio.
+//
+// Etz Chaim NO se aplana como Tania (sería un muro de 51 chips: Shaar HaKlalim +
+// 50 Portales, junto a Zohar, Tikkunei Zohar, etc. en la lista plana de Cabalá).
+// Se navega como el Zohar: queda como UN solo chip "Etz Jaim" en la lista; al
+// abrirlo, BookBrowser lo intercepta por id y muestra EtzChaimNavigator (TOC de
+// 51 secciones → portal → capítulos), calcando la TOC de Sefaria. Por eso vive
+// aquí en REF_OVERRIDES (chip único) y NO en COMPLEX_OVERRIDES (que lo aplanaría).
 export const REF_OVERRIDES: Record<string, Partial<RichBook>> = {
   "Sefer Etz Chaim": {
     label: "Etz Jaim (Árbol de la Vida)",
     he: "עֵץ חַיִּים",
-    units: 50,
-    // El nodo principal de Etz Chaim es el "default" en Sefaria: "Sefer Etz Chaim {n}"
-    // resuelve a Gate {n}:1. NO usar "Sefer Etz Chaim, Gate {n}" — Sefaria ignora el
-    // ", Gate" y cae SIEMPRE a Gate 1:1 (bug reportado por Mardan, 2026-06).
-    refTemplate: "Sefer Etz Chaim {n}",
+    // units/refTemplate aquí son irrelevantes para la navegación: el id se
+    // intercepta en BookBrowser y se delega a EtzChaimNavigator, que arma los
+    // refs de cada sección (igual que el Zohar nunca usa sus units del catálogo).
+    units: 51,
   },
 };
+
+// ─── Estructura de Sefer Etz Chaim (para EtzChaimNavigator) ─────────────────
+// 51 secciones EXACTAS de Sefaria, verificadas contra la API (2026-06-09):
+//   · Shaar HaKlalim (Principios) — 13 capítulos.
+//       ref: "Sefer Etz Chaim, Shaar HaKlalim {n}"  (n = 1..13)
+//   · 50 Portales (Gates) — cada uno con su nº de capítulos.
+//       ref: "Sefer Etz Chaim {gate}:{n}"   (ej. "Sefer Etz Chaim 13:5")
+// El nombre propio de cada portal aparece en el texto al abrirlo (como en
+// Sefaria, cuya TOC numera los Gates 1..50).
+export interface EtzChaimSection {
+  id: string;      // ref base Sefaria de la sección (se le añade ":{n}" o " {n}")
+  refTemplate: string; // plantilla del ref de un capítulo concreto
+  label: string;   // español
+  labelFa: string; // farsi
+  he: string;
+  units: number;   // nº de capítulos de la sección
+  special?: boolean;
+}
+
+// nº de capítulos por Portal (índice 1..50), verificado contra Sefaria.
+const ETZ_CHAIM_GATE_CHAPTERS = [
+  5, 3, 3, 5, 7, 8, 5, 6, 8, 5, 10, 5, 14, 10, 6, 7, 4, 6, 10, 12, 3, 3, 8, 7,
+  8, 4, 4, 5, 9, 7, 5, 9, 5, 7, 5, 4, 5, 9, 15, 15, 3, 17, 4, 7, 4, 7, 6, 4, 9, 10,
+];
+
+export const ETZ_CHAIM_SECTIONS: EtzChaimSection[] = [
+  {
+    id: "Sefer Etz Chaim, Shaar HaKlalim",
+    refTemplate: "Sefer Etz Chaim, Shaar HaKlalim {n}",
+    label: "Shaar HaKlalim · Principios",
+    labelFa: "شعار هکلالیم · کلیات",
+    he: "שַׁעַר הַכְּלָלִים",
+    units: 13,
+    special: true,
+  },
+  ...ETZ_CHAIM_GATE_CHAPTERS.map((units, i) => ({
+    id: `Sefer Etz Chaim ${i + 1}`,
+    refTemplate: `Sefer Etz Chaim ${i + 1}:{n}`,
+    label: `Portal ${i + 1}`,
+    labelFa: `دروازه ${i + 1}`,
+    he: `שַׁעַר ${i + 1}`,
+    units,
+  })),
+];
 
 // Libros a OCULTAR del menú (ref roto sin plantilla numérica viable; accesibles
 // por el buscador). Pri Etz Chaim es complejo con secciones de nombre.

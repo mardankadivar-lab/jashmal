@@ -11,6 +11,7 @@ import {
 } from "@/lib/categories";
 import BookSummary from "./BookSummary";
 import ZoharNavigator from "./ZoharNavigator";
+import EtzChaimNavigator from "./EtzChaimNavigator";
 import type { RichBook } from "@/lib/catalogOverrides";
 
 interface BookBrowserProps {
@@ -43,6 +44,20 @@ export default function BookBrowser({
           {locale === "fa" ? "یک پاراشا را انتخاب کنید" : "Elige una parashá"}
         </p>
         <ZoharNavigator onSelectParasha={(book) => onSelectBook(book as CatBook)} />
+      </div>
+    );
+  }
+
+  // ---- Navegador especial de Etz Chaim (51 secciones → portal → capítulo) ----
+  if (selectedBook?.id === "Sefer Etz Chaim") {
+    return (
+      <div className="mt-4">
+        <BookSummary bookId={selectedBook.id} />
+        <p className="mb-2 text-sm text-muted">
+          <span className="hebrew me-2 text-gold/80">עֵץ חַיִּים</span>
+          {locale === "fa" ? "یک شعار یا دروازه را انتخاب کنید" : "Elige un Shaar o Portal"}
+        </p>
+        <EtzChaimNavigator onSelectSection={(book) => onSelectBook(book as CatBook)} />
       </div>
     );
   }
