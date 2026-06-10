@@ -45,32 +45,15 @@ import EdgeTooltip, { type EdgeHint } from "./EdgeTooltip";
 import GilgulTooltip, { type GilgulHint } from "./GilgulTooltip";
 import { useUniversoHistory } from "./useUniversoHistory";
 import { useIsMobile } from "./useIsMobile";
+// Sistema visual: TODO el tuning fino (paleta, fog, bloom, CFG, partículas,
+// estados) vive en theme.ts — el look se ajusta allí, no aquí.
+import { CFG, SCENE, BLOOM, STARFIELD, NEBULAE } from "./theme";
 
 type Graph = { nodes: BNode[]; edges: [string, string][] };
 
 const Canvas = dynamic(() => import("@react-three/fiber").then((m) => m.Canvas), { ssr: false });
 // Capa Gilgul (linaje de almas): ADITIVA, solo se monta cuando hay raíz invocada.
 const GilgulLayer = dynamic(() => import("./GilgulLayer"), { ssr: false });
-
-// ── Ajustes del look (todo el tuning fino vive aquí) ──────────────────────
-const CFG = {
-  fiberSegments: 24,
-  fiberSag: 0.32,           // arco MÁS curvado de las fibras (menos rectas)
-  fiberOpacityIdle: 0.022,  // red cósmica: hilos casi invisibles en reposo
-  fiberOpacityDimmed: 0.02, // cuando hay selección, la base se apaga más
-  fiberOpacityActive: 0.9,  // fibras encendidas
-  ambientCount: 13000,      // polvo estelar que dibuja los brazos de las galaxias
-  ambientSize: 0.058,
-  ambientOpacity: 0.74,
-  potentialCount: 1100,     // nodos POTENCIALES (chispas por recoger, Tikún incompleto)
-  potentialSize: 0.07,      // un poco más grandes que el tejido, para leerse como "nodos"
-  potentialOpacity: 0.22,   // muy tenues: insinúan, no compiten con los reales
-  haloBase: 0.30,           // halo más chico: no lava las letras alrededor
-  coreBase: 0.16,           // tamaño del núcleo brillante
-  driftSpeed: 0.045,        // deriva lenta de cámara
-  radiusIdle: 56,           // cámara: el universo de galaxias llena la pantalla
-  radiusFocus: 7,           // al elegir/buscar, la cámara se ACERCA al concepto
-};
 
 const CENTER = new THREE.Vector3(0.1 * BRAIN_SCALE, 0.1 * BRAIN_SCALE, 0);
 
@@ -214,7 +197,7 @@ function PotentialNodes() {
 function StarField() {
   const tex = useMemo(() => glowTexture(), []);
   const geom = useMemo(() => {
-    const N = 5200;
+    const N = STARFIELD.count;
     let s = 0x9e3779b9 >>> 0;
     const rnd = () => {
       s = (s + 0x6d2b79f5) >>> 0;
@@ -227,15 +210,15 @@ function StarField() {
     const col = new Float32Array(N * 3);
     for (let i = 0; i < N; i++) {
       const u = rnd() * 2 - 1, ph = rnd() * Math.PI * 2, si = Math.sqrt(1 - u * u);
-      const r = 70 + rnd() * 190; // muy detrás de las galaxias
+      const r = STARFIELD.radiusMin + rnd() * (STARFIELD.radiusMax - STARFIELD.radiusMin); // muy detrás de las galaxias
       pos[i * 3] = si * Math.cos(ph) * r;
       pos[i * 3 + 1] = u * r;
       pos[i * 3 + 2] = si * Math.sin(ph) * r;
       const w = 0.45 + rnd() * 0.55;
-      const blue = rnd() < 0.22;
-      col[i * 3] = (blue ? 0.62 : 1) * w;
-      col[i * 3 + 1] = (blue ? 0.74 : 1) * w;
-      col[i * 3 + 2] = w;
+      const tinted = rnd() < STARFIELD.blueShare;
+      col[i * 3] = (tinted ? STARFIELD.blueTint[0] : 1) * w;
+      col[i * 3 + 1] = (tinted ? STARFIELD.blueTint[1] : 1) * w;
+      col[i * 3 + 2] = STARFIELD.blueTint[2] * w;
     }
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
@@ -244,7 +227,7 @@ function StarField() {
   }, []);
   return (
     <points geometry={geom}>
-      <pointsMaterial map={tex} size={0.85} vertexColors transparent opacity={0.7} blending={THREE.AdditiveBlending} depthWrite={false} sizeAttenuation />
+      <pointsMaterial map={tex} size={STARFIELD.size} vertexColors transparent opacity={STARFIELD.opacity} blending={THREE.AdditiveBlending} depthWrite={false} sizeAttenuation />
     </points>
   );
 }
@@ -257,15 +240,15 @@ function Nebulae({ locale }: { locale: string }) {
       {GALAXY_CATS.map((cat) => {
         const c = galaxyCenter(cat);
         const col = BRAIN_CATS[cat]?.c ?? "#9a9aae";
-        const neb = GALAXY_DISK * 2.4;
-        const core = GALAXY_DISK * 0.5;
+        const neb = GALAXY_DISK * NEBULAE.haloScale;
+        const core = GALAXY_DISK * NEBULAE.coreScale;
         return (
           <group key={cat} position={c}>
             <sprite scale={[neb, neb, 1]}>
-              <spriteMaterial map={tex} color={col} transparent opacity={0.18} blending={THREE.AdditiveBlending} depthWrite={false} />
+              <spriteMaterial map={tex} color={col} transparent opacity={NEBULAE.haloOpacity} blending={THREE.AdditiveBlending} depthWrite={false} />
             </sprite>
             <sprite scale={[core, core, 1]}>
-              <spriteMaterial map={tex} color={"#fff7e6"} transparent opacity={0.24} blending={THREE.AdditiveBlending} depthWrite={false} />
+              <spriteMaterial map={tex} color={NEBULAE.coreColor} transparent opacity={NEBULAE.coreOpacity} blending={THREE.AdditiveBlending} depthWrite={false} />
             </sprite>
             <Html center zIndexRange={[15, 0]} style={{ pointerEvents: "none" }}>
               <div
@@ -1819,7 +1802,7 @@ export default function GrafoPage() {
   return (
     <div
       className="always-dark fixed inset-0 z-50 overflow-hidden"
-      style={{ background: "#03040a" }}
+      style={{ background: SCENE.background }}
       dir={isFa ? "rtl" : "ltr"}
     >
       <Suspense
@@ -1835,8 +1818,8 @@ export default function GrafoPage() {
           gl={{ antialias: true }}
           style={{ position: "absolute", inset: 0 }}
         >
-          <color attach="background" args={["#03040a"]} />
-          <fogExp2 attach="fog" args={["#03040a", 0.005]} />
+          <color attach="background" args={[SCENE.background]} />
+          <fogExp2 attach="fog" args={[SCENE.fogColor, SCENE.fogDensity]} />
           <BrainScene
             nodes={graph.nodes}
             edges={graph.edges}
@@ -1865,7 +1848,13 @@ export default function GrafoPage() {
             onTravelConsumed={consumeTravelRequest}
           />
           <EffectComposer>
-            <Bloom intensity={0.72} luminanceThreshold={0.2} luminanceSmoothing={0.7} mipmapBlur radius={0.5} />
+            <Bloom
+              intensity={BLOOM.intensity}
+              luminanceThreshold={BLOOM.luminanceThreshold}
+              luminanceSmoothing={BLOOM.luminanceSmoothing}
+              mipmapBlur
+              radius={BLOOM.radius}
+            />
           </EffectComposer>
         </Canvas>
       </Suspense>
