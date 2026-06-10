@@ -1501,6 +1501,22 @@ export default function GrafoPage() {
     if (q.includes("+")) {
       const ids = q.split("+").map((s) => resolveTerm(s)).filter((x): x is string => !!x);
       const uniq = [...new Set(ids)];
+      // ── Vista CONTEXTUAL (espec V3 · comportamiento de búsqueda): si la mezcla
+      //    resuelve a EXACTAMENTE 2 nodos Y existe la arista directa A–B, no se
+      //    compara: se abre la ficha de ESA conexión (tipo, explicación, fuentes
+      //    y "Estudiar conexión A → B"). Es el mismo estado final que viajar por
+      //    la fibra: B en foco, camino contextual A → B, panel de la sinapsis.
+      //    OJO: la Consola prioriza compare ▸ edge → compare debe quedar VACÍO.
+      if (uniq.length === 2 && isNeighborEdge(uniq[0], uniq[1])) {
+        const [a, b] = uniq;
+        setCompare([]); setActiveCat(null); setGilgulRoot(null);
+        setSelected(b); // el destino queda en foco (espec: "nodo actual: B") → enciende ambos extremos y su fibra
+        setFlyToId(b);
+        setActivePath([a, b]); // contexto vivo A → B → el estudio sale con context "connection"
+        setEdgeView({ from: a, to: b, pts: null }); // sin spline: si se viaja, BrainScene lo resuelve
+        history.clear(); history.visit(b); // navegación fresca, anclada en el destino
+        return;
+      }
       if (uniq.length >= 2) {
         setSelected(null);
         setActiveCat(null);

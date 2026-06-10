@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured, getSql } from "@/lib/db";
-import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch } from "@/lib/brainStore";
+import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addAvrahamKabLote2, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch } from "@/lib/brainStore";
 import { BNODES, BEDGES } from "@/lib/brainData";
 
 export const runtime = "nodejs";
@@ -39,6 +39,8 @@ function ensureInit(): Promise<void> {
       await addTohu();
       // Estudio verificado: Abraham en la Cabalá (+ Avraham→Abraham)
       await addAvrahamKab();
+      // Lote 2 Sofer: 5 aristas nuevas de Abraham (Bereshit, Sará, Yitzjak, Brit, Tres oraciones)
+      await addAvrahamKabLote2();
       // Estudio verificado: Gilgulim de Caín y Abel (Sha'ar HaGilgulim)
       await addGilgulCainHevel();
       // Capa Gilgul: vasijas de las 5 cadenas-ancla del Sha'ar HaGilgulim

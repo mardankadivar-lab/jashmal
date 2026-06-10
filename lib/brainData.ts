@@ -529,6 +529,12 @@ export const AVRAHAM_KAB_EDGES: MaseiEdge[] = [
   { a: "Malki-Tzedek", b: "Jésed",      kind: "interp" }, // sacerdocio del jésed
   { a: "Jésed",   b: "Nombre de 72",    kind: "interp" }, // gematría חסד = 72
   { a: "Nombre de 72", b: "Cabalá",     kind: "interp" }, // Shem HaMforash
+  // ── LOTE 2 (Sofer 2026-06-10): aristas estructurales + relacionales ──
+  { a: "Avraham", b: "Bereshit",       kind: "solid" },  // arco narrativo Génesis 11:26–25:11
+  { a: "Avraham", b: "Sará",           kind: "solid" },  // Génesis 11:29 + Bereshit Rabbah 39:14
+  { a: "Avraham", b: "Yitzjak",        kind: "solid" },  // Génesis 21:1-3 + 22:1-2
+  { a: "Brit",    b: "Avraham",        kind: "solid" },  // Génesis 15:18 + 17:2 + 17:7 (brit olam)
+  { a: "Tres oraciones", b: "Avraham", kind: "solid" },  // Berakhot 26b:5 (Shajarit)
 ];
 
 // ─── Gilgulim de Caín y Abel · escuela del Arí z"l (verificado por el Sofer) ─

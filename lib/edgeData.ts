@@ -461,6 +461,135 @@ export const EDGE_DATA: Record<string, EdgeData> = {
       "endulzamiento"
     ]
   },
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // LOTE 2 del Sofer (2026-06-10) — 8 conexiones de Abraham, verificadas ref
+  // por ref contra la API de Sefaria. Fuente: content/curaduria-edges-lote2.json.
+  // Una entrega (Descensos→Avraham) es honesta: verificado:false (vínculo interp).
+  // ══════════════════════════════════════════════════════════════════════════
+
+  // Avraham→Neshamá
+  "avraham→neshama": {
+    "relationship_type": "concept",
+    "directional_label": "Abraham «hace almas» — la conversión como creación",
+    "reverse_label": "El alma (neshamá) se gana cuando Abraham acerca a una criatura",
+    "context_title": "Abraham y el alma (Neshamá) — «las almas que hicieron en Jarán»",
+    "short_explanation": "Antes de partir hacia Canaán, la Torá cuenta que Abram y Sarai llevaron consigo «el alma que hicieron en Jarán» (וְאֶת־הַנֶּפֶשׁ אֲשֶׁר־עָשׂוּ בְחָרָן, Génesis 12:5). El midrash se asombra del verbo: «si todos los habitantes del mundo se juntaran para crear un solo mosquito, no podrían insuflarle un alma — ¿y tú dices 'el alma que hicieron'?». La respuesta de Rabí Elazar bar Zimra: son los conversos que acercaron, «para enseñarte que quien acerca a una criatura y la convierte es como si la creara» (Bereshit Rabbah 39:14). Abraham no fabrica cuerpos: despierta almas. Acercar a otro a su raíz es, a los ojos del midrash, un acto de creación.",
+    "study_prompt": "Estudiar Génesis 12:5 en relación con la Neshamá con enfoque en el escándalo del verbo עָשׂוּ («hicieron») aplicado a personas: leer la objeción de Bereshit Rabbah 39:14 (nadie puede insuflar alma ni a un mosquito) como límite de la creación humana, y la respuesta (quien convierte es como si creara) como su excepción. Preguntar: ¿qué significa «hacer un alma»? Distinguir entre crear nefesh ex nihilo (solo Dios) y revelar/despertar el alma que ya estaba (la obra de Abraham). Conectar con la Birá Doleket (Bereshit Rabbah 39:1): primero Abraham se despierta a sí mismo, luego despierta a otros.",
+    "source_refs": [
+      { "text": "Torá — Bereshit", "ref": "Genesis 12:5", "reason": "«וְאֶת־הַנֶּפֶשׁ אֲשֶׁר־עָשׂוּ בְחָרָן» — el alma que hicieron en Jarán; el verbo 'hacer' aplicado a personas que dispara todo el midrash." },
+      { "text": "Midrash — Bereshit Rabá", "ref": "Bereshit Rabbah 39:14", "reason": "R. Elazar bar Zimra: nadie puede insuflar alma ni a un mosquito; son los conversos — 'quien acerca a una criatura y la convierte es como si la creara'. La conversión como acto cuasi-creador del alma." }
+    ],
+    "keywords": ["neshamá", "alma", "nefesh", "almas de jarán", "conversión", "guiur", "bereshit rabá 39", "génesis 12:5", "crear un alma"]
+  },
+
+  // Malki-Tzedek→Avraham
+  "malki-tzedek→avraham": {
+    "relationship_type": "event",
+    "directional_label": "Malki-Tzédek bendice a Abraham con pan y vino",
+    "reverse_label": "Abraham recibe la bendición del sacerdote de El Elyón y le da el diezmo",
+    "context_title": "Malki-Tzédek y Abraham (Génesis 14) — el rey-sacerdote de Shalem",
+    "short_explanation": "De regreso de la guerra de los reyes, Abram es recibido por una figura enigmática: «Malki-Tzédek, rey de Shalem, sacó pan y vino — y él era sacerdote de El Elyón (אֵל עֶלְיוֹן, Dios Altísimo)» (Génesis 14:18). Lo bendice: «bendito sea Abram por El Elyón, dueño de cielos y tierra» (14:19), y bendice también a Dios que entregó a sus enemigos; entonces «Abram le dio el diezmo de todo» (14:20). Es el único encuentro de Abraham con otro adorador del Dios único fuera de su casa: un rey cuyo nombre mismo significa «mi rey es justicia» y cuya ciudad, Shalem, lleva en sus letras la paz (shalom) y prefigura a Yerushalaim.",
+    "study_prompt": "Estudiar Génesis 14:18-20 con enfoque en el pan y el vino del sacerdote: ¿qué clase de encuentro es este, donde el patriarca recibe bendición y entrega diezmo a un rey-sacerdote que no es de su linaje? Leer 'El Elyón, dueño de cielos y tierra' (14:19) y notar que Abraham adopta ese mismo nombre divino en su juramento al rey de Sodoma pocos versículos después (14:22). Preguntar por el significado de Shalem (paz / Yerushalaim) y por qué el primer sacerdocio de la Torá aparece antes del sacerdocio de Aharón.",
+    "source_refs": [
+      { "text": "Torá — Bereshit", "ref": "Genesis 14:18-20", "reason": "El encuentro completo: Malki-Tzédek rey de Shalem saca pan y vino, es sacerdote de El Elyón, bendice a Abram y a Dios, y Abram le da el diezmo de todo (מַעֲשֵׂר מִכֹּל)." }
+    ],
+    "keywords": ["malki-tzedek", "melquisedec", "pan y vino", "el elyón", "shalem", "diezmo", "maaser", "rey sacerdote", "génesis 14", "yerushalaim"]
+  },
+
+  // Avraham→Bereshit
+  "avraham→bereshit": {
+    "relationship_type": "textual_source",
+    "directional_label": "Abraham vive y actúa dentro del libro de Bereshit",
+    "reverse_label": "Bereshit es el libro que narra la vida de Abraham",
+    "context_title": "Abraham en el libro de Bereshit (Génesis)",
+    "short_explanation": "Abraham es una de las grandes figuras del libro de Bereshit (Génesis): su historia ocupa el arco que va de su genealogía y nacimiento (Génesis 11:26-32), pasando por el llamado «Lej Lejá» (12:1), el pacto entre las partes (15), el pacto de la milá (17), la hospitalidad y la intercesión por Sodoma (18), la Akedá (22), hasta su muerte y sepultura en la cueva de Majpelá (25:7-11). Es la arista más estructural del nodo: Abraham es personaje del primer libro de la Torá, y cada estudio suyo se ancla en algún versículo de Bereshit.",
+    "study_prompt": "Recorrer el arco de Abraham dentro de Bereshit como una sola biografía: el llamado (Génesis 12), los pactos (15 y 17), las pruebas (de Ur a la Akedá), y el cierre en Majpelá (Génesis 25). Preguntar qué hace de Bereshit el libro de los comienzos también el libro de los patriarcas: la creación del mundo (caps. 1-11) desemboca en la creación de un pueblo a partir de un hombre (caps. 12-25). ¿Por qué la Torá pasa de lo cósmico-universal a lo familiar-particular justo en Abraham?",
+    "source_refs": [
+      { "text": "Torá — Bereshit", "ref": "Genesis 11:26-32", "reason": "Genealogía y nacimiento de Abram, su familia y la salida de Ur de los caldeos hacia Jarán: el punto de entrada del personaje en el libro." },
+      { "text": "Torá — Bereshit", "ref": "Genesis 25:7-11", "reason": "Muerte de Abraham a los 175 años y su sepultura en la cueva de Majpelá: el cierre de su arco narrativo dentro de Bereshit." }
+    ],
+    "keywords": ["bereshit", "génesis", "lej lejá", "patriarca", "majpelá", "arco narrativo", "ur kasdim", "libro de los comienzos"]
+  },
+
+  // Avraham→Sará
+  "avraham→sara": {
+    "relationship_type": "relationship",
+    "directional_label": "Abraham y Sará — esposos y compañeros en la obra de las almas",
+    "reverse_label": "Sará es esposa de Abraham y maestra de las mujeres que él acerca",
+    "context_title": "Abraham y Sará (Sarai)",
+    "short_explanation": "«El nombre de la mujer de Abram era Sarai» (Génesis 11:29): el primer dato de la pareja, antes aún del llamado. Pero la tradición les da también una sociedad espiritual: sobre «el alma que hicieron en Jarán» (Génesis 12:5), Rav Huna enseña que «Abraham convertía a los hombres y Sará convertía a las mujeres» (Bereshit Rabbah 39:14). El plural del verbo עָשׂוּ («hicieron», no «hizo») se lee como la firma de los dos: la obra de acercar almas fue de la pareja, repartida por mitades — él a los hombres, ella a las mujeres.",
+    "study_prompt": "Estudiar la relación Abraham–Sará a partir de Génesis 11:29 (la presentación de la pareja) y Bereshit Rabbah 39:14 (el reparto de la obra: Abraham a los hombres, Sará a las mujeres). Enfocar el plural gramatical de אֲשֶׁר עָשׂוּ en Génesis 12:5: ¿por qué el midrash insiste en que el verbo está en plural, y qué dice eso de la sociedad espiritual de los esposos?",
+    "source_refs": [
+      { "text": "Torá — Bereshit", "ref": "Genesis 11:29", "reason": "«שֵׁם אֵשֶׁת־אַבְרָם שָׂרָי» — la presentación de la pareja: el nombre de la esposa de Abram era Sarai." },
+      { "text": "Midrash — Bereshit Rabá", "ref": "Bereshit Rabbah 39:14", "reason": "Rav Huna sobre el plural de 'hicieron': 'Abraham convertía a los hombres y Sará convertía a las mujeres' — la sociedad espiritual de los esposos en la obra de acercar almas." }
+    ],
+    "keywords": ["sará", "sarai", "matrimonio", "esposos", "obra de las almas", "rav huna", "bereshit rabá 39", "génesis 11:29", "conversión"]
+  },
+
+  // Avraham→Yitzjak
+  "avraham→yitzjak": {
+    "relationship_type": "relationship",
+    "directional_label": "Abraham es el padre de Yitzjak",
+    "reverse_label": "Yitzjak es el hijo de la promesa y de la prueba de Abraham",
+    "context_title": "Abraham y Yitzjak — el hijo prometido",
+    "short_explanation": "«Y concibió Sará y dio a luz a Abraham un hijo en su vejez, en el tiempo señalado del que Dios le había hablado; y Abraham llamó al hijo que le nació, que Sará le parió, Yitzjak» (Génesis 21:2-3). El nombre — de la raíz צחק, «reír» — recoge la risa con que ambos padres habían recibido el anuncio imposible. Pero la relación padre-hijo se define también por su segundo extremo: en Génesis 22, ese mismo hijo amado es el que Abraham lleva al monte Moriá. Yitzjak es a la vez el hijo de la promesa (cap. 21) y el hijo de la prueba (cap. 22).",
+    "study_prompt": "Estudiar la relación Abraham–Yitzjak entre sus dos polos: el nacimiento (Génesis 21:1-3, el hijo de la vejez y de la risa) y la Akedá (Génesis 22, el hijo ofrecido). Preguntar por el nombre Yitzjak (de tzjok, reír): ¿por qué el hijo de la promesa lleva grabada la risa de la incredulidad de sus padres? Leer la paternidad de Abraham como el canal por el que el pacto desciende de una generación a la siguiente.",
+    "source_refs": [
+      { "text": "Torá — Bereshit", "ref": "Genesis 21:1-3", "reason": "Nacimiento de Yitzjak: Sará da a luz en la vejez de Abraham, y Abraham le pone el nombre Yitzjak. El polo de la promesa cumplida." },
+      { "text": "Torá — Bereshit", "ref": "Genesis 22:1-2", "reason": "«Toma a tu hijo, a tu único, al que amas, a Yitzjak» — el inicio de la Akedá; define al hijo por la prueba." }
+    ],
+    "keywords": ["yitzjak", "isaac", "hijo de la promesa", "tzjok", "risa", "nacimiento", "akedá", "génesis 21", "paternidad", "descendencia"]
+  },
+
+  // Brit→Avraham
+  "brit→avraham": {
+    "relationship_type": "covenant",
+    "directional_label": "El Pacto se corta con Abraham",
+    "reverse_label": "Abraham es el primer hombre del pacto eterno",
+    "context_title": "El Pacto (Brit) y Abraham — del corte entre las partes al pacto eterno",
+    "short_explanation": "Abraham es el hombre con quien Dios «corta» (כָּרַת) el pacto. Dos veces: primero el Brit bein haBetarim, donde «en ese día YHVH cortó pacto con Abram» prometiéndole la tierra «desde el río de Egipto hasta el gran río Éufrates» (Génesis 15:18), tras la visión que comienza con «no temas, Abram, yo soy escudo para ti» (15:1). Y luego, a los noventa y nueve años, el pacto inscrito en la carne: «estableceré mi pacto entre Mí y ti» (17:2), un «pacto eterno (בְּרִית עוֹלָם)... para ser Dios para ti y para tu descendencia después de ti» (17:7). La palabra hebrea para hacer pacto es literalmente «cortar» — con Abraham, la alianza entre el Infinito y un hombre se vuelve una herida fundadora.",
+    "study_prompt": "Estudiar el Brit en relación con Abraham por sus dos cortes: el pacto entre las partes (Génesis 15, la tierra, los animales partidos, la oscuridad y la antorcha de fuego) y el pacto de la milá (Génesis 17, la carne, el nombre nuevo, el 'pacto eterno'). Enfocar el verbo כָּרַת ('cortar') en Génesis 15:18: ¿por qué en hebreo un pacto no se 'hace' sino que se 'corta'? Leer brit olam (17:7) — pacto eterno que abarca a la descendencia — como el puente entre un individuo y un pueblo.",
+    "source_refs": [
+      { "text": "Torá — Bereshit", "ref": "Genesis 15:18", "reason": "«בַּיּוֹם הַהוּא כָּרַת יְהוָה אֶת־אַבְרָם בְּרִית» — en ese día YHVH cortó pacto con Abram: el Brit bein haBetarim." },
+      { "text": "Torá — Bereshit", "ref": "Genesis 15:1", "reason": "«אַל־תִּירָא אַבְרָם אָנֹכִי מָגֵן לָךְ» — 'no temas, yo soy escudo para ti': la apertura de la visión del pacto entre las partes." },
+      { "text": "Torá — Bereshit", "ref": "Genesis 17:2", "reason": "«וְאֶתְּנָה בְרִיתִי בֵּינִי וּבֵינֶךָ» — estableceré mi pacto entre Mí y ti: la fórmula del pacto de la milá." },
+      { "text": "Torá — Bereshit", "ref": "Genesis 17:7", "reason": "«לִבְרִית עוֹלָם... לִהְיוֹת לְךָ לֵאלֹהִים וּלְזַרְעֲךָ» — pacto eterno, para ti y tu descendencia: el carácter perpetuo y generacional de la alianza." }
+    ],
+    "keywords": ["brit", "pacto", "karat brit", "cortar pacto", "brit bein habetarim", "pacto entre las partes", "brit olam", "pacto eterno", "génesis 15", "génesis 17"]
+  },
+
+  // Tres oraciones→Avraham
+  "tres-oraciones→avraham": {
+    "relationship_type": "practice",
+    "directional_label": "De las tres oraciones, Abraham instituye Shajarit",
+    "reverse_label": "Abraham es el patriarca de la oración de la mañana",
+    "context_title": "Las tres oraciones y Abraham — la mañana (Shajarit)",
+    "short_explanation": "El misterio de las Tres Oraciones enseña que las tres plegarias diarias fueron instituidas por los tres patriarcas: Abraham la de la mañana, Yitzjak la de la tarde, Yaakov la de la noche (Berajot 26b). A Abraham le toca Shajarit: «Abraham instituyó la oración de la mañana, como está dicho: madrugó Abraham por la mañana hacia el lugar donde había estado de pie (Génesis 19:27) — y no hay 'estar de pie' (עֲמִידָה) sino oración» (Berakhot 26b:5). El versículo es la mañana siguiente a la destrucción de Sodoma, en el mismo lugar donde Abraham había intercedido: la primera Shajarit nace de volver a presentarse, al amanecer, en el sitio de una plegaria cuyo desenlace fue humo que sube.",
+    "study_prompt": "Estudiar Berakhot 26b:5 en relación con Abraham dentro del trío de las tres oraciones: ¿por qué a Abraham, el hombre del jésed y de la mañana, le corresponde Shajarit? Leer el detalle del pshat: Génesis 19:27 es la mañana DESPUÉS de Sodoma, en el lugar donde Abraham había 'estado de pie ante YHVH' (Génesis 18:22) intercediendo. Preguntar qué significa que la oración fija de la mañana se funde precisamente en una plegaria aparentemente no respondida.",
+    "source_refs": [
+      { "text": "Talmud Bavli — Berajot", "ref": "Berakhot 26b:5", "reason": "La baraita: 'Abraham instituyó la tefilá de Shajarit, como está dicho: madrugó Abraham por la mañana al lugar donde había estado de pie; y amidá no es sino tefilá'." },
+      { "text": "Torá — Bereshit", "ref": "Genesis 19:27", "reason": "«madrugó Abraham por la mañana hacia el lugar donde había estado de pie ante el Eterno» — la mañana siguiente a Sodoma, el versículo-prueba." }
+    ],
+    "keywords": ["tres oraciones", "shajarit", "abraham", "patriarcas", "oración de la mañana", "amidá", "berajot 26b", "sodoma", "tefilá"]
+  },
+
+  // Descensos de la Shejiná→Avraham — entregado honesto: vínculo interpretativo
+  "descensos-de-la-shejina→avraham": {
+    "relationship_type": "concept",
+    "directional_label": "Un descenso de la Shejiná ocurre en el episodio de Abraham (Sodoma)",
+    "reverse_label": "Abraham acompaña el descenso de la Presencia sobre Sodoma",
+    "context_title": "Los diez descensos de la Shejiná y Abraham (Sodoma) — vínculo interpretativo",
+    "short_explanation": "El midrash de los diez descensos de la Shejiná está localizado y verificado: «Diez descensos descendió la Shejiná sobre el mundo» — incluyendo «en Sodoma» con el versículo «descenderé ahora y veré» (אֵרֲדָה נָּא וְאֶרְאֶה, Génesis 18:21) (Avot DeRabbi Natan 34:6). PERO el midrash ancla el descenso en la ciudad y su juicio, NO en la persona de Abraham. El vínculo con Abraham es contextual: ese versículo pertenece a la perícopa donde Abraham intercede (Génesis 18:22-33), y al versículo siguiente Abraham «aún estaba de pie ante YHVH» (18:22). La conexión es real pero indirecta — el midrash no dice que la Shejiná descendió 'por' o 'hacia' Abraham. Se presenta honesta como vínculo interpretativo.",
+    "study_prompt": "Estudiar Avot DeRabbi Natan 34:6 (los diez descensos de la Shejiná) con honestidad metodológica sobre el lugar de Abraham: el tercer descenso es 'en Sodoma' (Génesis 18:21), versículo que abre el juicio de la ciudad y precede a la intercesión de Abraham (18:22-33). Preguntar: ¿es Abraham parte del descenso, o solo su testigo y contraparte humana? Distinguir con cuidado: el midrash habla del descenso DEL JUEZ sobre la ciudad; Abraham es quien, abajo, discute con ese Juez.",
+    "source_refs": [
+      { "text": "Avot DeRabbi Natan", "ref": "Avot DeRabbi Natan 34:6", "reason": "FOLIO VERIFICADO: los diez descensos de la Shejiná; el 3º es 'en Sodoma' citando Génesis 18:21. El midrash NO nombra a Abraham — ancla el descenso en la ciudad, no en la persona." },
+      { "text": "Torá — Bereshit", "ref": "Genesis 18:21", "reason": "«אֵרֲדָה נָּא וְאֶרְאֶה» — 'descenderé ahora y veré': el versículo del descenso sobre Sodoma." },
+      { "text": "Torá — Bereshit", "ref": "Genesis 18:22", "reason": "«וְאַבְרָהָם עוֹדֶנּוּ עֹמֵד לִפְנֵי יְהוָה» — 'y Abraham aún estaba de pie ante YHVH': el puente contextual que justifica la arista, declarado como drash." }
+    ],
+    "keywords": ["descensos de la shejiná", "diez descensos", "sodoma", "avot derabbi natan 34", "génesis 18", "intercesión", "vínculo interpretativo"],
+    "needs_review": true
+  },
 };
 
 // ── Lookup orientado ───────────────────────────────────────────────────────

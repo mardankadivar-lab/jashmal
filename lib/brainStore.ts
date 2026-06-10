@@ -476,6 +476,28 @@ export async function addAvrahamKab(): Promise<void> {
   }
 }
 
+// ── Lote 2 Sofer: 5 aristas nuevas de Abraham (Bereshit, Sará, Yitzjak, Brit, Tres oraciones) ─
+export async function addAvrahamKabLote2(): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  const edges = [
+    { a: "Avraham", b: "Bereshit",       kind: "solid" },
+    { a: "Avraham", b: "Sará",           kind: "solid" },
+    { a: "Avraham", b: "Yitzjak",        kind: "solid" },
+    { a: "Brit",    b: "Avraham",        kind: "solid" },
+    { a: "Tres oraciones", b: "Avraham", kind: "solid" },
+  ];
+  try {
+    for (const e of edges) {
+      await sql`
+        INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
+        VALUES (${edgeKey(e.a, e.b)}, ${e.a}, ${e.b}, ${e.kind}, 1, 'approved', 'sofer')
+        ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, status = 'approved'
+      `;
+    }
+  } catch { /* nunca romper la lectura del cerebro */ }
+}
+
 // ── Estudio: Gilgulim de Caín y Abel (Sofer · Sha'ar HaGilgulim del Arí) ───
 export async function addGilgulCainHevel(): Promise<void> {
   const sql = getSql();
