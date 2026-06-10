@@ -5,6 +5,7 @@ import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Analytics } from "@vercel/analytics/next";
 import { routing, type Locale } from "@/i18n/routing";
+import { localizedMetadata } from "@/lib/i18n/seo";
 import GlobalTutor from "@/components/GlobalTutor";
 import "../globals.css";
 
@@ -37,11 +38,19 @@ const vazir = Vazirmatn({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Jashmal — חַשְׁמַל",
-  description:
-    "Estudio de Cabalá y filosofía judía. Donde el silencio aprende a hablar.",
-};
+// SEO por idioma: título y descripción salen de messages/ (traducido en es/en/fa)
+// vía el helper oficial. Antes era estático y solo en español para los 3 idiomas.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    metadataBase: new URL("https://jashmal.org"),
+    ...(await localizedMetadata(locale as Locale)),
+  };
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
