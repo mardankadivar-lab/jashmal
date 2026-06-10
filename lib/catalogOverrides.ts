@@ -30,7 +30,10 @@ export const REF_OVERRIDES: Record<string, Partial<RichBook>> = {
     label: "Etz Jaim (Árbol de la Vida)",
     he: "עֵץ חַיִּים",
     units: 50,
-    refTemplate: "Sefer Etz Chaim, Gate {n}",
+    // El nodo principal de Etz Chaim es el "default" en Sefaria: "Sefer Etz Chaim {n}"
+    // resuelve a Gate {n}:1. NO usar "Sefer Etz Chaim, Gate {n}" — Sefaria ignora el
+    // ", Gate" y cae SIEMPRE a Gate 1:1 (bug reportado por Mardan, 2026-06).
+    refTemplate: "Sefer Etz Chaim {n}",
   },
 };
 
