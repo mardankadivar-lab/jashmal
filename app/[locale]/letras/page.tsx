@@ -85,7 +85,7 @@ export default function LetrasIndexPage() {
       </div>
 
       <p className="mt-12 text-center font-cinzel text-xs uppercase tracking-widest text-muted/40">
-        {fa ? "هر حرف یک کانالِ آگاهی است" : "Cada letra es un canal de consciencia"}
+        {t("footer")}
       </p>
     </main>
   );

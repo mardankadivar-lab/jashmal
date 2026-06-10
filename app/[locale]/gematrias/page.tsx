@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
 import { GEMATRIAS } from "@/lib/nodes/gematrias";
 import { tri, triList } from "@/lib/i18n/i18nContent";
@@ -11,6 +11,7 @@ import MisterioTutor from "@/components/MisterioTutor";
 
 export default function GematriasPage() {
   const locale = useLocale() as Locale;
+  const t = useTranslations("gematria");
   const router = useRouter();
   const fa = locale === "fa";
   const [abierto, setAbierto] = useState<number | null>(null);
@@ -39,8 +40,8 @@ export default function GematriasPage() {
         </Link>
         <button
           onClick={toggleTheme}
-          aria-label={dark ? "Modo claro" : "Modo oscuro"}
-          title={dark ? "Modo claro" : "Modo oscuro"}
+          aria-label={dark ? t("themeToLight") : t("themeToDark")}
+          title={dark ? t("themeToLight") : t("themeToDark")}
           className="flex h-8 w-8 items-center justify-center rounded-full border border-gold/30 text-gold transition-colors hover:bg-gold/10"
         >
           {dark ? "☀" : "☾"}
@@ -53,12 +54,10 @@ export default function GematriasPage() {
           גִּימַטְרִיָּה
         </p>
         <h1 className="font-cinzel text-2xl font-bold tracking-wide text-parchment sm:text-3xl">
-          {fa ? "گیماتریا" : "Gematría"}
+          {t("heading")}
         </h1>
         <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-muted">
-          {fa
-            ? "هر حرفِ عبری یک عدد است. این اعداد بارها بازمی‌گردند — نام‌های الهی، سِفیروت، ساختارهای آفرینش. روی هر عدد بزن تا رازش را بگشایی."
-            : "Cada letra hebrea es un número. Estos números regresan una y otra vez — Nombres divinos, sefirot, estructuras de la creación. Toca cada número para abrir su secreto."}
+          {t("intro")}
         </p>
       </div>
 
@@ -145,9 +144,7 @@ export default function GematriasPage() {
                     }}
                     className="mt-4 inline-block cursor-pointer rounded-full border border-gold/30 px-4 py-1.5 font-cinzel text-[11px] uppercase tracking-widest text-gold/80 transition-all hover:border-gold hover:bg-gold/10 hover:text-gold"
                   >
-                    {g.mystery
-                      ? (fa ? "گشودنِ راز ↗" : "Abrir el misterio ↗")
-                      : (fa ? "مطالعهٔ عمیق این عدد ↗" : "Estudiar este número a fondo ↗")}
+                    {g.mystery ? t("openMystery") : t("studyDeep")}
                   </div>
                 </div>
               )}
@@ -157,7 +154,7 @@ export default function GematriasPage() {
       </div>
 
       <p className="mt-12 text-center font-cinzel text-xs uppercase tracking-widest text-muted/40">
-        {fa ? "هر عدد دری است" : "Cada número es una puerta"}
+        {t("footer")}
       </p>
 
       <MisterioTutor />
