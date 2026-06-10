@@ -15,7 +15,9 @@
     "brain": "Mente Cósmica",
     "community": "Comunidad",
     "atlas": "Atlas",
-    "myStudies": "Mis Estudios"
+    "myStudies": "Mis Estudios",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
   },
   "hero": {
     "kicker": "Cabalá y filosofía judía",
@@ -97,7 +99,8 @@
     "title": "Las letras hebreas",
     "subtitle": "Canales de consciencia creativa, según el marco de Rav Yitzchak Ginsburgh.",
     "studying": "Estudiando la letra...",
-    "back": "Volver al estudio"
+    "back": "Volver al estudio",
+    "footer": "Cada letra es un canal de consciencia"
   },
   "lexicon": {
     "title": "Léxico",
@@ -303,6 +306,16 @@
       "dosFilos": "Dos Filos",
       "gematria": "Gematría",
       "sanidad": "Sanidad"
-    }
+    },
+    "notAvailable": "La versión en tu idioma llegará pronto — léelo en:"
+  },
+  "gematria": {
+    "heading": "Gematría",
+    "intro": "Cada letra hebrea es un número. Estos números regresan una y otra vez — Nombres divinos, sefirot, estructuras de la creación. Toca cada número para abrir su secreto.",
+    "openMystery": "Abrir el misterio ↗",
+    "studyDeep": "Estudiar este número a fondo ↗",
+    "footer": "Cada número es una puerta",
+    "themeToLight": "Modo claro",
+    "themeToDark": "Modo oscuro"
   }
 }

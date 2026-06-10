@@ -45,7 +45,7 @@ export default function SiteHeader() {
           <ThemeToggle />
           <button
             onClick={() => setOpen((o) => !o)}
-            aria-label={open ? "Cerrar menú" : "Abrir menú"}
+            aria-label={open ? t("nav.closeMenu") : t("nav.openMenu")}
             aria-expanded={open}
             className="flex h-9 w-9 items-center justify-center rounded-md border border-gold/25 text-gold transition-colors hover:bg-gold/10"
           >

@@ -47,5 +47,32 @@ export function tri(
   return { value: v.es ?? "", missing: true, available, shownIn: "es" };
 }
 
+export interface PickedList {
+  value: string[];
+  missing: boolean;
+  available: Locale[];
+  shownIn: Locale;
+}
+
+/**
+ * Versión de `tri()` para listas (p. ej. viñetas de asociaciones). Misma política
+ * honesta: respaldo al español marcado como `missing`, nunca mezcla silenciosa.
+ */
+export function triList(
+  locale: Locale,
+  es: string[],
+  fa?: string[] | null,
+  en?: string[] | null,
+): PickedList {
+  const clean = (a?: string[] | null) => (Array.isArray(a) && a.length ? a : undefined);
+  const v = { es: clean(es), fa: clean(fa), en: clean(en) };
+  const available = (["es", "fa", "en"] as Locale[]).filter((l) => v[l]);
+
+  const direct = v[locale];
+  if (direct) return { value: direct, missing: false, available, shownIn: locale };
+
+  return { value: v.es ?? [], missing: true, available, shownIn: "es" };
+}
+
 /** Etiquetas cortas de idioma para los avisos ("ES · FA"). */
 export const LANG_LABEL: Record<Locale, string> = { es: "ES", fa: "فا", en: "EN" };

@@ -9,7 +9,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const CYCLE_SLOTS = [
   "right-[6vw] top-[40vh] w-[min(17rem,30vw)] text-right",
-  "left-[6vw] top-[40vh] w-[min(17rem,30vw)] text-left",
+  "left-[6vw] top-[40vh] w-[min(17rem,30vw)] text-start",
   "inset-x-0 bottom-[10vh] mx-auto w-[min(26rem,82vw)] text-center",
   "inset-x-0 top-[19vh] mx-auto w-[min(26rem,82vw)] text-center",
 ];
@@ -662,7 +662,7 @@ export default function AlefScrollytelling() {
         <div id="gimelDaletGhost" className="pointer-events-none absolute left-[23%] top-1/2 z-[13] -translate-y-1/2 text-[7rem] leading-none text-[#d8ad4f]/25 sm:text-[9rem]" style={{ fontFamily: "var(--font-hebrew), serif" }}>ד</div>
         {/* Disección de la Guímel: Vav (cuerpo) + Yud (pie); el pie se estira hacia la Dálet (Shabat 104a) */}
         <div id="sceneGimelDissect" className="pointer-events-none absolute inset-0 z-40">
-          <div className="gDissectLabel absolute right-[6vw] top-[33%] w-[min(12rem,36vw)] text-left">
+          <div className="gDissectLabel absolute right-[6vw] top-[33%] w-[min(12rem,36vw)] text-start">
             <p className="font-cinzel text-[0.62rem] uppercase tracking-[0.18em] text-[#e8c87a]"><span className="hebrew text-sm">ו</span> · El cuerpo erguido · 6</p>
             <p className="mt-0.5 text-xs italic leading-snug text-white/60">la Vav: la persona de pie</p>
           </div>
@@ -685,7 +685,7 @@ export default function AlefScrollytelling() {
             <p className="mt-0.5 text-xs italic leading-snug text-white/60">el techo que cubre la casa</p>
           </div>
           {/* VERTICAL (la pared) — conecta cielo y tierra; la memoria */}
-          <div className="vavinLabel absolute right-[5vw] top-1/2 w-[min(13rem,40vw)] -translate-y-1/2 text-left">
+          <div className="vavinLabel absolute right-[5vw] top-1/2 w-[min(13rem,40vw)] -translate-y-1/2 text-start">
             <p className="font-cinzel text-[0.62rem] uppercase tracking-[0.18em] text-[#e8c87a]"><span className="hebrew text-sm">ו</span> · La Torá: conecta cielo y tierra</p>
             <p className="mt-0.5 text-xs italic leading-snug text-white/60">la memoria; el gancho que sostiene (Éx 27:10)</p>
           </div>
@@ -962,7 +962,7 @@ export default function AlefScrollytelling() {
 
         <div
           id="labelLowerYud"
-          className="pointer-events-none absolute bottom-[15vh] z-20 max-w-[11.5rem] text-left sm:bottom-auto sm:top-[61vh] sm:max-w-[13rem]"
+          className="pointer-events-none absolute bottom-[15vh] z-20 max-w-[11.5rem] text-start sm:bottom-auto sm:top-[61vh] sm:max-w-[13rem]"
           style={{ left: "max(1.5rem, calc(50% - 23rem))" }}
         >
           <p className="font-cinzel text-[0.68rem] uppercase tracking-[0.22em] text-[#d8ad4f]">Yud inferior</p>
@@ -971,7 +971,7 @@ export default function AlefScrollytelling() {
 
         <div
           id="labelVav"
-          className="pointer-events-none absolute top-[38vh] z-20 max-w-[11.5rem] text-left sm:max-w-[14rem]"
+          className="pointer-events-none absolute top-[38vh] z-20 max-w-[11.5rem] text-start sm:max-w-[14rem]"
           style={{ left: "max(1.5rem, calc(50% - 24rem))" }}
         >
           <p className="font-cinzel text-[0.68rem] uppercase tracking-[0.22em] text-[#d8ad4f]">Vav</p>
@@ -1010,7 +1010,7 @@ export default function AlefScrollytelling() {
             </p>
           </div>
           {[
-            ["Mundos", "El cosmos toma forma de Álef.", "left-[6vw] top-[42vh] w-[min(17rem,30vw)] text-left"],
+            ["Mundos", "El cosmos toma forma de Álef.", "left-[6vw] top-[42vh] w-[min(17rem,30vw)] text-start"],
             ["Almas", "Alma arriba, cuerpo abajo, fe en medio.", "right-[6vw] top-[42vh] w-[min(17rem,30vw)] text-right"],
             ["Divinidad", "Arriba y abajo: Hashem Ejad.", "inset-x-0 bottom-[11vh] mx-auto w-[min(26rem,82vw)] text-center"],
           ].map(([label, text, slot]) => (
@@ -1038,7 +1038,7 @@ export default function AlefScrollytelling() {
             </p>
           </div>
           {[
-            ["Mundos", "Crear traduce el 1 al 26.", "left-[6vw] top-[42vh] w-[min(17rem,30vw)] text-left"],
+            ["Mundos", "Crear traduce el 1 al 26.", "left-[6vw] top-[42vh] w-[min(17rem,30vw)] text-start"],
             ["Almas", "Unificar devuelve la dispersión al Uno.", "right-[6vw] top-[42vh] w-[min(17rem,30vw)] text-right"],
             ["Divinidad", "El 1 y el 26 son una sola fe.", "inset-x-0 bottom-[11vh] mx-auto w-[min(26rem,82vw)] text-center"],
           ].map(([label, text, slot]) => (
@@ -1086,7 +1086,7 @@ export default function AlefScrollytelling() {
           {/* Las 3 dimensiones DESFILAN en orden cósmico: Divinidad arriba · Almas al lado · Mundos abajo */}
           {[
             ["Divinidad", "El Uno rige y excede todo entendimiento.", "inset-x-0 top-[20vh] mx-auto w-[min(26rem,82vw)] text-center"],
-            ["Almas", "Aprender empieza en el asombro.", "left-[6vw] top-[42vh] w-[min(17rem,30vw)] text-left"],
+            ["Almas", "Aprender empieza en el asombro.", "left-[6vw] top-[42vh] w-[min(17rem,30vw)] text-start"],
             ["Mundos", "Un origen gobierna toda multiplicidad.", "inset-x-0 bottom-[11vh] mx-auto w-[min(26rem,82vw)] text-center"],
           ].map(([label, text, slot]) => (
             <div key={label} className={`cycleItem absolute ${slot}`}>

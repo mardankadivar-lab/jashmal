@@ -15,7 +15,9 @@
     "brain": "Cosmic Mind",
     "community": "Community",
     "atlas": "Atlas",
-    "myStudies": "My Studies"
+    "myStudies": "My Studies",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "hero": {
     "kicker": "Kabbalah and Jewish philosophy",
@@ -97,7 +99,8 @@
     "title": "The Hebrew letters",
     "subtitle": "Channels of creative consciousness, per the framework of Rav Yitzchak Ginsburgh.",
     "studying": "Studying the letter...",
-    "back": "Back to study"
+    "back": "Back to study",
+    "footer": "Each letter is a channel of consciousness"
   },
   "lexicon": {
     "title": "Lexicon",
@@ -303,6 +306,16 @@
       "dosFilos": "Two Edges",
       "gematria": "Gematria",
       "sanidad": "Healing"
-    }
+    },
+    "notAvailable": "English version coming soon — read this study in:"
+  },
+  "gematria": {
+    "heading": "Gematria",
+    "intro": "Each Hebrew letter is a number. These numbers return again and again — divine Names, sefirot, structures of creation. Tap each number to open its secret.",
+    "openMystery": "Open the mystery ↗",
+    "studyDeep": "Study this number in depth ↗",
+    "footer": "Each number is a door",
+    "themeToLight": "Light mode",
+    "themeToDark": "Dark mode"
   }
 }

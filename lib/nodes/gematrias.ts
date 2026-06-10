@@ -5,12 +5,15 @@
 export interface Gematria {
   num: number;
   he: string;            // palabra(s) hebrea(s) principal(es), separadas por ·
-  titulo: string;        // título español
+  titulo: string;        // título español (canónico)
   tituloFa: string;
+  tituloEn?: string;     // inglés — lo llena el Sofer por fases ([[i18n-audit]])
   sig: string;           // una línea de significado (español)
   sigFa: string;
+  sigEn?: string;        // inglés — lo llena el Sofer por fases
   asociaciones: string[];   // viñetas (español)
   asociacionesFa: string[];
+  asociacionesEn?: string[]; // inglés — lo llena el Sofer por fases
   color: string;
   mystery?: string;         // slug de misterio dedicado (ej. "137"), si lo tiene
 }

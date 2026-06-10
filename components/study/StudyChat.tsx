@@ -206,7 +206,7 @@ export default function StudyChat({ studyRef, prefill, onPrefillConsumed }: Stud
                           key={j}
                           onClick={() => sendMessage(opt)}
                           disabled={loading}
-                          className="rounded-xl border border-gold/30 bg-gold/[0.06] px-3 py-1.5 text-left text-xs text-gold/80 transition-all hover:border-gold/60 hover:bg-gold/[0.12] hover:text-gold disabled:opacity-40"
+                          className="rounded-xl border border-gold/30 bg-gold/[0.06] px-3 py-1.5 text-start text-xs text-gold/80 transition-all hover:border-gold/60 hover:bg-gold/[0.12] hover:text-gold disabled:opacity-40"
                         >
                           {opt}
                         </button>

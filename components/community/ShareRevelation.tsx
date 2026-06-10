@@ -54,7 +54,7 @@ export default function ShareRevelation() {
               ? "Recibida 🕯️"
               : "El Sofer te responde 📜"}
         </p>
-        <p className="mt-3 whitespace-pre-line text-left text-sm leading-relaxed text-parchment/80">{result.message}</p>
+        <p className="mt-3 whitespace-pre-line text-start text-sm leading-relaxed text-parchment/80">{result.message}</p>
         {accepted && (
           <p className="mt-3 text-xs italic leading-relaxed text-gold/60">
             Mardan dará el visto final; si firma, tu estrella se encenderá con tu nombre.
@@ -68,7 +68,7 @@ export default function ShareRevelation() {
   }
 
   return (
-    <form onSubmit={submit} className="text-left">
+    <form onSubmit={submit} className="text-start">
       <label className="mb-2 block font-cinzel text-xs uppercase tracking-widest text-gold/60">Tu revelación</label>
       <textarea
         value={text}
