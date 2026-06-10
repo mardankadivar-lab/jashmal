@@ -30,3 +30,7 @@ next-env.d.ts
 
 # vercel
 .vercel
+
+# python (scripts de video/voz)
+__pycache__/
+*.pyc
