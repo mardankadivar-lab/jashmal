@@ -38,6 +38,7 @@ import {
   type BNode,
 } from "@/lib/brainData";
 import { gilgulChainForRoot, traverseGilgul, getGilgulModel, GILGUL_ERAS } from "@/lib/gilgul";
+import { getEdgeData, type OrientedEdgeData } from "@/lib/edgeData";
 import type { GilgulMode } from "./GilgulLayer";
 import Consola from "./Consola";
 import EdgeTooltip, { type EdgeHint } from "./EdgeTooltip";
@@ -907,6 +908,7 @@ function BrainScene({
   onGilgulHint,
   onDouble,
   onPickEdge,
+  onTravelSpline,
   onTravelArrived,
   onTravelConsumed,
 }: {
@@ -932,6 +934,7 @@ function BrainScene({
   onGilgulHint: (hint: GilgulHint | null) => void;
   onDouble: (n: BNode) => void;
   onPickEdge: (from: string, to: string, pts: THREE.Vector3[]) => void;
+  onTravelSpline: (from: string, to: string, pts: THREE.Vector3[]) => void;
   onTravelArrived: (toId: string) => void;
   onTravelConsumed: () => void;
 }) {
@@ -1012,19 +1015,20 @@ function BrainScene({
   // al cambiar el nodo en foco (o entrar en viaje), olvida la arista resaltada y su rótulo
   useEffect(() => { setHotEdge(null); onEdgeHint(null); }, [focusId, travel, onEdgeHint]);
 
-  // ── Petición de viaje desde la Consola (chip de destino): la página pide
-  //    "viaja de A → B"; aquí encontramos el spline real, lo orientamos y
-  //    disparamos el mismo "Viaje de luz" que el clic directo en la arista. ──
+  // ── Petición de viaje desde la Consola (chip de destino o panel de conexión):
+  //    la página pide "viaja de A → B"; aquí encontramos el spline real, lo
+  //    orientamos y disparamos el "Viaje de luz". (El clic FÍSICO en una arista
+  //    ya no viaja directo: abre el panel de la conexión vía onPickEdge.) ──
   useEffect(() => {
     if (!travelRequest) return;
     const { from, to } = travelRequest;
     const c = curves.find((c) => (c.a === from && c.b === to) || (c.a === to && c.b === from));
     if (c) {
       const pts = c.a === from ? c.pts : [...c.pts].reverse();
-      onPickEdge(from, to, pts);
+      onTravelSpline(from, to, pts);
     }
     onTravelConsumed();
-  }, [travelRequest, curves, onPickEdge, onTravelConsumed]);
+  }, [travelRequest, curves, onTravelSpline, onTravelConsumed]);
   // marca de tiempo del último movimiento real de cámara (girar/zoom/pinch):
   // sirve para NO deseleccionar cuando el "clic" en el fondo viene de un gesto.
   // Solo cuenta mientras el usuario interactúa (no el auto-giro).
@@ -1236,7 +1240,15 @@ export default function GrafoPage() {
   const [currentEra, setCurrentEra] = useState<string | null>(null); // Fase 2: era que la chispa acaba de alcanzar (línea de tiempo)
   const [filterCat, setFilterCat] = useState<string | null>(null); // chip-filtro de la Consola (disciplina del nodo en foco)
   const [travelRequest, setTravelRequest] = useState<{ from: string; to: string } | null>(null); // viaje pedido desde la Consola
-  const [edgeHint, setEdgeHint] = useState<EdgeHint | null>(null); // rótulo "viajar a" que sigue al cursor
+  const [edgeHint, setEdgeHint] = useState<EdgeHint | null>(null); // rótulo "ver conexión" que sigue al cursor
+  // ── Contexto relacional (V3): el CAMINO activo de la navegación ──
+  // Invariante: si hay nodo seleccionado y camino, el ÚLTIMO paso es el nodo
+  // seleccionado. Con ≥2 pasos hay contexto: el panel ofrece estudiar LA RELACIÓN
+  // (penúltimo → último). Búsqueda/click "directo" lo reinician a [nodo].
+  const [activePath, setActivePath] = useState<string[]>([]);
+  // panel de CONEXIÓN (clic en una arista o "ver conexión" del panel del nodo).
+  // pts = spline orientado (si vino del clic 3D) para poder "Viajar" sin recalcular.
+  const [edgeView, setEdgeView] = useState<{ from: string; to: string; pts: THREE.Vector3[] | null } | null>(null);
   const [gilgulHint, setGilgulHint] = useState<GilgulHint | null>(null); // sendero de gilgul bajo el cursor → tooltip DOM que lo sigue
 
   // Consola unificada + hoja inferior en móvil + historial de navegación (migaja ← →)
@@ -1246,6 +1258,23 @@ export default function GrafoPage() {
   const consumeTravelRequest = useCallback(() => setTravelRequest(null), []);
   // al cambiar de nodo seleccionado, el chip-filtro se reinicia (cada nodo, filtro fresco)
   useEffect(() => { setFilterCat(null); }, [selected]);
+
+  // ── Mantenimiento del camino contextual (V3) ──
+  // extendPath: el usuario VIAJÓ por una conexión from→to (clic en vecino, viaje
+  // de luz, chip de la Consola) → el camino se extiende y el contexto vive.
+  const extendPath = useCallback((fromId: string, toId: string) => {
+    setActivePath((p) => (p.length > 0 && p[p.length - 1] === fromId ? [...p, toId] : [fromId, toId]));
+  }, []);
+  // resetPathTo: apertura DIRECTA (búsqueda, clic sin origen, salir) → el
+  // contexto se reinicia; el siguiente estudio vuelve a ser general.
+  const resetPathTo = useCallback((id: string | null) => {
+    setActivePath(id ? [id] : []);
+  }, []);
+  // ¿existe la arista a–b en el grafo vivo? (decide si un clic "viaja" o "salta")
+  const isNeighborEdge = useCallback(
+    (a: string, b: string) => graph.edges.some(([x, y]) => (x === a && y === b) || (x === b && y === a)),
+    [graph.edges],
+  );
 
   useEffect(() => {
     let alive = true;
@@ -1388,6 +1417,7 @@ export default function GrafoPage() {
   }, [currentTerm, graph.nodes, searchQ]);
 
   // Buscar = seleccionar + VOLAR hacia el nodo (porque no se ve en pantalla).
+  // Es una apertura DIRECTA → el contexto relacional se reinicia (espec V3).
   const pickNode = (id: string) => {
     setCompare([]);
     setActiveCat(null);
@@ -1395,6 +1425,8 @@ export default function GrafoPage() {
     setSelected(id);
     setFlyToId(id);
     setSuggestOpen(false);
+    setEdgeView(null);
+    resetPathTo(id); // nodo directo: sin nodo origen → estudio general
     history.visit(id); // registra en el historial de navegación (migaja ← →)
     const lbl = graph.nodes.find((n) => n.id === id)?.label;
     if (lbl) setSearchQ(lbl); // el texto se queda FIJO en el resultado
@@ -1450,6 +1482,7 @@ export default function GrafoPage() {
   const enterGilgul = (rootId: string) => {
     setSuggestOpen(false);
     setSelected(null); setCompare([]); setActiveCat(null); setTravel(null); setFlyToId(null);
+    setEdgeView(null); resetPathTo(null); // el linaje es otro modo: contexto fuera
     history.clear(); // el linaje de almas es otro modo: el historial de nodos se reinicia
     setGilgulMode("journey");  // cada invocación arranca en el VIAJE (no hereda "árbol")
     setCurrentEra(null);       // y con la línea de tiempo en cero
@@ -1471,6 +1504,7 @@ export default function GrafoPage() {
       if (uniq.length >= 2) {
         setSelected(null);
         setActiveCat(null);
+        setEdgeView(null); resetPathTo(null); // la mezcla es otro modo: contexto fuera
         history.clear(); // la mezcla/comparación es otro modo → reinicia el historial
         setCompare(uniq.slice(0, 4)); // modo mezcla: enciende sus conexiones comunes
         setFlyToId(uniq[0]); // acerca a uno para dar contexto
@@ -1493,8 +1527,8 @@ export default function GrafoPage() {
     }
     if (s.kind === "cat") {
       const id = resolveTerm(s.label);
-      setCompare([]); setActiveCat(null); setGilgulRoot(null);
-      if (id) { setSelected(id); setFlyToId(id); history.visit(id); }
+      setCompare([]); setActiveCat(null); setGilgulRoot(null); setEdgeView(null);
+      if (id) { setSelected(id); setFlyToId(id); resetPathTo(id); history.visit(id); }
       setSearchQ(s.label);
     } else {
       pickNode(s.key);
@@ -1504,6 +1538,7 @@ export default function GrafoPage() {
   const clearSearch = () => {
     setSearchQ(""); setSuggestOpen(false);
     setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setGilgulRoot(null);
+    setEdgeView(null); resetPathTo(null);
     history.clear();
   };
 
@@ -1512,9 +1547,11 @@ export default function GrafoPage() {
   const handleSelect = (id: string, additive: boolean) => {
     setActiveCat(null); // tocar un nodo apaga el resaltado de dominio
     setGilgulRoot(null); // y sale del modo Gilgul (vuelve a la exploración normal)
+    setEdgeView(null); // y cierra el panel de conexión si estaba abierto
     if (additive) {
       setFlyToId(null);
       setSelected(null);
+      resetPathTo(null); // la comparación es otro modo: contexto fuera
       history.clear(); // entrar a comparación reinicia el historial de nodos
       setCompare((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
     } else {
@@ -1523,15 +1560,30 @@ export default function GrafoPage() {
       setSelected(next);
       // al elegir un concepto, la cámara VIAJA hasta él → indagar y saltar por sus aristas
       setFlyToId(next);
+      // ── Contexto (V3): clic en un VECINO del nodo en foco = viajar por esa
+      //    conexión (el camino se extiende). Clic en un nodo suelto = apertura
+      //    directa (el contexto se reinicia). Soltar el nodo = sin contexto. ──
+      if (next) {
+        if (selected && selected !== next && isNeighborEdge(selected, next)) extendPath(selected, next);
+        else resetPathTo(next);
+      } else {
+        resetPathTo(null);
+      }
       if (next) history.visit(next); else history.clear(); // registra el salto (o limpia al soltar)
     }
   };
-  const clearAll = () => { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setTravel(null); setGilgulRoot(null); history.clear(); };
+  const clearAll = () => { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setTravel(null); setGilgulRoot(null); setEdgeView(null); resetPathTo(null); history.clear(); };
 
   // ── Historial: ← volver · → adelante · saltar a un punto de la migaja ──
   // Re-seleccionan el nodo y VUELAN la cámara, SIN registrar (no crean rama nueva).
+  // Contexto (V3): si el destino está en el camino activo, el camino se TRUNCA
+  // hasta él (volver atrás también retrocede el contexto); si no, se reinicia.
   const goToHistory = (id: string) => {
-    setActiveCat(null); setCompare([]); setGilgulRoot(null); setTravel(null);
+    setActiveCat(null); setCompare([]); setGilgulRoot(null); setTravel(null); setEdgeView(null);
+    setActivePath((p) => {
+      const i = p.lastIndexOf(id);
+      return i >= 0 ? p.slice(0, i + 1) : [id];
+    });
     setSelected(id);
     setFlyToId(id);
   };
@@ -1546,28 +1598,68 @@ export default function GrafoPage() {
     setTravelRequest({ from: selected, to: toId });
   };
 
-  // ── "Viaje de luz": clic en una arista → la cámara VIAJA por la fibra ──
-  // Mientras viaja, soltamos la selección (no hay tarjeta encima del recorrido)
-  // y desactivamos flyTo (el viaje manda). La arista entrega su spline orientado.
+  // ── "Viaje de luz": la cámara VIAJA por la fibra (desde el panel de conexión
+  // o un chip de la Consola). Mientras viaja, soltamos la selección (no hay
+  // tarjeta encima del recorrido) y desactivamos flyTo (el viaje manda).
+  // El camino contextual NO se toca aquí: se extiende al LLEGAR (arriveTravel).
   const startTravel = (from: string, to: string, pts: THREE.Vector3[]) => {
     if (travel) return; // no encadenar viajes a mitad de uno
-    setActiveCat(null); setCompare([]); setFlyToId(null); setSelected(null);
+    setActiveCat(null); setCompare([]); setFlyToId(null); setSelected(null); setEdgeView(null);
     setTravel({ from, to, pts });
   };
   // al llegar al destino: termina el viaje y REUSA la selección normal (el
   // FocusHelper existente asienta el encuadre fino y lo vuelve el nuevo centro).
   const arriveTravel = (toId: string) => {
+    if (travel) extendPath(travel.from, toId); // V3: viajar por la fibra EXTIENDE el camino contextual
     setTravel(null);
     setSelected(toId);
     setFlyToId(toId); // pulso final + encuadre cómodo (flujo de selección existente)
     history.visit(toId); // el viaje por la fibra SÍ se registra (es navegar a un nodo nuevo)
   };
 
+  // ── Panel de CONEXIÓN (V3): clic en una arista = acción de ESTUDIO ──
+  // Abre la ficha de la sinapsis (tipo, explicación, fuentes, estudiar, viajar).
+  // El nodo en foco NO se suelta: la conexión se examina sin perder el lugar.
+  const openEdgePanel = (from: string, to: string, pts: THREE.Vector3[]) => {
+    if (travel) return;
+    setEdgeView({ from, to, pts });
+  };
+  // "Ver conexión" desde el panel del nodo (contexto prev→selected, sin spline:
+  // si luego se viaja, el resolutor de splines de BrainScene lo encuentra).
+  const openContextEdge = () => {
+    const n = activePath.length;
+    if (n >= 2) setEdgeView({ from: activePath[n - 2], to: activePath[n - 1], pts: null });
+  };
+  // Viajar DESDE el panel de conexión: usa el spline del clic, o lo pide a la escena.
+  const travelFromEdge = () => {
+    if (!edgeView || travel) return;
+    if (edgeView.pts) startTravel(edgeView.from, edgeView.to, edgeView.pts);
+    else { setTravelRequest({ from: edgeView.from, to: edgeView.to }); setEdgeView(null); }
+  };
+
+  // ── Controles del contexto (V3) ──
+  // Saltar a un paso del breadcrumb contextual: TRUNCA el camino y vuelve allí.
+  const jumpToPathStep = (i: number) => {
+    const id = activePath[i];
+    if (!id) return;
+    setActiveCat(null); setCompare([]); setGilgulRoot(null); setTravel(null); setEdgeView(null);
+    setActivePath((p) => p.slice(0, i + 1));
+    setSelected(id);
+    setFlyToId(id);
+    history.visit(id);
+  };
+  // Reiniciar contexto: el nodo sigue abierto, pero olvida el camino → el
+  // siguiente estudio vuelve a ser GENERAL (caso 7 de la espec).
+  const resetContext = () => {
+    setEdgeView(null);
+    resetPathTo(selected);
+  };
+
   // Escape = cerrar la selección. Junto al botón de la tarjeta, es la ÚNICA
   // forma de soltar el punto: ya nunca se pierde solo al explorar (zoom/arrastrar).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setTravel(null); setGilgulRoot(null); history.clear(); }
+      if (e.key === "Escape") { setSelected(null); setCompare([]); setFlyToId(null); setActiveCat(null); setTravel(null); setGilgulRoot(null); setEdgeView(null); setActivePath([]); history.clear(); }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -1575,7 +1667,7 @@ export default function GrafoPage() {
   }, []);
   // clic en un dominio de la leyenda → enciende toda esa parte del cerebro (toggle)
   const toggleCat = (key: string) => {
-    setSelected(null); setCompare([]); setFlyToId(null); setGilgulRoot(null); history.clear();
+    setSelected(null); setCompare([]); setFlyToId(null); setGilgulRoot(null); setEdgeView(null); resetPathTo(null); history.clear();
     setActiveCat((p) => (p === key ? null : key));
   };
   const handleDouble = (n: BNode) => { if (n.url) window.open("https://jashmal.org" + n.url, "_blank"); };
@@ -1621,6 +1713,61 @@ export default function GrafoPage() {
       }),
     [history.stack, graph.nodes, locale],
   );
+
+  // ── Derivados del CONTEXTO relacional (V3) ──
+  // breadcrumb contextual: el camino activo con etiquetas localizadas. NO es
+  // decoración: cada paso trunca el camino (controla el contexto del estudio).
+  const pathCrumb = useMemo(
+    () => activePath.map((id) => ({ id, label: labelOf(id) })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [activePath, graph.nodes, locale],
+  );
+  // nodo ORIGEN del contexto: penúltimo paso del camino, si el último es el seleccionado
+  const contextFromId =
+    selected && activePath.length >= 2 && activePath[activePath.length - 1] === selected
+      ? activePath[activePath.length - 2]
+      : null;
+  // ficha de la relación activa (origen → seleccionado): curaduría + tipo de arista
+  const contextInfo = useMemo(() => {
+    if (!selected || !contextFromId) return null;
+    return {
+      fromId: contextFromId,
+      fromLabel: labelOf(contextFromId),
+      kind: edgeKind(contextFromId, selected),
+      curated: getEdgeData(contextFromId, selected) as OrientedEdgeData | null,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected, contextFromId, graph.nodes, locale]);
+  // href del estudio CONTEXTUAL (relación origen→seleccionado + camino completo)
+  const connStudyHref =
+    selected && contextFromId
+      ? `/estudio?connFrom=${encodeURIComponent(contextFromId)}&connTo=${encodeURIComponent(selected)}&connPath=${encodeURIComponent(activePath.join("|"))}`
+      : null;
+
+  // ── Ficha del panel de CONEXIÓN (clic en arista / "ver conexión") ──
+  // camino que acompaña al estudio de esta conexión (cola del camino activo si encaja)
+  const edgePathIds = useMemo(() => {
+    if (!edgeView) return [] as string[];
+    const p = activePath;
+    const n = p.length;
+    if (n >= 2 && p[n - 1] === edgeView.to && p[n - 2] === edgeView.from) return p;
+    if (n >= 1 && p[n - 1] === edgeView.from) return [...p, edgeView.to];
+    return [edgeView.from, edgeView.to];
+  }, [edgeView, activePath]);
+  const edgeInfo = useMemo(() => {
+    if (!edgeView) return null;
+    return {
+      fromId: edgeView.from,
+      toId: edgeView.to,
+      fromLabel: labelOf(edgeView.from),
+      toLabel: labelOf(edgeView.to),
+      kind: edgeKind(edgeView.from, edgeView.to),
+      curated: getEdgeData(edgeView.from, edgeView.to) as OrientedEdgeData | null,
+      studyHref: `/estudio?connFrom=${encodeURIComponent(edgeView.from)}&connTo=${encodeURIComponent(edgeView.to)}&connPath=${encodeURIComponent(edgePathIds.join("|"))}`,
+      canTravel: !travel && isNeighborEdge(edgeView.from, edgeView.to),
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [edgeView, edgePathIds, travel, graph.nodes, graph.edges, locale]);
 
   // Expansión recursiva: el Sofer del dominio investiga el nodo → el cerebro crece.
   function mergeGraph(prev: Graph, addNodes: BNode[], addEdges: [string, string][]): Graph {
@@ -1696,7 +1843,8 @@ export default function GrafoPage() {
             onEdgeHint={setEdgeHint}
             onGilgulHint={setGilgulHint}
             onDouble={handleDouble}
-            onPickEdge={startTravel}
+            onPickEdge={openEdgePanel}
+            onTravelSpline={startTravel}
             onTravelArrived={arriveTravel}
             onTravelConsumed={consumeTravelRequest}
           />
@@ -1863,6 +2011,15 @@ export default function GrafoPage() {
         onForward={goForward}
         onJump={jumpTo}
         onExit={clearAll}
+        pathCrumb={pathCrumb}
+        contextInfo={contextInfo}
+        connStudyHref={connStudyHref}
+        onJumpPath={jumpToPathStep}
+        onResetContext={resetContext}
+        onOpenContextEdge={openContextEdge}
+        edgeInfo={edgeInfo}
+        onCloseEdge={() => setEdgeView(null)}
+        onTravelEdge={travelFromEdge}
         compare={compare}
         compareShared={compareShared}
         labelOf={labelOf}

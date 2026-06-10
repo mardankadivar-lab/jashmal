@@ -46,7 +46,9 @@ export default function EdgeTooltip({
     return () => window.removeEventListener("pointermove", onMove);
   }, []);
 
-  const travelTo = isFa ? "سفر به" : locale === "en" ? "travel to" : "viajar a";
+  // el clic en la arista abre la FICHA de la conexión (V3) — desde ahí se
+  // estudia la relación o se viaja por la fibra.
+  const travelTo = isFa ? "پیوند با" : locale === "en" ? "connection to" : "conexión con";
   const kindLabel = hint
     ? hint.kind === "solid"
       ? isFa

@@ -146,6 +146,14 @@ export default function StudyEngine() {
     if (concept) {
       setTimeout(() => openConcept(concept), 50);
     }
+    // ?connFrom=&connTo=(&connPath=a|b|c) → estudio CONTEXTUAL de una conexión
+    // de la Mente Cósmica ("Jesed en relación con Abraham"), no del nodo general.
+    const connFrom = params.get("connFrom");
+    const connTo = params.get("connTo");
+    if (connFrom && connTo) {
+      const connPath = (params.get("connPath") ?? "").split("|").filter(Boolean);
+      setTimeout(() => void openConnection(connFrom, connTo, connPath.length >= 2 ? connPath : undefined), 50);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -402,6 +410,33 @@ export default function StudyEngine() {
   function openLetter(letterKey: string, label: string) {
     setConceptHistory((h) => conceptTarget ? [...h, conceptTarget] : h);
     setConceptTarget({ kind: "letter", value: letterKey, label });
+  }
+  // Estudio CONTEXTUAL de una conexión de la Mente Cósmica (relacional V3).
+  // Recibe IDS de nodos; resuelve sus labels localizados con el caché del cerebro
+  // (si un id no aparece, usa el id mismo como label — nunca se queda vacío).
+  async function openConnection(fromId: string, toId: string, pathIds?: string[]) {
+    const nodes = await ensureBrainNodes();
+    const clean = (s: string) => s.replace(/\s*\([^)]*\)\s*/g, " ").replace(/\s+/g, " ").trim();
+    const lbl = (id: string) => {
+      const n = nodes.find((x) => x.id === id);
+      return clean(n ? nodeLabelLocal(n) : id) || id;
+    };
+    const fromLabel = lbl(fromId);
+    const toLabel = lbl(toId);
+    const label =
+      locale === "fa"
+        ? `${toLabel} در پیوند با ${fromLabel}`
+        : locale === "en"
+          ? `${toLabel} in relation to ${fromLabel}`
+          : `${toLabel} en relación con ${fromLabel}`;
+    const pathLabels = pathIds && pathIds.length >= 2 ? pathIds.map(lbl) : [fromLabel, toLabel];
+    setConceptHistory((h) => (conceptTarget ? [...h, conceptTarget] : h));
+    setConceptTarget({
+      kind: "connection",
+      value: `${fromId}→${toId}`,
+      label,
+      connection: { fromId, toId, fromLabel, toLabel, pathLabels },
+    });
   }
   function closeConceptPanel() {
     // Si hay historial, volver al panel anterior; si no, cerrar.

@@ -13,8 +13,16 @@ export interface StudyClientRequest {
   hebrewText?: string;
   term?: string;
   letter?: string;
-  context?: string;    // "kabbalah" = modo cabalístico
+  context?: string;    // "kabbalah" = modo cabalístico · "connection" = relación de la Mente Cósmica
   sefiraId?: string;  // id de la sefirá de origen
+  // Estudio contextual de una conexión (Mente Cósmica relacional V3):
+  connection?: {
+    fromId: string;
+    toId: string;
+    fromLabel: string;
+    toLabel: string;
+    pathLabels?: string[];
+  };
   saveTitle?: string; // título legible para "Mis Estudios" (no se envía a la API)
 }
 
@@ -109,7 +117,9 @@ export async function requestStudy(
       body.mode === "letter"
         ? body.letter || body.term
         : body.mode === "concept"
-          ? body.term
+          ? // estudio de CONEXIÓN: los hallazgos se acreditan al nodo destino real
+            // (no a un nodo fantasma "X en relación con Y")
+            body.connection?.toLabel || body.term
           : body.ref;
     if (subject && study) {
       // "Mis Estudios": guardar el estudio (localStorage siempre; servidor si

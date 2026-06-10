@@ -15,8 +15,42 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { BRAIN_CATS, catLabel, nodeLabel, type BNode } from "@/lib/brainData";
+import { directionalLabelFor, type OrientedEdgeData } from "@/lib/edgeData";
 
 type Cat = { c: string; label: string; labelFa?: string; labelEn?: string };
+
+// Ficha de la relación activa (nodo origen → nodo en foco) — contexto V3.
+export type ContextInfo = {
+  fromId: string;
+  fromLabel: string;
+  kind: "solid" | "interp";
+  curated: OrientedEdgeData | null;
+};
+
+// Ficha del panel de CONEXIÓN (clic en una arista / "ver conexión").
+export type EdgeInfo = {
+  fromId: string;
+  toId: string;
+  fromLabel: string;
+  toLabel: string;
+  kind: "solid" | "interp";
+  curated: OrientedEdgeData | null;
+  studyHref: string;
+  canTravel: boolean;
+};
+
+// Tipos de relación conocidos → etiqueta humana trilingüe (fallback: el slug).
+const REL_TYPE_LABELS: Record<string, { es: string; fa: string; en: string }> = {
+  sefirotic_attribute: { es: "correspondencia sefirótica", fa: "تناظر سفیروتی", en: "sefirotic correspondence" },
+  mystical_identity: { es: "identidad mística", fa: "این‌همانیِ عرفانی", en: "mystical identity" },
+  textual_source: { es: "fuente textual", fa: "منبع متنی", en: "textual source" },
+  family: { es: "vínculo familiar", fa: "پیوند خانوادگی", en: "family bond" },
+};
+function relTypeLabel(t: string, isFa: boolean, locale: string): string {
+  const k = REL_TYPE_LABELS[t];
+  if (k) return isFa ? k.fa : locale === "en" ? k.en : k.es;
+  return t.replace(/_/g, " ");
+}
 
 export type ConsolaProps = {
   isFa: boolean;
@@ -50,6 +84,19 @@ export type ConsolaProps = {
   onBack: () => void;
   onForward: () => void;
   onJump: (index: number) => void;
+
+  // ── contexto relacional (V3): camino activo + relación con el nodo origen ──
+  pathCrumb: { id: string; label: string }[]; // breadcrumb contextual (controla el contexto)
+  contextInfo: ContextInfo | null;            // relación origen→foco (curaduría si existe)
+  connStudyHref: string | null;               // href del estudio contextual
+  onJumpPath: (i: number) => void;            // truncar el camino y volver a ese paso
+  onResetContext: () => void;                 // olvidar el camino (el nodo queda en general)
+  onOpenContextEdge: () => void;              // abrir el panel de la conexión origen→foco
+
+  // ── panel de CONEXIÓN (clic en arista / "ver conexión") ──
+  edgeInfo: EdgeInfo | null;
+  onCloseEdge: () => void;
+  onTravelEdge: () => void;
 
   // ── salir ──
   onExit: () => void;
@@ -96,6 +143,15 @@ export default function Consola(props: ConsolaProps) {
     onBack,
     onForward,
     onJump,
+    pathCrumb,
+    contextInfo,
+    connStudyHref,
+    onJumpPath,
+    onResetContext,
+    onOpenContextEdge,
+    edgeInfo,
+    onCloseEdge,
+    onTravelEdge,
     onExit,
     compare,
     compareShared,
@@ -110,14 +166,16 @@ export default function Consola(props: ConsolaProps) {
   const dir = isFa ? "rtl" : "ltr";
   const tri = (es: string, fa: string, en: string) => (isFa ? fa : locale === "en" ? en : es);
 
-  // qué vista toca (prioridad: gilgul ▸ comparación ▸ nodo ▸ reposo)
-  const view: "gilgul" | "compare" | "node" | "idle" = gilgulInfo
+  // qué vista toca (prioridad: gilgul ▸ comparación ▸ conexión ▸ nodo ▸ reposo)
+  const view: "gilgul" | "compare" | "edge" | "node" | "idle" = gilgulInfo
     ? "gilgul"
     : compare.length > 0
       ? "compare"
-      : selNode
-        ? "node"
-        : "idle";
+      : edgeInfo
+        ? "edge"
+        : selNode
+          ? "node"
+          : "idle";
   const focusActive = view !== "idle";
 
   // ── hoja inferior (móvil): abrir/cerrar + arrastre del asa ──
@@ -140,7 +198,8 @@ export default function Consola(props: ConsolaProps) {
   useEffect(() => {
     if (tucked || traveling) return;
     if (focusActive) setOpen(true);
-  }, [tucked, traveling, focusActive, selNode?.id, compare.length, gilgulInfo?.label]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tucked, traveling, focusActive, selNode?.id, compare.length, gilgulInfo?.label, edgeInfo?.fromId, edgeInfo?.toId]);
   // el usuario la sube a mano (asa en móvil · pastilla en escritorio)
   const raise = () => { setTucked(false); setOpen(true); };
   const dragStartY = useRef<number | null>(null);
@@ -185,6 +244,15 @@ export default function Consola(props: ConsolaProps) {
       return (
         <span className="text-sm text-cyan-200/90">
           {tri("Comparando", "مقایسه", "Comparing")} ({compare.length})
+        </span>
+      );
+    if (view === "edge" && edgeInfo)
+      return (
+        <span className="flex items-center gap-1.5 text-sm text-parchment/90">
+          <span className="text-gold/70">⟡</span>
+          <span className="truncate">
+            {edgeInfo.fromLabel} {isFa ? "←" : "→"} {edgeInfo.toLabel}
+          </span>
         </span>
       );
     if (view === "node")
@@ -263,6 +331,12 @@ export default function Consola(props: ConsolaProps) {
             </p>
           </div>
           <p className="mt-0.5 ps-[18px] text-[10px] uppercase tracking-wide text-muted/50">{discLabel}</p>
+          {/* subtítulo contextual (V3): de dónde viene el estudiante */}
+          {contextInfo && (
+            <p className="mt-0.5 ps-[18px] text-[10px] italic text-gold/60">
+              {tri("Conectado desde", "پیوسته از", "Connected from")} {contextInfo.fromLabel}
+            </p>
+          )}
         </div>
         {canForward && (
           <button onClick={onForward} aria-label={tri("Adelante", "جلو", "Forward")} className={iconBtn}>
@@ -276,20 +350,135 @@ export default function Consola(props: ConsolaProps) {
 
       {selNode.author && <p className="mt-1 ps-[18px] text-[11px] italic text-rose-200/80">✦ {tri("por", "از", "by")} {selNode.author}</p>}
 
-      {/* migaja: el camino recorrido (reconocer, no recordar) */}
-      {breadcrumb.length > 1 && (
-        <div className="mt-2 flex flex-wrap items-center gap-x-0.5 gap-y-1 text-[11px]">
-          {breadcrumb.map((b, i) => (
-            <span key={b.id + ":" + i} className="flex items-center gap-0.5">
-              {i > 0 && <span className="px-0.5 text-muted/35">{isFa ? "‹" : "›"}</span>}
-              <button
-                onClick={() => onJump(i)}
-                className={`max-w-[118px] truncate rounded px-1 transition-colors ${i === currentIndex ? "font-medium text-gold" : "text-muted/55 hover:text-parchment"}`}
-              >
-                {b.label}
-              </button>
-            </span>
-          ))}
+      {/* ── CONTEXTO RELACIONAL (V3): breadcrumb que CONTROLA el contexto ── */}
+      {contextInfo && pathCrumb.length > 1 ? (
+        <div className="mt-2.5 rounded-lg border border-gold/20 bg-gold/[0.05] p-2.5">
+          <p className="mb-1 font-cinzel text-[9px] uppercase tracking-[0.18em] text-gold/55">
+            {tri("Estás estudiando la ruta", "در حال مطالعهٔ این مسیر", "You are studying the route")}
+          </p>
+          {/* cada paso TRUNCA el camino hasta él (no es decoración) */}
+          <div className="flex flex-wrap items-center gap-x-0.5 gap-y-1 text-[12px]">
+            {pathCrumb.map((b, i) => (
+              <span key={b.id + ":" + i} className="flex items-center gap-0.5">
+                {i > 0 && <span className="px-0.5 text-gold/45">{isFa ? "←" : "→"}</span>}
+                <button
+                  onClick={() => onJumpPath(i)}
+                  className={`max-w-[118px] truncate rounded px-1 transition-colors ${
+                    i === pathCrumb.length - 1
+                      ? "font-medium text-gold"
+                      : "text-parchment/70 hover:text-gold"
+                  }`}
+                >
+                  {b.label}
+                </button>
+              </span>
+            ))}
+          </div>
+          <div className="mt-1.5 flex flex-wrap gap-1.5">
+            <button
+              onClick={() => onJumpPath(pathCrumb.length - 2)}
+              className={`rounded-full border border-gold/25 px-2.5 ${chipPad} text-[10px] text-gold/85 transition-colors hover:bg-gold/10`}
+            >
+              {isFa ? "→" : "←"} {tri("Volver a", "بازگشت به", "Back to")} {contextInfo.fromLabel}
+            </button>
+            <button
+              onClick={onResetContext}
+              className={`rounded-full border border-gold/15 px-2.5 ${chipPad} text-[10px] text-muted/70 transition-colors hover:text-gold`}
+              title={tri(
+                "Olvidar el camino: el nodo se queda abierto en modo general",
+                "فراموش‌کردن مسیر: گره در حالت کلی باز می‌ماند",
+                "Forget the path: the node stays open in general mode",
+              )}
+            >
+              ⟲ {tri("Reiniciar contexto", "بازنشانی زمینه", "Reset context")}
+            </button>
+          </div>
+        </div>
+      ) : (
+        /* migaja del historial: el camino recorrido (reconocer, no recordar) */
+        breadcrumb.length > 1 && (
+          <div className="mt-2 flex flex-wrap items-center gap-x-0.5 gap-y-1 text-[11px]">
+            {breadcrumb.map((b, i) => (
+              <span key={b.id + ":" + i} className="flex items-center gap-0.5">
+                {i > 0 && <span className="px-0.5 text-muted/35">{isFa ? "‹" : "›"}</span>}
+                <button
+                  onClick={() => onJump(i)}
+                  className={`max-w-[118px] truncate rounded px-1 transition-colors ${i === currentIndex ? "font-medium text-gold" : "text-muted/55 hover:text-parchment"}`}
+                >
+                  {b.label}
+                </button>
+              </span>
+            ))}
+          </div>
+        )
+      )}
+
+      {/* ── "¿Por qué {origen} está conectado con {foco}?" — la relación ── */}
+      {contextInfo && selNode && (
+        <div className="mt-2.5 rounded-lg border border-gold/15 bg-white/[0.02] p-2.5">
+          <div className="flex items-start justify-between gap-2">
+            <p className="text-[11px] font-medium leading-snug text-parchment/90">
+              {tri(
+                `¿Por qué ${contextInfo.fromLabel} está conectado con ${nodeLabel(selNode, locale)}?`,
+                `چرا ${contextInfo.fromLabel} با ${nodeLabel(selNode, locale)} پیوند دارد؟`,
+                `Why is ${contextInfo.fromLabel} connected to ${nodeLabel(selNode, locale)}?`,
+              )}
+            </p>
+            <button
+              onClick={onOpenContextEdge}
+              className="shrink-0 rounded-full border border-gold/25 px-2 py-0.5 text-[10px] text-gold/80 transition-colors hover:bg-gold/10"
+              title={tri("Abrir la ficha de esta conexión", "بازکردن برگهٔ این پیوند", "Open this connection's card")}
+            >
+              ⟡ {tri("Ver", "دیدن", "View")}
+            </button>
+          </div>
+          {contextInfo.curated ? (
+            <>
+              <p className="mt-1.5 text-[11px] italic leading-snug text-gold/85">
+                «{directionalLabelFor(contextInfo.curated)}»
+              </p>
+              <p className="mt-1 text-[11px] leading-snug text-parchment/75">
+                {contextInfo.curated.data.short_explanation}
+              </p>
+              {contextInfo.curated.data.source_refs.length > 0 && (
+                <p className="mt-1.5 text-[10px] leading-snug text-muted/75">
+                  <span className="font-cinzel uppercase tracking-wide text-gold/45">
+                    {tri("Fuentes", "منابع", "Sources")}:
+                  </span>{" "}
+                  {contextInfo.curated.data.source_refs
+                    .map((r) => (r.ref ? `${r.text} (${r.ref})` : r.text))
+                    .join(" · ")}
+                </p>
+              )}
+              {contextInfo.curated.data.keywords.length > 0 && (
+                <div className="mt-1.5 flex flex-wrap gap-1">
+                  {contextInfo.curated.data.keywords.slice(0, 6).map((k) => (
+                    <span key={k} className="rounded-full bg-gold/[0.08] px-1.5 py-0.5 text-[9px] text-gold/70">
+                      {k}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {contextInfo.curated.data.needs_review && (
+                <p className="mt-1.5 text-[9px] italic text-amber-200/70">
+                  {tri(
+                    "Curaduría preliminar — en revisión del Sofer.",
+                    "تنظیم مقدماتی — در بازبینی سوفر.",
+                    "Preliminary curation — under Sofer review.",
+                  )}
+                </p>
+              )}
+            </>
+          ) : (
+            /* HONESTIDAD (espec V3): sin curaduría NO se inventan fuentes */
+            <p className="mt-1.5 text-[11px] italic leading-snug text-muted/65">
+              {tri(
+                "Esta conexión todavía necesita desarrollo. El Sofer la está curando — las fuentes llegarán pronto.",
+                "این پیوند هنوز به پرورش نیاز دارد. سوفر در حال تنظیم آن است — منابع به‌زودی می‌رسند.",
+                "This connection still needs development. The Sofer is curating it — sources are coming soon.",
+              )}
+            </p>
+          )}
         </div>
       )}
 
@@ -362,26 +551,72 @@ export default function Consola(props: ConsolaProps) {
         </div>
       )}
 
-      {/* acciones: Expandir · Estudiar */}
-      <div className="mt-3 flex gap-2">
-        <button
-          onClick={onExpand}
-          disabled={expanding}
-          className="flex-1 rounded-full border border-cyan-300/30 bg-cyan-300/[0.06] px-3 py-2 text-center font-cinzel text-xs uppercase tracking-widest text-cyan-200/90 transition-all hover:border-cyan-300/60 hover:bg-cyan-300/15 disabled:opacity-50"
-          title={tri("El Sofer investiga este tema y abre sus conexiones", "سوفر این موضوع را می‌کاود", "The Sofer researches this topic")}
-        >
-          {expanding ? tri("Investigando…", "در حال پژوهش…", "Researching…") : tri("✦ Expandir", "✦ گسترش", "✦ Expand")}
-        </button>
-        {studyUrl ? (
-          <a href={"https://jashmal.org" + studyUrl} target="_blank" rel="noopener noreferrer" className={studyBtn}>
-            {tri("Estudiar →", "مطالعه ←", "Study →")}
-          </a>
-        ) : (
-          <Link href={`/estudio?concept=${encodeURIComponent(studyConcept)}`} className={studyBtn}>
-            {tri("Estudiar →", "مطالعه ←", "Study →")}
+      {/* acciones: con CONTEXTO el estudio de la RELACIÓN es el principal (espec
+          V3); el general queda como opción secundaria EXPLÍCITA. Sin contexto,
+          todo sigue como siempre (un solo botón Estudiar). */}
+      {contextInfo && connStudyHref ? (
+        <>
+          <Link
+            href={connStudyHref}
+            className="mt-3 block w-full rounded-full border border-gold/60 bg-gold/15 px-3 py-2.5 text-center font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/25"
+            style={{ boxShadow: "0 0 14px rgba(201,164,62,0.18)" }}
+          >
+            {tri(
+              `Estudiar ${nodeLabel(selNode, locale)} en relación con ${contextInfo.fromLabel}`,
+              `مطالعهٔ ${nodeLabel(selNode, locale)} در پیوند با ${contextInfo.fromLabel}`,
+              `Study ${nodeLabel(selNode, locale)} in relation to ${contextInfo.fromLabel}`,
+            )}{" "}
+            {isFa ? "←" : "→"}
           </Link>
-        )}
-      </div>
+          <div className="mt-2 flex gap-2">
+            <button
+              onClick={onExpand}
+              disabled={expanding}
+              className="flex-1 rounded-full border border-cyan-300/30 bg-cyan-300/[0.06] px-3 py-2 text-center font-cinzel text-xs uppercase tracking-widest text-cyan-200/90 transition-all hover:border-cyan-300/60 hover:bg-cyan-300/15 disabled:opacity-50"
+              title={tri("El Sofer investiga este tema y abre sus conexiones", "سوفر این موضوع را می‌کاود", "The Sofer researches this topic")}
+            >
+              {expanding ? tri("Investigando…", "در حال پژوهش…", "Researching…") : tri("✦ Expandir", "✦ گسترش", "✦ Expand")}
+            </button>
+            {studyUrl ? (
+              <a
+                href={"https://jashmal.org" + studyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 rounded-full border border-gold/20 px-3 py-2 text-center font-cinzel text-[11px] uppercase tracking-widest text-muted/80 transition-all hover:border-gold/50 hover:text-gold"
+              >
+                {tri("Estudiar en general", "مطالعهٔ کلی", "Study in general")}
+              </a>
+            ) : (
+              <Link
+                href={`/estudio?concept=${encodeURIComponent(studyConcept)}`}
+                className="flex-1 rounded-full border border-gold/20 px-3 py-2 text-center font-cinzel text-[11px] uppercase tracking-widest text-muted/80 transition-all hover:border-gold/50 hover:text-gold"
+              >
+                {tri("Estudiar en general", "مطالعهٔ کلی", "Study in general")}
+              </Link>
+            )}
+          </div>
+        </>
+      ) : (
+        <div className="mt-3 flex gap-2">
+          <button
+            onClick={onExpand}
+            disabled={expanding}
+            className="flex-1 rounded-full border border-cyan-300/30 bg-cyan-300/[0.06] px-3 py-2 text-center font-cinzel text-xs uppercase tracking-widest text-cyan-200/90 transition-all hover:border-cyan-300/60 hover:bg-cyan-300/15 disabled:opacity-50"
+            title={tri("El Sofer investiga este tema y abre sus conexiones", "سوفر این موضوع را می‌کاود", "The Sofer researches this topic")}
+          >
+            {expanding ? tri("Investigando…", "در حال پژوهش…", "Researching…") : tri("✦ Expandir", "✦ گسترش", "✦ Expand")}
+          </button>
+          {studyUrl ? (
+            <a href={"https://jashmal.org" + studyUrl} target="_blank" rel="noopener noreferrer" className={studyBtn}>
+              {tri("Estudiar →", "مطالعه ←", "Study →")}
+            </a>
+          ) : (
+            <Link href={`/estudio?concept=${encodeURIComponent(studyConcept)}`} className={studyBtn}>
+              {tri("Estudiar →", "مطالعه ←", "Study →")}
+            </Link>
+          )}
+        </div>
+      )}
     </div>
   );
 
@@ -504,9 +739,130 @@ export default function Consola(props: ConsolaProps) {
     </div>
   );
 
+  // ── Vista de CONEXIÓN (V3): la sinapsis tiene contenido propio ──
+  // Clic en una arista (o "Ver" en el panel del nodo) abre esta ficha: tipo,
+  // lectura direccional, explicación, fuentes, estudiar la relación, viajar.
+  const EdgeView = edgeInfo && (
+    <div className="py-0.5">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="font-cinzel text-[10px] uppercase tracking-[0.2em] text-gold/55">
+            ⟡ {tri("Conexión", "پیوند", "Connection")}
+            <span className="ms-2 normal-case tracking-normal text-muted/55">
+              {edgeInfo.kind === "solid"
+                ? tri("clásica", "کلاسیک", "classic")
+                : tri("interpretativa", "تفسیری", "interpretive")}
+            </span>
+          </p>
+          <p className="mt-1 truncate font-cinzel text-base text-parchment">
+            {edgeInfo.fromLabel} <span className="text-gold">{isFa ? "←" : "→"}</span> {edgeInfo.toLabel}
+          </p>
+          {edgeInfo.curated && (
+            <p className="mt-0.5 text-[10px] uppercase tracking-wide text-muted/55">
+              {relTypeLabel(edgeInfo.curated.data.relationship_type, isFa, locale)}
+            </p>
+          )}
+        </div>
+        <button onClick={onCloseEdge} aria-label={tri("cerrar", "بستن", "close")} className={`${iconBtn} text-lg`}>
+          ×
+        </button>
+      </div>
+
+      {edgeInfo.curated ? (
+        <div className="mt-2.5 border-t border-gold/10 pt-2.5">
+          <p className="text-[12px] italic leading-snug text-gold/85">
+            «{directionalLabelFor(edgeInfo.curated)}»
+          </p>
+          <p className="mt-1.5 text-[12px] leading-snug text-parchment/85">
+            {edgeInfo.curated.data.short_explanation}
+          </p>
+          {edgeInfo.curated.data.source_refs.length > 0 && (
+            <div className="mt-2.5">
+              <p className="mb-1 font-cinzel text-[9px] uppercase tracking-[0.18em] text-gold/50">
+                {tri("Fuentes", "منابع", "Sources")}
+              </p>
+              <ul className="space-y-1.5">
+                {edgeInfo.curated.data.source_refs.map((r, i) => (
+                  <li key={i} className="text-[11px] leading-snug">
+                    <span className="text-gold/90">{r.text}</span>
+                    {r.ref && <span className="text-parchment/70"> · {r.ref}</span>}
+                    <span className="block text-muted/65">{r.reason}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {edgeInfo.curated.data.keywords.length > 0 && (
+            <div className="mt-2 flex flex-wrap gap-1">
+              {edgeInfo.curated.data.keywords.slice(0, 8).map((k) => (
+                <span key={k} className="rounded-full bg-gold/[0.08] px-1.5 py-0.5 text-[9px] text-gold/70">
+                  {k}
+                </span>
+              ))}
+            </div>
+          )}
+          {edgeInfo.curated.data.needs_review && (
+            <p className="mt-2 rounded-md border border-amber-300/20 bg-amber-300/[0.06] px-2 py-1.5 text-[10px] italic leading-snug text-amber-200/80">
+              {tri(
+                "Curaduría preliminar — en revisión del Sofer.",
+                "تنظیم مقدماتی — در بازبینی سوفر.",
+                "Preliminary curation — under Sofer review.",
+              )}
+            </p>
+          )}
+        </div>
+      ) : (
+        /* HONESTIDAD (espec V3): sin curaduría se dice — nunca se finge */
+        <div className="mt-2.5 border-t border-gold/10 pt-2.5">
+          <p className="text-[12px] italic leading-snug text-muted/70">
+            {tri(
+              "Esta conexión todavía necesita desarrollo. No hay una fuente específica conectada todavía; el Sofer la está curando.",
+              "این پیوند هنوز به پرورش نیاز دارد. هنوز منبع مشخصی به آن متصل نیست؛ سوفر در حال تنظیم آن است.",
+              "This connection still needs development. No specific source is attached yet; the Sofer is curating it.",
+            )}
+          </p>
+          <p className="mt-1.5 text-[10px] leading-snug text-muted/50">
+            {tri(
+              "Puedes abrir un estudio exploratorio de la relación: irá claramente marcado como exploratorio y sin fuentes inventadas.",
+              "می‌توانی مطالعه‌ای اکتشافی از این پیوند بگشایی: به‌روشنی «اکتشافی» نشان‌گذاری می‌شود و منبعی جعل نخواهد شد.",
+              "You can open an exploratory study of the relation: it will be clearly marked as exploratory, with no invented sources.",
+            )}
+          </p>
+        </div>
+      )}
+
+      <Link
+        href={edgeInfo.studyHref}
+        className="mt-3 block w-full rounded-full border border-gold/60 bg-gold/15 px-3 py-2.5 text-center font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/25"
+        style={{ boxShadow: "0 0 14px rgba(201,164,62,0.18)" }}
+      >
+        {edgeInfo.curated
+          ? tri("Estudiar esta conexión", "مطالعهٔ این پیوند", "Study this connection")
+          : tri("Estudio exploratorio de la conexión", "مطالعهٔ اکتشافی پیوند", "Exploratory study of the connection")}{" "}
+        {isFa ? "←" : "→"}
+      </Link>
+      {edgeInfo.canTravel && (
+        <button
+          onClick={onTravelEdge}
+          className="mt-2 w-full rounded-full border border-gold/25 px-3 py-2 text-center font-cinzel text-[11px] uppercase tracking-widest text-muted/85 transition-all hover:border-gold/60 hover:text-gold"
+        >
+          {tri("Viajar a", "سفر به", "Travel to")} {edgeInfo.toLabel} {isFa ? "←" : "→"}
+        </button>
+      )}
+    </div>
+  );
+
   const Body = (
     <>
-      {view === "gilgul" ? GilgulView : view === "compare" ? CompareView : view === "node" ? NodeView : IdleView}
+      {view === "gilgul"
+        ? GilgulView
+        : view === "compare"
+          ? CompareView
+          : view === "edge"
+            ? EdgeView
+            : view === "node"
+              ? NodeView
+              : IdleView}
     </>
   );
 

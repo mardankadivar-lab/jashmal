@@ -6,9 +6,18 @@ import StudyResult from "./StudyResult";
 import { requestStudy, StudyError } from "@/lib/studyClient";
 
 export interface ConceptTarget {
-  kind: "concept" | "letter";
+  kind: "concept" | "letter" | "connection";
   value: string;
   label: string;
+  // Solo para kind "connection" (Mente Cósmica relacional V3): la relación
+  // entre dos nodos + el camino recorrido (breadcrumb visible en modo estudio).
+  connection?: {
+    fromId: string;
+    toId: string;
+    fromLabel: string;
+    toLabel: string;
+    pathLabels?: string[];
+  };
 }
 
 interface ConceptPanelProps {
@@ -46,7 +55,18 @@ export default function ConceptPanel({
     const body =
       target.kind === "letter"
         ? { mode: "letter" as const, locale, letter: target.value, saveTitle: target.label }
-        : { mode: "concept" as const, locale, term: target.value, saveTitle: target.label };
+        : target.kind === "connection" && target.connection
+          ? {
+              // Estudio CONTEXTUAL de una conexión: el servidor busca la
+              // curaduría del edge y estudia LA RELACIÓN, no el nodo general.
+              mode: "concept" as const,
+              locale,
+              term: target.label,
+              context: "connection",
+              connection: target.connection,
+              saveTitle: target.label,
+            }
+          : { mode: "concept" as const, locale, term: target.value, saveTitle: target.label };
     requestStudy(body)
       .then((res) => !cancelled && setStudy(res.study))
       .catch((err) => {
@@ -97,6 +117,14 @@ export default function ConceptPanel({
               </button>
             )}
             <h2 className="font-cinzel text-xl text-gold">{target.label}</h2>
+            {/* Breadcrumb contextual en modo estudio: el camino que trajo aquí */}
+            {target.kind === "connection" &&
+              target.connection &&
+              (target.connection.pathLabels?.length ?? 0) >= 2 && (
+                <p className="text-[11px] tracking-wide text-gold/55">
+                  {target.connection.pathLabels!.join(" → ")}
+                </p>
+              )}
           </div>
           {/* Cerrar todo */}
           <button

@@ -1,5 +1,14 @@
 import { NextResponse } from "next/server";
-import { anthropic, buildSystemPrompt, buildKabbalahStudyPrompt, STUDY_MODEL, type StudyMode } from "@/lib/anthropic";
+import {
+  anthropic,
+  buildSystemPrompt,
+  buildKabbalahStudyPrompt,
+  buildConnectionStudyPrompt,
+  STUDY_MODEL,
+  type StudyMode,
+  type ConnectionInfo,
+} from "@/lib/anthropic";
+import { getEdgeData } from "@/lib/edgeData";
 import { checkRateLimit, clientIp } from "@/lib/rateLimit";
 import { gatherSources, formatSourcesForPrompt } from "@/lib/related";
 
@@ -18,8 +27,18 @@ interface StudyRequest {
   hebrewText?: string;
   term?: string;
   letter?: string;
-  context?: string;   // "kabbalah" = modo cabalístico desde el Árbol de la Vida
+  context?: string;   // "kabbalah" = Árbol de la Vida · "connection" = relación de la Mente Cósmica
   sefiraId?: string;  // id de la sefirá que originó el estudio
+  // Estudio contextual de una CONEXIÓN (Mente Cósmica relacional V3):
+  // ids de los nodos (para buscar la curaduría del edge en el servidor) +
+  // labels localizados (para el prompt) + camino recorrido.
+  connection?: {
+    fromId: string;
+    toId: string;
+    fromLabel: string;
+    toLabel: string;
+    pathLabels?: string[];
+  };
 }
 
 function originAllowed(req: Request): boolean {
@@ -36,6 +55,16 @@ function originAllowed(req: Request): boolean {
 function buildUserPrompt(body: StudyRequest, sourcesBlock: string): string {
   if (body.mode === "letter") {
     return `Estudia la letra hebrea: ${body.letter ?? body.term ?? ""}.`;
+  }
+  // Estudio contextual de una conexión: la relación manda, no el nodo suelto.
+  if (body.mode === "concept" && body.context === "connection" && body.connection) {
+    const c = body.connection;
+    const path =
+      c.pathLabels && c.pathLabels.length >= 2
+        ? `\nRuta recorrida por el estudiante: ${c.pathLabels.join(" → ")}`
+        : "";
+    return `Estudia la RELACIÓN entre «${c.fromLabel}» y «${c.toLabel}».
+El estudiante llegó a «${c.toLabel}» viajando desde «${c.fromLabel}» en la Mente Cósmica.${path}`;
   }
   if (body.mode === "concept") {
     return `Estudia en profundidad el concepto: ${body.term ?? ""}.`;
@@ -98,9 +127,34 @@ export async function POST(req: Request) {
   const { SEFIROT } = await import("@/lib/sefirot");
   const sefira = isKabbalah ? SEFIROT.find((s) => s.id === body.sefiraId) : null;
 
+  // Modo CONEXIÓN (Mente Cósmica relacional V3): estudiar la relación entre
+  // dos nodos. La curaduría del edge se resuelve AQUÍ (servidor = única fuente
+  // de verdad); si no existe, el prompt exige un estudio exploratorio honesto.
+  const isConnection =
+    body.context === "connection" &&
+    mode === "concept" &&
+    !!body.connection?.fromId &&
+    !!body.connection?.toId &&
+    !!body.connection?.fromLabel &&
+    !!body.connection?.toLabel;
+  const connInfo: ConnectionInfo | null = isConnection
+    ? {
+        fromLabel: String(body.connection!.fromLabel).slice(0, 120),
+        toLabel: String(body.connection!.toLabel).slice(0, 120),
+        pathLabels: Array.isArray(body.connection!.pathLabels)
+          ? body.connection!.pathLabels.slice(0, 8).map((s) => String(s).slice(0, 120))
+          : undefined,
+      }
+    : null;
+  const curatedEdge = isConnection
+    ? getEdgeData(body.connection!.fromId, body.connection!.toId)
+    : null;
+
   const systemPrompt = isKabbalah && sefira
     ? buildKabbalahStudyPrompt(locale, sefira.he, sefira.es)
-    : buildSystemPrompt(mode, locale, withSources);
+    : isConnection && connInfo
+      ? buildConnectionStudyPrompt(locale, connInfo, curatedEdge)
+      : buildSystemPrompt(mode, locale, withSources);
   const userPrompt = buildUserPrompt(body, sourcesBlock);
 
   // --- STREAMING: el texto aparece progresivamente mientras Claude genera. ---
