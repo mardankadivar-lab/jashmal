@@ -4,10 +4,13 @@ import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
 import { GEMATRIAS } from "@/lib/nodes/gematrias";
+import { tri, triList } from "@/lib/i18n/i18nContent";
+import type { Locale } from "@/i18n/routing";
+import TranslationBadge from "@/components/TranslationBadge";
 import MisterioTutor from "@/components/MisterioTutor";
 
 export default function GematriasPage() {
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const router = useRouter();
   const fa = locale === "fa";
   const [abierto, setAbierto] = useState<number | null>(null);
@@ -63,6 +66,10 @@ export default function GematriasPage() {
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
         {GEMATRIAS.map((g) => {
           const open = abierto === g.num;
+          // Contenido por idioma con respaldo honesto (nunca mezcla silenciosa).
+          const titulo = tri(locale, g.titulo, g.tituloFa, g.tituloEn);
+          const sig = tri(locale, g.sig, g.sigFa, g.sigEn);
+          const asoc = triList(locale, g.asociaciones, g.asociacionesFa, g.asociacionesEn);
           return (
             <button
               key={g.num}
@@ -99,20 +106,26 @@ export default function GematriasPage() {
                 {g.he}
               </span>
 
-              {/* Título */}
-              <span className="mt-1 font-cinzel text-[11px] uppercase tracking-widest" style={{ color: g.color }}>
-                {fa ? g.tituloFa : g.titulo}
+              {/* Título + aviso honesto si aún no está en el idioma activo */}
+              <span className="mt-1 flex flex-wrap items-center justify-center gap-1.5 font-cinzel text-[11px] uppercase tracking-widest" style={{ color: g.color }}>
+                {titulo.value}
+                {titulo.missing && <TranslationBadge available={titulo.available} />}
               </span>
 
               {/* Detalle expandido — texto claro fijo (el azulejo siempre es oscuro) */}
               {open && (
                 <div className="mt-4 w-full max-w-md" style={{ animation: "fadeIn 0.4s ease" }}>
-                  <p className="text-sm leading-relaxed" style={{ color: "rgba(232,228,216,0.9)" }} dir={fa ? "rtl" : "ltr"}>
-                    {fa ? g.sigFa : g.sig}
+                  {sig.missing && (
+                    <div className="mb-2 flex justify-center">
+                      <TranslationBadge available={sig.available} />
+                    </div>
+                  )}
+                  <p className="text-sm leading-relaxed" style={{ color: "rgba(232,228,216,0.9)" }} dir={sig.shownIn === "fa" ? "rtl" : "ltr"}>
+                    {sig.value}
                   </p>
                   <ul className="mt-3 space-y-1.5 text-start">
-                    {(fa ? g.asociacionesFa : g.asociaciones).map((a, i) => (
-                      <li key={i} className="flex items-start gap-2 text-xs leading-relaxed" style={{ color: "rgba(200,196,184,0.85)" }} dir={fa ? "rtl" : "ltr"}>
+                    {asoc.value.map((a, i) => (
+                      <li key={i} className="flex items-start gap-2 text-xs leading-relaxed" style={{ color: "rgba(200,196,184,0.85)" }} dir={asoc.shownIn === "fa" ? "rtl" : "ltr"}>
                         <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full" style={{ background: g.color }} />
                         <span>{a}</span>
                       </li>
@@ -126,7 +139,7 @@ export default function GematriasPage() {
                         router.push(`/misterio/${g.mystery}`);
                       } else {
                         // Resto → estudio de concepto en el motor.
-                        const concept = `${(fa ? g.tituloFa : g.titulo)} — la gematría ${g.num}: ${g.he}`;
+                        const concept = `${titulo.value} — la gematría ${g.num}: ${g.he}`;
                         router.push(`/estudio?concept=${encodeURIComponent(concept)}`);
                       }
                     }}
