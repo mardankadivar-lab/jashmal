@@ -389,7 +389,7 @@ export default function Misterio26Page() {
                 { label: fa ? "اِچاد" : "Ejad · Unidad", ref: "Tanya, Part I; Likkutei Amarim 2" },
                 { label: fa ? "اَهاوا" : "Ahavá · Amor", ref: "Tanya, Part I; Likkutei Amarim 32" },
                 { label: fa ? "یهوه" : "YHVH · El Nombre", ref: "Zohar, Vaetchanan 1" },
-                { label: fa ? "گیماتریا" : "Gematría", ref: "Sefer Etz Chaim, Gate 1" },
+                { label: fa ? "گیماتریا" : "Gematría", ref: "Sefer Etz Chaim 1" },
               ].map((t, i) => (
                 <button
                   key={i}

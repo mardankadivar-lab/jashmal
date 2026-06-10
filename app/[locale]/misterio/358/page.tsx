@@ -583,11 +583,11 @@ export default function MisterioPage() {
             {/* Temas relacionados */}
             <div className="mb-8 flex flex-wrap justify-center gap-2">
               {[
-                { label: fa ? "گیماتریا" : "Gematría", ref: "Sefer Etz Chaim, Gate 1" },
+                { label: fa ? "گیماتریا" : "Gematría", ref: "Sefer Etz Chaim 1" },
                 { label: fa ? "مَشیاح" : "Mashíaj", ref: "Zohar, Balak 1" },
                 { label: fa ? "نَحاش" : "Najash", ref: "Zohar, Bereshit 1" },
                 { label: fa ? "زوهر" : "Zohar · Bereshit", ref: "Zohar, Bereshit 1" },
-                { label: fa ? "تیقون" : "Tikún", ref: "Sefer Etz Chaim, Gate 1" },
+                { label: fa ? "تیقون" : "Tikún", ref: "Sefer Etz Chaim 1" },
               ].map((t, i) => (
                 <button
                   key={i}

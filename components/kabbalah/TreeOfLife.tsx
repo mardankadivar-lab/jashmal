@@ -308,35 +308,35 @@ export default function TreeOfLife() {
               sefiraHe: "כֶּתֶר",
               descEs: "La punta (קוֹץ) del Yud trasciende los cuatro mundos. Es el punto de contacto entre el Ein Sof ilimitado y el primer sefirá. Kéter no pertenece a ningún mundo: es la voluntad primordial antes de toda forma.",
               descFa: "نقطهٔ (قوتز) یود از چهار عالم فراتر می‌رود. نقطهٔ تماس میان اِین سوف نامحدود و اولین سِفیرا است. کِتِر به هیچ عالمی تعلق ندارد — ارادهٔ ازلی پیش از هر صورتی است.",
-              studyRef: "Sefer Etz Chaim, Gate 1",
+              studyRef: "Sefer Etz Chaim 1",
             },
             yud: {
               sefiraEs: "Jojmá — Sabiduría",
               sefiraHe: "חָכְמָה",
               descEs: "El cuerpo del Yud corresponde al Mundo de la Emanación (Atzilut). En Atzilut, Creador y creatura aún no están separados. La luz divina fluye directamente, sin velo. Corresponde al Partzuf Aba (Padre).",
               descFa: "جسم یود با عالم اَتزیلوت (فیض) مطابقت دارد. در اَتزیلوت، خالق و مخلوق هنوز جدا نیستند. نور الهی مستقیماً جاری است، بدون حجاب. با پارتزوف اَبا (پدر) مطابقت دارد.",
-              studyRef: "Sefer Etz Chaim, Gate 1",
+              studyRef: "Sefer Etz Chaim 1",
             },
             hei1: {
               sefiraEs: "Biná — Entendimiento",
               sefiraHe: "בִּינָה",
               descEs: "La primera Hei es el Mundo de la Creación (Beriá). Aquí aparece la primera separación entre Creador y creatura: la luz ya no es directa sino reflejada. Los grandes arcángeles habitan Beriá. Corresponde al Partzuf Ima (Madre).",
               descFa: "هِی اول با عالم بِریاه (آفرینش) مطابقت دارد. اینجاست که اولین جدایی میان خالق و مخلوق پدیدار می‌شود. فرشتگان بزرگ در بِریاه ساکنند. با پارتزوف اِما (مادر) مطابقت دارد.",
-              studyRef: "Sefer Etz Chaim, Gate 1",
+              studyRef: "Sefer Etz Chaim 1",
             },
             vav: {
               sefiraEs: "Zeir Anpin — Los Seis",
               sefiraHe: "זְעֵיר אַנְפִּין",
               descEs: "El Vav (valor 6) corresponde a los seis sefirot del Zeir Anpin: Jésed, Guevurá, Tiferet, Netzaj, Hod, Yesod. Su mundo es Yetzirá (Formación), el mundo de los ángeles intermedios y las almas. La Torah fue dada a este nivel.",
               descFa: "وָو (ارزش ۶) با شش سِفیروت زِئیر اَنپین مطابقت دارد: خِسِد، گِووورا، تیفِرِت، نِتزاخ، هود، یِسود. عالم آن یِتزیراه (صورت‌بندی) است — عالم فرشتگان میانی و ارواح. تورات در این سطح اعطا شد.",
-              studyRef: "Sefer Etz Chaim, Gate 1",
+              studyRef: "Sefer Etz Chaim 1",
             },
             hei2: {
               sefiraEs: "Maljut — Reino",
               sefiraHe: "מַלְכוּת",
               descEs: "La Hei final corresponde al Mundo de la Acción (Asiá), el mundo material. Maljut recibe de todos los sefirot superiores y los irradia en la creación física. La Shejiná (presencia divina) habita en Maljut. El alma humana opera en este mundo.",
               descFa: "هِی آخر با عالم عَسیاه (عمل) — جهان مادی — مطابقت دارد. مالخوت از تمام سِفیروت بالاتر دریافت می‌کند و آن‌ها را در آفرینش فیزیکی می‌تاباند. شِخینا (حضور الهی) در مالخوت ساکن است.",
-              studyRef: "Sefer Etz Chaim, Gate 1",
+              studyRef: "Sefer Etz Chaim 1",
             },
           };
 
@@ -389,7 +389,7 @@ export default function TreeOfLife() {
                 <button
                   onClick={() => {
                     setActiveYhvh(null);
-                    const params = new URLSearchParams({ ref: d?.studyRef ?? "Sefer Etz Chaim, Gate 1", context: "kabbalah" });
+                    const params = new URLSearchParams({ ref: d?.studyRef ?? "Sefer Etz Chaim 1", context: "kabbalah" });
                     router.push(`/estudio?${params.toString()}`);
                   }}
                   className="w-full rounded-xl border border-gold/30 bg-gold/[0.07] px-4 py-2.5 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold/60 hover:bg-gold/15"
