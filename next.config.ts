@@ -26,6 +26,7 @@ const nextConfig: NextConfig = {
       { source: "/enoch", destination: "/es/misterio/enoch" },
       { source: "/lot", destination: "/es/misterio/lot" },
       { source: "/yehuda", destination: "/es/misterio/yehuda" },
+      { source: "/ropas-de-luz", destination: "/es/misterio/ropas-de-luz" },
     ];
   },
   async redirects() {

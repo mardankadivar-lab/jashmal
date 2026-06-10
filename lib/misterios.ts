@@ -85,6 +85,17 @@ export const MISTERIOS: Misterio[] = [
     orden: 3.8,
   },
   {
+    slug: "ropas-de-luz",
+    he: "כָּתְנוֹת עוֹר · אוֹר",
+    titulo: "De Ropas de Luz a Piel de Serpiente",
+    tituloFa: "از جامه‌های نور تا پوست مار",
+    gancho: "Una sola letra separa la «ropa de luz» (אוֹר) de la «ropa de piel» (עוֹר). Hubo una falta real en el Edén — pero esa caída tenía un lugar en el plan: vestir la luz de piel para que el hombre la rescate desde abajo. La caída necesaria para el Tikún.",
+    ganchoFa: "تنها یک حرف، «جامهٔ نور» (אוֹר) را از «جامهٔ پوست» (עוֹר) جدا می‌کند. در عدن لغزشی واقعی رخ داد — اما آن سقوط جایی در نقشه داشت: سقوطِ لازم برای تیکون.",
+    serie: "dos-filos",
+    color: "#cf8c52",
+    orden: 3.9,
+  },
+  {
     slug: "linaje",
     he: "עֲבֵרָה לִשְׁמָהּ",
     titulo: "El linaje prohibido del Mashíaj",
