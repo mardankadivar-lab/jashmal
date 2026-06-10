@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { consumeLoginToken, upsertUser } from "@/lib/community";
-import { createSessionToken, SESSION_COOKIE, SESSION_MAXAGE } from "@/lib/communitySession";
+import { consumeLoginToken, upsertUser } from "@/lib/community/community";
+import { createSessionToken, SESSION_COOKIE, SESSION_MAXAGE } from "@/lib/community/communitySession";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

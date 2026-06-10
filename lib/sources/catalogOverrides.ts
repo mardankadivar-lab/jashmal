@@ -1,7 +1,7 @@
 // Overrides para obras de estructura COMPLEJA (isComplex en Sefaria), cuyo ref
 // no es "Titulo N" sino una ruta anidada. Refs verificados contra la API (2026-05-31).
 
-import type { CatBook } from "./catalog.generated";
+import type { CatBook } from "@/lib/sources/catalog.generated";
 
 export interface RichBook extends CatBook {
   refTemplate?: string; // ej. "Tanya, Part I; Likkutei Amarim {n}"

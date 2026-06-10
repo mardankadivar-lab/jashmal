@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { dbConfigured, getSql } from "@/lib/db";
-import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addAvrahamKabLote2, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch } from "@/lib/brainStore";
-import { BNODES, BEDGES } from "@/lib/brainData";
+import { dbConfigured, getSql } from "@/lib/infra/db";
+import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addAvrahamKabLote2, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch } from "@/lib/nodes/brainStore";
+import { BNODES, BEDGES } from "@/lib/nodes/brainData";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

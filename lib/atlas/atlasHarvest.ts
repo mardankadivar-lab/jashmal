@@ -7,8 +7,8 @@
 // exacto): NUNCA se inventa una localidad, solo se enciende una ya curada.
 // ─────────────────────────────────────────────────────────────────────────
 
-import { detectPlaceIds, gazetteerById } from "./atlasGazetteer";
-import { addPlace, recordPlaceHit } from "./atlasStore";
+import { detectPlaceIds, gazetteerById } from "@/lib/atlas/atlasGazetteer";
+import { addPlace, recordPlaceHit } from "@/lib/atlas/atlasStore";
 
 export type AtlasHarvestInput = {
   subject: string; // tema del estudio (ref de Sefaria, término o letra)

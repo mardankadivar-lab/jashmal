@@ -20,7 +20,7 @@ import {
   GILGUL_CONFIDENCE_COLOR,
   confidenceLabel,
   type GilgulLink,
-} from "@/lib/gilgul";
+} from "@/lib/nodes/gilgul";
 
 type Lang = "es" | "fa" | "en";
 

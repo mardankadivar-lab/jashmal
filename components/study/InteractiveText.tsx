@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { parseHyperlinks } from "@/lib/hyperlinks";
+import { parseHyperlinks } from "@/lib/relations/hyperlinks";
 
 const HEBREW = /[֐-׿]/;
 

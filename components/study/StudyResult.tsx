@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { parseHyperlinks } from "@/lib/hyperlinks";
+import { parseHyperlinks } from "@/lib/relations/hyperlinks";
 import InlineText from "./InlineText";
 
 interface StudyResultProps {

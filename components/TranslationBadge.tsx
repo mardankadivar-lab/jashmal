@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { LANG_LABEL } from "@/lib/i18nContent";
+import { LANG_LABEL } from "@/lib/i18n/i18nContent";
 import type { Locale } from "@/i18n/routing";
 
 // Aviso limpio "disponible en …" — política "honesto y crece". Aparece cuando el

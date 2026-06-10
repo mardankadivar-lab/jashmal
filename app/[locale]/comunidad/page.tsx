@@ -1,7 +1,7 @@
 import { LocalizedLink } from "@/i18n/navigation";
-import { getSession } from "@/lib/communitySession";
-import { getUserByEmail } from "@/lib/community";
-import { levelForStars } from "@/lib/communityLevels";
+import { getSession } from "@/lib/community/communitySession";
+import { getUserByEmail } from "@/lib/community/community";
+import { levelForStars } from "@/lib/community/communityLevels";
 import LoginForm from "@/components/community/LoginForm";
 import ShareRevelation from "@/components/community/ShareRevelation";
 

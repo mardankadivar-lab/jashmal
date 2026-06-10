@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useLocale } from "next-intl";
-import { ZOHAR_GROUPS, type ZoharParasha } from "@/lib/catalogOverrides";
-import type { RichBook } from "@/lib/catalogOverrides";
+import { ZOHAR_GROUPS, type ZoharParasha } from "@/lib/sources/catalogOverrides";
+import type { RichBook } from "@/lib/sources/catalogOverrides";
 
 interface ZoharNavigatorProps {
   onSelectParasha: (book: RichBook) => void;

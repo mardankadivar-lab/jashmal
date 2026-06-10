@@ -15,7 +15,7 @@
 // → micro-acción (מַעֲשֶׂה) → sello (חֲתִימָה) → hilo ("Sigue el hilo").
 // ─────────────────────────────────────────────────────────────────────────
 
-import { MISTERIOS } from "@/lib/misterios";
+import { MISTERIOS } from "@/lib/content/misterios";
 
 // ── Tipos ──────────────────────────────────────────────────────────────────
 

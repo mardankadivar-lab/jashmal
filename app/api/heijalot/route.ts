@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { anthropic, LIGHT_MODEL } from "@/lib/anthropic";
-import { checkRateLimit, clientIp } from "@/lib/rateLimit";
-import { SEFIROT } from "@/lib/sefirot";
+import { anthropic, LIGHT_MODEL } from "@/lib/engine/anthropic";
+import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
+import { SEFIROT } from "@/lib/nodes/sefirot";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;

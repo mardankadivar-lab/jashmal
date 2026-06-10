@@ -4,9 +4,9 @@ import dynamic from "next/dynamic";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
-import { getSefira, sefiraLabel } from "@/lib/sefirot";
-import { SEFIRA_STUDY, ROADMAP_LEVELS } from "@/lib/sefirotStudy";
-import { LETTER_MEANINGS, LETTER_TO_PATH, type HebrewLetterMeaning } from "@/lib/hebrewLetters";
+import { getSefira, sefiraLabel } from "@/lib/nodes/sefirot";
+import { SEFIRA_STUDY, ROADMAP_LEVELS } from "@/lib/study/sefirotStudy";
+import { LETTER_MEANINGS, LETTER_TO_PATH, type HebrewLetterMeaning } from "@/lib/nodes/hebrewLetters";
 import { YHVH_SECTIONS } from "./TreeScene";
 
 const Canvas = dynamic(() => import("@react-three/fiber").then((m) => m.Canvas), { ssr: false });

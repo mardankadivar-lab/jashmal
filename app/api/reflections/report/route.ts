@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { reportReflection } from "@/lib/reflections";
-import { dbConfigured } from "@/lib/db";
-import { checkRateLimit, clientIp } from "@/lib/rateLimit";
+import { reportReflection } from "@/lib/study/reflections";
+import { dbConfigured } from "@/lib/infra/db";
+import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
 
 export const runtime = "nodejs";
 

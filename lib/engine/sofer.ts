@@ -3,7 +3,7 @@
 // de un estudiante con su criterio verificado. Devuelve veredicto + score +
 // un mensaje en su voz de rebe. Reusa el cliente/modelo del motor de estudio.
 // ─────────────────────────────────────────────────────────────────────────
-import { anthropic, STUDY_MODEL } from "./anthropic";
+import { anthropic, STUDY_MODEL } from "@/lib/engine/anthropic";
 
 export type SoferVerdict = {
   verdict: "aceptar" | "arreglar" | "rechazar";

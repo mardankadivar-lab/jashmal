@@ -3,8 +3,8 @@ import {
   adminListAll,
   deleteReflection,
   restoreReflection,
-} from "@/lib/reflections";
-import { dbConfigured } from "@/lib/db";
+} from "@/lib/study/reflections";
+import { dbConfigured } from "@/lib/infra/db";
 
 export const runtime = "nodejs";
 

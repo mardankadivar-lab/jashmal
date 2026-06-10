@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useLocale } from "next-intl";
 import { useRouter, Link } from "@/i18n/navigation";
-import { GEMATRIAS } from "@/lib/gematrias";
+import { GEMATRIAS } from "@/lib/nodes/gematrias";
 import MisterioTutor from "@/components/MisterioTutor";
 
 export default function GematriasPage() {

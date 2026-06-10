@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { LETTER_MEANINGS } from "@/lib/hebrewLetters";
+import { LETTER_MEANINGS } from "@/lib/nodes/hebrewLetters";
 
 // Slug de ruta a partir del nombre transliterado: "Álef" -> "alef".
 function toSlug(name: string): string {

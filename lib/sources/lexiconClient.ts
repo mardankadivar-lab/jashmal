@@ -1,5 +1,5 @@
 // Cliente del léxico hebreo.
-import type { ClassicLexicon } from "./lexicon";
+import type { ClassicLexicon } from "@/lib/sources/lexicon";
 
 export interface LexiconResponse {
   classic: ClassicLexicon;

@@ -1,7 +1,7 @@
 // Cliente del motor de estudio — lee la respuesta en streaming para que el
 // texto aparezca progresivamente (evita timeouts en Farsi y textos largos).
-import type { StudyMode } from "./anthropic";
-import { saveStudyHistory } from "./myStudies";
+import type { StudyMode } from "@/lib/engine/anthropic";
+import { saveStudyHistory } from "@/lib/study/myStudies";
 
 export type StudyDepth = "quick" | "deep";
 

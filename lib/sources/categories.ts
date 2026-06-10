@@ -2,15 +2,15 @@
 // (lib/catalog.generated.ts), aplica overrides para obras complejas (Tania, etc.)
 // y añade nombres localizados ES/FA.
 
-import { CATALOG as RAW, type CatSub } from "./catalog.generated";
+import { CATALOG as RAW, type CatSub } from "@/lib/sources/catalog.generated";
 import {
   COMPLEX_OVERRIDES,
   REF_OVERRIDES,
   HIDDEN_BOOKS,
   bookRef,
   type RichBook,
-} from "./catalogOverrides";
-import { localizedBookLabel, SUB_FA, CATEGORY_FA } from "./bookNames";
+} from "@/lib/sources/catalogOverrides";
+import { localizedBookLabel, SUB_FA, CATEGORY_FA } from "@/lib/sources/bookNames";
 
 export type CatBook = RichBook;
 export { bookRef };

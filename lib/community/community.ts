@@ -6,7 +6,7 @@
 //   · community_submissions  — las revelaciones que envían los estudiantes
 // Todo es idempotente (CREATE TABLE IF NOT EXISTS) y nunca rompe la lectura.
 // ─────────────────────────────────────────────────────────────────────────
-import { getSql } from "./db";
+import { getSql } from "@/lib/infra/db";
 import { randomBytes, randomUUID } from "crypto";
 
 export type SubmissionStatus = "pending" | "sofer_review" | "approved" | "rejected";

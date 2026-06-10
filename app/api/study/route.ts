@@ -7,10 +7,10 @@ import {
   STUDY_MODEL,
   type StudyMode,
   type ConnectionInfo,
-} from "@/lib/anthropic";
-import { getEdgeData } from "@/lib/edgeData";
-import { checkRateLimit, clientIp } from "@/lib/rateLimit";
-import { gatherSources, formatSourcesForPrompt } from "@/lib/related";
+} from "@/lib/engine/anthropic";
+import { getEdgeData } from "@/lib/relations/edgeData";
+import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
+import { gatherSources, formatSourcesForPrompt } from "@/lib/relations/related";
 
 export const runtime = "nodejs";
 // 300s (máximo de Vercel Pro): un estudio profundo con 8000 tokens puede tardar
@@ -124,7 +124,7 @@ export async function POST(req: Request) {
 
   // Modo cabalístico (viene del Árbol de la Vida) o modo estándar PaRDeS
   const isKabbalah = body.context === "kabbalah" && !!body.sefiraId && mode === "text";
-  const { SEFIROT } = await import("@/lib/sefirot");
+  const { SEFIROT } = await import("@/lib/nodes/sefirot");
   const sefira = isKabbalah ? SEFIROT.find((s) => s.id === body.sefiraId) : null;
 
   // Modo CONEXIÓN (Mente Cósmica relacional V3): estudiar la relación entre

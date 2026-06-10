@@ -25,7 +25,7 @@ import {
   placeById,
   type Place,
   type AtlasRoute,
-} from "@/lib/atlasData";
+} from "@/lib/atlas/atlasData";
 
 const Canvas = dynamic(() => import("@react-three/fiber").then((m) => m.Canvas), { ssr: false });
 

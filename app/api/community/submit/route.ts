@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/communitySession";
-import { ensureCommunityTables, createSubmission, updateSoferVerdict } from "@/lib/community";
-import { soferEvaluate } from "@/lib/sofer";
+import { getSession } from "@/lib/community/communitySession";
+import { ensureCommunityTables, createSubmission, updateSoferVerdict } from "@/lib/community/community";
+import { soferEvaluate } from "@/lib/engine/sofer";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

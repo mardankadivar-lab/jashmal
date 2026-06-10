@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { ensureCommunityTables, createLoginToken } from "@/lib/community";
-import { sendMagicLink } from "@/lib/email";
+import { ensureCommunityTables, createLoginToken } from "@/lib/community/community";
+import { sendMagicLink } from "@/lib/infra/email";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

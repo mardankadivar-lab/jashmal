@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { anthropic, LIGHT_MODEL } from "@/lib/anthropic";
-import { checkRateLimit, clientIp } from "@/lib/rateLimit";
+import { anthropic, LIGHT_MODEL } from "@/lib/engine/anthropic";
+import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;

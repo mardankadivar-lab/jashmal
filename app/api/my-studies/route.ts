@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/communitySession";
-import { dbConfigured } from "@/lib/db";
-import { saveUserStudy, listUserStudies, deleteUserStudy } from "@/lib/userStudies";
+import { getSession } from "@/lib/community/communitySession";
+import { dbConfigured } from "@/lib/infra/db";
+import { saveUserStudy, listUserStudies, deleteUserStudy } from "@/lib/study/userStudies";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
