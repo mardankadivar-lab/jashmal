@@ -154,6 +154,18 @@ export const MISTERIOS: Misterio[] = [
     orden: 8,
   },
   {
+    slug: "enoch",
+    numero: "84",
+    he: "חֲנוֹךְ",
+    titulo: "Janóoj — la gracia que asciende",
+    tituloFa: "حَنوخ — فیضی که بالا می‌رود",
+    gancho: "Janóoj «caminó con Dios y desapareció, porque Dios lo tomó». El iniciado que asciende y se vuelve Metatrón, el canal universal (=314). Su nombre (חֲנוֹךְ) y «educación» (חִינּוּךְ) comparten una raíz: el camino que vuelve al hombre vehículo de luz.",
+    ganchoFa: "خنوخ «با خدا راه رفت و ناپدید شد، زیرا خدا او را برگرفت». مبتدی‌ای که بالا می‌رود و مِطَطرون می‌شود، کانالِ جهانی (=۳۱۴). نامِ او (חֲנוֹךְ) و «تربیت» (חִינּוּךְ) یک ریشه دارند: راهی که انسان را مرکبِ نور می‌کند.",
+    serie: "gematria",
+    color: "#6cd4e0",
+    orden: 8.5,
+  },
+  {
     slug: "sanador",
     he: "יְהוָה רֹפְאֶךָ",
     titulo: "Yo soy Hashem tu sanador",
