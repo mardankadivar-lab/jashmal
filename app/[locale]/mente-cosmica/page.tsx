@@ -44,10 +44,10 @@ import Consola from "./Consola";
 import EdgeTooltip, { type EdgeHint } from "./EdgeTooltip";
 import GilgulTooltip, { type GilgulHint } from "./GilgulTooltip";
 import { useUniversoHistory } from "./useUniversoHistory";
-import { useIsMobile } from "./useIsMobile";
+import { useIsMobile, usePrefersReducedMotion } from "./useIsMobile";
 // Sistema visual: TODO el tuning fino (paleta, fog, bloom, CFG, partículas,
 // estados) vive en theme.ts — el look se ajusta allí, no aquí.
-import { CFG, SCENE, BLOOM, STARFIELD, NEBULAE, PALETTE, NODE, CATEGORY_ACCENTS, FIBERS } from "./theme";
+import { CFG, SCENE, BLOOM, STARFIELD, NEBULAE, PALETTE, NODE, CATEGORY_ACCENTS, FIBERS, PERF } from "./theme";
 
 type Graph = { nodes: BNode[]; edges: [string, string][] };
 
@@ -124,9 +124,9 @@ function curvesToSegments(curves: EdgeCurve[]): Float32Array {
 }
 
 // ── Tejido ambiental (sinapsis decorativas que forman la masa del cerebro) ─
-function AmbientTissue() {
+function AmbientTissue({ count = CFG.ambientCount, still = false }: { count?: number; still?: boolean }) {
   const tex = useMemo(() => glowTexture(), []);
-  const { positions, colors } = useMemo(() => ambientTissue(CFG.ambientCount), []);
+  const { positions, colors } = useMemo(() => ambientTissue(count), [count]);
   const geom = useMemo(() => {
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
@@ -136,8 +136,10 @@ function AmbientTissue() {
   const matRef = useRef<THREE.PointsMaterial>(null);
   useFrame(({ clock }) => {
     if (matRef.current) {
-      // respiración: leve parpadeo del tejido
-      matRef.current.opacity = CFG.ambientOpacity * (0.8 + Math.sin(clock.elapsedTime * 0.6) * 0.12);
+      // respiración: leve parpadeo del tejido (quieto si el usuario pide menos movimiento)
+      matRef.current.opacity = still
+        ? CFG.ambientOpacity
+        : CFG.ambientOpacity * (0.8 + Math.sin(clock.elapsedTime * 0.6) * 0.12);
     }
   });
   return (
@@ -160,9 +162,9 @@ function AmbientTissue() {
 // ── Nodos POTENCIALES: chispas tenues por recoger (Tikún incompleto) ───────
 // Llenan una esfera más grande que los nodos reales → zonas oscuras con
 // potencial. Tinte dorado frío, muy tenue, con un parpadeo lento desfasado.
-function PotentialNodes() {
+function PotentialNodes({ count = CFG.potentialCount, still = false }: { count?: number; still?: boolean }) {
   const tex = useMemo(() => glowTexture(), []);
-  const positions = useMemo(() => potentialNodes(CFG.potentialCount), []);
+  const positions = useMemo(() => potentialNodes(count), [count]);
   const geom = useMemo(() => {
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
@@ -172,8 +174,9 @@ function PotentialNodes() {
   useFrame(({ clock }) => {
     if (matRef.current) {
       // respiración lenta y desfasada del tejido: las chispas "laten" suave
-      matRef.current.opacity =
-        CFG.potentialOpacity * (0.7 + Math.sin(clock.elapsedTime * 0.35 + 1.7) * 0.3);
+      matRef.current.opacity = still
+        ? CFG.potentialOpacity
+        : CFG.potentialOpacity * (0.7 + Math.sin(clock.elapsedTime * 0.35 + 1.7) * 0.3);
     }
   });
   return (
@@ -194,10 +197,10 @@ function PotentialNodes() {
 }
 
 // ── Campo estelar de fondo (profundidad del universo) ─────────────────────
-function StarField() {
+function StarField({ count = STARFIELD.count }: { count?: number }) {
   const tex = useMemo(() => glowTexture(), []);
   const geom = useMemo(() => {
-    const N = STARFIELD.count;
+    const N = count;
     let s = 0x9e3779b9 >>> 0;
     const rnd = () => {
       s = (s + 0x6d2b79f5) >>> 0;
@@ -224,7 +227,7 @@ function StarField() {
     g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
     g.setAttribute("color", new THREE.BufferAttribute(col, 3));
     return g;
-  }, []);
+  }, [count]);
   return (
     <points geometry={geom}>
       <pointsMaterial map={tex} size={STARFIELD.size} vertexColors transparent opacity={STARFIELD.opacity} blending={THREE.AdditiveBlending} depthWrite={false} sizeAttenuation />
@@ -307,11 +310,13 @@ function LayeredFibers({
   dist,
   focusId,
   color,
+  electrons = true,
 }: {
   curves: EdgeCurve[];
   dist: Map<string, number>;
   focusId: string;
   color: string;
+  electrons?: boolean; // false = sin electrones viajeros (reduced-motion)
 }) {
   const layers = useMemo(() => {
     const out: EdgeCurve[][] = [[], [], []];
@@ -350,6 +355,7 @@ function LayeredFibers({
   const primarySolid = useMemo(() => layers[0].filter((c) => c.kind === "solid"), [layers]);
   const pulseRefs = useRef<(THREE.Sprite | null)[]>([]);
   useFrame(({ clock }) => {
+    if (!electrons) return;
     const t = clock.elapsedTime;
     primarySolid.forEach((c, i) => {
       const spr = pulseRefs.current[i];
@@ -380,7 +386,7 @@ function LayeredFibers({
           </lineSegments>
         </group>
       ))}
-      {primarySolid.map((c, i) => (
+      {electrons && primarySolid.map((c, i) => (
         <sprite key={c.a + c.b} ref={(el) => { pulseRefs.current[i] = el; }}>
           <spriteMaterial map={tex} color={col} transparent opacity={FIBERS.electronOpacity} blending={THREE.AdditiveBlending} depthWrite={false} />
         </sprite>
@@ -486,6 +492,7 @@ function Synapse({
   showLabel,
   sizeBoost = 1,
   locale,
+  reducedMotion = false,
   onClick,
   onDouble,
   onHover,
@@ -496,6 +503,7 @@ function Synapse({
   showLabel: boolean;
   sizeBoost?: number; // >1 → la sinapsis se agranda (vecino directo del foco)
   locale: string;
+  reducedMotion?: boolean; // accesibilidad: sin respiración decorativa
   onClick: (additive: boolean) => void;
   onDouble: () => void;
   onHover: (h: boolean) => void;
@@ -525,7 +533,8 @@ function Synapse({
     const mix = Math.max(0, Math.min(1, mixRaw));
     const m = mix * mix * (3 - 2 * mix); // smoothstep
     // respiración LENTA: silenciosa en reposo, honda en el activo
-    const amp = NODE.pulseAmpIdle + (NODE.pulseAmpActive - NODE.pulseAmpIdle) * m;
+    // (quieta del todo si el usuario pide menos movimiento)
+    const amp = reducedMotion ? 0 : NODE.pulseAmpIdle + (NODE.pulseAmpActive - NODE.pulseAmpIdle) * m;
     const pulse = 1 + Math.sin(t * NODE.pulseSpeed + pos[0] * 1.7) * amp;
     const halo = CFG.haloBase * lvlScale * (0.8 + k * 0.9) * pulse * BRAIN_SCALE * 0.34 * sizeBoost;
     const core = CFG.coreBase * lvlScale * (0.9 + k * 0.7) * pulse * BRAIN_SCALE * 0.34 * sizeBoost;
@@ -563,7 +572,9 @@ function Synapse({
         onPointerOver={(e) => { e.stopPropagation(); onHover(true); document.body.style.cursor = "pointer"; }}
         onPointerOut={() => { onHover(false); document.body.style.cursor = "default"; }}
       >
-        <spriteMaterial map={tex} transparent opacity={0} depthWrite={false} />
+        {/* material invisible=false: el raycaster lo sigue tocando (hover/clic),
+            pero la GPU ya NO dibuja 232 quads transparentes por frame */}
+        <spriteMaterial map={tex} transparent opacity={0} depthWrite={false} visible={false} />
       </sprite>
 
       {showLabel && (
@@ -914,6 +925,8 @@ function BrainScene({
   onTravelSpline,
   onTravelArrived,
   onTravelConsumed,
+  isMobile = false,
+  reducedMotion = false,
 }: {
   nodes: BNode[];
   edges: [string, string][];
@@ -922,6 +935,8 @@ function BrainScene({
   compare: string[];
   isFa: boolean;
   locale: string;
+  isMobile?: boolean;        // nivel de calidad: menos partículas en móvil
+  reducedMotion?: boolean;   // accesibilidad: sin animación decorativa
   flyToId: string | null;
   activeCat: string | null;
   filterCat: string | null;
@@ -1046,14 +1061,17 @@ function BrainScene({
     idleTimer.current = setTimeout(() => setAutoRot(true), 3000);
   };
 
-  // breathing group
+  // breathing group (quieto si el usuario pide menos movimiento)
   const groupRef = useRef<THREE.Group>(null);
   useFrame(({ clock }) => {
     if (groupRef.current) {
-      const s = 1 + Math.sin(clock.elapsedTime * 0.5) * 0.012;
+      const s = reducedMotion ? 1 : 1 + Math.sin(clock.elapsedTime * 0.5) * 0.012;
       groupRef.current.scale.set(s, s, s);
     }
   });
+
+  // nivel de calidad: en móvil el cosmos respira con menos partículas
+  const particleScale = isMobile ? PERF.mobileParticleScale : 1;
 
   // intensidad por nodo según capa: primaria > secundaria > terciaria > lejana
   // "Tanaj" en la leyenda enciende también el núcleo Torá (misma galaxia)
@@ -1137,7 +1155,7 @@ function BrainScene({
         maxAzimuthAngle={Infinity}
         // ── Táctil (móvil): un dedo orbita · dos dedos pellizco-zoom + paneo ──
         touches={{ ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN }}
-        autoRotate={autoRot && !selected && !compareActive && !catActive && !travel && !gilgulActive}
+        autoRotate={autoRot && !reducedMotion && !selected && !compareActive && !catActive && !travel && !gilgulActive}
         autoRotateSpeed={0.3}
         onStart={() => { interacting.current = true; pauseAuto(); }}
         onEnd={() => { interacting.current = false; resumeAuto(); }}
@@ -1151,7 +1169,7 @@ function BrainScene({
       <ambientLight intensity={0.35} />
 
       {/* el universo: estrellas de fondo + nebulosas con nombre por galaxia */}
-      <StarField />
+      <StarField count={Math.round(STARFIELD.count * particleScale)} />
       <Nebulae locale={locale} />
 
       {/* La selección NUNCA se suelta al tocar el fondo, arrastrar, hacer zoom ni
@@ -1159,12 +1177,12 @@ function BrainScene({
           el botón × de la tarjeta, la tecla Escape, o al elegir OTRO nodo. */}
 
       <group ref={groupRef}>
-        <AmbientTissue />
-        <PotentialNodes />
+        <AmbientTissue count={Math.round(CFG.ambientCount * particleScale)} still={reducedMotion} />
+        <PotentialNodes count={Math.round(CFG.potentialCount * particleScale)} still={reducedMotion} />
         <BaseFibers segments={baseSegments} dimmed={focusId !== null || compareActive || catActive || gilgulActive} />
         {/* en modo filtro, la malla jerárquica y el camino a la Torá se apagan para
             que solo brillen las aristas hacia la disciplina elegida (foco limpio) */}
-        {!gilgulActive && !compareActive && !catActive && !filterActive && focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} />}
+        {!gilgulActive && !compareActive && !catActive && !filterActive && focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} electrons={!reducedMotion} />}
         {!gilgulActive && !compareActive && !catActive && !filterActive && pathToTorah.length > 1 && <PathToTorah path={pathToTorah} curves={curves} />}
         {!gilgulActive && compareActive && sharedCurves.length > 0 && <FiberHighlight curves={sharedCurves} color={FIBERS.compareColor} />}
         {!gilgulActive && catActive && catCurves.length > 0 && <FiberHighlight curves={catCurves} color={CATEGORY_ACCENTS[activeCat ?? ""] ?? "#c9a43e"} />}
@@ -1210,6 +1228,7 @@ function BrainScene({
               showLabel={showLabelOf(n)}
               sizeBoost={boostOf(n)}
               locale={locale}
+              reducedMotion={reducedMotion}
               onClick={(additive) => onSelect(n.id, additive)}
               onDouble={() => onDouble(n)}
               onHover={(h) => onHover(h ? n.id : null)}
@@ -1257,6 +1276,7 @@ export default function GrafoPage() {
 
   // Consola unificada + hoja inferior en móvil + historial de navegación (migaja ← →)
   const isMobile = useIsMobile();
+  const reducedMotion = usePrefersReducedMotion();
   const history = useUniversoHistory();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const consumeTravelRequest = useCallback(() => setTravelRequest(null), []);
@@ -1836,7 +1856,10 @@ export default function GrafoPage() {
       >
         <Canvas
           camera={{ position: [0, 6, CFG.radiusIdle], fov: 55 }}
-          gl={{ antialias: true }}
+          // tope de dpr: en retina 3x el costo era 9x el de 1x; el Bloom lo multiplica.
+          // En móvil 1.5 se ve igual y deja la GPU respirar.
+          dpr={[1, isMobile ? PERF.dprMaxMobile : PERF.dprMax]}
+          gl={{ antialias: isMobile ? PERF.antialiasMobile : PERF.antialiasDesktop, powerPreference: "high-performance" }}
           style={{ position: "absolute", inset: 0 }}
         >
           <color attach="background" args={[SCENE.background]} />
@@ -1844,6 +1867,8 @@ export default function GrafoPage() {
           <BrainScene
             nodes={graph.nodes}
             edges={graph.edges}
+            isMobile={isMobile}
+            reducedMotion={reducedMotion}
             selected={selected}
             hovered={hovered}
             compare={compare}

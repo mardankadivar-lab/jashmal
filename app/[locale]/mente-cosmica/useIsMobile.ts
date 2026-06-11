@@ -16,3 +16,19 @@ export function useIsMobile(query = "(max-width: 768px)"): boolean {
   }, [query]);
   return isMobile;
 }
+
+// Accesibilidad DENTRO del canvas: el baseline CSS global no alcanza al WebGL,
+// así que la escena consulta esta preferencia y apaga sus animaciones decorativas
+// (auto-rotación, respiraciones, electrones). SSR-safe: arranca en false.
+export function usePrefersReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return reduced;
+}

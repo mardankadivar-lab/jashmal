@@ -100,9 +100,20 @@ export const CFG = {
   potentialOpacity: 0.22,   // muy tenues: insinúan, no compiten con los reales
   haloBase: 0.30,           // halo más chico: no lava las letras alrededor
   coreBase: 0.16,           // tamaño del núcleo brillante
-  driftSpeed: 0.045,        // deriva lenta de cámara
   radiusIdle: 56,           // cámara: el universo de galaxias llena la pantalla
   radiusFocus: 7,           // al elegir/buscar, la cámara se ACERCA al concepto
+} as const;
+
+// ── RENDIMIENTO (COMMIT 5) ──────────────────────────────────────────────────
+// La deriva real de cámara es autoRotate de OrbitControls (0.3); driftSpeed
+// era config muerta y se eliminó. Estos topes pagan la deuda de GPU antes de
+// añadir más animación.
+export const PERF = {
+  dprMax: 2,                 // tope de densidad de píxeles (retina)
+  dprMaxMobile: 1.5,         // móvil: el Bloom pesa; 1.5 se ve igual y cuesta ~44% menos
+  antialiasDesktop: true,
+  antialiasMobile: false,    // el Bloom ya suaviza bordes; AA en móvil es gasto doble
+  mobileParticleScale: 0.55, // móvil: 13000→7150 tejido · 1100→605 chispas · 5200→2860 estrellas
 } as const;
 
 // ── PARTÍCULAS DE FONDO ─────────────────────────────────────────────────────
