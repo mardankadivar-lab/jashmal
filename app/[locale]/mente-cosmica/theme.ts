@@ -30,11 +30,43 @@ export const PALETTE = {
 } as const;
 
 // ── PALETA SEMÁNTICA POR CATEGORÍA ──────────────────────────────────────────
-// Información, no decoración: Torá/Sefirot/Letras/Zohar… conservan identidad.
-// Hoy se deriva 1:1 de BRAIN_CATS (cero cambio); el COMMIT 3 la subordina al
-// sistema violeta (menos saturación) SIN eliminarla.
+// Información, no decoración: Torá/Sefirot/Letras/Zohar… conservan identidad,
+// pero SUBORDINADA al sistema violeta (COMMIT 3): mismos matices, menos
+// saturación. La leyenda y las nebulosas siguen usando BRAIN_CATS pleno.
+function hexToHsl(hex: string): [number, number, number] {
+  const n = parseInt(hex.slice(1), 16);
+  const r = ((n >> 16) & 255) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  if (max === min) return [0, 0, l];
+  const d = max - min;
+  const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  let h = 0;
+  if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+  else if (max === g) h = ((b - r) / d + 2) / 6;
+  else h = ((r - g) / d + 4) / 6;
+  return [h, s, l];
+}
+function hslToHex(h: number, s: number, l: number): string {
+  const f = (p: number, q: number, t: number) => {
+    if (t < 0) t += 1; if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+  const to255 = (x: number) => Math.round(x * 255).toString(16).padStart(2, "0");
+  return `#${to255(f(p, q, h + 1 / 3))}${to255(f(p, q, h))}${to255(f(p, q, h - 1 / 3))}`;
+}
+/** Versión sobria de un color: mismo matiz, menos saturación. */
+function sober(hex: string, satKeep = 0.72): string {
+  const [h, s, l] = hexToHsl(hex);
+  return hslToHex(h, s * satKeep, l);
+}
 export const CATEGORY_ACCENTS: Record<string, string> = Object.fromEntries(
-  Object.entries(BRAIN_CATS).map(([k, v]) => [k, v.c]),
+  Object.entries(BRAIN_CATS).map(([k, v]) => [k, sober(v.c)]),
 );
 
 // ── ESCENA ──────────────────────────────────────────────────────────────────
@@ -96,14 +128,21 @@ export const NEBULAE = {
   coreOpacity: 0.22,
 } as const;
 
-// ── ESTADOS DE NODO (declarados; se aplican en COMMIT 3 — pulse) ────────────
-export const NODE_STATES = {
-  // activo: núcleo violeta + halo sutil + respiración lenta (sin glow vulgar)
-  active: { core: PALETTE.violet, halo: PALETTE.plum },
-  // inactivo: silencioso — blanco/gris muy tenue
-  idle: { tint: "#ffffff", opacity: 0.1 },
-  // relacionado: el color de su categoría (o ámbar/lichen) a baja opacidad
-  related: { opacity: 0.35, amber: PALETTE.amber, lichen: PALETTE.lichen },
+// ── NODOS / PULSO (COMMIT 3) ────────────────────────────────────────────────
+// El violeta es la autoridad: el nodo se tiñe de #8052ff a medida que su
+// intensidad sube hacia el estado activo (selección/foco = 1.4, hover = 1.1).
+// Los nodos normales quedan más silenciosos; su categoría se conserva sobria.
+export const NODE = {
+  pulseSpeed: 0.9,        // respiración LENTA (antes 1.4)
+  pulseAmpIdle: 0.06,     // latido casi imperceptible en reposo (antes 0.1)
+  pulseAmpActive: 0.12,   // el activo respira hondo
+  haloOpacityBase: 0.09,  // reposo más silencioso (antes 0.12)
+  haloOpacityGain: 0.48,
+  coreOpacityBase: 0.2,   // antes 0.25
+  coreOpacityGain: 0.72,
+  violetMixStart: 1.0,    // desde esta intensidad empieza el tinte violeta
+  violetMixFull: 1.35,    // aquí el violeta domina (el activo llega a 1.4)
+  coreWhiten: 0.35,       // núcleo activo: violeta aclarado (luminoso, no neón)
 } as const;
 
 // ── FIBRAS / CONEXIONES (declarados; se aplican en COMMIT 4 — fibers) ───────

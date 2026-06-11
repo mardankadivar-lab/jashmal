@@ -47,7 +47,7 @@ import { useUniversoHistory } from "./useUniversoHistory";
 import { useIsMobile } from "./useIsMobile";
 // Sistema visual: TODO el tuning fino (paleta, fog, bloom, CFG, partículas,
 // estados) vive en theme.ts — el look se ajusta allí, no aquí.
-import { CFG, SCENE, BLOOM, STARFIELD, NEBULAE } from "./theme";
+import { CFG, SCENE, BLOOM, STARFIELD, NEBULAE, PALETTE, NODE, CATEGORY_ACCENTS } from "./theme";
 
 type Graph = { nodes: BNode[]; edges: [string, string][] };
 
@@ -501,9 +501,14 @@ function Synapse({
   onHover: (h: boolean) => void;
 }) {
   const tex = useMemo(() => glowTexture(), []);
-  const baseCol = BRAIN_CATS[node.cat]?.c ?? "#c9a43e";
+  // Identidad de categoría SOBRIA (subordinada al sistema violeta) — la versión
+  // saturada plena queda para la leyenda y las nebulosas.
+  const baseCol = CATEGORY_ACCENTS[node.cat] ?? "#c9a43e";
   const col = useMemo(() => new THREE.Color(baseCol), [baseCol]);
   const white = useMemo(() => new THREE.Color(baseCol).lerp(new THREE.Color("#ffffff"), 0.7), [baseCol]);
+  // Autoridad violeta: destino del tinte cuando el nodo está activo.
+  const violetHalo = useMemo(() => new THREE.Color(PALETTE.violet), []);
+  const violetCore = useMemo(() => new THREE.Color(PALETTE.violet).lerp(new THREE.Color("#ffffff"), NODE.coreWhiten), []);
 
   // tamaño según nivel (la Torá y los dominios son mayores)
   const lvlScale = node.level === 0 ? 2.0 : node.level === 1 ? 1.3 : node.level === 2 ? 1.0 : node.level === 3 ? 0.8 : 0.7;
@@ -514,14 +519,26 @@ function Synapse({
 
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
-    const pulse = 1 + Math.sin(t * 1.4 + pos[0] * 1.7) * 0.1;
     const k = intensity; // 0..~1.4
+    // mezcla violeta: 0 en reposo → 1 en el nodo activo (suave, sin saltos)
+    const mixRaw = (k - NODE.violetMixStart) / (NODE.violetMixFull - NODE.violetMixStart);
+    const mix = Math.max(0, Math.min(1, mixRaw));
+    const m = mix * mix * (3 - 2 * mix); // smoothstep
+    // respiración LENTA: silenciosa en reposo, honda en el activo
+    const amp = NODE.pulseAmpIdle + (NODE.pulseAmpActive - NODE.pulseAmpIdle) * m;
+    const pulse = 1 + Math.sin(t * NODE.pulseSpeed + pos[0] * 1.7) * amp;
     const halo = CFG.haloBase * lvlScale * (0.8 + k * 0.9) * pulse * BRAIN_SCALE * 0.34 * sizeBoost;
     const core = CFG.coreBase * lvlScale * (0.9 + k * 0.7) * pulse * BRAIN_SCALE * 0.34 * sizeBoost;
     if (haloRef.current) haloRef.current.scale.set(halo, halo, 1);
     if (coreRef.current) coreRef.current.scale.set(core, core, 1);
-    if (haloMat.current) haloMat.current.opacity = Math.min(0.9, 0.12 + k * 0.5);
-    if (coreMat.current) coreMat.current.opacity = Math.min(1, 0.25 + k * 0.7);
+    if (haloMat.current) {
+      haloMat.current.opacity = Math.min(0.9, NODE.haloOpacityBase + k * NODE.haloOpacityGain);
+      haloMat.current.color.copy(col).lerp(violetHalo, m);
+    }
+    if (coreMat.current) {
+      coreMat.current.opacity = Math.min(1, NODE.coreOpacityBase + k * NODE.coreOpacityGain);
+      coreMat.current.color.copy(white).lerp(violetCore, m);
+    }
   });
 
   return (
