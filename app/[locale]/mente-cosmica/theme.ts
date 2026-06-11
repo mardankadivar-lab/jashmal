@@ -37,10 +37,12 @@ export const CATEGORY_ACCENTS: Record<string, string> = Object.fromEntries(
   Object.entries(BRAIN_CATS).map(([k, v]) => [k, v.c]),
 );
 
-// ── ESCENA (valores actuales, movidos tal cual de page.tsx) ─────────────────
+// ── ESCENA ──────────────────────────────────────────────────────────────────
+// COMMIT 2 (void): negro absoluto. La profundidad viene del contraste y las
+// partículas, no de un fondo azulado.
 export const SCENE = {
-  background: "#03040a", // COMMIT 2 → PALETTE.void
-  fogColor: "#03040a",   // COMMIT 2 → PALETTE.void
+  background: PALETTE.void,
+  fogColor: PALETTE.void,
   fogDensity: 0.005,
 } as const;
 
@@ -71,23 +73,27 @@ export const CFG = {
   radiusFocus: 7,           // al elegir/buscar, la cámara se ACERCA al concepto
 } as const;
 
-// ── PARTÍCULAS DE FONDO (valores actuales; COMMIT 2 las retinta) ────────────
+// ── PARTÍCULAS DE FONDO ─────────────────────────────────────────────────────
+// COMMIT 2 (void): campo negro con estrellas blancas y acento violeta mínimo.
+// El tinte frío azulado pasa a ser un violeta suave (eco del pulso #8052ff).
 export const STARFIELD = {
   count: 5200,
   radiusMin: 70,
-  radiusMax: 260,     // 70 + 190 (muy detrás de las galaxias)
+  radiusMax: 260,     // muy detrás de las galaxias
   size: 0.85,
   opacity: 0.7,
-  blueShare: 0.22,    // fracción de estrellas con tinte frío
-  blueTint: [0.62, 0.74, 1] as const, // COMMIT 2 → tinte violeta
+  blueShare: 0.26,    // fracción de estrellas con tinte violeta
+  blueTint: [0.66, 0.52, 1] as const, // violeta suave (antes azul frío)
 } as const;
 
+// COMMIT 2 (void): halos de galaxia un punto más sobrios (sin gradientes
+// pesados) y núcleo blanco-violeta frío en lugar del crema cálido.
 export const NEBULAE = {
   haloScale: 2.4,        // × GALAXY_DISK
-  haloOpacity: 0.18,
+  haloOpacity: 0.15,
   coreScale: 0.5,        // × GALAXY_DISK
-  coreColor: "#fff7e6",
-  coreOpacity: 0.24,
+  coreColor: "#f3efff",
+  coreOpacity: 0.22,
 } as const;
 
 // ── ESTADOS DE NODO (declarados; se aplican en COMMIT 3 — pulse) ────────────
