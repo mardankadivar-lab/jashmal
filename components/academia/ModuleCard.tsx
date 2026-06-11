@@ -19,10 +19,12 @@ export default function ModuleCard({
   module,
   locale,
   status,
+  onToggle,
 }: {
   module: AcademyModule;
   locale: string;
   status: ModuleStatus;
+  onToggle?: () => void;
 }) {
   const loc = locale as Locale;
   const tr = (x: LocalizedText) => resolveText(loc, x);
@@ -160,14 +162,29 @@ export default function ModuleCard({
             </p>
           )}
 
-          {module.lessonSlug && (
-            <Link
-              href={`/academia/modulo-1/${module.lessonSlug}`}
-              className="inline-block rounded-full border border-gold/55 bg-gold/15 px-4 py-1.5 font-cinzel text-[11px] uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/25"
-            >
-              {t("Abrir lección guiada", "گشودن درس راهنما", "Open guided lesson")} {loc === "fa" ? "←" : "→"}
-            </Link>
-          )}
+          <div className="flex flex-wrap items-center gap-3">
+            {module.lessonSlug && (
+              <Link
+                href={`/academia/modulo-1/${module.lessonSlug}`}
+                className="inline-block rounded-full border border-gold/55 bg-gold/15 px-4 py-1.5 font-cinzel text-[11px] uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/25"
+              >
+                {t("Abrir lección guiada", "گشودن درس راهنما", "Open guided lesson")} {loc === "fa" ? "←" : "→"}
+              </Link>
+            )}
+            {onToggle && (
+              <button
+                type="button"
+                onClick={onToggle}
+                className={`rounded-full border px-4 py-1.5 text-[11px] uppercase tracking-widest transition-all ${
+                  completed
+                    ? "border-emerald-400/40 text-emerald-300/90 hover:border-emerald-400/70"
+                    : "border-white/15 text-muted/80 hover:border-white/30 hover:text-parchment"
+                }`}
+              >
+                {completed ? `✓ ${t("Completada", "تکمیل‌شده", "Completed")}` : t("Marcar completada", "علامت‌گذاری", "Mark complete")}
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>

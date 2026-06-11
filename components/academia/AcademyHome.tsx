@@ -9,25 +9,18 @@
 // quien llega por primera vez. El progreso real desde localStorage se conecta
 // en el COMMIT 5; por eso el estado vive en useState, listo para alimentarse.
 // ═══════════════════════════════════════════════════════════════════════════
-import { useState } from "react";
 import type { Locale } from "@/i18n/routing";
 import { ACADEMY_LEVELS, prevLevel } from "@/lib/academia/curriculum";
-import {
-  emptyAcademyProgress,
-  getLevelProgress,
-  requirementStatuses,
-  type AcademyProgress,
-} from "@/lib/academia/unlock";
+import { getLevelProgress, requirementStatuses } from "@/lib/academia/unlock";
+import { useAcademyProgress } from "@/lib/academia/useAcademyProgress";
 import LevelCard from "./LevelCard";
 
 export default function AcademyHome({ locale }: { locale: string }) {
   const loc = locale as Locale;
   const t = (es: string, fa: string, en: string) => (loc === "fa" ? fa : loc === "en" ? en : es);
 
-  // Progreso del estudiante. Hoy: vacío (nuevo). COMMIT 5 lo leerá de localStorage.
-  const [progress] = useState<AcademyProgress>(() => emptyAcademyProgress());
-  // `now` estable durante la vida del componente (con progreso vacío no varía el render).
-  const [now] = useState(() => Date.now());
+  // Progreso real del estudiante (localStorage; vacío hasta hidratar).
+  const { progress, now } = useAcademyProgress();
 
   const talmid = getLevelProgress("talmid", progress, now);
 
