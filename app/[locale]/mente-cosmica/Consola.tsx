@@ -220,11 +220,11 @@ export default function Consola(props: ConsolaProps) {
     setOpen(willOpen);
   };
 
-  const iconBtn = `flex shrink-0 items-center justify-center rounded-full text-muted/60 transition-colors hover:text-gold ${
+  const iconBtn = `flex shrink-0 items-center justify-center rounded-full text-muted/60 transition-colors hover:text-violet-300 ${
     isMobile ? "h-11 w-11 text-xl" : "h-7 w-7 text-base"
   }`;
   const studyBtn =
-    "flex-1 rounded-full border border-gold/30 bg-gold/[0.07] px-3 py-2 text-center font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold/60 hover:bg-gold/15";
+    "flex-1 rounded-full border border-[#8052ff]/55 bg-[#8052ff]/[0.16] px-3 py-2 text-center font-cinzel text-xs uppercase tracking-widest text-violet-100 transition-all hover:border-[#8052ff]/90 hover:bg-[#8052ff]/25";
   const chipPad = isMobile ? "py-1.5" : "py-1";
   const rowPad = isMobile ? "py-2.5" : "py-1";
 
@@ -249,7 +249,7 @@ export default function Consola(props: ConsolaProps) {
     if (view === "edge" && edgeInfo)
       return (
         <span className="flex items-center gap-1.5 text-sm text-parchment/90">
-          <span className="text-gold/70">⟡</span>
+          <span className="text-parchment/75">⟡</span>
           <span className="truncate">
             {edgeInfo.fromLabel} {isFa ? "←" : "→"} {edgeInfo.toLabel}
           </span>
@@ -265,7 +265,7 @@ export default function Consola(props: ConsolaProps) {
         </span>
       );
     return (
-      <span className="font-cinzel text-[11px] uppercase tracking-[0.2em] text-gold/55">
+      <span className="font-cinzel text-[11px] uppercase tracking-[0.2em] text-muted/70">
         {tri("Dominios del saber", "دامنه‌های دانش", "Domains of knowledge")}
       </span>
     );
@@ -276,12 +276,12 @@ export default function Consola(props: ConsolaProps) {
   const IdleView = (
     <div className="py-1">
       <div className="mb-2 flex items-center justify-between gap-2">
-        <p className="font-cinzel text-[10px] uppercase tracking-[0.2em] text-gold/45">
+        <p className="font-cinzel text-[10px] uppercase tracking-[0.2em] text-muted/60">
           {tri("Dominios del saber", "دامنه‌های دانش", "Domains of knowledge")}
         </p>
         <button
           onClick={onFocusSearch}
-          className={`flex items-center gap-1 rounded-full border border-gold/25 px-2.5 ${chipPad} text-[11px] text-gold/80 transition-colors hover:bg-gold/10`}
+          className={`flex items-center gap-1 rounded-full border border-white/10 px-2.5 ${chipPad} text-[11px] text-parchment/80 transition-colors hover:bg-white/[0.06]`}
         >
           <span>⌕</span>
           {tri("Buscar", "جستجو", "Search")}
@@ -295,7 +295,7 @@ export default function Consola(props: ConsolaProps) {
               key={key}
               onClick={() => onToggleCat(key)}
               aria-pressed={on}
-              className={`flex items-center gap-2 rounded-md px-2 ${rowPad} text-start transition-colors ${on ? "bg-gold/15" : "hover:bg-gold/10"}`}
+              className={`flex items-center gap-2 rounded-md px-2 ${rowPad} text-start transition-colors ${on ? "bg-white/[0.08]" : "hover:bg-white/[0.06]"}`}
             >
               <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: v.c, boxShadow: `0 0 8px ${v.c}` }} />
               <span className={`text-[13px] leading-tight ${on ? "font-medium text-parchment" : "text-muted/85"}`}>{nodeLabel(v, locale)}</span>
@@ -333,7 +333,7 @@ export default function Consola(props: ConsolaProps) {
           <p className="mt-0.5 ps-[18px] text-[10px] uppercase tracking-wide text-muted/50">{discLabel}</p>
           {/* subtítulo contextual (V3): de dónde viene el estudiante */}
           {contextInfo && (
-            <p className="mt-0.5 ps-[18px] text-[10px] italic text-gold/60">
+            <p className="mt-0.5 ps-[18px] text-[10px] italic text-muted/75">
               {tri("Conectado desde", "پیوسته از", "Connected from")} {contextInfo.fromLabel}
             </p>
           )}
@@ -352,21 +352,21 @@ export default function Consola(props: ConsolaProps) {
 
       {/* ── CONTEXTO RELACIONAL (V3): breadcrumb que CONTROLA el contexto ── */}
       {contextInfo && pathCrumb.length > 1 ? (
-        <div className="mt-2.5 rounded-lg border border-gold/20 bg-gold/[0.05] p-2.5">
-          <p className="mb-1 font-cinzel text-[9px] uppercase tracking-[0.18em] text-gold/55">
+        <div className="mt-2.5 rounded-lg border border-white/10 bg-white/[0.04] p-2.5">
+          <p className="mb-1 font-cinzel text-[9px] uppercase tracking-[0.18em] text-muted/70">
             {tri("Estás estudiando la ruta", "در حال مطالعهٔ این مسیر", "You are studying the route")}
           </p>
           {/* cada paso TRUNCA el camino hasta él (no es decoración) */}
           <div className="flex flex-wrap items-center gap-x-0.5 gap-y-1 text-[12px]">
             {pathCrumb.map((b, i) => (
               <span key={b.id + ":" + i} className="flex items-center gap-0.5">
-                {i > 0 && <span className="px-0.5 text-gold/45">{isFa ? "←" : "→"}</span>}
+                {i > 0 && <span className="px-0.5 text-muted/60">{isFa ? "←" : "→"}</span>}
                 <button
                   onClick={() => onJumpPath(i)}
                   className={`max-w-[118px] truncate rounded px-1 transition-colors ${
                     i === pathCrumb.length - 1
-                      ? "font-medium text-gold"
-                      : "text-parchment/70 hover:text-gold"
+                      ? "font-medium text-parchment"
+                      : "text-parchment/70 hover:text-violet-300"
                   }`}
                 >
                   {b.label}
@@ -377,13 +377,13 @@ export default function Consola(props: ConsolaProps) {
           <div className="mt-1.5 flex flex-wrap gap-1.5">
             <button
               onClick={() => onJumpPath(pathCrumb.length - 2)}
-              className={`rounded-full border border-gold/25 px-2.5 ${chipPad} text-[10px] text-gold/85 transition-colors hover:bg-gold/10`}
+              className={`rounded-full border border-white/10 px-2.5 ${chipPad} text-[10px] text-parchment/85 transition-colors hover:bg-white/[0.06]`}
             >
               {isFa ? "→" : "←"} {tri("Volver a", "بازگشت به", "Back to")} {contextInfo.fromLabel}
             </button>
             <button
               onClick={onResetContext}
-              className={`rounded-full border border-gold/15 px-2.5 ${chipPad} text-[10px] text-muted/70 transition-colors hover:text-gold`}
+              className={`rounded-full border border-white/[0.08] px-2.5 ${chipPad} text-[10px] text-muted/70 transition-colors hover:text-violet-300`}
               title={tri(
                 "Olvidar el camino: el nodo se queda abierto en modo general",
                 "فراموش‌کردن مسیر: گره در حالت کلی باز می‌ماند",
@@ -403,7 +403,7 @@ export default function Consola(props: ConsolaProps) {
                 {i > 0 && <span className="px-0.5 text-muted/35">{isFa ? "‹" : "›"}</span>}
                 <button
                   onClick={() => onJump(i)}
-                  className={`max-w-[118px] truncate rounded px-1 transition-colors ${i === currentIndex ? "font-medium text-gold" : "text-muted/55 hover:text-parchment"}`}
+                  className={`max-w-[118px] truncate rounded px-1 transition-colors ${i === currentIndex ? "font-medium text-parchment" : "text-muted/55 hover:text-parchment"}`}
                 >
                   {b.label}
                 </button>
@@ -415,7 +415,7 @@ export default function Consola(props: ConsolaProps) {
 
       {/* ── "¿Por qué {origen} está conectado con {foco}?" — la relación ── */}
       {contextInfo && selNode && (
-        <div className="mt-2.5 rounded-lg border border-gold/15 bg-white/[0.02] p-2.5">
+        <div className="mt-2.5 rounded-lg border border-white/[0.08] bg-white/[0.02] p-2.5">
           <div className="flex items-start justify-between gap-2">
             <p className="text-[11px] font-medium leading-snug text-parchment/90">
               {tri(
@@ -426,7 +426,7 @@ export default function Consola(props: ConsolaProps) {
             </p>
             <button
               onClick={onOpenContextEdge}
-              className="shrink-0 rounded-full border border-gold/25 px-2 py-0.5 text-[10px] text-gold/80 transition-colors hover:bg-gold/10"
+              className="shrink-0 rounded-full border border-white/10 px-2 py-0.5 text-[10px] text-parchment/80 transition-colors hover:bg-white/[0.06]"
               title={tri("Abrir la ficha de esta conexión", "بازکردن برگهٔ این پیوند", "Open this connection's card")}
             >
               ⟡ {tri("Ver", "دیدن", "View")}
@@ -434,7 +434,7 @@ export default function Consola(props: ConsolaProps) {
           </div>
           {contextInfo.curated ? (
             <>
-              <p className="mt-1.5 text-[11px] italic leading-snug text-gold/85">
+              <p className="mt-1.5 text-[11px] italic leading-snug text-parchment/85">
                 «{directionalLabelFor(contextInfo.curated)}»
               </p>
               <p className="mt-1 text-[11px] leading-snug text-parchment/75">
@@ -442,7 +442,7 @@ export default function Consola(props: ConsolaProps) {
               </p>
               {contextInfo.curated.data.source_refs.length > 0 && (
                 <p className="mt-1.5 text-[10px] leading-snug text-muted/75">
-                  <span className="font-cinzel uppercase tracking-wide text-gold/45">
+                  <span className="font-cinzel uppercase tracking-wide text-muted/60">
                     {tri("Fuentes", "منابع", "Sources")}:
                   </span>{" "}
                   {contextInfo.curated.data.source_refs
@@ -453,7 +453,7 @@ export default function Consola(props: ConsolaProps) {
               {contextInfo.curated.data.keywords.length > 0 && (
                 <div className="mt-1.5 flex flex-wrap gap-1">
                   {contextInfo.curated.data.keywords.slice(0, 6).map((k) => (
-                    <span key={k} className="rounded-full bg-gold/[0.08] px-1.5 py-0.5 text-[9px] text-gold/70">
+                    <span key={k} className="rounded-full bg-white/[0.05] px-1.5 py-0.5 text-[9px] text-parchment/75">
                       {k}
                     </span>
                   ))}
@@ -484,9 +484,9 @@ export default function Consola(props: ConsolaProps) {
 
       {/* conexiones + CHIPS-FILTRO por disciplina */}
       {selConnections && selConnections.total > 0 && (
-        <div className="mt-2.5 border-t border-gold/10 pt-2.5">
+        <div className="mt-2.5 border-t border-white/[0.07] pt-2.5">
           <p className="mb-1 text-[11px] text-parchment/80">
-            <span className="font-cinzel text-sm text-gold">{selConnections.total}</span>{" "}
+            <span className="font-cinzel text-sm text-parchment">{selConnections.total}</span>{" "}
             {isFa ? "اتصال" : locale === "en" ? (selConnections.total === 1 ? "connection" : "connections") : selConnections.total === 1 ? "conexión" : "conexiones"}
           </p>
           {(selConnections.solid > 0 || selConnections.interp > 0) && (
@@ -494,12 +494,12 @@ export default function Consola(props: ConsolaProps) {
               className="mb-2 text-[10px] text-muted/70"
               title={tri("Clásicas = fuente directa · Interpretativas = lectura", "کلاسیک = منبع مستقیم · تفسیری = خوانش", "Classic = direct source · Interpretive = reading")}
             >
-              <span className="text-gold/90">{selConnections.solid}</span> {tri("clásicas", "کلاسیک", "classic")}
+              <span className="text-parchment/90">{selConnections.solid}</span> {tri("clásicas", "کلاسیک", "classic")}
               <span className="text-muted/40"> · </span>
               <span className="text-parchment/55">{selConnections.interp}</span> {tri("interpretativas", "تفسیری", "interpretive")}
             </p>
           )}
-          <p className="mb-1.5 text-[10px] uppercase tracking-wide text-gold/40">
+          <p className="mb-1.5 text-[10px] uppercase tracking-wide text-muted/55">
             {tri("Filtra una disciplina y viaja", "یک دامنه را فیلتر کن و سفر کن", "Filter a domain & travel")}
           </p>
           <div className="flex flex-wrap gap-1.5">
@@ -527,7 +527,7 @@ export default function Consola(props: ConsolaProps) {
 
           {/* destinos del filtro: elegir dirección y VIAJAR a esa galaxia */}
           {filterCat && (
-            <div className="mt-2.5 rounded-lg border border-gold/15 bg-gold/[0.04] p-2">
+            <div className="mt-2.5 rounded-lg border border-white/[0.08] bg-white/[0.03] p-2">
               <p className="mb-1.5 text-[10px] text-parchment/70">
                 {tri("Viajar a", "سفر به", "Travel to")} <span style={{ color: filterColor }}>{catLabel(filterCat, locale)}</span>:
               </p>
@@ -539,7 +539,7 @@ export default function Consola(props: ConsolaProps) {
                     <button
                       key={d.id}
                       onClick={() => onTravelTo(d.id)}
-                      className={`rounded-full border border-gold/30 bg-gold/10 px-2.5 ${chipPad} text-[11px] text-gold transition-colors hover:bg-gold/20`}
+                      className={`rounded-full border border-white/[0.14] bg-white/[0.06] px-2.5 ${chipPad} text-[11px] text-parchment transition-colors hover:bg-white/10`}
                     >
                       {isFa ? "←" : "→"} {d.label}
                     </button>
@@ -558,8 +558,7 @@ export default function Consola(props: ConsolaProps) {
         <>
           <Link
             href={connStudyHref}
-            className="mt-3 block w-full rounded-full border border-gold/60 bg-gold/15 px-3 py-2.5 text-center font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/25"
-            style={{ boxShadow: "0 0 14px rgba(201,164,62,0.18)" }}
+            className="mt-3 block w-full rounded-full border border-[#8052ff]/55 bg-[#8052ff]/[0.16] px-3 py-2.5 text-center font-cinzel text-xs uppercase tracking-widest text-violet-100 transition-all hover:border-[#8052ff]/90 hover:bg-[#8052ff]/25"
           >
             {tri(
               `Estudiar ${nodeLabel(selNode, locale)} en relación con ${contextInfo.fromLabel}`,
@@ -582,14 +581,14 @@ export default function Consola(props: ConsolaProps) {
                 href={"https://jashmal.org" + studyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 rounded-full border border-gold/20 px-3 py-2 text-center font-cinzel text-[11px] uppercase tracking-widest text-muted/80 transition-all hover:border-gold/50 hover:text-gold"
+                className="flex-1 rounded-full border border-white/10 px-3 py-2 text-center font-cinzel text-[11px] uppercase tracking-widest text-muted/80 transition-all hover:border-white/30 hover:text-violet-300"
               >
                 {tri("Estudiar en general", "مطالعهٔ کلی", "Study in general")}
               </a>
             ) : (
               <Link
                 href={`/estudio?concept=${encodeURIComponent(studyConcept)}`}
-                className="flex-1 rounded-full border border-gold/20 px-3 py-2 text-center font-cinzel text-[11px] uppercase tracking-widest text-muted/80 transition-all hover:border-gold/50 hover:text-gold"
+                className="flex-1 rounded-full border border-white/10 px-3 py-2 text-center font-cinzel text-[11px] uppercase tracking-widest text-muted/80 transition-all hover:border-white/30 hover:text-violet-300"
               >
                 {tri("Estudiar en general", "مطالعهٔ کلی", "Study in general")}
               </Link>
@@ -624,13 +623,13 @@ export default function Consola(props: ConsolaProps) {
     <div className="py-0.5">
       <div className="flex items-center justify-between">
         <p className="font-cinzel text-sm uppercase tracking-wide text-cyan-200/90">{tri("Comparando", "مقایسه", "Comparing")}</p>
-        <button onClick={onExit} className="text-[10px] uppercase tracking-wide text-muted/60 transition-colors hover:text-gold">
+        <button onClick={onExit} className="text-[10px] uppercase tracking-wide text-muted/60 transition-colors hover:text-violet-300">
           {tri("limpiar", "پاک کردن", "clear")}
         </button>
       </div>
       <div className="mt-2 flex flex-wrap gap-1.5">
         {compare.map((id) => (
-          <span key={id} className="inline-flex items-center gap-1 rounded-full border border-gold/25 bg-gold/[0.06] px-2 py-0.5 text-[11px] text-parchment">
+          <span key={id} className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[11px] text-parchment">
             {labelOf(id)}
             <button onClick={() => onRemoveCompare(id)} className="text-muted/60 transition-colors hover:text-rose-300" aria-label={tri("quitar", "حذف", "remove")}>
               ×
@@ -644,7 +643,7 @@ export default function Consola(props: ConsolaProps) {
         </p>
       ) : (
         <>
-          <p className="mb-1 mt-3 font-cinzel text-[10px] uppercase tracking-wide text-gold/60">{tri("Comparten", "مشترک", "Shared")}</p>
+          <p className="mb-1 mt-3 font-cinzel text-[10px] uppercase tracking-wide text-muted/75">{tri("Comparten", "مشترک", "Shared")}</p>
           {compareShared.length === 0 ? (
             <p className="text-[11px] italic leading-snug text-muted/50">
               {tri("Sin coincidencia directa (toca ✦ Expandir para descubrir)", "اشتراک مستقیمی نیست (✦ گسترش بزن)", "No direct overlap (tap ✦ Expand to discover)")}
@@ -652,7 +651,7 @@ export default function Consola(props: ConsolaProps) {
           ) : (
             <div className="flex flex-wrap gap-1.5">
               {compareShared.map((id) => (
-                <button key={id} onClick={() => onPickShared(id)} className="rounded-full border border-gold/30 bg-gold/10 px-2 py-0.5 text-[11px] text-gold transition-colors hover:bg-gold/20">
+                <button key={id} onClick={() => onPickShared(id)} className="rounded-full border border-white/[0.14] bg-white/[0.06] px-2 py-0.5 text-[11px] text-parchment transition-colors hover:bg-white/10">
                   {labelOf(id)}
                 </button>
               ))}
@@ -687,7 +686,7 @@ export default function Consola(props: ConsolaProps) {
         )}
       </p>
 
-      <div className="mt-3 border-t border-gold/10 pt-2.5 text-[11px] text-muted/85">
+      <div className="mt-3 border-t border-white/[0.07] pt-2.5 text-[11px] text-muted/85">
         <p>
           <span className="font-cinzel" style={{ color: "#ffd66b" }}>{gilgulInfo.vessels}</span>{" "}
           {isFa ? "ظرفِ روح" : locale === "en" ? (gilgulInfo.vessels === 1 ? "vessel" : "vessels") : gilgulInfo.vessels === 1 ? "vasija" : "vasijas"}
@@ -698,7 +697,7 @@ export default function Consola(props: ConsolaProps) {
         </p>
       </div>
 
-      <div className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1 border-t border-gold/10 pt-2.5">
+      <div className="mt-2.5 flex flex-wrap gap-x-3 gap-y-1 border-t border-white/[0.07] pt-2.5">
         {(
           [
             ["#ffd66b", tri("directo", "تصریح‌شده", "direct")],
@@ -746,7 +745,7 @@ export default function Consola(props: ConsolaProps) {
     <div className="py-0.5">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <p className="font-cinzel text-[10px] uppercase tracking-[0.2em] text-gold/55">
+          <p className="font-cinzel text-[10px] uppercase tracking-[0.2em] text-muted/70">
             ⟡ {tri("Conexión", "پیوند", "Connection")}
             <span className="ms-2 normal-case tracking-normal text-muted/55">
               {edgeInfo.kind === "solid"
@@ -755,7 +754,7 @@ export default function Consola(props: ConsolaProps) {
             </span>
           </p>
           <p className="mt-1 truncate font-cinzel text-base text-parchment">
-            {edgeInfo.fromLabel} <span className="text-gold">{isFa ? "←" : "→"}</span> {edgeInfo.toLabel}
+            {edgeInfo.fromLabel} <span className="text-parchment">{isFa ? "←" : "→"}</span> {edgeInfo.toLabel}
           </p>
           {edgeInfo.curated && (
             <p className="mt-0.5 text-[10px] uppercase tracking-wide text-muted/55">
@@ -769,8 +768,8 @@ export default function Consola(props: ConsolaProps) {
       </div>
 
       {edgeInfo.curated ? (
-        <div className="mt-2.5 border-t border-gold/10 pt-2.5">
-          <p className="text-[12px] italic leading-snug text-gold/85">
+        <div className="mt-2.5 border-t border-white/[0.07] pt-2.5">
+          <p className="text-[12px] italic leading-snug text-parchment/85">
             «{directionalLabelFor(edgeInfo.curated)}»
           </p>
           <p className="mt-1.5 text-[12px] leading-snug text-parchment/85">
@@ -778,13 +777,13 @@ export default function Consola(props: ConsolaProps) {
           </p>
           {edgeInfo.curated.data.source_refs.length > 0 && (
             <div className="mt-2.5">
-              <p className="mb-1 font-cinzel text-[9px] uppercase tracking-[0.18em] text-gold/50">
+              <p className="mb-1 font-cinzel text-[9px] uppercase tracking-[0.18em] text-muted/65">
                 {tri("Fuentes", "منابع", "Sources")}
               </p>
               <ul className="space-y-1.5">
                 {edgeInfo.curated.data.source_refs.map((r, i) => (
                   <li key={i} className="text-[11px] leading-snug">
-                    <span className="text-gold/90">{r.text}</span>
+                    <span className="text-parchment/90">{r.text}</span>
                     {r.ref && <span className="text-parchment/70"> · {r.ref}</span>}
                     <span className="block text-muted/65">{r.reason}</span>
                   </li>
@@ -795,7 +794,7 @@ export default function Consola(props: ConsolaProps) {
           {edgeInfo.curated.data.keywords.length > 0 && (
             <div className="mt-2 flex flex-wrap gap-1">
               {edgeInfo.curated.data.keywords.slice(0, 8).map((k) => (
-                <span key={k} className="rounded-full bg-gold/[0.08] px-1.5 py-0.5 text-[9px] text-gold/70">
+                <span key={k} className="rounded-full bg-white/[0.05] px-1.5 py-0.5 text-[9px] text-parchment/75">
                   {k}
                 </span>
               ))}
@@ -813,7 +812,7 @@ export default function Consola(props: ConsolaProps) {
         </div>
       ) : (
         /* HONESTIDAD (espec V3): sin curaduría se dice — nunca se finge */
-        <div className="mt-2.5 border-t border-gold/10 pt-2.5">
+        <div className="mt-2.5 border-t border-white/[0.07] pt-2.5">
           <p className="text-[12px] italic leading-snug text-muted/70">
             {tri(
               "Esta conexión todavía necesita desarrollo. No hay una fuente específica conectada todavía; el Sofer la está curando.",
@@ -833,8 +832,7 @@ export default function Consola(props: ConsolaProps) {
 
       <Link
         href={edgeInfo.studyHref}
-        className="mt-3 block w-full rounded-full border border-gold/60 bg-gold/15 px-3 py-2.5 text-center font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/25"
-        style={{ boxShadow: "0 0 14px rgba(201,164,62,0.18)" }}
+        className="mt-3 block w-full rounded-full border border-[#8052ff]/55 bg-[#8052ff]/[0.16] px-3 py-2.5 text-center font-cinzel text-xs uppercase tracking-widest text-violet-100 transition-all hover:border-[#8052ff]/90 hover:bg-[#8052ff]/25"
       >
         {edgeInfo.curated
           ? tri("Estudiar esta conexión", "مطالعهٔ این پیوند", "Study this connection")
@@ -844,7 +842,7 @@ export default function Consola(props: ConsolaProps) {
       {edgeInfo.canTravel && (
         <button
           onClick={onTravelEdge}
-          className="mt-2 w-full rounded-full border border-gold/25 px-3 py-2 text-center font-cinzel text-[11px] uppercase tracking-widest text-muted/85 transition-all hover:border-gold/60 hover:text-gold"
+          className="mt-2 w-full rounded-full border border-white/10 px-3 py-2 text-center font-cinzel text-[11px] uppercase tracking-widest text-muted/85 transition-all hover:border-white/30 hover:text-violet-300"
         >
           {tri("Viajar a", "سفر به", "Travel to")} {edgeInfo.toLabel} {isFa ? "←" : "→"}
         </button>
@@ -876,10 +874,10 @@ export default function Consola(props: ConsolaProps) {
           dir={dir}
           onClick={raise}
           aria-label={tri("Abrir la consola", "باز کردن کنسول", "Open console")}
-          className="fixed bottom-4 start-4 z-30 flex max-w-[min(344px,92vw)] items-center gap-2 rounded-full border border-gold/25 bg-ink/88 px-4 py-2.5 shadow-[0_8px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl transition-colors hover:border-gold/50"
-          style={view === "gilgul" ? { borderColor: "rgba(255,214,107,0.4)" } : undefined}
+          className="fixed bottom-4 start-4 z-30 flex max-w-[min(344px,92vw)] items-center gap-2 rounded-full border border-white/10 bg-black/90 px-4 py-2.5 backdrop-blur-xl transition-colors hover:border-white/30"
+          style={view === "gilgul" ? { borderColor: "rgba(128,82,255,0.45)" } : undefined}
         >
-          <span className="shrink-0 text-gold/55">▴</span>
+          <span className="shrink-0 text-muted/70">▴</span>
           {peekLine}
         </button>
       );
@@ -887,8 +885,8 @@ export default function Consola(props: ConsolaProps) {
     return (
       <div
         dir={dir}
-        className="fixed bottom-4 start-4 z-30 max-h-[82vh] w-[min(344px,92vw)] overflow-y-auto rounded-2xl border border-gold/25 bg-ink/88 p-3.5 shadow-[0_8px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl"
-        style={focusActive && view === "gilgul" ? { borderColor: "rgba(255,214,107,0.4)", boxShadow: "0 0 26px rgba(255,214,107,0.12)" } : undefined}
+        className="fixed bottom-4 start-4 z-30 max-h-[82vh] w-[min(344px,92vw)] overflow-y-auto rounded-[24px] border border-white/10 bg-black/90 p-3.5 backdrop-blur-xl"
+        style={focusActive && view === "gilgul" ? { borderColor: "rgba(128,82,255,0.5)" } : undefined}
       >
         {Body}
       </div>
@@ -906,8 +904,8 @@ export default function Consola(props: ConsolaProps) {
       }}
     >
       <div
-        className="mx-auto flex max-h-[82vh] w-full max-w-[680px] flex-col rounded-t-2xl border border-b-0 border-gold/25 bg-ink/95 shadow-[0_-8px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl"
-        style={view === "gilgul" ? { borderColor: "rgba(255,214,107,0.4)" } : undefined}
+        className="mx-auto flex max-h-[82vh] w-full max-w-[680px] flex-col rounded-t-[24px] border border-b-0 border-white/10 bg-black/95 backdrop-blur-xl"
+        style={view === "gilgul" ? { borderColor: "rgba(128,82,255,0.45)" } : undefined}
       >
         {/* asa: tocar = abrir/cerrar · arrastrar arriba/abajo = subir/bajar */}
         <button
@@ -919,7 +917,7 @@ export default function Consola(props: ConsolaProps) {
           className="flex w-full touch-none flex-col items-center gap-1 px-4 pt-2"
           style={{ minHeight: PEEK }}
         >
-          <span className="mb-1 h-1.5 w-12 rounded-full bg-gold/40" />
+          <span className="mb-1 h-1.5 w-12 rounded-full bg-white/25" />
           <span className="flex w-full items-center justify-center gap-2 pb-1 text-center">{peekLine}</span>
         </button>
         <div
