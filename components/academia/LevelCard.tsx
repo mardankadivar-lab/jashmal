@@ -131,12 +131,12 @@ export default function LevelCard({
             <div className="h-full rounded-full bg-gold/70" style={{ width: `${progress.pct}%` }} />
           </div>
           <Link
-            href="/academia/umbral"
+            href={`/academia/${level.slug}`}
             className="mt-4 inline-block rounded-full border border-gold/60 bg-gold/15 px-5 py-2 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/25"
           >
             {progress.started
               ? t("Continuar", "ادامه", "Continue")
-              : t("Comenzar TALMID", "آغاز تَلمید", "Begin TALMID")}{" "}
+              : t(`Comenzar ${level.name}`, `آغاز ${level.name}`, `Begin ${level.name}`)}{" "}
             {loc === "fa" ? "←" : "→"}
           </Link>
         </div>
