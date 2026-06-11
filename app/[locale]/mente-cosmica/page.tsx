@@ -44,33 +44,16 @@ import Consola from "./Consola";
 import EdgeTooltip, { type EdgeHint } from "./EdgeTooltip";
 import GilgulTooltip, { type GilgulHint } from "./GilgulTooltip";
 import { useUniversoHistory } from "./useUniversoHistory";
-import { useIsMobile } from "./useIsMobile";
+import { useIsMobile, usePrefersReducedMotion } from "./useIsMobile";
+// Sistema visual: TODO el tuning fino (paleta, fog, bloom, CFG, partículas,
+// estados) vive en theme.ts — el look se ajusta allí, no aquí.
+import { CFG, SCENE, BLOOM, STARFIELD, NEBULAE, PALETTE, NODE, CATEGORY_ACCENTS, FIBERS, PERF } from "./theme";
 
 type Graph = { nodes: BNode[]; edges: [string, string][] };
 
 const Canvas = dynamic(() => import("@react-three/fiber").then((m) => m.Canvas), { ssr: false });
 // Capa Gilgul (linaje de almas): ADITIVA, solo se monta cuando hay raíz invocada.
 const GilgulLayer = dynamic(() => import("./GilgulLayer"), { ssr: false });
-
-// ── Ajustes del look (todo el tuning fino vive aquí) ──────────────────────
-const CFG = {
-  fiberSegments: 24,
-  fiberSag: 0.32,           // arco MÁS curvado de las fibras (menos rectas)
-  fiberOpacityIdle: 0.022,  // red cósmica: hilos casi invisibles en reposo
-  fiberOpacityDimmed: 0.02, // cuando hay selección, la base se apaga más
-  fiberOpacityActive: 0.9,  // fibras encendidas
-  ambientCount: 13000,      // polvo estelar que dibuja los brazos de las galaxias
-  ambientSize: 0.058,
-  ambientOpacity: 0.74,
-  potentialCount: 1100,     // nodos POTENCIALES (chispas por recoger, Tikún incompleto)
-  potentialSize: 0.07,      // un poco más grandes que el tejido, para leerse como "nodos"
-  potentialOpacity: 0.22,   // muy tenues: insinúan, no compiten con los reales
-  haloBase: 0.30,           // halo más chico: no lava las letras alrededor
-  coreBase: 0.16,           // tamaño del núcleo brillante
-  driftSpeed: 0.045,        // deriva lenta de cámara
-  radiusIdle: 56,           // cámara: el universo de galaxias llena la pantalla
-  radiusFocus: 7,           // al elegir/buscar, la cámara se ACERCA al concepto
-};
 
 const CENTER = new THREE.Vector3(0.1 * BRAIN_SCALE, 0.1 * BRAIN_SCALE, 0);
 
@@ -141,9 +124,9 @@ function curvesToSegments(curves: EdgeCurve[]): Float32Array {
 }
 
 // ── Tejido ambiental (sinapsis decorativas que forman la masa del cerebro) ─
-function AmbientTissue() {
+function AmbientTissue({ count = CFG.ambientCount, still = false }: { count?: number; still?: boolean }) {
   const tex = useMemo(() => glowTexture(), []);
-  const { positions, colors } = useMemo(() => ambientTissue(CFG.ambientCount), []);
+  const { positions, colors } = useMemo(() => ambientTissue(count), [count]);
   const geom = useMemo(() => {
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
@@ -153,8 +136,10 @@ function AmbientTissue() {
   const matRef = useRef<THREE.PointsMaterial>(null);
   useFrame(({ clock }) => {
     if (matRef.current) {
-      // respiración: leve parpadeo del tejido
-      matRef.current.opacity = CFG.ambientOpacity * (0.8 + Math.sin(clock.elapsedTime * 0.6) * 0.12);
+      // respiración: leve parpadeo del tejido (quieto si el usuario pide menos movimiento)
+      matRef.current.opacity = still
+        ? CFG.ambientOpacity
+        : CFG.ambientOpacity * (0.8 + Math.sin(clock.elapsedTime * 0.6) * 0.12);
     }
   });
   return (
@@ -177,9 +162,9 @@ function AmbientTissue() {
 // ── Nodos POTENCIALES: chispas tenues por recoger (Tikún incompleto) ───────
 // Llenan una esfera más grande que los nodos reales → zonas oscuras con
 // potencial. Tinte dorado frío, muy tenue, con un parpadeo lento desfasado.
-function PotentialNodes() {
+function PotentialNodes({ count = CFG.potentialCount, still = false }: { count?: number; still?: boolean }) {
   const tex = useMemo(() => glowTexture(), []);
-  const positions = useMemo(() => potentialNodes(CFG.potentialCount), []);
+  const positions = useMemo(() => potentialNodes(count), [count]);
   const geom = useMemo(() => {
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
@@ -189,8 +174,9 @@ function PotentialNodes() {
   useFrame(({ clock }) => {
     if (matRef.current) {
       // respiración lenta y desfasada del tejido: las chispas "laten" suave
-      matRef.current.opacity =
-        CFG.potentialOpacity * (0.7 + Math.sin(clock.elapsedTime * 0.35 + 1.7) * 0.3);
+      matRef.current.opacity = still
+        ? CFG.potentialOpacity
+        : CFG.potentialOpacity * (0.7 + Math.sin(clock.elapsedTime * 0.35 + 1.7) * 0.3);
     }
   });
   return (
@@ -211,10 +197,10 @@ function PotentialNodes() {
 }
 
 // ── Campo estelar de fondo (profundidad del universo) ─────────────────────
-function StarField() {
+function StarField({ count = STARFIELD.count }: { count?: number }) {
   const tex = useMemo(() => glowTexture(), []);
   const geom = useMemo(() => {
-    const N = 5200;
+    const N = count;
     let s = 0x9e3779b9 >>> 0;
     const rnd = () => {
       s = (s + 0x6d2b79f5) >>> 0;
@@ -227,24 +213,24 @@ function StarField() {
     const col = new Float32Array(N * 3);
     for (let i = 0; i < N; i++) {
       const u = rnd() * 2 - 1, ph = rnd() * Math.PI * 2, si = Math.sqrt(1 - u * u);
-      const r = 70 + rnd() * 190; // muy detrás de las galaxias
+      const r = STARFIELD.radiusMin + rnd() * (STARFIELD.radiusMax - STARFIELD.radiusMin); // muy detrás de las galaxias
       pos[i * 3] = si * Math.cos(ph) * r;
       pos[i * 3 + 1] = u * r;
       pos[i * 3 + 2] = si * Math.sin(ph) * r;
       const w = 0.45 + rnd() * 0.55;
-      const blue = rnd() < 0.22;
-      col[i * 3] = (blue ? 0.62 : 1) * w;
-      col[i * 3 + 1] = (blue ? 0.74 : 1) * w;
-      col[i * 3 + 2] = w;
+      const tinted = rnd() < STARFIELD.blueShare;
+      col[i * 3] = (tinted ? STARFIELD.blueTint[0] : 1) * w;
+      col[i * 3 + 1] = (tinted ? STARFIELD.blueTint[1] : 1) * w;
+      col[i * 3 + 2] = STARFIELD.blueTint[2] * w;
     }
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(pos, 3));
     g.setAttribute("color", new THREE.BufferAttribute(col, 3));
     return g;
-  }, []);
+  }, [count]);
   return (
     <points geometry={geom}>
-      <pointsMaterial map={tex} size={0.85} vertexColors transparent opacity={0.7} blending={THREE.AdditiveBlending} depthWrite={false} sizeAttenuation />
+      <pointsMaterial map={tex} size={STARFIELD.size} vertexColors transparent opacity={STARFIELD.opacity} blending={THREE.AdditiveBlending} depthWrite={false} sizeAttenuation />
     </points>
   );
 }
@@ -257,15 +243,15 @@ function Nebulae({ locale }: { locale: string }) {
       {GALAXY_CATS.map((cat) => {
         const c = galaxyCenter(cat);
         const col = BRAIN_CATS[cat]?.c ?? "#9a9aae";
-        const neb = GALAXY_DISK * 2.4;
-        const core = GALAXY_DISK * 0.5;
+        const neb = GALAXY_DISK * NEBULAE.haloScale;
+        const core = GALAXY_DISK * NEBULAE.coreScale;
         return (
           <group key={cat} position={c}>
             <sprite scale={[neb, neb, 1]}>
-              <spriteMaterial map={tex} color={col} transparent opacity={0.18} blending={THREE.AdditiveBlending} depthWrite={false} />
+              <spriteMaterial map={tex} color={col} transparent opacity={NEBULAE.haloOpacity} blending={THREE.AdditiveBlending} depthWrite={false} />
             </sprite>
             <sprite scale={[core, core, 1]}>
-              <spriteMaterial map={tex} color={"#fff7e6"} transparent opacity={0.24} blending={THREE.AdditiveBlending} depthWrite={false} />
+              <spriteMaterial map={tex} color={NEBULAE.coreColor} transparent opacity={NEBULAE.coreOpacity} blending={THREE.AdditiveBlending} depthWrite={false} />
             </sprite>
             <Html center zIndexRange={[15, 0]} style={{ pointerEvents: "none" }}>
               <div
@@ -305,7 +291,7 @@ function BaseFibers({ segments, dimmed }: { segments: Float32Array; dimmed: bool
     <lineSegments geometry={geom}>
       <lineBasicMaterial
         ref={matRef}
-        color="#6a7fae"
+        color={FIBERS.idleColor}
         transparent
         opacity={CFG.fiberOpacityIdle}
         blending={THREE.AdditiveBlending}
@@ -318,17 +304,19 @@ function BaseFibers({ segments, dimmed }: { segments: Float32Array; dimmed: bool
 // ── Fibras jerárquicas: capas por distancia (primaria→secundaria→terciaria) ─
 // Cada arista pertenece a la capa = min(distancia de sus dos extremos al foco).
 // Capa 0 = primaria (más brillante) · 1 = secundaria · 2 = terciaria (tenue).
-const LAYER_OPACITY = [0.6, 0.26, 0.1]; // fibras encendidas: más finas/tenues
+const LAYER_OPACITY = FIBERS.layerOpacity; // fibras encendidas: más finas/tenues
 function LayeredFibers({
   curves,
   dist,
   focusId,
   color,
+  electrons = true,
 }: {
   curves: EdgeCurve[];
   dist: Map<string, number>;
   focusId: string;
   color: string;
+  electrons?: boolean; // false = sin electrones viajeros (reduced-motion)
 }) {
   const layers = useMemo(() => {
     const out: EdgeCurve[][] = [[], [], []];
@@ -360,13 +348,14 @@ function LayeredFibers({
   );
 
   const col = useMemo(() => new THREE.Color(color), [color]);
-  // tinte interpretativo: el color del dominio desvaído hacia un gris frío
-  const interpCol = useMemo(() => new THREE.Color(color).lerp(new THREE.Color("#9aa6c4"), 0.55), [color]);
+  // tinte interpretativo: la ruta desvaída hacia un gris neutro (NO es fuente)
+  const interpCol = useMemo(() => new THREE.Color(color).lerp(new THREE.Color(FIBERS.interpFade), FIBERS.interpFadeAmount), [color]);
   const tex = useMemo(() => glowTexture(), []);
   // el electrón viaja SOLO por las aristas CLÁSICAS primarias (la autoridad)
   const primarySolid = useMemo(() => layers[0].filter((c) => c.kind === "solid"), [layers]);
   const pulseRefs = useRef<(THREE.Sprite | null)[]>([]);
   useFrame(({ clock }) => {
+    if (!electrons) return;
     const t = clock.elapsedTime;
     primarySolid.forEach((c, i) => {
       const spr = pulseRefs.current[i];
@@ -393,13 +382,13 @@ function LayeredFibers({
           </lineSegments>
           {/* INTERPRETATIVAS (lectura): tenues y frías = NO son fuente */}
           <lineSegments geometry={g.interp}>
-            <lineBasicMaterial color={interpCol} transparent opacity={LAYER_OPACITY[i] * 0.4} blending={THREE.AdditiveBlending} depthWrite={false} />
+            <lineBasicMaterial color={interpCol} transparent opacity={LAYER_OPACITY[i] * FIBERS.interpOpacityFactor} blending={THREE.AdditiveBlending} depthWrite={false} />
           </lineSegments>
         </group>
       ))}
-      {primarySolid.map((c, i) => (
+      {electrons && primarySolid.map((c, i) => (
         <sprite key={c.a + c.b} ref={(el) => { pulseRefs.current[i] = el; }}>
-          <spriteMaterial map={tex} color={col} transparent opacity={0.7} blending={THREE.AdditiveBlending} depthWrite={false} />
+          <spriteMaterial map={tex} color={col} transparent opacity={FIBERS.electronOpacity} blending={THREE.AdditiveBlending} depthWrite={false} />
         </sprite>
       ))}
     </group>
@@ -423,7 +412,7 @@ function PathToTorah({ path, curves }: { path: string[]; curves: EdgeCurve[] }) 
 
   return (
     <lineSegments geometry={geom}>
-      <lineBasicMaterial color="#ffe9a8" transparent opacity={0.95} blending={THREE.AdditiveBlending} depthWrite={false} />
+      <lineBasicMaterial color={FIBERS.pathToTorah} transparent opacity={FIBERS.pathToTorahOpacity} blending={THREE.AdditiveBlending} depthWrite={false} />
     </lineSegments>
   );
 }
@@ -437,7 +426,7 @@ function FiberHighlight({ curves, color }: { curves: EdgeCurve[]; color: string 
   }, [curves]);
   return (
     <lineSegments geometry={geom}>
-      <lineBasicMaterial color={color} transparent opacity={0.95} blending={THREE.AdditiveBlending} depthWrite={false} />
+      <lineBasicMaterial color={color} transparent opacity={FIBERS.highlightOpacity} blending={THREE.AdditiveBlending} depthWrite={false} />
     </lineSegments>
   );
 }
@@ -503,6 +492,7 @@ function Synapse({
   showLabel,
   sizeBoost = 1,
   locale,
+  reducedMotion = false,
   onClick,
   onDouble,
   onHover,
@@ -513,14 +503,20 @@ function Synapse({
   showLabel: boolean;
   sizeBoost?: number; // >1 → la sinapsis se agranda (vecino directo del foco)
   locale: string;
+  reducedMotion?: boolean; // accesibilidad: sin respiración decorativa
   onClick: (additive: boolean) => void;
   onDouble: () => void;
   onHover: (h: boolean) => void;
 }) {
   const tex = useMemo(() => glowTexture(), []);
-  const baseCol = BRAIN_CATS[node.cat]?.c ?? "#c9a43e";
+  // Identidad de categoría SOBRIA (subordinada al sistema violeta) — la versión
+  // saturada plena queda para la leyenda y las nebulosas.
+  const baseCol = CATEGORY_ACCENTS[node.cat] ?? "#c9a43e";
   const col = useMemo(() => new THREE.Color(baseCol), [baseCol]);
   const white = useMemo(() => new THREE.Color(baseCol).lerp(new THREE.Color("#ffffff"), 0.7), [baseCol]);
+  // Autoridad violeta: destino del tinte cuando el nodo está activo.
+  const violetHalo = useMemo(() => new THREE.Color(PALETTE.violet), []);
+  const violetCore = useMemo(() => new THREE.Color(PALETTE.violet).lerp(new THREE.Color("#ffffff"), NODE.coreWhiten), []);
 
   // tamaño según nivel (la Torá y los dominios son mayores)
   const lvlScale = node.level === 0 ? 2.0 : node.level === 1 ? 1.3 : node.level === 2 ? 1.0 : node.level === 3 ? 0.8 : 0.7;
@@ -531,14 +527,27 @@ function Synapse({
 
   useFrame(({ clock }) => {
     const t = clock.elapsedTime;
-    const pulse = 1 + Math.sin(t * 1.4 + pos[0] * 1.7) * 0.1;
     const k = intensity; // 0..~1.4
+    // mezcla violeta: 0 en reposo → 1 en el nodo activo (suave, sin saltos)
+    const mixRaw = (k - NODE.violetMixStart) / (NODE.violetMixFull - NODE.violetMixStart);
+    const mix = Math.max(0, Math.min(1, mixRaw));
+    const m = mix * mix * (3 - 2 * mix); // smoothstep
+    // respiración LENTA: silenciosa en reposo, honda en el activo
+    // (quieta del todo si el usuario pide menos movimiento)
+    const amp = reducedMotion ? 0 : NODE.pulseAmpIdle + (NODE.pulseAmpActive - NODE.pulseAmpIdle) * m;
+    const pulse = 1 + Math.sin(t * NODE.pulseSpeed + pos[0] * 1.7) * amp;
     const halo = CFG.haloBase * lvlScale * (0.8 + k * 0.9) * pulse * BRAIN_SCALE * 0.34 * sizeBoost;
     const core = CFG.coreBase * lvlScale * (0.9 + k * 0.7) * pulse * BRAIN_SCALE * 0.34 * sizeBoost;
     if (haloRef.current) haloRef.current.scale.set(halo, halo, 1);
     if (coreRef.current) coreRef.current.scale.set(core, core, 1);
-    if (haloMat.current) haloMat.current.opacity = Math.min(0.9, 0.12 + k * 0.5);
-    if (coreMat.current) coreMat.current.opacity = Math.min(1, 0.25 + k * 0.7);
+    if (haloMat.current) {
+      haloMat.current.opacity = Math.min(0.9, NODE.haloOpacityBase + k * NODE.haloOpacityGain);
+      haloMat.current.color.copy(col).lerp(violetHalo, m);
+    }
+    if (coreMat.current) {
+      coreMat.current.opacity = Math.min(1, NODE.coreOpacityBase + k * NODE.coreOpacityGain);
+      coreMat.current.color.copy(white).lerp(violetCore, m);
+    }
   });
 
   return (
@@ -563,7 +572,9 @@ function Synapse({
         onPointerOver={(e) => { e.stopPropagation(); onHover(true); document.body.style.cursor = "pointer"; }}
         onPointerOut={() => { onHover(false); document.body.style.cursor = "default"; }}
       >
-        <spriteMaterial map={tex} transparent opacity={0} depthWrite={false} />
+        {/* material invisible=false: el raycaster lo sigue tocando (hover/clic),
+            pero la GPU ya NO dibuja 232 quads transparentes por frame */}
+        <spriteMaterial map={tex} transparent opacity={0} depthWrite={false} visible={false} />
       </sprite>
 
       {showLabel && (
@@ -762,23 +773,25 @@ function FocusEdges({
 
   const colCache = useMemo(() => new Map<string, THREE.Color>(), []);
   const colorOf = (cat: string | undefined) => {
-    const hex = BRAIN_CATS[cat ?? ""]?.c ?? "#c9a43e";
+    // destino con identidad de categoría SOBRIA (subordinada al violeta)
+    const hex = CATEGORY_ACCENTS[cat ?? ""] ?? "#c9a43e";
     let col = colCache.get(hex);
     if (!col) { col = new THREE.Color(hex); colCache.set(hex, col); }
     return col;
   };
+  // la autoridad en el origen: la arista NACE violeta desde el nodo en foco
+  const violetOrigin = useMemo(() => new THREE.Color(FIBERS.activeColor), []);
 
   return (
     <group>
       {focusCurves.map(({ c, oriented }) => {
         const key = c.a + "→" + c.b;
-        const fromN = nodeMap.get(oriented.a);
         const toN = nodeMap.get(oriented.b);
         return (
           <InteractiveEdge
             key={key}
             curve={oriented}
-            colA={colorOf(fromN?.cat)}
+            colA={violetOrigin}
             colB={colorOf(toN?.cat)}
             isHot={hotKey === key}
             onHover={(h) =>
@@ -840,8 +853,9 @@ function TravelHelper({
 }) {
   const camera = useThree((s) => s.camera);
   const curve = useMemo(() => new THREE.CatmullRomCurve3(travel.pts), [travel.pts]);
-  const colA = useMemo(() => new THREE.Color(BRAIN_CATS[nodeMap.get(travel.from)?.cat ?? ""]?.c ?? "#c9a43e"), [nodeMap, travel.from]);
-  const colB = useMemo(() => new THREE.Color(BRAIN_CATS[nodeMap.get(travel.to)?.cat ?? ""]?.c ?? "#c9a43e"), [nodeMap, travel.to]);
+  // pulsos de viaje VIOLETA (la autoridad acompaña el vuelo, no la categoría)
+  const colA = useMemo(() => new THREE.Color(FIBERS.travelA), []);
+  const colB = useMemo(() => new THREE.Color(FIBERS.travelB), []);
   const dest = useMemo(() => travel.pts[travel.pts.length - 1].clone(), [travel.pts]);
   const startOff = useRef<THREE.Vector3 | null>(null);
   const prog = useRef(0); // 0..1 a lo largo del recorrido
@@ -911,6 +925,8 @@ function BrainScene({
   onTravelSpline,
   onTravelArrived,
   onTravelConsumed,
+  isMobile = false,
+  reducedMotion = false,
 }: {
   nodes: BNode[];
   edges: [string, string][];
@@ -919,6 +935,8 @@ function BrainScene({
   compare: string[];
   isFa: boolean;
   locale: string;
+  isMobile?: boolean;        // nivel de calidad: menos partículas en móvil
+  reducedMotion?: boolean;   // accesibilidad: sin animación decorativa
   flyToId: string | null;
   activeCat: string | null;
   filterCat: string | null;
@@ -961,7 +979,8 @@ function BrainScene({
   );
   const pathSet = useMemo(() => new Set(pathToTorah), [pathToTorah]);
   const flyToPos = flyToId && positions[flyToId] ? new THREE.Vector3(...positions[flyToId]) : null;
-  const focusColor = focusId ? (BRAIN_CATS[nodeMap.get(focusId)?.cat ?? ""]?.c ?? "#cfe6ff") : "#cfe6ff";
+  // ruta activa: VIOLETA (la autoridad), ya no el color de la categoría del foco
+  const focusColor = FIBERS.activeColor;
 
   // ── Modo GILGUL (linaje de almas): qué nodos toca el linaje de la raíz ──
   // Cuando hay raíz, atenuamos TODO lo no-relacionado y encendemos la cadena.
@@ -1042,14 +1061,17 @@ function BrainScene({
     idleTimer.current = setTimeout(() => setAutoRot(true), 3000);
   };
 
-  // breathing group
+  // breathing group (quieto si el usuario pide menos movimiento)
   const groupRef = useRef<THREE.Group>(null);
   useFrame(({ clock }) => {
     if (groupRef.current) {
-      const s = 1 + Math.sin(clock.elapsedTime * 0.5) * 0.012;
+      const s = reducedMotion ? 1 : 1 + Math.sin(clock.elapsedTime * 0.5) * 0.012;
       groupRef.current.scale.set(s, s, s);
     }
   });
+
+  // nivel de calidad: en móvil el cosmos respira con menos partículas
+  const particleScale = isMobile ? PERF.mobileParticleScale : 1;
 
   // intensidad por nodo según capa: primaria > secundaria > terciaria > lejana
   // "Tanaj" en la leyenda enciende también el núcleo Torá (misma galaxia)
@@ -1133,7 +1155,7 @@ function BrainScene({
         maxAzimuthAngle={Infinity}
         // ── Táctil (móvil): un dedo orbita · dos dedos pellizco-zoom + paneo ──
         touches={{ ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN }}
-        autoRotate={autoRot && !selected && !compareActive && !catActive && !travel && !gilgulActive}
+        autoRotate={autoRot && !reducedMotion && !selected && !compareActive && !catActive && !travel && !gilgulActive}
         autoRotateSpeed={0.3}
         onStart={() => { interacting.current = true; pauseAuto(); }}
         onEnd={() => { interacting.current = false; resumeAuto(); }}
@@ -1147,7 +1169,7 @@ function BrainScene({
       <ambientLight intensity={0.35} />
 
       {/* el universo: estrellas de fondo + nebulosas con nombre por galaxia */}
-      <StarField />
+      <StarField count={Math.round(STARFIELD.count * particleScale)} />
       <Nebulae locale={locale} />
 
       {/* La selección NUNCA se suelta al tocar el fondo, arrastrar, hacer zoom ni
@@ -1155,15 +1177,15 @@ function BrainScene({
           el botón × de la tarjeta, la tecla Escape, o al elegir OTRO nodo. */}
 
       <group ref={groupRef}>
-        <AmbientTissue />
-        <PotentialNodes />
+        <AmbientTissue count={Math.round(CFG.ambientCount * particleScale)} still={reducedMotion} />
+        <PotentialNodes count={Math.round(CFG.potentialCount * particleScale)} still={reducedMotion} />
         <BaseFibers segments={baseSegments} dimmed={focusId !== null || compareActive || catActive || gilgulActive} />
         {/* en modo filtro, la malla jerárquica y el camino a la Torá se apagan para
             que solo brillen las aristas hacia la disciplina elegida (foco limpio) */}
-        {!gilgulActive && !compareActive && !catActive && !filterActive && focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} />}
+        {!gilgulActive && !compareActive && !catActive && !filterActive && focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} electrons={!reducedMotion} />}
         {!gilgulActive && !compareActive && !catActive && !filterActive && pathToTorah.length > 1 && <PathToTorah path={pathToTorah} curves={curves} />}
-        {!gilgulActive && compareActive && sharedCurves.length > 0 && <FiberHighlight curves={sharedCurves} color="#ffe9a8" />}
-        {!gilgulActive && catActive && catCurves.length > 0 && <FiberHighlight curves={catCurves} color={BRAIN_CATS[activeCat ?? ""]?.c ?? "#c9a43e"} />}
+        {!gilgulActive && compareActive && sharedCurves.length > 0 && <FiberHighlight curves={sharedCurves} color={FIBERS.compareColor} />}
+        {!gilgulActive && catActive && catCurves.length > 0 && <FiberHighlight curves={catCurves} color={CATEGORY_ACCENTS[activeCat ?? ""] ?? "#c9a43e"} />}
 
         {/* "Viaje de luz": aristas interactivas del nodo en foco (hover/gradiente/clic →
             tooltip al cursor). Con chip-filtro activo solo se activan las de esa disciplina.
@@ -1206,6 +1228,7 @@ function BrainScene({
               showLabel={showLabelOf(n)}
               sizeBoost={boostOf(n)}
               locale={locale}
+              reducedMotion={reducedMotion}
               onClick={(additive) => onSelect(n.id, additive)}
               onDouble={() => onDouble(n)}
               onHover={(h) => onHover(h ? n.id : null)}
@@ -1253,6 +1276,7 @@ export default function GrafoPage() {
 
   // Consola unificada + hoja inferior en móvil + historial de navegación (migaja ← →)
   const isMobile = useIsMobile();
+  const reducedMotion = usePrefersReducedMotion();
   const history = useUniversoHistory();
   const searchInputRef = useRef<HTMLInputElement>(null);
   const consumeTravelRequest = useCallback(() => setTravelRequest(null), []);
@@ -1819,7 +1843,7 @@ export default function GrafoPage() {
   return (
     <div
       className="always-dark fixed inset-0 z-50 overflow-hidden"
-      style={{ background: "#03040a" }}
+      style={{ background: SCENE.background }}
       dir={isFa ? "rtl" : "ltr"}
     >
       <Suspense
@@ -1832,14 +1856,19 @@ export default function GrafoPage() {
       >
         <Canvas
           camera={{ position: [0, 6, CFG.radiusIdle], fov: 55 }}
-          gl={{ antialias: true }}
+          // tope de dpr: en retina 3x el costo era 9x el de 1x; el Bloom lo multiplica.
+          // En móvil 1.5 se ve igual y deja la GPU respirar.
+          dpr={[1, isMobile ? PERF.dprMaxMobile : PERF.dprMax]}
+          gl={{ antialias: isMobile ? PERF.antialiasMobile : PERF.antialiasDesktop, powerPreference: "high-performance" }}
           style={{ position: "absolute", inset: 0 }}
         >
-          <color attach="background" args={["#03040a"]} />
-          <fogExp2 attach="fog" args={["#03040a", 0.005]} />
+          <color attach="background" args={[SCENE.background]} />
+          <fogExp2 attach="fog" args={[SCENE.fogColor, SCENE.fogDensity]} />
           <BrainScene
             nodes={graph.nodes}
             edges={graph.edges}
+            isMobile={isMobile}
+            reducedMotion={reducedMotion}
             selected={selected}
             hovered={hovered}
             compare={compare}
@@ -1865,7 +1894,13 @@ export default function GrafoPage() {
             onTravelConsumed={consumeTravelRequest}
           />
           <EffectComposer>
-            <Bloom intensity={0.72} luminanceThreshold={0.2} luminanceSmoothing={0.7} mipmapBlur radius={0.5} />
+            <Bloom
+              intensity={BLOOM.intensity}
+              luminanceThreshold={BLOOM.luminanceThreshold}
+              luminanceSmoothing={BLOOM.luminanceSmoothing}
+              mipmapBlur
+              radius={BLOOM.radius}
+            />
           </EffectComposer>
         </Canvas>
       </Suspense>
