@@ -47,7 +47,7 @@ import { useUniversoHistory } from "./useUniversoHistory";
 import { useIsMobile } from "./useIsMobile";
 // Sistema visual: TODO el tuning fino (paleta, fog, bloom, CFG, partículas,
 // estados) vive en theme.ts — el look se ajusta allí, no aquí.
-import { CFG, SCENE, BLOOM, STARFIELD, NEBULAE, PALETTE, NODE, CATEGORY_ACCENTS } from "./theme";
+import { CFG, SCENE, BLOOM, STARFIELD, NEBULAE, PALETTE, NODE, CATEGORY_ACCENTS, FIBERS } from "./theme";
 
 type Graph = { nodes: BNode[]; edges: [string, string][] };
 
@@ -288,7 +288,7 @@ function BaseFibers({ segments, dimmed }: { segments: Float32Array; dimmed: bool
     <lineSegments geometry={geom}>
       <lineBasicMaterial
         ref={matRef}
-        color="#6a7fae"
+        color={FIBERS.idleColor}
         transparent
         opacity={CFG.fiberOpacityIdle}
         blending={THREE.AdditiveBlending}
@@ -301,7 +301,7 @@ function BaseFibers({ segments, dimmed }: { segments: Float32Array; dimmed: bool
 // ── Fibras jerárquicas: capas por distancia (primaria→secundaria→terciaria) ─
 // Cada arista pertenece a la capa = min(distancia de sus dos extremos al foco).
 // Capa 0 = primaria (más brillante) · 1 = secundaria · 2 = terciaria (tenue).
-const LAYER_OPACITY = [0.6, 0.26, 0.1]; // fibras encendidas: más finas/tenues
+const LAYER_OPACITY = FIBERS.layerOpacity; // fibras encendidas: más finas/tenues
 function LayeredFibers({
   curves,
   dist,
@@ -343,8 +343,8 @@ function LayeredFibers({
   );
 
   const col = useMemo(() => new THREE.Color(color), [color]);
-  // tinte interpretativo: el color del dominio desvaído hacia un gris frío
-  const interpCol = useMemo(() => new THREE.Color(color).lerp(new THREE.Color("#9aa6c4"), 0.55), [color]);
+  // tinte interpretativo: la ruta desvaída hacia un gris neutro (NO es fuente)
+  const interpCol = useMemo(() => new THREE.Color(color).lerp(new THREE.Color(FIBERS.interpFade), FIBERS.interpFadeAmount), [color]);
   const tex = useMemo(() => glowTexture(), []);
   // el electrón viaja SOLO por las aristas CLÁSICAS primarias (la autoridad)
   const primarySolid = useMemo(() => layers[0].filter((c) => c.kind === "solid"), [layers]);
@@ -376,13 +376,13 @@ function LayeredFibers({
           </lineSegments>
           {/* INTERPRETATIVAS (lectura): tenues y frías = NO son fuente */}
           <lineSegments geometry={g.interp}>
-            <lineBasicMaterial color={interpCol} transparent opacity={LAYER_OPACITY[i] * 0.4} blending={THREE.AdditiveBlending} depthWrite={false} />
+            <lineBasicMaterial color={interpCol} transparent opacity={LAYER_OPACITY[i] * FIBERS.interpOpacityFactor} blending={THREE.AdditiveBlending} depthWrite={false} />
           </lineSegments>
         </group>
       ))}
       {primarySolid.map((c, i) => (
         <sprite key={c.a + c.b} ref={(el) => { pulseRefs.current[i] = el; }}>
-          <spriteMaterial map={tex} color={col} transparent opacity={0.7} blending={THREE.AdditiveBlending} depthWrite={false} />
+          <spriteMaterial map={tex} color={col} transparent opacity={FIBERS.electronOpacity} blending={THREE.AdditiveBlending} depthWrite={false} />
         </sprite>
       ))}
     </group>
@@ -406,7 +406,7 @@ function PathToTorah({ path, curves }: { path: string[]; curves: EdgeCurve[] }) 
 
   return (
     <lineSegments geometry={geom}>
-      <lineBasicMaterial color="#ffe9a8" transparent opacity={0.95} blending={THREE.AdditiveBlending} depthWrite={false} />
+      <lineBasicMaterial color={FIBERS.pathToTorah} transparent opacity={FIBERS.pathToTorahOpacity} blending={THREE.AdditiveBlending} depthWrite={false} />
     </lineSegments>
   );
 }
@@ -420,7 +420,7 @@ function FiberHighlight({ curves, color }: { curves: EdgeCurve[]; color: string 
   }, [curves]);
   return (
     <lineSegments geometry={geom}>
-      <lineBasicMaterial color={color} transparent opacity={0.95} blending={THREE.AdditiveBlending} depthWrite={false} />
+      <lineBasicMaterial color={color} transparent opacity={FIBERS.highlightOpacity} blending={THREE.AdditiveBlending} depthWrite={false} />
     </lineSegments>
   );
 }
@@ -762,23 +762,25 @@ function FocusEdges({
 
   const colCache = useMemo(() => new Map<string, THREE.Color>(), []);
   const colorOf = (cat: string | undefined) => {
-    const hex = BRAIN_CATS[cat ?? ""]?.c ?? "#c9a43e";
+    // destino con identidad de categoría SOBRIA (subordinada al violeta)
+    const hex = CATEGORY_ACCENTS[cat ?? ""] ?? "#c9a43e";
     let col = colCache.get(hex);
     if (!col) { col = new THREE.Color(hex); colCache.set(hex, col); }
     return col;
   };
+  // la autoridad en el origen: la arista NACE violeta desde el nodo en foco
+  const violetOrigin = useMemo(() => new THREE.Color(FIBERS.activeColor), []);
 
   return (
     <group>
       {focusCurves.map(({ c, oriented }) => {
         const key = c.a + "→" + c.b;
-        const fromN = nodeMap.get(oriented.a);
         const toN = nodeMap.get(oriented.b);
         return (
           <InteractiveEdge
             key={key}
             curve={oriented}
-            colA={colorOf(fromN?.cat)}
+            colA={violetOrigin}
             colB={colorOf(toN?.cat)}
             isHot={hotKey === key}
             onHover={(h) =>
@@ -840,8 +842,9 @@ function TravelHelper({
 }) {
   const camera = useThree((s) => s.camera);
   const curve = useMemo(() => new THREE.CatmullRomCurve3(travel.pts), [travel.pts]);
-  const colA = useMemo(() => new THREE.Color(BRAIN_CATS[nodeMap.get(travel.from)?.cat ?? ""]?.c ?? "#c9a43e"), [nodeMap, travel.from]);
-  const colB = useMemo(() => new THREE.Color(BRAIN_CATS[nodeMap.get(travel.to)?.cat ?? ""]?.c ?? "#c9a43e"), [nodeMap, travel.to]);
+  // pulsos de viaje VIOLETA (la autoridad acompaña el vuelo, no la categoría)
+  const colA = useMemo(() => new THREE.Color(FIBERS.travelA), []);
+  const colB = useMemo(() => new THREE.Color(FIBERS.travelB), []);
   const dest = useMemo(() => travel.pts[travel.pts.length - 1].clone(), [travel.pts]);
   const startOff = useRef<THREE.Vector3 | null>(null);
   const prog = useRef(0); // 0..1 a lo largo del recorrido
@@ -961,7 +964,8 @@ function BrainScene({
   );
   const pathSet = useMemo(() => new Set(pathToTorah), [pathToTorah]);
   const flyToPos = flyToId && positions[flyToId] ? new THREE.Vector3(...positions[flyToId]) : null;
-  const focusColor = focusId ? (BRAIN_CATS[nodeMap.get(focusId)?.cat ?? ""]?.c ?? "#cfe6ff") : "#cfe6ff";
+  // ruta activa: VIOLETA (la autoridad), ya no el color de la categoría del foco
+  const focusColor = FIBERS.activeColor;
 
   // ── Modo GILGUL (linaje de almas): qué nodos toca el linaje de la raíz ──
   // Cuando hay raíz, atenuamos TODO lo no-relacionado y encendemos la cadena.
@@ -1162,8 +1166,8 @@ function BrainScene({
             que solo brillen las aristas hacia la disciplina elegida (foco limpio) */}
         {!gilgulActive && !compareActive && !catActive && !filterActive && focusId && dist && <LayeredFibers curves={curves} dist={dist} focusId={focusId} color={focusColor} />}
         {!gilgulActive && !compareActive && !catActive && !filterActive && pathToTorah.length > 1 && <PathToTorah path={pathToTorah} curves={curves} />}
-        {!gilgulActive && compareActive && sharedCurves.length > 0 && <FiberHighlight curves={sharedCurves} color="#ffe9a8" />}
-        {!gilgulActive && catActive && catCurves.length > 0 && <FiberHighlight curves={catCurves} color={BRAIN_CATS[activeCat ?? ""]?.c ?? "#c9a43e"} />}
+        {!gilgulActive && compareActive && sharedCurves.length > 0 && <FiberHighlight curves={sharedCurves} color={FIBERS.compareColor} />}
+        {!gilgulActive && catActive && catCurves.length > 0 && <FiberHighlight curves={catCurves} color={CATEGORY_ACCENTS[activeCat ?? ""] ?? "#c9a43e"} />}
 
         {/* "Viaje de luz": aristas interactivas del nodo en foco (hover/gradiente/clic →
             tooltip al cursor). Con chip-filtro activo solo se activan las de esa disciplina.

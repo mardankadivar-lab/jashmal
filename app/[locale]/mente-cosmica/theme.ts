@@ -145,11 +145,24 @@ export const NODE = {
   coreWhiten: 0.35,       // núcleo activo: violeta aclarado (luminoso, no neón)
 } as const;
 
-// ── FIBRAS / CONEXIONES (declarados; se aplican en COMMIT 4 — fibers) ───────
+// ── FIBRAS / CONEXIONES (COMMIT 4) ──────────────────────────────────────────
+// Regla: inactivas casi invisibles · relacionadas finas · ruta activa VIOLETA ·
+// pulsos de viaje violeta · ámbar SOLO donde aporta significado (el hilo a la
+// Torá, lo compartido al comparar). Sin saturar la escena de líneas.
 export const FIBERS = {
-  activeColor: PALETTE.violet,  // ruta activa y pulsos de viaje
-  accentWarm: PALETTE.amber,    // acento solo cuando aporta significado
-  accentLife: PALETTE.lichen,
+  idleColor: "#76719f",          // red de reposo: gris-violeta neutro (antes azul #6a7fae)
+  activeColor: PALETTE.violet,   // fibras del nodo en foco + electrones
+  layerOpacity: [0.55, 0.2, 0.07] as const, // primaria/secundaria/terciaria (antes 0.6/0.26/0.1)
+  interpFade: "#8b87a0",         // interpretativas: desvaídas a gris neutro (antes azul #9aa6c4)
+  interpFadeAmount: 0.55,
+  interpOpacityFactor: 0.4,      // las interpretativas pesan menos que las clásicas
+  electronOpacity: 0.7,
+  travelA: PALETTE.violet,       // pulso de viaje: violeta…
+  travelB: "#ac8fff",            // …hacia violeta luminoso (no neón)
+  pathToTorah: "#ffe9a8",        // ámbar CON significado: el hilo dorado a la Torá
+  pathToTorahOpacity: 0.95,
+  compareColor: "#ffe9a8",       // ámbar CON significado: lo que comparten al comparar
+  highlightOpacity: 0.95,
 } as const;
 
 // ── PANEL / CONSOLA (declarados; se aplican en COMMIT 6 — consola) ──────────
