@@ -14,6 +14,7 @@ import { ACADEMY_LEVELS, prevLevel } from "@/lib/academia/curriculum";
 import { getLevelProgress, requirementStatuses } from "@/lib/academia/unlock";
 import { useAcademyProgress } from "@/lib/academia/useAcademyProgress";
 import LevelCard from "./LevelCard";
+import LangNotice from "./LangNotice";
 
 export default function AcademyHome({ locale }: { locale: string }) {
   const loc = locale as Locale;
@@ -40,6 +41,8 @@ export default function AcademyHome({ locale }: { locale: string }) {
           )}
         </p>
       </header>
+
+      <LangNotice locale={locale} />
 
       {/* ── Estado del estudiante (demo) ── */}
       <section className="mt-10 rounded-2xl border border-gold/25 bg-gold/[0.03] p-5">

@@ -13,7 +13,6 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { resolveText, type AcademyModule, type LocalizedText } from "@/lib/academia/curriculum";
 import type { ModuleStatus } from "@/lib/academia/curriculum";
-import TranslationBadge from "@/components/TranslationBadge";
 
 export default function ModuleCard({
   module,
@@ -70,7 +69,6 @@ export default function ModuleCard({
           </span>
           <span className={`block truncate text-[15px] ${locked ? "text-parchment/60" : "text-parchment"}`}>
             {title.value}
-            {title.missing && <TranslationBadge available={title.available} className="ms-2 align-middle" />}
           </span>
         </span>
         {locked ? (
@@ -91,10 +89,7 @@ export default function ModuleCard({
 
       {open && !locked && (
         <div className="space-y-4 border-t border-white/8 px-4 py-4 ps-14">
-          <p className="text-[14px] leading-relaxed text-parchment/85">
-            {description.value}
-            {description.missing && <TranslationBadge available={description.available} className="ms-2 align-middle" />}
-          </p>
+          <p className="text-[14px] leading-relaxed text-parchment/85">{description.value}</p>
 
           {module.learningObjectives.length > 0 && (
             <div>

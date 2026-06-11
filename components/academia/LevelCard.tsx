@@ -12,7 +12,6 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { resolveText, type AcademyLevel, type LocalizedText } from "@/lib/academia/curriculum";
 import type { LevelProgressView, ReqStatus } from "@/lib/academia/unlock";
-import TranslationBadge from "@/components/TranslationBadge";
 
 function Lock({ className = "" }: { className?: string }) {
   return (
@@ -75,10 +74,7 @@ export default function LevelCard({
           >
             {level.name}
           </h3>
-          <p className="mt-0.5 text-sm text-muted/85">
-            {subtitle.value}
-            {subtitle.missing && <TranslationBadge available={subtitle.available} className="ms-2 align-middle" />}
-          </p>
+          <p className="mt-0.5 text-sm text-muted/85">{subtitle.value}</p>
         </div>
         <div className="shrink-0 text-end">
           <p className="hebrew text-2xl text-gold/80 sm:text-3xl">{level.he}</p>
@@ -104,7 +100,6 @@ export default function LevelCard({
 
       <p className={`mt-4 text-[15px] leading-relaxed ${locked ? "text-muted/70" : "text-parchment/85"}`}>
         {description.value}
-        {description.missing && <TranslationBadge available={description.available} className="ms-2 align-middle" />}
       </p>
 
       {gloss && (

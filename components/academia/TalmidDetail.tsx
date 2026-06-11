@@ -21,6 +21,7 @@ import {
 } from "@/lib/academia/unlock";
 import { useAcademyProgress } from "@/lib/academia/useAcademyProgress";
 import ModuleCard from "./ModuleCard";
+import LangNotice from "./LangNotice";
 
 export default function TalmidDetail({ locale }: { locale: string }) {
   const loc = locale as Locale;
@@ -82,6 +83,8 @@ export default function TalmidDetail({ locale }: { locale: string }) {
           </div>
         )}
       </header>
+
+      <LangNotice locale={locale} />
 
       {/* ── El Umbral: el ingreso ── */}
       <Link
