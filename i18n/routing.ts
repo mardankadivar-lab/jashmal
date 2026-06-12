@@ -27,6 +27,20 @@ export const pathnames = {
     en: "/creation",
     fa: "/creation",
   },
+  // ── Misterios con rutas completamente localizadas ───────────────────────
+  // La carpeta física interna es siempre /misterio/[slug].
+  // La URL pública cambia el segmento "misterio" por idioma:
+  //   es → /misterio/[slug]   ·   en → /mystery/[slug]   ·   fa → /اسرار/[slug]
+  // El middleware de next-intl decodifica con decodeURI() antes de comparar,
+  // por lo que los caracteres Unicode en la URL farsi funcionan correctamente.
+  // El slug interno NO cambia (es el identificador de la carpeta física);
+  // la localización del slug en la URL es manejada por el componente de cada
+  // página (ver: app/[locale]/misterio/ropas-de-luz/page.tsx).
+  "/misterio/[slug]": {
+    es: "/misterio/[slug]",
+    en: "/mystery/[slug]",
+    fa: "/اسرار/[slug]",
+  },
 } as const;
 
 // Routing CANÓNICO (con pathnames): lo usan el middleware y la navegación
