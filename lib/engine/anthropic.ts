@@ -68,6 +68,7 @@ ${MARCA_RULE}
 ${RIGOR_RULE}
 ${DOS_FILOS_RULE}
 ${GEMATRIA_RULE}
+${SHEM_RULE}
 ${GLOSAS_RULE}
 ${HYPERLINK_RULES}
 ${HILOS_RULE}
@@ -200,6 +201,7 @@ ${MARCA_RULE}
 ${RIGOR_RULE}
 ${DOS_FILOS_RULE}
 ${GEMATRIA_RULE}
+${SHEM_RULE}
 ${GLOSAS_RULE}
 ${HYPERLINK_RULES}
 ${HILOS_RULE}
@@ -351,6 +353,38 @@ equivalencia entre dos palabras solo es significativa si los valores coinciden d
 verdad — verifícalo. Las transformaciones (At-bash, Al-bam) y el milui del Nombre
 YHVH (72/63/45/52) pueden destapar conexiones ocultas; úsalas solo cuando el texto
 lo invite, nunca forzadas. Si no puedes verificar un valor, NO lo afirmes.`;
+
+// Nombres y su peso: la etimología revela; abrir el nombre cuando pesa en el texto.
+const SHEM_RULE = `
+NOMBRES Y SU PESO (שֵׁמוֹת) — en el Tanaj el nombre es revelación, no etiqueta:
+«כִּשְׁמוֹ כֶּן הוּא» (kishmó ken hu, "como su nombre, así es él", 1 Shmuel 25:25,
+sobre Naval) y la máxima talmúdica «שְׁמָא גָּרֵים» (shmá garim, "el nombre influye /
+determina", Berajot 7b). Por eso, cuando en el pasaje aparezca un PERSONAJE, LUGAR,
+PUEBLO o NOMBRE significativo del Tanaj, ÁBRELO cuando de verdad PESE en el texto:
+- Da su forma hebrea + transliteración + el SIGNIFICADO de su raíz (shóresh).
+- Si la propia Torá da su etimología al nombrarlo ("lo llamó X porque…"), cítala con
+  el versículo exacto. Ejemplos verificados: קַיִן↔קָנִיתִי "adquirí" (Bereshit/Gén
+  4:1); נֹחַ↔יְנַחֲמֵנוּ "nos consolará" (Gén 5:29); יִצְחָק↔צְחֹק "risa" (Gén 21:6);
+  יַעֲקֹב↔עֵקֶב "talón" (Gén 25:26); מֹשֶׁה↔מְשִׁיתִהוּ "lo saqué [de las aguas]"
+  (Shemot/Éx 2:10); פֶּרֶץ↔פָּרַצְתָּ "irrumpiste" (Gén 38:29). Lugares: בָּבֶל↔בָּלַל
+  "confundir" (Gén 11:9); בֵּית אֵל "casa de Dios" (Gén 28:19); בְּאֵר שֶׁבַע, que la
+  Torá lee a la vez como "pozo del juramento" (de נִשְׁבְּעוּ, "juraron", Gén 21:31) y
+  "pozo del siete/del oath" (de שֶׁבַע, "siete", Gén 26:33); פְּנִיאֵל "rostro de Dios"
+  (Gén 32:31).
+- CAMBIOS DE NOMBRE — di qué letra ENTRA o SALE y por qué: אַבְרָם→אַבְרָהָם (entra
+  una ה, "אַב הֲמוֹן גּוֹיִם", padre de multitud de naciones, Gén 17:5); שָׂרַי→שָׂרָה
+  (Gén 17:15); יַעֲקֹב→יִשְׂרָאֵל ("כִּי שָׂרִיתָ עִם אֱלֹהִים", luchaste con Dios,
+  Gén 32:29); הוֹשֵׁעַ→יְהוֹשֻׁעַ (Moshé le añade una י, Bemidbar 13:16 — la misma yod
+  que salió de שָׂרַי, según RIGOR FACTUAL; jamás la atribuyas a la esposa de Moshé).
+- Lo esencial: di CÓMO el significado del nombre ILUMINA, GIRA o PROFUNDIZA el pasaje —
+  el nombre suele ser la llave. Enlaza con la gematría y las letras cuando profundice
+  (ej.: אַבְרָם 243 → אַבְרָהָם 248, la ה añadida suma 5).
+GUARDARRAÍLES: (1) la etimología que da la Torá es a menudo DERASH (juego de sonido),
+no filología científica — preséntala como "la lectura que la propia Torá ofrece", sin
+afirmar falsa lingüística (ej.: מֹשֶׁה se explica en hebreo como "sacado del agua"
+—de מָשָׁה— aunque su raíz probable sea egipcia "hijo de / nacido de"). (2) Abre el
+nombre SOLO cuando pese en el pasaje; no gloses mecánicamente cada nombre. (3) Si no
+conoces la etimología con certeza, NO la inventes (rige el RIGOR FACTUAL).`;
 
 // Rigor factual: nunca inventar ni confundir hechos/parentescos de la tradición.
 const RIGOR_RULE = `
@@ -548,6 +582,7 @@ ${MARCA_RULE}
 ${RIGOR_RULE}
 ${DOS_FILOS_RULE}
 ${GEMATRIA_RULE}
+${SHEM_RULE}
 ${GLOSAS_RULE}
 ${HYPERLINK_RULES}
 ${HILOS_RULE}
