@@ -11,7 +11,13 @@ import MisterioLangToggle from "@/components/MisterioLangToggle";
 // (guedolá averá lishmáh) y Bavá Kamá 38b (las dos palomas: Rut y Naamá), con el
 // Sod de las nitzotzot. Contenido verificado por el Sofer (editor-erudito).
 // Idioma principal: español (el video de TikTok es en español).
-// TODO(fa): el farsi de esta página está pendiente de traducción verificada.
+//
+// Versión FARSI verificada por el Sofer (LotFarsi, render cuando locale === "fa").
+// Fuentes confirmadas en Sefaria: Génesis 19:31 (וְאִישׁ אֵין בָּאָרֶץ),
+// 19:37-38 (Moab / Ben-Amí), Nazir 23b (גְּדוֹלָה עֲבֵירָה לִשְׁמָהּ),
+// Bavá Kamá 38b (שְׁתֵּי פְרֵידוֹת טוֹבוֹת — Rut y Naamá), Rut 4:17 (Rut→Obed→
+// Yishai→David), I Reyes 14:21 (Naamá la amonita, madre de Rejavam).
+// Gematría sello: נָחָשׁ = 50+8+300 = 358 = מָשִׁיחַ = 40+300+10+8 = 358. Verificada.
 
 // ── Las dos hijas sin nombre → las dos naciones → las dos madres ──────────────
 interface Hija {
@@ -37,6 +43,396 @@ const HIJAS: Hija[] = [
     color: "#e0a850",
   },
 ];
+
+// ── Página en FARSI (رندر شده وقتی locale === "fa") ──────────────────────────
+function LotFarsi() {
+  const bg = "#05050a";
+  const navBg = "rgba(5,5,10,0.9)";
+  const router = useRouter();
+
+  function Sec({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+    const ref = useRef<HTMLDivElement>(null);
+    const [v, setV] = useState(false);
+    useEffect(() => {
+      const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setV(true); }, { threshold: 0.12 });
+      if (ref.current) obs.observe(ref.current);
+      return () => obs.disconnect();
+    }, []);
+    return (
+      <div ref={ref} className="transition-all duration-1000"
+        style={{ opacity: v ? 1 : 0, transform: v ? "translateY(0)" : "translateY(24px)", transitionDelay: `${delay}ms` }}>
+        {children}
+      </div>
+    );
+  }
+
+  function PQ({ he, fa, source }: { he: string; fa: string; source: string }) {
+    return (
+      <Sec>
+        <div className="my-10 rounded-2xl border border-gold/25 bg-gold/[0.05] p-6">
+          <p className="hebrew mb-3 text-right text-lg leading-relaxed text-gold/85" dir="rtl">{he}</p>
+          <p className="mb-1 text-sm italic leading-relaxed text-parchment/80" dir="rtl">«{fa}»</p>
+          <p className="font-cinzel text-[10px] uppercase tracking-widest text-gold/50">— {source}</p>
+        </div>
+      </Sec>
+    );
+  }
+
+  // دو دختر بی‌نام → دو ملت → دو مادر
+  const dokhtaran = [
+    {
+      he: "הַבְּכִירָה",
+      name: "دختر بزرگ‌تر ← موآب ← روت",
+      sentido:
+        "تورا نامی به او نمی‌دهد: تنها «بزرگ‌تر». از او موآب زاده می‌شود؛ از موآب روتِ موآبی نسب می‌برد، جده‌ی بزرگِ داوود پادشاه.",
+      color: "#c9a43e",
+    },
+    {
+      he: "הַצְּעִירָה",
+      name: "دختر کوچک‌تر ← عَمّون ← نَعَما",
+      sentido:
+        "او نیز نامی ندارد: تنها «کوچک‌تر». پسرش را با حیا نام نهاد؛ از عَمّون نَعَمای عَمّونی می‌آید، مادر رِحَوعام که تخت داوود را به ارث بُرد.",
+      color: "#e0a850",
+    },
+  ];
+
+  return (
+    <div className="always-dark min-h-screen" style={{ background: bg, fontFamily: "Vazirmatn, sans-serif" }} dir="rtl">
+
+      {/* Nav */}
+      <nav className="sticky top-0 z-40 border-b border-gold/10 px-5 py-3 backdrop-blur-md" style={{ background: navBg }}>
+        <div className="mx-auto flex max-w-2xl items-center justify-between">
+          <Link href="/" className="font-cinzel text-sm text-gold/70 hover:text-gold">חַשְׁמַל · خَشمَل</Link>
+          <div className="flex items-center gap-3">
+            <MisterioLangToggle />
+            <button onClick={() => router.push("/estudio")}
+              className="rounded-full border border-gold/30 px-4 py-1.5 text-xs text-gold transition-all hover:border-gold hover:bg-gold/10">
+              شروع مطالعه ←
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <main className="mx-auto max-w-2xl px-5 pb-24 pt-16">
+
+        {/* ── هیرو / Hero ── */}
+        <div className="mb-16 text-center">
+          <p className="mb-4 font-cinzel text-xs uppercase tracking-[0.4em] text-gold/50">
+            پیدایش ۱۹:۳۰–۳۸ · تلمود · سود
+          </p>
+          <h1 className="hebrew mb-3 font-bold leading-none"
+            style={{ fontSize: "clamp(44px, 13vw, 92px)", color: "#fdf4dd",
+              textShadow: "0 0 24px #c9a43e88" }}>
+            לוֹט
+          </h1>
+          <h2 className="text-xl font-bold text-parchment/90 sm:text-2xl">
+            دو دختر بی‌نام
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-muted" dir="rtl">
+            دو زنی که نسب داوود پادشاه از آنان زاده می‌شود، در تورا نامی ندارند.
+            و آنچه کردند هر تابویی را شکست. با این حال، از پست‌ترین گِل
+            — یک غار، پس از پایان یک جهان — آسمان تاج مَشیَح را بیرون کشید.
+          </p>
+        </div>
+
+        {/* ── داستان ── */}
+        <Sec>
+          <h3 className="mb-2 text-sm uppercase tracking-[0.3em] text-gold/60">
+            داستان
+          </h3>
+          <div className="space-y-4 text-sm leading-relaxed text-parchment/85" dir="rtl">
+            <p>
+              سُدوم می‌سوزد. لوط با همسر و دو دخترش می‌گریزد؛ فرشتگان آنان را از
+              داوری بیرون می‌کشند. همسرش به پشت سر می‌نگرد و به{" "}
+              <span className="text-gold/90">ستونی از نمک</span> بدل می‌شود (پیدایش ۱۹:۲۶).
+              تنها سه تن می‌مانند: پدری سالخورده و دو دختر، پناه‌گرفته در غاری بر کوه.
+            </p>
+            <p>
+              دختران می‌پندارند که سراسر جهان به پایان رسیده — که آنان{" "}
+              <span className="hebrew text-gold/90" dir="rtl">וְאִישׁ אֵין בָּאָרֶץ</span>، «و مردی در زمین
+              نیست» (پیدایش ۱۹:۳۱)، آخرین انسان‌های زنده‌اند. برای آنکه بشریت با آنان نمیرد،
+              پدر را مست می‌کنند و از او باردار می‌شوند{" "}
+              <span className="text-gold/80">«تا نسلی نگاه دارند»</span>{" "}
+              (<span className="hebrew" dir="rtl">וּנְחַיֶּה...זָרַע</span>، ۱۹:۳۲). از بزرگ‌تر موآب
+              زاده می‌شود؛ از کوچک‌تر، بِن‌عَمّی، پدر عَمّون (۱۹:۳۷–۳۸).
+            </p>
+          </div>
+        </Sec>
+
+        {/* ── دو زنِ بی‌نام ── */}
+        <Sec>
+          <h3 className="mb-6 mt-16 text-center text-sm uppercase tracking-[0.3em] text-gold/60">
+            دو زنِ بی‌نام
+          </h3>
+          <p className="mx-auto mb-8 max-w-md text-center text-sm leading-relaxed text-muted" dir="rtl">
+            در سراسر روایت، تورا <span className="text-gold/80">هرگز</span> نام آنان را نمی‌برد.
+            تنها «بزرگ‌تر» و «کوچک‌تر» می‌خواندشان. این یگانه «نام‌هایی» است که آن دو زن می‌گیرند،
+            دو زنی که از آنان، در خطی مستقیم، مَشیَح خواهد جوشید.
+          </p>
+        </Sec>
+
+        <div className="space-y-4">
+          {dokhtaran.map((p, i) => (
+            <Sec key={p.he} delay={i * 60}>
+              <div className="flex items-center gap-4 rounded-2xl border border-gold/15 p-5"
+                style={{ background: "rgba(255,255,255,0.02)" }}>
+                <span className="hebrew shrink-0 font-bold leading-none" dir="rtl"
+                  style={{ fontSize: "clamp(30px, 8vw, 44px)", color: "#fff6e0",
+                    textShadow: `0 0 16px ${p.color}` }}>
+                  {p.he}
+                </span>
+                <div className="flex-1 text-right">
+                  <p className="text-sm font-bold tracking-wide" style={{ color: p.color }}>
+                    {p.name}
+                  </p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-parchment/85" dir="rtl">{p.sentido}</p>
+                </div>
+              </div>
+            </Sec>
+          ))}
+        </div>
+
+        {/* ── פְּשָׁט: سنگینی ── */}
+        <Sec>
+          <h3 className="mb-4 mt-16 text-sm uppercase tracking-[0.3em] text-gold/60">
+            פְּשָׁט · سنگینیِ آنچه روی داد
+          </h3>
+          <div className="space-y-4 text-sm leading-relaxed text-parchment/85" dir="rtl">
+            <p>
+              قرص را روکش نمی‌کنیم. در معنای ظاهری، آنچه در آن غار رخ می‌دهد یک تابوی
+              مطلق است: زنای محارم میان پدر و دخترانش. تورا آن را پنهان نمی‌کند — با همه‌ی
+              حروفش بازگو می‌کند (پیدایش ۱۹:۳۰–۳۸). خَشمَل نیز از آن نمی‌گریزد: مطالعه‌ی
+              صادقانه، سنگینی را <span className="text-gold/90">پیش از</span> جستنِ نور بر دوش می‌گیرد.
+            </p>
+            <p>
+              آنچه اکنون می‌آید سختیِ روایت را <span className="text-gold/90">باطل نمی‌کند</span>:
+              آن را ژرف‌تر می‌خواند.
+            </p>
+          </div>
+        </Sec>
+
+        {/* ── نور پنهان ── */}
+        <Sec>
+          <h3 className="mb-4 mt-16 text-sm uppercase tracking-[0.3em] text-gold/60">
+            نور پنهان
+          </h3>
+
+          <div className="mb-8 rounded-xl border border-gold/20 bg-gold/[0.04] px-5 py-4">
+            <p className="text-[10px] uppercase tracking-widest text-gold/55">
+              یادداشت صادقانه
+            </p>
+            <p className="mt-1.5 text-sm leading-relaxed text-parchment/75" dir="rtl">
+              آنچه در پی می‌آید قرائت تلمود و میدراش است، و همچون آن نشان‌گذاری شده. دختران
+              در پی لذت نبودند: خودِ متن می‌گوید که می‌پنداشتند{" "}
+              <span className="text-gold/85">کسی در زمین نمانده است</span>. حَزال عملِ آنان را
+              از روی نیّت می‌خواند، نه از روی رسوایی.
+            </p>
+          </div>
+
+          <div className="space-y-4 text-sm leading-relaxed text-parchment/85" dir="rtl">
+            <p>
+              تلمود اصلی هولناک می‌آموزد:{" "}
+              <span className="hebrew text-gold/90" dir="rtl">גְּדוֹלָה עֲבֵרָה לִשְׁמָהּ</span>{" "}
+              —<span className="text-gold/90">گِدولا عَوِرا لیشما</span>، «بزرگ است گناهی که
+              به‌خاطر آسمان کرده شود»— و درست همین دختران لوط را مثال می‌آورد (نازیر ۲۳b). آنان
+              در پی لذت نبودند؛ در پی نگاه‌داشتنِ حیات بودند. از همین رو، از پست‌ترین گِل،
+              آسمان <span className="text-gold/90">دو کبوتر</span> بیرون می‌آورد.
+            </p>
+            <p>
+              تلمود این را با همان تصویر می‌گوید: از دختران لوط{" "}
+              <span className="text-gold/90">«دو کبوتر نیک»</span> بیرون می‌آیند —
+              <span className="hebrew" dir="rtl">רוּת הַמּוֹאֲבִיָּה וְנַעֲמָה הָעַמּוֹנִית</span>—
+              «روتِ موآبی و نَعَمای عَمّونی» (بابا قاما ۳۸b). از موآب{" "}
+              <span className="text-gold/90">روت</span> نسب می‌برد، جده‌ی بزرگ داوود پادشاه (روت ۴:۱۳–۲۲). از
+              عَمّون <span className="text-gold/90">نَعَما</span> می‌آید، مادر رِحَوعام، پادشاهی که
+              تخت داوود را به ارث بُرد (اول پادشاهان ۱۴:۲۱،۳۱). تاج اسرائیل… در سُدوم زاده شد.
+            </p>
+          </div>
+        </Sec>
+
+        <PQ
+          he="שְׁתֵּי פְרֵידוֹת טוֹבוֹת... רוּת הַמּוֹאֲבִיָּה וְנַעֲמָה הָעַמּוֹנִית"
+          fa="دو کبوتر نیک دارم که از ایشان بیرون آورم: روتِ موآبی و نَعَمای عَمّونی."
+          source="تلمود، بابا قاما ۳۸b"
+        />
+
+        {/* ── بی‌نامی ── */}
+        <Sec>
+          <h3 className="mb-4 mt-16 text-sm uppercase tracking-[0.3em] text-gold/60">
+            بی‌نامی
+          </h3>
+          <div className="space-y-4 text-sm leading-relaxed text-parchment/85" dir="rtl">
+            <p>
+              پرسشی می‌ماند: چرا تورا آنان را بی‌نام رها می‌کند؟ متن سرنخی می‌دهد. دختر کوچک‌تر
+              پسرش را «بِن‌عَمّی» نامید —با حیا، به{" "}
+              <span className="hebrew text-gold/90" dir="rtl">לָשׁוֹן נְקִיָּה</span>، «زبان
+              پاکیزه»—، حال آنکه بزرگ‌تر او را «موآب» («از پدرم») نامید، بی‌پروا. و حکیمان
+              می‌آموزند که <span className="text-gold/90">به‌خاطر همان حیا</span> نسلِ دختر کوچک‌تر،
+              بعدها، حمایتی ویژه یافت (راشی بر پیدایش ۱۹:۳۷؛ بابا قاما ۳۸b).
+            </p>
+            <p className="text-parchment/70">
+              <span className="text-[11px] uppercase tracking-widest text-gold/50">
+                قرائت خَشمَل (دِراش):
+              </span>{" "}
+              ظرفی که والاترین نور را حمل می‌کند نیازی به امضا ندارد. بی‌نامیِ این زنان
+              کیفر نیست: <span className="text-gold/85">حجابِ</span> مَشیَح است، که فرود می‌آید
+              تا خود را در نهان بجوید. <span className="italic">(این جمع‌بندی هِمیلیتیکِ ماست،
+              بر پایه‌ی تأییدشده‌ی حیای دختر کوچک‌تر — نقل‌قول لفظی نیست.)</span>
+            </p>
+          </div>
+        </Sec>
+
+        {/* ── סוֹד ── */}
+        <Sec>
+          <h3 className="mb-4 mt-16 text-sm uppercase tracking-[0.3em] text-gold/60">
+            סוֹד · جرقه در پست‌ترین جا
+          </h3>
+          <div className="space-y-4 text-sm leading-relaxed text-parchment/85" dir="rtl">
+            <p>
+              اینجا همان چرخشی که سراسر این مجموعه را تعریف می‌کند. کابالا قانونی از جهان را
+              می‌خواند: والاترین نور به پست‌ترین جا فرو می‌افتد و چشم‌به‌راه نجات می‌ماند. این‌ها{" "}
+              <span className="text-gold/90">نیتسوتسوت</span>‌اند، جرقه‌های مقدس به‌دام‌افتاده در درون
+              <span className="italic"> کلیپوت</span>. نسبِ رهاننده از آسمانِ پاک فرود نمی‌آید:
+              از پایین <span className="text-gold/90">نجات داده می‌شود</span>، از همان جاهایی که جهان
+              می‌خواهد بپوشاند.
+            </p>
+            <p>
+              و این رویدادی منفرد نیست: خطِ مَشیَح از{" "}
+              <span className="text-gold/90">دو رسوایی، به‌عمد</span>، می‌گذرد —رسوایی لوط (← موآب
+              ← روت) و رسوایی یهودا با تامار (← پِرِص)—. خود تلمود هر دو را در{" "}
+              <span className="text-gold/90">یک صفحه</span> بحث می‌کند (نازیر ۲۳b). دو بار، پادشاهیِ
+              جاودان در گِل کاشته می‌شود، زیرا{" "}
+              <span className="hebrew text-gold/90" dir="rtl">יְרִידָה צוֹרֶךְ עֲלִיָּה</span>{" "}
+              —<span className="text-gold/90">یِریدا تسوِرِخ عَلیا</span>، فرود برای صعود است—
+              (اصل حسیدیِ بَعل شِم طوو). سقوط، خودِ راه بود.
+            </p>
+            <p className="font-cinzel text-base text-gold/90" dir="rtl">
+              لوط ← موآب ← روت ← خاندان داوود ← مَشیَح.
+            </p>
+            <p>
+              در کنار تامار، روت، نَعَما و بَتشِبَع، دختران لوط ریشه‌ی{" "}
+              <span className="text-gold/90">مادران مَشیَح از ناممکن‌ترین جا</span>یند.
+            </p>
+          </div>
+
+          {/* مُهر مجموعه: נחש = ۳۵۸ = משיח */}
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <div className="inline-flex flex-col items-center rounded-2xl border-2 px-6 py-4"
+              style={{ borderColor: "#b06a3c99", background: "rgba(14,12,22,0.96)", boxShadow: "0 0 24px #b06a3c33" }}>
+              <span className="hebrew font-bold leading-none" style={{ fontSize: "clamp(56px,14vw,78px)", color: "#fff6e0", textShadow: "0 0 22px #b06a3c, 0 0 8px #b06a3c" }}>נָחָשׁ</span>
+              <span className="mt-2 text-xs uppercase tracking-widest" style={{ color: "#b06a3c" }}>نَحاش · مار · ۳۵۸</span>
+            </div>
+            <span className="font-cinzel text-2xl text-gold/40">=</span>
+            <div className="inline-flex flex-col items-center rounded-2xl border-2 px-6 py-4"
+              style={{ borderColor: "#c9a43e99", background: "rgba(14,12,22,0.96)", boxShadow: "0 0 24px #c9a43e33" }}>
+              <span className="hebrew font-bold leading-none" style={{ fontSize: "clamp(56px,14vw,78px)", color: "#fff6e0", textShadow: "0 0 22px #c9a43e, 0 0 8px #c9a43e" }}>מָשִׁיחַ</span>
+              <span className="mt-2 text-xs uppercase tracking-widest" style={{ color: "#c9a43e" }}>مَشیَح · مسیح · ۳۵۸</span>
+            </div>
+          </div>
+          <p className="mx-auto mt-6 max-w-md text-center text-sm leading-relaxed text-muted" dir="rtl">
+            همان نیرویی که گویی به پایین می‌کشاند، چون برافراشته و تصحیح شود، همان نیرویی است
+            که رستگار می‌کند. از تاریک‌ترین غار، پس از پایان یک جهان، تاج می‌جوشد.
+          </p>
+        </Sec>
+
+        {/* ── פרד״ס ── */}
+        <Sec>
+          <h3 className="mb-6 mt-16 text-sm uppercase tracking-[0.3em] text-gold/60">
+            פרד״ס · چهار قرائت
+          </h3>
+          <div className="space-y-4">
+            {[
+              {
+                he: "פְּשָׁט", name: "پَشاط",
+                txt: "پس از سُدوم، در غاری، دو دختر لوط —بی‌نام— از پدرشان باردار می‌شوند، با این پندار که کسی زنده نمانده است. موآب و عَمّون زاده می‌شوند (پیدایش ۱۹:۳۰–۳۸).",
+              },
+              {
+                he: "רֶמֶז", name: "رِمِز",
+                txt: "بی‌نامی اشاره می‌کند به پنهان‌شدگی: ظرفی که والاترین نور را حمل می‌کند امضا نمی‌کند. «بزرگ‌تر» و «کوچک‌تر» یگانه نام‌های آنانی است که پادشاهی را می‌زایند.",
+              },
+              {
+                he: "דְּרָשׁ", name: "دِراش",
+                txt: "«بزرگ است گناهی که به‌خاطر آسمان کرده شود» (گِدولا عَوِرا لیشما، نازیر ۲۳b): حکیمان عمل را از روی نیّتِ نگاه‌داشتنِ حیات می‌خوانند، نه از روی رسوایی. دختر کوچک‌تر، به‌خاطر حیایش، پاداش می‌گیرد (بابا قاما ۳۸b).",
+              },
+              {
+                he: "סוֹד", name: "سود",
+                txt: "نیتسوتسوتِ فروافتاده در کلیپا. نور مَشیَح از پست‌ترین جا نجات داده می‌شود. یِریدا تسوِرِخ عَلیا: فرود (لوط و یهودا، همان سوگیا در نازیر ۲۳b) روشی است که با آن اور این‌سوف در پایین قابل‌سکونت می‌شود.",
+              },
+            ].map((r) => (
+              <div key={r.name} className="flex items-start gap-4 rounded-2xl border border-gold/15 p-5"
+                style={{ background: "rgba(255,255,255,0.02)" }}>
+                <span className="hebrew shrink-0 text-2xl font-bold text-gold/80" dir="rtl"
+                  style={{ textShadow: "0 0 12px #c9a43e66" }}>
+                  {r.he}
+                </span>
+                <div className="flex-1 text-right">
+                  <p className="text-xs font-bold uppercase tracking-widest text-gold/70">{r.name}</p>
+                  <p className="mt-1.5 text-sm leading-relaxed text-parchment/85" dir="rtl">{r.txt}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Sec>
+
+        {/* ── جمع‌بندی / חֲתִימָה ── */}
+        <Sec>
+          <div className="mt-16 rounded-2xl border border-gold/20 bg-gradient-to-b from-gold/[0.06] to-transparent p-8 text-center">
+            <p className="hebrew mb-3 text-3xl text-gold" style={{ textShadow: "0 0 12px #c9a43e88" }}>
+              יְרִידָה צוֹרֶךְ עֲלִיָּה
+            </p>
+            <h3 className="mb-3 font-cinzel text-base font-bold text-parchment/90">
+              تاج در سُدوم زاده شد
+            </h3>
+            <p className="mx-auto mb-6 max-w-md text-sm leading-relaxed text-muted" dir="rtl">
+              دو زن بی‌نام، در غاری، پس از پایان جهانشان. بزرگ‌ترین رسواییِ تورا، به‌عمد،
+              سرچشمه‌ی پادشاهی را پنهان می‌کرد. آنچه جهان پست‌ترین می‌شمارد، آسمان آن را
+              به ریشه‌ی رهاننده بدل کرد. فرود… خودِ راه بود.
+            </p>
+
+            <div className="mb-6 flex flex-wrap justify-center gap-2">
+              {[
+                { label: "دختران لوط · پیدایش ۱۹", ref: "Genesis 19" },
+                { label: "گِدولا عَوِرا لیشما · نازیر ۲۳b", ref: "Nazir 23b" },
+                { label: "دو کبوتر · بابا قاما ۳۸b", ref: "Bava Kamma 38b" },
+                { label: "موآب ← داوود · روت ۴", ref: "Ruth 4" },
+                { label: "نَعَما · اول پادشاهان ۱۴:۲۱", ref: "I Kings 14:21" },
+              ].map((t, i) => (
+                <button key={i} onClick={() => router.push(`/estudio?ref=${encodeURIComponent(t.ref)}`)}
+                  className="rounded-full border border-gold/25 px-4 py-1.5 text-xs text-gold/70 transition-all hover:border-gold hover:bg-gold/10 hover:text-gold">
+                  {t.label}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => router.push(`/estudio?ref=${encodeURIComponent("Genesis 19")}&context=kabbalah`)}
+              className="rounded-full border-2 border-gold bg-gold/10 px-8 py-3.5 font-cinzel text-sm font-bold uppercase tracking-widest text-gold transition-all hover:bg-gold/20"
+              style={{ boxShadow: "0 0 20px rgba(201,164,62,0.25)" }}
+            >
+              ← مطالعه‌ی این راز در خَشمَل
+            </button>
+
+            {/* הֶמְשֵׁךְ — ادامه‌ی مسیر */}
+            <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 font-cinzel text-[11px] uppercase tracking-widest text-gold/50">
+              <Link href="/misterio/linaje" className="hover:text-gold">← مادران مَشیَح</Link>
+              <Link href="/misterio/tamar" className="hover:text-gold">← تامار: حجابی که مسیح را پنهان کرد</Link>
+              <Link href="/misterio/betsabe" className="hover:text-gold">← بَتشِبَع: مسافری که ماند</Link>
+            </div>
+          </div>
+        </Sec>
+
+        {/* Footer */}
+        <div className="mt-16 border-t border-gold/10 pt-8 text-center">
+          <p className="hebrew text-2xl text-gold/60">חַשְׁמַל</p>
+          <p className="mt-1 font-cinzel text-xs uppercase tracking-widest text-muted/50">
+            کابالا و فلسفه‌ی یهودی
+          </p>
+        </div>
+
+      </main>
+    </div>
+  );
+}
 
 // ── Componentes (idénticos en estilo a /misterio/betsabe) ─────────────────────
 function Section({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
@@ -86,9 +482,12 @@ function HebrewTile({ he, sub, color }: { he: string; sub: string; color: string
 
 // ── Página ────────────────────────────────────────────────────────────────────
 export default function LotPage() {
+  const locale = useLocale();
   const router = useRouter();
   const [dark, setDark] = useState(true);
   useEffect(() => { document.documentElement.classList.add("dark"); setDark(true); }, []);
+
+  if (locale === "fa") return <LotFarsi />;
   const bg = dark ? "#05050a" : "#f1ebdd";
   const navBg = dark ? "rgba(5,5,10,0.9)" : "rgba(241,235,221,0.9)";
 
