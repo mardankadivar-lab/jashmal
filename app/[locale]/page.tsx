@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import HeroVideo from "@/components/HeroVideo";
 import Nitzotzot from "@/components/Nitzotzot";
 import SiteHeader from "@/components/SiteHeader";
 import MotivationBanner from "@/components/MotivationBanner";
@@ -11,8 +12,10 @@ export default function HomePage() {
     <>
       <SiteHeader />
       <main className="relative">
-        {/* Hero con partículas Nitzotzot — siempre oscuro (el negro es dramático aquí). */}
+        {/* Hero con partículas Nitzotzot — siempre oscuro (el negro es dramático aquí).
+            Capas (de abajo hacia arriba): video loop → Nitzotzot → glow → contenido. */}
         <section className="always-dark relative flex min-h-[88vh] items-center justify-center overflow-hidden px-5">
+          <HeroVideo />
           <Nitzotzot />
           <div
             className="absolute inset-0"
