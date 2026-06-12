@@ -27,6 +27,7 @@ const nextConfig: NextConfig = {
       { source: "/lot", destination: "/es/misterio/lot" },
       { source: "/yehuda", destination: "/es/misterio/yehuda" },
       { source: "/ropas-de-luz", destination: "/es/misterio/ropas-de-luz" },
+      { source: "/nudo-de-la-fe", destination: "/es/misterio/nudo-de-la-fe" },
     ];
   },
   async redirects() {

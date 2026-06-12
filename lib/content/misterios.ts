@@ -19,6 +19,18 @@ export interface Misterio {
 
 export const MISTERIOS: Misterio[] = [
   {
+    slug: "nudo-de-la-fe",
+    numero: "91",
+    he: "קִשְׁרָא דִּמְהֵימְנוּתָא",
+    titulo: "El Nudo de la Fe",
+    tituloFa: "گِرِهِ ایمان",
+    gancho: "Dios no le mostró a Moshé su rostro — le mostró un nudo. El «nudo de la fe» del Zohar ata lo que no se ve con lo que sí: y cada mañana, al anudarte los tefilín, lo vuelves a atar.",
+    ganchoFa: "خدا چهره‌اش را به موسی نشان نداد — یک گره نشانش داد. «گِرِهِ ایمان» در زوهر، ناپیدا را به پیدا می‌بندد؛ و هر بامداد که تِفیلین می‌بندی، آن را از نو گره می‌زنی.",
+    serie: "fe",
+    color: "#6f8fe8",
+    orden: 0.5,
+  },
+  {
     slug: "358",
     numero: "358",
     he: "מָשִׁיחַ = נָחָשׁ",
