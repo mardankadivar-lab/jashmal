@@ -109,8 +109,11 @@ El motor marca términos cruzables con esta sintaxis:
 El frontend convierte esa sintaxis en enlaces dorados clicables.
 
 ## Audio (Fase 2)
-ElevenLabs para el podcast. Voice ID: 30Flj57Y61xChp5iKYNE.
-Botón "generar audio" toma el estudio → MP3.
+ElevenLabs para el podcast/narración. Botón "generar audio" toma el estudio → MP3.
+- VOZ FARSI OFICIAL = voz clonada de Mardan: `eF5At5p43oXnK1Ss6W4I`, con modelo
+  `eleven_v3` (con multilingual_v2 el farsi NO sonó bien; v3 sí). Es la voz del
+  contenido farsi (videos + canal @jashmal_kabbalah).
+- (El Voice ID antiguo `30Flj57Y61xChp5iKYNE` ya NO existe en la cuenta.)
 
 ## Skill relacionado
 kabbalah-sefaria-research (skill de IA que conecta a Sefaria y aplica
