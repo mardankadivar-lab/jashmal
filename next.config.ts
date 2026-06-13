@@ -29,6 +29,7 @@ const nextConfig: NextConfig = {
       { source: "/ropas-de-luz", destination: "/es/misterio/ropas-de-luz" },
       { source: "/nudo-de-la-fe", destination: "/es/misterio/nudo-de-la-fe" },
       { source: "/emunah", destination: "/es/misterio/emunah" },
+      { source: "/en-que-consiste", destination: "/es/misterio/en-que-consiste" },
     ];
   },
   async redirects() {

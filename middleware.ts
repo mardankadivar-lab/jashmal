@@ -6,7 +6,7 @@ const intlMiddleware = createMiddleware(routing);
 
 // Rutas cortas de TikTok: el middleware de locale las ignora para que
 // next.config.ts pueda reescribirlas sin añadir /es al principio.
-const TIKTOK_ROUTES = /^\/(26|358|137|linaje|tamar|betsabe|habakuk|bilaam|cerebro|21\-pactos|enoch|lot|yehuda|ropas\-de\-luz|nudo\-de\-la\-fe|emunah|entrelazamiento|sanador|refael|refua|serpiente\-de\-cobre)$/;
+const TIKTOK_ROUTES = /^\/(26|358|137|linaje|tamar|betsabe|habakuk|bilaam|cerebro|21\-pactos|enoch|lot|yehuda|ropas\-de\-luz|nudo\-de\-la\-fe|emunah|en\-que\-consiste|entrelazamiento|sanador|refael|refua|serpiente\-de\-cobre)$/;
 
 export default function middleware(req: NextRequest) {
   if (TIKTOK_ROUTES.test(req.nextUrl.pathname)) {

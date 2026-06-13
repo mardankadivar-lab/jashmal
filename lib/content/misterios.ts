@@ -43,6 +43,17 @@ export const MISTERIOS: Misterio[] = [
     orden: 0.6,
   },
   {
+    slug: "en-que-consiste",
+    he: "אֱמוּנָה וּבִטָּחוֹן",
+    titulo: "En qué consiste la fe — de la creencia a la confianza",
+    tituloFa: "ایمان از چه ساخته شده؟ — از باور تا توکّل",
+    gancho: "Creer es saber que Dios es firme; confiar es dejarse caer en esa firmeza. La fe consiste en tres columnas: el bitajón, la providencia en cada hoja y la fuerza de sostener cuando el Rostro se oculta.",
+    ganchoFa: "باور می‌گوید «او پابرجاست»؛ توکّل می‌افزاید «پس بر او می‌افتم». ایمان از سه ستون ساخته شده: توکّل، مشیّتِ جزئی، و ایستادن آنجا که چهره پنهان است.",
+    serie: "fe",
+    color: "#6f8fe8",
+    orden: 0.7,
+  },
+  {
     slug: "358",
     numero: "358",
     he: "מָשִׁיחַ = נָחָשׁ",
