@@ -54,6 +54,18 @@ export const MISTERIOS: Misterio[] = [
     orden: 0.7,
   },
   {
+    slug: "abraham",
+    numero: "248",
+    he: "אַבְרָהָם",
+    titulo: "Abraham — el padre de la fe",
+    tituloFa: "ابراهیم — پدرِ ایمان",
+    gancho: "El primero de quien la Torá dice «creyó». Diez pruebas, de «vete» a la Akedá; una sola letra que convierte 243 en 248, y el cuerpo entero al servicio de una promesa no vista.",
+    ganchoFa: "نخستین کسی که تورات درباره‌اش می‌گوید «ایمان آورد». ده آزمون، از «بیرون شو» تا عَقِدا؛ یک حرف که ۲۴۳ را ۲۴۸ می‌کند، و تمامِ تن در خدمتِ وعده‌ای ندیده.",
+    serie: "fe",
+    color: "#6f8fe8",
+    orden: 0.8,
+  },
+  {
     slug: "358",
     numero: "358",
     he: "מָשִׁיחַ = נָחָשׁ",
