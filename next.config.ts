@@ -31,6 +31,9 @@ const nextConfig: NextConfig = {
       { source: "/emunah", destination: "/es/misterio/emunah" },
       { source: "/en-que-consiste", destination: "/es/misterio/en-que-consiste" },
       { source: "/abraham", destination: "/es/misterio/abraham" },
+      // Atajo de la "Ruta de la Fe" (landing de la serie): jashmal.org/ruta-de-la-fe
+      // queda como URL limpia en el navegador y sirve la versión española.
+      { source: "/ruta-de-la-fe", destination: "/es/ruta-de-la-fe" },
     ];
   },
   async redirects() {

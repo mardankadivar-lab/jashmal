@@ -8,6 +8,7 @@ import type { Locale } from "@/i18n/routing";
 import MisterioTutor from "@/components/MisterioTutor";
 import MisterioLangToggle from "@/components/MisterioLangToggle";
 import TranslationBadge from "@/components/TranslationBadge";
+import SelloSofer from "@/components/SelloSofer";
 
 export default function MisteriosPage() {
   const locale = useLocale() as Locale;
@@ -64,6 +65,11 @@ export default function MisteriosPage() {
         <p className="mx-auto mt-3 max-w-md text-xs italic leading-relaxed text-gold/50">
           {t("thread")}
         </p>
+        {/* Micro-rótulo de confianza: el sello del Sofer, discreto, bajo el
+            encabezado (no en cada tarjeta). Enlaza a /como-verificamos. */}
+        <div className="mt-5 flex justify-center">
+          <SelloSofer variant="inline" />
+        </div>
       </div>
 
       {/* Misterios agrupados por categoría */}
