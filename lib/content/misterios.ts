@@ -31,6 +31,18 @@ export const MISTERIOS: Misterio[] = [
     orden: 0.5,
   },
   {
+    slug: "emunah",
+    numero: "102",
+    he: "אֱמוּנָה",
+    titulo: "La Fe — el fundamento de todo",
+    tituloFa: "ایمان — ستونی که همه‌چیز بر آن ایستاده است",
+    gancho: "613 mandamientos, y Habakuk los redujo todos a uno: «el justo por su fe vivirá». Pero la fe no es una corazonada — es firmeza, la piedra de abajo sobre la que todo se sostiene.",
+    ganchoFa: "ششصد و سیزده فرمان، و حَبَقوق همه را بر یک پایه نهاد: «عادل به ایمانش زنده است». اما ایمان گمان نیست — استواری است، آن سنگِ زیرین که همه‌چیز بر آن می‌ایستد.",
+    serie: "fe",
+    color: "#6f8fe8",
+    orden: 0.6,
+  },
+  {
     slug: "358",
     numero: "358",
     he: "מָשִׁיחַ = נָחָשׁ",
