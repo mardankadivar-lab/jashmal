@@ -20,13 +20,13 @@ export default function StudyTour() {
       const allSteps = [
         {
           // Paso de bienvenida: sin elemento, centrado en pantalla.
-          popover: { title: t("step1.title"), description: t("step1.desc") },
+          popover: { title: t("step1.title"), description: t.raw("step1.desc") },
         },
         {
           element: "#tour-search",
           popover: {
             title: t("step2.title"),
-            description: t("step2.desc"),
+            description: t.raw("step2.desc"),
             side: "bottom" as const,
             align: "start" as const,
           },
@@ -35,7 +35,7 @@ export default function StudyTour() {
           element: "#tour-categories",
           popover: {
             title: t("step3.title"),
-            description: t("step3.desc"),
+            description: t.raw("step3.desc"),
             side: "bottom" as const,
             align: "start" as const,
           },
@@ -44,7 +44,7 @@ export default function StudyTour() {
           element: "#tour-analysis",
           popover: {
             title: t("step4.title"),
-            description: t("step4.desc"),
+            description: t.raw("step4.desc"),
             side: "left" as const,
             align: "start" as const,
           },
@@ -53,7 +53,7 @@ export default function StudyTour() {
           element: "#tour-tutor",
           popover: {
             title: t("step5.title"),
-            description: t("step5.desc"),
+            description: t.raw("step5.desc"),
             side: "left" as const,
             align: "end" as const,
           },
@@ -62,14 +62,14 @@ export default function StudyTour() {
           element: "#tour-language",
           popover: {
             title: t("step6.title"),
-            description: t("step6.desc"),
+            description: t.raw("step6.desc"),
             side: "bottom" as const,
             align: "end" as const,
           },
         },
         {
           // Paso de cierre: sin elemento, centrado. Invita a empezar a estudiar.
-          popover: { title: t("step7.title"), description: t("step7.desc") },
+          popover: { title: t("step7.title"), description: t.raw("step7.desc") },
         },
       ];
 
