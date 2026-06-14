@@ -1,4 +1,4 @@
-const CACHE = 'jashmal-v1';
+const CACHE = 'jashmal-v2';
 const STATIC = ['/', '/es', '/fa'];
 
 self.addEventListener('install', e => {
