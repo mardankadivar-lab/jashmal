@@ -168,6 +168,18 @@ export const MISTERIOS: Misterio[] = [
     orden: 8,
   },
   {
+    slug: "chashmal-vav",
+    numero: "378",
+    he: "חַשְׁמַל · וָאו",
+    titulo: "El Chashmal — el silencio que habla",
+    tituloFa: "چَشمَل — سکوتی که سخن می‌گوید",
+    gancho: "La palabra más misteriosa de la Biblia lleva dentro su propio secreto: חש (silencio, 308) + מל (habla, 70) = 378 = חשמל. Y la vav, el «y» más simple del hebreo, se expande hasta revelar exactamente 137 — la constante de la luz.",
+    ganchoFa: "رازآمیزترین واژهٔ کتاب مقدس، رازِ خود را در درون دارد: חש (سکوت، ۳۰۸) + מל (سخن، ۷۰) = ۳۷۸ = חשמל. و واو، سادهٔ‌ترین «و» در عبری، گسترش می‌یابد تا دقیقاً ۱۳۷ را آشکار کند.",
+    serie: "gematria",
+    color: "#7855bb",
+    orden: 8.3,
+  },
+  {
     slug: "enoch",
     numero: "84",
     he: "חֲנוֹךְ",
