@@ -394,3 +394,58 @@ html.study-mode .always-dark canvas { opacity: 0.4; transition: opacity 0.5s eas
     filter: none;
   }
 }
+
+/* ===========================================================================
+   LamedLoader — la letra Lamed (ל) que "se escribe" sola, de arriba (Yud)
+   hacia abajo (recipiente Kaf), en bucle. Técnica de line-drawing SVG con
+   stroke-dasharray + stroke-dashoffset. Color dorado, fondo transparente.
+   El componente <LamedLoader> calcula el largo real del trazo y lo inyecta
+   como --lamed-len para que el dibujado sea exacto en cualquier tamaño.
+   =========================================================================== */
+@keyframes lamed-draw {
+  /* 0–45%: el trazo se dibuja desde el Yud hacia el recipiente Kaf */
+  0% {
+    stroke-dashoffset: var(--lamed-len, 2400);
+    fill-opacity: 0;
+  }
+  45% {
+    stroke-dashoffset: 0;
+    fill-opacity: 0;
+  }
+  /* 45–70%: la letra completa se "rellena" con un brillo dorado */
+  70% {
+    stroke-dashoffset: 0;
+    fill-opacity: 0.85;
+  }
+  /* 70–90%: sostiene el brillo */
+  90% {
+    stroke-dashoffset: 0;
+    fill-opacity: 0.85;
+  }
+  /* 90–100%: se desvanece para reiniciar el ciclo */
+  100% {
+    stroke-dashoffset: 0;
+    fill-opacity: 0;
+  }
+}
+
+.lamed-loader__path {
+  stroke: rgb(var(--c-gold, 201 164 62));
+  stroke-width: 14;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: rgb(var(--c-gold, 201 164 62));
+  fill-opacity: 0;
+  stroke-dasharray: var(--lamed-len, 2400);
+  stroke-dashoffset: var(--lamed-len, 2400);
+  animation: lamed-draw 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Sin movimiento: mostramos la Lamed dorada estática y visible. */
+  .lamed-loader__path {
+    stroke-dashoffset: 0 !important;
+    fill-opacity: 0.85 !important;
+    animation: none !important;
+  }
+}

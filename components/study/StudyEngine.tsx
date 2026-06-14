@@ -15,6 +15,7 @@ import StudyChat from "./StudyChat";
 import AudioPlayer from "./AudioPlayer";
 import WordMenu, { type WordMenuAnchor } from "./WordMenu";
 import RefPanel from "./RefPanel";
+import LamedLoader from "@/components/LamedLoader";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, type CatBook, type CategoryId } from "@/lib/sources/categories";
 import { getText, searchSuggestions, type SefariaTextResult, type NameSuggestion } from "@/lib/sources/sefaria";
@@ -660,8 +661,8 @@ export default function StudyEngine() {
 
         {studyLoading && (
           <div className="mt-10 flex flex-col items-center py-8">
-            {/* Indicador sobrio mientras Claude estudia (sin la gema). */}
-            <span className="h-3 w-3 animate-ping rounded-full bg-gold/70" />
+            {/* La Lamed se escribe sola mientras Claude estudia. */}
+            <LamedLoader size={72} label={t("generating")} />
             <p className="mt-6 animate-pulse text-center text-sm text-muted">
               {t("generating")}
             </p>

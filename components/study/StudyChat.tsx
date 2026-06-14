@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import LamedLoader from "@/components/LamedLoader";
 
 interface Message {
   role: "user" | "assistant";
@@ -218,7 +219,8 @@ export default function StudyChat({ studyRef, prefill, onPrefillConsumed }: Stud
             })}
             {loading && (
               <div className="flex justify-start">
-                <div className="max-w-[90%] rounded-2xl rounded-tl-sm bg-white/[0.04] px-3 py-2">
+                <div className="flex max-w-[90%] items-center gap-2 rounded-2xl rounded-tl-sm bg-white/[0.04] px-3 py-2">
+                  <LamedLoader size={28} label={t("thinking")} />
                   <span className="animate-pulse text-muted text-xs">{t("thinking")}</span>
                 </div>
               </div>
