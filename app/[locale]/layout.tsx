@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cinzel, EB_Garamond, Frank_Ruhl_Libre, Vazirmatn } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { routing, type Locale } from "@/i18n/routing";
 import { localizedMetadata } from "@/lib/i18n/seo";
 import GlobalTutor from "@/components/GlobalTutor";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import "../globals.css";
 
 const cinzel = Cinzel({
@@ -49,8 +50,20 @@ export async function generateMetadata({
   return {
     metadataBase: new URL("https://jashmal.org"),
     ...(await localizedMetadata(locale as Locale)),
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "black-translucent",
+      title: "Jashmal",
+    },
   };
 }
+
+export const viewport: Viewport = {
+  themeColor: "#05050a",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -90,6 +103,7 @@ export default async function LocaleLayout({
           <GlobalTutor />
         </NextIntlClientProvider>
         <Analytics />
+        <ServiceWorkerRegister />
       </body>
     </html>
   );
