@@ -18,7 +18,7 @@ import RefPanel from "./RefPanel";
 import LamedLoader from "@/components/LamedLoader";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, type CatBook, type CategoryId } from "@/lib/sources/categories";
-import { getText, searchSuggestions, type SefariaTextResult, type NameSuggestion } from "@/lib/sources/sefaria";
+import { getText, searchSuggestions, searchText, HL_OPEN, HL_CLOSE, type SefariaTextResult, type NameSuggestion, type TextSearchHit } from "@/lib/sources/sefaria";
 import { requestStudy, StudyError } from "@/lib/study/studyClient";
 import { requestTranslation } from "@/lib/i18n/translateClient";
 import { getParashaHashavua, type ParashaInfo } from "@/lib/infra/calendar";
@@ -50,6 +50,9 @@ export default function StudyEngine() {
   // Búsqueda por concepto: historial del usuario + nodos de la Mente Cósmica.
   const [historyHits, setHistoryHits] = useState<LocalStudy[]>([]);
   const [nodeHits, setNodeHits] = useState<NodeHit[]>([]);
+  // Búsqueda DENTRO de los textos (full-text de Sefaria): pasajes con resaltado.
+  const [textHits, setTextHits] = useState<TextSearchHit[]>([]);
+  const [textSearching, setTextSearching] = useState(false);
   // Caché de los nodos de la Mente Cósmica (se baja una sola vez, al teclear).
   const brainNodesRef = useRef<NodeHit[] | null>(null);
   const brainLoadingRef = useRef(false);
@@ -300,6 +303,8 @@ export default function StudyEngine() {
       setSuggestions([]);
       setHistoryHits([]);
       setNodeHits([]);
+      setTextHits([]);
+      setTextSearching(false);
       return;
     }
     // Historial: instantáneo (localStorage), sin esperar a la red.
@@ -307,6 +312,8 @@ export default function StudyEngine() {
     setShowSug(true);
 
     let cancelled = false;
+    // La búsqueda full-text tarda más; mostramos un indicador mientras llega.
+    setTextSearching(true);
     const timer = setTimeout(async () => {
       // Sefaria (textos y temas)
       try {
@@ -327,6 +334,12 @@ export default function StudyEngine() {
           setNodeHits(hits);
         }
       } catch { /* noop */ }
+      // Sefaria full-text: pasajes DENTRO de los libros (hebreo o traducción).
+      try {
+        const hits = await searchText(q, 8);
+        if (!cancelled) { setTextHits(hits); setShowSug(true); }
+      } catch { /* noop */ }
+      finally { if (!cancelled) setTextSearching(false); }
     }, 220);
     return () => { cancelled = true; clearTimeout(timer); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -334,12 +347,30 @@ export default function StudyEngine() {
 
   // ¿Hay algún resultado de cualquier fuente? (para mostrar el dropdown)
   const hasAnyHit =
-    suggestions.length > 0 || historyHits.length > 0 || nodeHits.length > 0 || search.trim().length >= 2;
+    suggestions.length > 0 || historyHits.length > 0 || nodeHits.length > 0 ||
+    textHits.length > 0 || search.trim().length >= 2;
+
+  // Limpia el buscador (input + todos los grupos de resultados + dropdown).
+  function clearSearch() {
+    setSearch("");
+    setSuggestions([]);
+    setHistoryHits([]);
+    setNodeHits([]);
+    setTextHits([]);
+    setTextSearching(false);
+    setShowSug(false);
+  }
 
   // Abrir un estudio guardado del historial: va a Mis Estudios sin regenerar.
   function openHistory(s: LocalStudy) {
-    setSearch(""); setSuggestions([]); setHistoryHits([]); setNodeHits([]); setShowSug(false);
+    clearSearch();
     router.push(`/mis-estudios?open=${encodeURIComponent(s.cid)}`);
+  }
+
+  // Al elegir un pasaje de la búsqueda en los textos: carga esa ref exacta.
+  function pickTextHit(h: TextSearchHit) {
+    clearSearch();
+    loadRef(h.ref, true);
   }
 
   // Al elegir una sugerencia: texto → carga la ref; tema/persona/lugar → estudio de concepto.
@@ -439,6 +470,21 @@ export default function StudyEngine() {
       connection: { fromId, toId, fromLabel, toLabel, pathLabels },
     });
   }
+  // Renderiza un fragmento resaltando la coincidencia (marcada con  …  por
+  // searchText). Devuelve nodos React: el término en dorado, el resto atenuado.
+  function renderSnippet(snippet: string) {
+    const parts = snippet.split(new RegExp(`${HL_OPEN}|${HL_CLOSE}`));
+    // El split por dos marcadores deja: fuera, dentro, fuera, dentro… alternado.
+    let inside = false;
+    return parts.map((part, i) => {
+      const node = inside
+        ? <mark key={i} className="bg-transparent font-semibold text-gold">{part}</mark>
+        : <span key={i}>{part}</span>;
+      inside = !inside;
+      return node;
+    });
+  }
+
   function closeConceptPanel() {
     // Si hay historial, volver al panel anterior; si no, cerrar.
     if (conceptHistory.length > 0) {
@@ -557,7 +603,45 @@ export default function StudyEngine() {
                   </ul>
                 )}
 
-                {/* Grupo 4 · Estudiar este concepto (siempre, para no quedar vacío) */}
+                {/* Grupo 4 · En los textos (búsqueda full-text de Sefaria) */}
+                {(textHits.length > 0 || textSearching) && (
+                  <ul className="border-t border-gold/10">
+                    <li className="flex items-center gap-2 px-3 pb-1 pt-2 font-cinzel text-[9px] uppercase tracking-widest text-gold/40">
+                      {t("groupInTexts")}
+                      {textSearching && (
+                        <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-gold/40" />
+                      )}
+                    </li>
+                    {textHits.map((h, i) => (
+                      <li key={`tx-${i}`}>
+                        <button
+                          type="button"
+                          onMouseDown={(e) => { e.preventDefault(); pickTextHit(h); }}
+                          className="block w-full px-3 py-2 text-start transition-colors hover:bg-gold/10"
+                        >
+                          <span className="flex items-center justify-between gap-2">
+                            <span className="truncate text-sm text-parchment/90">
+                              {h.heRef ? <span className="hebrew" dir="rtl">{h.heRef}</span> : h.ref}
+                            </span>
+                            <span className="shrink-0 font-cinzel text-[9px] uppercase tracking-wider text-gold/45">
+                              {t("sugInText")}
+                            </span>
+                          </span>
+                          {h.snippet && (
+                            <span
+                              dir="rtl"
+                              className="hebrew mt-0.5 block truncate text-start text-xs leading-relaxed text-muted/80"
+                            >
+                              {renderSnippet(h.snippet)}
+                            </span>
+                          )}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* Grupo 5 · Estudiar este concepto (siempre, para no quedar vacío) */}
                 {search.trim().length >= 2 && (
                   <div className="border-t border-gold/15">
                     <button

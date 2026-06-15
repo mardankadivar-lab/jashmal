@@ -119,6 +119,88 @@ export async function searchSuggestions(q: string): Promise<NameSuggestion[]> {
   return out;
 }
 
+// ── Búsqueda DENTRO de los textos (full-text) ────────────────────────────────
+// Sefaria expone un buscador de texto completo en /api/search-wrapper que soporta
+// CORS (access-control-allow-origin: *), así que se llama DIRECTO desde el
+// navegador, igual que el resto de Sefaria. No requiere API key.
+
+/** Un pasaje encontrado por la búsqueda de texto completo. */
+export interface TextSearchHit {
+  /** referencia canónica para cargar con loadRef. ej. "Genesis 1:1". */
+  ref: string;
+  /** referencia en hebreo (para mostrar en RTL). */
+  heRef?: string;
+  /** fragmento del texto con el término resaltado entre «marcas». */
+  snippet: string;
+}
+
+// El resaltado de Sefaria llega como <b>…</b> dentro del HTML del fragmento.
+// Lo convertimos a marcadores de texto propios ANTES de quitar el HTML, para no
+// perder dónde estaba la coincidencia. El frontend importa estas MISMAS constantes
+// y parte el snippet por ellas para pintar el término en dorado. Son cadenas que
+// nunca aparecen en un texto bíblico.
+export const HL_OPEN = "«hl»";
+export const HL_CLOSE = "«/hl»";
+
+function snippetFromHighlight(highlight: string): string {
+  return stripHtml(
+    highlight
+      .replace(/<b>/gi, HL_OPEN)
+      .replace(/<\/b>/gi, HL_CLOSE)
+  )
+    // El stripHtml deja las marcas; recortamos espacios sobrantes alrededor.
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Busca una palabra o frase DENTRO de los textos (no solo títulos/temas).
+ * Sirve en hebreo o en traducción. Devuelve hasta `limit` pasajes con su
+ * referencia y un fragmento resaltado. Nunca lanza: ante error devuelve [].
+ */
+export async function searchText(q: string, limit = 8): Promise<TextSearchHit[]> {
+  const query = q.trim();
+  if (!query) return [];
+  try {
+    // OJO: NO mandamos "Content-Type: application/json". Ese header convierte la
+    // petición en "no simple" y dispara un preflight CORS (OPTIONS) que el
+    // endpoint de Sefaria rechaza desde el navegador → "Failed to fetch". Sin el
+    // header, es una petición CORS simple y Sefaria igual lee el body como JSON.
+    const res = await fetch(`${BASE}/search-wrapper`, {
+      method: "POST",
+      body: JSON.stringify({
+        query,
+        type: "text",
+        size: Math.max(1, Math.min(limit, 20)),
+        field: "naive_lemmatizer", // tolera flexiones (raíces hebreas)
+        source_proj: true,          // pide ref/heRef limpios en _source
+      }),
+    });
+    if (!res.ok) return [];
+    const data = await res.json();
+    const hits: unknown[] = data?.hits?.hits ?? [];
+    const out: TextSearchHit[] = [];
+    const seen = new Set<string>();
+    for (const h of hits) {
+      const hit = h as {
+        _source?: { ref?: string; heRef?: string };
+        highlight?: { naive_lemmatizer?: string[]; exact?: string[] };
+      };
+      const ref = hit._source?.ref;
+      if (!ref || seen.has(ref)) continue;
+      seen.add(ref);
+      const frags =
+        hit.highlight?.naive_lemmatizer ?? hit.highlight?.exact ?? [];
+      const snippet = frags.length > 0 ? snippetFromHighlight(frags[0]) : "";
+      out.push({ ref, heRef: hit._source?.heRef, snippet });
+      if (out.length >= limit) break;
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
 /** Construye la ref de un capítulo o daf de Talmud. */
 export function buildRef(
   bookId: string,

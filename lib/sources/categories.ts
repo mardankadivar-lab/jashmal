@@ -7,6 +7,7 @@ import {
   COMPLEX_OVERRIDES,
   REF_OVERRIDES,
   HIDDEN_BOOKS,
+  EXTRA_BOOKS,
   bookRef,
   type RichBook,
 } from "@/lib/sources/catalogOverrides";
@@ -31,8 +32,11 @@ export interface RichGroup {
 }
 
 // Expande cada subcategoría: complejos → sus partes; aplica REF_OVERRIDES
-// (parche de etiqueta/ref del Arí); oculta HIDDEN_BOOKS (refs rotos).
-function expandSub(sub: CatSub): RichSub {
+// (parche de etiqueta/ref del Arí); oculta HIDDEN_BOOKS (refs rotos); e inyecta
+// los EXTRA_BOOKS de la categoría (libros que no vienen en el catálogo generado,
+// ej. Ben Porat Yosef en Jasidut). Los extra se añaden a la PRIMERA subcategoría
+// de la categoría para que aparezcan en la lista plana.
+function expandSub(sub: CatSub, extra: RichBook[]): RichSub {
   const books: RichBook[] = [];
   for (const b of sub.books) {
     if (HIDDEN_BOOKS.has(b.id)) continue;
@@ -44,16 +48,21 @@ function expandSub(sub: CatSub): RichSub {
     const patch = REF_OVERRIDES[b.id];
     books.push(patch ? { ...(b as RichBook), ...patch } : (b as RichBook));
   }
+  books.push(...extra);
   return { sub: sub.sub, subHe: sub.subHe, books };
 }
 
-export const CATALOG: RichGroup[] = RAW.map((g) => ({
-  id: g.id,
-  he: g.he,
-  es: g.es,
-  fa: CATEGORY_FA[g.id] ?? g.es, // fallback a español si no hay FA
-  subs: g.subs.map(expandSub),
-}));
+export const CATALOG: RichGroup[] = RAW.map((g) => {
+  const extra = EXTRA_BOOKS[g.id] ?? [];
+  return {
+    id: g.id,
+    he: g.he,
+    es: g.es,
+    fa: CATEGORY_FA[g.id] ?? g.es, // fallback a español si no hay FA
+    // Los EXTRA_BOOKS de la categoría se inyectan solo en la primera subcategoría.
+    subs: g.subs.map((s, i) => expandSub(s, i === 0 ? extra : [])),
+  };
+});
 
 export const CATEGORY_ORDER: CategoryId[] = CATALOG.map((g) => g.id);
 

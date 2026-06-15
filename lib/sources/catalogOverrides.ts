@@ -19,8 +19,27 @@ export const COMPLEX_OVERRIDES: Record<string, RichBook[]> = {
 
 };
 
-// Libros EXTRA a añadir a una subcategoría (no usado por ahora).
-export const EXTRA_BOOKS: Record<string, RichBook[]> = {};
+// Libros EXTRA a añadir a una CATEGORÍA (clave = id de categoría de Sefaria,
+// ej. "Chasidut"). Se inyectan al final de la lista de la categoría desde
+// categories.ts → expandSub. Útil para obras que NO vienen en el catálogo
+// autogenerado pero sí existen en Sefaria.
+//
+// Ben Porat Yosef: comentario jasídico al Génesis de R' Yaakov Yosef de Polnoye,
+// discípulo principal del Baal Shem Tov. Estructura COMPLEJA (21 secciones de
+// nombre, no numéricas): como el Zohar/Etz Jaim, queda como UN solo chip; al
+// abrirlo BookBrowser lo intercepta por id y muestra BenPoratNavigator (TOC
+// agrupado). units aquí es irrelevante (la navegación la maneja el navegador).
+export const EXTRA_BOOKS: Record<string, RichBook[]> = {
+  Chasidut: [
+    {
+      id: "Ben Porat Yosef",
+      label: "Ben Porat Yosef",
+      he: "בֶּן פּוֹרָת יוֹסֵף",
+      type: "chapters",
+      units: 21,
+    },
+  ],
+};
 
 // Parche de etiqueta/ref para libros que YA están en el catálogo generado.
 // Etz Chaim (Árbol de la Vida) del Arí: la exposición sistemática de la Cabalá
@@ -197,6 +216,70 @@ export const ZOHAR_GROUPS: ZoharGroup[] = [
     parashot: [
       { id: "Zohar, Idra Zuta",  label: "Idra Zutá — Pequeña Asamblea ★", labelFa: "ایدرا زوطا ★", he: "אִדְרָא זוּטָא", units: 43, special: true },
       { id: "Zohar, Addenda",    label: "Tosafot — Suplementos",           labelFa: "توسافوت",      he: "תּוֹסָפוֹת",    units: 81  },
+    ],
+  },
+];
+
+// ─── Estructura de Ben Porat Yosef (para BenPoratNavigator) ─────────────────
+// 21 secciones EXACTAS de Sefaria, verificadas contra la API (2026-06-15).
+// El ref de cada nodo es "Ben Porat Yosef, {refTitle}" (título inglés de Sefaria).
+// 19 nodos son profundidad 1 (se cargan ENTEROS con getText). Los 2 de Sermones
+// (Shabbat HaGadol / Shabbat Shuva) son profundidad 2 (Capítulo→Párrafo): para
+// el MVP se abren también como nodo completo; getText devuelve el nodo y el
+// flatten existente lo aplana.
+export interface BenPoratNode {
+  id: string;      // ref Sefaria completo: "Ben Porat Yosef, Vayechi"
+  label: string;   // español
+  labelFa: string; // farsi
+  he: string;
+  special?: boolean;  // ★ destacado normal (introducción)
+  star?: boolean;     // ★★ texto estrella (la Carta del Baal Shem Tov)
+}
+export interface BenPoratGroup {
+  id: string;
+  label: string;   // español
+  labelFa: string; // farsi
+  he: string;
+  nodes: BenPoratNode[];
+}
+
+const BPY = (refTitle: string) => `Ben Porat Yosef, ${refTitle}`;
+
+export const BEN_PORAT_GROUPS: BenPoratGroup[] = [
+  {
+    id: "aperturas", label: "Aperturas", labelFa: "گشایش‌ها", he: "פְּתִיחוֹת",
+    nodes: [
+      { id: BPY("Foreword"),     label: "Apertura",      labelFa: "گشایش", he: "פְּתִיחָה" },
+      { id: BPY("Introduction"), label: "Introducción",  labelFa: "مقدمه", he: "הַקְדָּמָה", special: true },
+    ],
+  },
+  {
+    id: "bereshit", label: "Bereshit · Génesis", labelFa: "برئشیت · پیدایش", he: "בְּרֵאשִׁית",
+    nodes: [
+      { id: BPY("Bereshit"),    label: "Bereshit",     labelFa: "برئشیت",  he: "בְּרֵאשִׁית" },
+      { id: BPY("Noach"),       label: "Noaj",         labelFa: "نوح",     he: "נֹחַ" },
+      { id: BPY("Lech Lecha"),  label: "Lej Lejá",     labelFa: "لخ لخا",  he: "לֶךְ לְךָ" },
+      { id: BPY("Vayera"),      label: "Vayerá",       labelFa: "وَیّرا",  he: "וַיֵּרָא" },
+      { id: BPY("Chayei Sara"), label: "Jayéi Sará",   labelFa: "حَیّی سارا", he: "חַיֵּי שָׂרָה" },
+      { id: BPY("Toldot"),      label: "Toledot",      labelFa: "تولدوت",  he: "תּוֹלְדוֹת" },
+      { id: BPY("Vayetzei"),    label: "Vayetzé",      labelFa: "وَیّتسی", he: "וַיֵּצֵא" },
+      { id: BPY("Vayishlach"),  label: "Vayishlaj",    labelFa: "وَیشلَح", he: "וַיִּשְׁלַח" },
+      { id: BPY("Vayeshev"),    label: "Vayeshev",     labelFa: "وَیّشِو", he: "וַיֵּשֶׁב" },
+      { id: BPY("Miketz"),      label: "Mikets",       labelFa: "مِقّتس",  he: "מִקֵּץ" },
+      { id: BPY("Vayigash"),    label: "Vayigash",     labelFa: "وَیگَش",  he: "וַיִּגַּשׁ" },
+      { id: BPY("Vayechi"),     label: "Vayejí",       labelFa: "وَیْحی",  he: "וַיְחִי" },
+    ],
+  },
+  {
+    id: "otras", label: "Otras secciones", labelFa: "بخش‌های دیگر", he: "שְׁאָר חֲלָקִים",
+    nodes: [
+      { id: BPY("Likkutim"),                label: "Recopilaciones (Likutim)",          labelFa: "گزیده‌ها",          he: "לִקּוּטִים" },
+      { id: BPY("Discourse"),               label: "Disertación (Jiluk)",               labelFa: "رساله",             he: "חִלּוּק" },
+      { id: BPY("Responsa"),                label: "Responsa (She'elot u-Teshuvot)",    labelFa: "پرسش و پاسخ",       he: "שׁוּ\"ת" },
+      { id: BPY("Shabbat HaGadol Sermons"), label: "Sermones de Shabat HaGadol",        labelFa: "خطبه‌های شبات هَگادول", he: "דְּרָשׁוֹת שַׁבָּת הַגָּדוֹל" },
+      { id: BPY("Shabbat Shuva Sermons"),   label: "Sermones de Shabat Teshuvá",        labelFa: "خطبه‌های شبات تشووا",  he: "דְּרָשׁוֹת שַׁבָּת תְּשׁוּבָה" },
+      { id: BPY("Kuntres Acharon"),         label: "Cuaderno Final (Kuntrés Ajarón)",   labelFa: "دفترچهٔ پایانی",    he: "קוּנְטְרֵס אַחֲרוֹן" },
+      { id: BPY("Baal Shem Tov's Letter"),  label: "La Carta del Baal Shem Tov",        labelFa: "نامهٔ بعل شم טوב",  he: "אִגֶּרֶת מֵהַבַּעַשְׁ\"ט", star: true },
     ],
   },
 ];

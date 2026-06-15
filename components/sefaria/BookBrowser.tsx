@@ -12,6 +12,7 @@ import {
 import BookSummary from "./BookSummary";
 import ZoharNavigator from "./ZoharNavigator";
 import EtzChaimNavigator from "./EtzChaimNavigator";
+import BenPoratNavigator from "./BenPoratNavigator";
 import type { RichBook } from "@/lib/sources/catalogOverrides";
 
 interface BookBrowserProps {
@@ -58,6 +59,42 @@ export default function BookBrowser({
           {locale === "fa" ? "یک شعار یا دروازه را انتخاب کنید" : "Elige un Shaar o Portal"}
         </p>
         <EtzChaimNavigator onSelectSection={(book) => onSelectBook(book as CatBook)} />
+      </div>
+    );
+  }
+
+  // ---- Navegador especial de Ben Porat Yosef (21 nodos agrupados en TOC) ----
+  if (selectedBook?.id === "Ben Porat Yosef") {
+    return (
+      <div className="mt-4">
+        <BookSummary bookId={selectedBook.id} />
+        <p className="mb-2 text-sm text-muted">
+          <span className="hebrew me-2 text-gold/80">בֶּן פּוֹרָת יוֹסֵף</span>
+          {locale === "fa" ? "یک بخش را انتخاب کنید" : "Elige una sección"}
+        </p>
+        <BenPoratNavigator onSelectNode={(book) => onSelectBook(book as CatBook)} />
+      </div>
+    );
+  }
+
+  // ---- Nodo de Ben Porat Yosef ya elegido → se estudia ENTERO (sin capítulos) ----
+  // Los nodos se reportan con id "Ben Porat Yosef, …" y un refTemplate que es el
+  // ref completo del nodo. En vez de mostrar una rejilla con un único "1", damos
+  // un botón claro que abre la sección entera.
+  if (selectedBook?.id.startsWith("Ben Porat Yosef, ")) {
+    return (
+      <div className="mt-4">
+        <BookSummary bookId="Ben Porat Yosef" />
+        <p className="mb-2 text-sm text-muted">
+          <span className="text-parchment/80">{selectedBook.label}</span>
+          <span className="hebrew ms-2 text-gold/60">{selectedBook.he}</span>
+        </p>
+        <button
+          onClick={() => onSelectUnit(1)}
+          className="rounded-md border border-gold/50 bg-gold/10 px-4 py-2 text-sm text-gold transition-all hover:border-gold hover:bg-gold/20"
+        >
+          {locale === "fa" ? "مطالعهٔ این بخش به‌طور کامل" : "Estudiar esta sección completa"}
+        </button>
       </div>
     );
   }

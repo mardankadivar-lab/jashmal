@@ -25,10 +25,34 @@ export function indexTitleFor(id: string): string {
   return OVERRIDE_INDEX[id] ?? id;
 }
 
+// Fichas verificadas por el editor-erudito (texto fijo ES/FA), para libros cuya
+// descripción de Sefaria es pobre o solo en inglés. Tienen prioridad sobre el
+// índice de Sefaria.
+const VERIFIED_INFO: Record<string, { heTitle: string; es: string; fa: string }> = {
+  "Ben Porat Yosef": {
+    heTitle: "בֶּן פּוֹרָת יוֹסֵף",
+    es: "Comentarios jasídicos sobre el Génesis por R' Yaakov Yosef de Polnoye, discípulo principal del Baal Shem Tov. Uno de los primeros libros jasídicos impresos (Koretz, 1781) y fuente primaria de las enseñanzas del Baal Shem Tov.",
+    fa: "تفسیرهای حسیدی بر سفر پیدایش از ربی یعقوب یوسف از پولنوآ، شاگرد برجستهٔ بَعْل شِم טوב. از نخستین کتاب‌های چاپ‌شدهٔ حسیدی (کورتس، ۱۷۸۱) و سرچشمهٔ اصلی آموزه‌های بعل شم טوב.",
+  },
+};
+
 export async function getBookInfo(
   id: string,
   locale: string
 ): Promise<BookInfo | null> {
+  // Ficha verificada por el editor-erudito: tiene prioridad sobre Sefaria.
+  const verified = VERIFIED_INFO[id];
+  if (verified) {
+    const desc = locale === "fa" ? verified.fa : verified.es;
+    return {
+      title: id,
+      heTitle: verified.heTitle,
+      shortDesc: desc,
+      desc,
+      categories: ["Chasidut"],
+    };
+  }
+
   const title = indexTitleFor(id);
   try {
     const res = await fetch(`${BASE}/v2/index/${encodeURIComponent(title)}`, {

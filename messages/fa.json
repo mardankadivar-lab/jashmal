@@ -45,7 +45,7 @@
   "study": {
     "title": "موتور مطالعه",
     "subtitle": "یک منبع را مرور کن یا مستقیم جست‌وجو کن. تحلیل به زبان تو ظاهر می‌شود؛ متون اصلی به عبری.",
-    "searchPlaceholder": "جست‌وجوی متن، نام، مکان یا موضوع (مثال: ابراهیم، اورشلیم، Bereshit 1:1)...",
+    "searchPlaceholder": "جست‌وجوی متن، نام، موضوع یا یک عبارت درون کتاب‌ها (مثال: ابراهیم، שמע ישראל، Bereshit 1:1)...",
     "searchButton": "جست‌وجو",
     "chooseCategory": "یک دسته را برگزین",
     "chooseBook": "یک کتاب را برگزین",
@@ -86,6 +86,8 @@
     "groupHistory": "مطالعات من",
     "groupBrain": "ذهن کیهانی",
     "groupTexts": "متون و موضوعات",
+    "groupInTexts": "در متن‌ها",
+    "sugInText": "بخش",
     "studyThisConcept": "مطالعهٔ مفهوم: «{q}»"
   },
   "myStudies": {
