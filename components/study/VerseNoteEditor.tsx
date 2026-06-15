@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { noteFor, saveNote, deleteNote } from "@/lib/study/cuaderno";
+import { noteFor, saveNote, deleteNote, isCuadernoSynced } from "@/lib/study/cuaderno";
 
 interface VerseNoteEditorProps {
   refBase: string;
@@ -25,6 +25,7 @@ export default function VerseNoteEditor({
   const t = useTranslations("cuaderno");
   const [text, setText] = useState("");
   const [saved, setSaved] = useState(false);
+  const [synced, setSynced] = useState(false);
   const taRef = useRef<HTMLTextAreaElement>(null);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -34,6 +35,15 @@ export default function VerseNoteEditor({
     if (autoFocus) setTimeout(() => taRef.current?.focus(), 60);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refBase, verse]);
+
+  // Reflejar si el cuaderno está ligado a la cuenta (se resuelve tras la
+  // hidratación, que emite "jashmal:cuaderno"). Sin sesión → guardado local.
+  useEffect(() => {
+    const refresh = () => setSynced(isCuadernoSynced());
+    refresh();
+    window.addEventListener("jashmal:cuaderno", refresh);
+    return () => window.removeEventListener("jashmal:cuaderno", refresh);
+  }, []);
 
   function persist(val: string) {
     saveNote(refBase, verse, val);
@@ -83,7 +93,7 @@ export default function VerseNoteEditor({
         className="w-full resize-y rounded-b-lg bg-transparent p-3 text-sm leading-relaxed text-parchment/90 placeholder:text-muted/55 focus:outline-none"
       />
       <div className="flex items-center justify-between border-t border-gold/10 px-3 py-1.5 text-[11px] text-muted/70">
-        <span>{t("local")}</span>
+        <span>{synced ? t("syncedAccount") : t("local")}</span>
         <span className="flex items-center gap-3">
           {saved && <span className="text-gold/70">{t("saved")}</span>}
           {text.trim() && (

@@ -13,6 +13,7 @@ import {
   addHighlight,
   clearHighlightsInRange,
   summaryForRef,
+  hydrateCuaderno,
   type HighlightColor,
   type Highlight,
   type VerseSide,
@@ -76,6 +77,13 @@ export default function TextViewer({
     window.addEventListener("jashmal:cuaderno", onChange);
     return () => window.removeEventListener("jashmal:cuaderno", onChange);
   }, [bump]);
+
+  // Sincronizar con la cuenta al montar: si hay sesión, fusiona el cuaderno del
+  // servidor con el local y sube lo anónimo (una vez). Si no hay sesión, no hace
+  // nada (modo local intacto). Idempotente: solo corre una vez por vida del módulo.
+  useEffect(() => {
+    void hydrateCuaderno();
+  }, []);
 
   const handleSelect = useCallback((info: SelectionInfo) => {
     setPendingSel(info);

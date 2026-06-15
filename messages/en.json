@@ -208,6 +208,7 @@
     "noteTitle": "Note · verse {n}",
     "notePlaceholder": "Your annotation on this verse...",
     "local": "Saved on your device",
+    "syncedAccount": "Synced to your account",
     "saved": "✓ Saved",
     "deleteNote": "Delete note",
     "close": "Close",
