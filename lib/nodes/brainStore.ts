@@ -9,7 +9,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 import { getSql } from "@/lib/infra/db";
-import { disciplineFromRef, commentatorNameToCat } from "@/lib/sources/discipline";
+import { disciplineFromRef, commentatorNameToCat, commentatorFromLabel } from "@/lib/sources/discipline";
 import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, STUDY2_NODES, STUDY2_EDGES, STUDY3_NODES, STUDY3_EDGES, BRIT21_NODES, BRIT21_EDGES, MADRES_NODES, MADRES_EDGES, TOHU_NODES, TOHU_EDGES, AVRAHAM_KAB_NODES, AVRAHAM_KAB_EDGES, GILGUL_CAIN_HEVEL_NODES, GILGUL_CAIN_HEVEL_EDGES, GILGUL_VESSEL_NODES, TIKUN_SILENCIO_NODES, TIKUN_SILENCIO_EDGES, ENOCH_NODES, ENOCH_EDGES, COMMENTARY_ALL_NODES, COMMENTARY_EDGES, type BNode } from "@/lib/nodes/brainData";
 
 export type BrainGraph = { nodes: BNode[]; edges: [string, string][] };
@@ -237,37 +237,92 @@ export async function reclassifyHarvestedDisciplines(): Promise<number> {
 
 // ── Migración (Sofer): Tanaj SOLO libros base · comentaristas → su galaxia ──
 // Exigencia de Mardan: la galaxia Tanaj debe contener SOLO los 24 libros del
-// Tanaj. Cualquier nodo cuyo nombre sea un COMENTARISTA o Targum (Ibn Ezra,
-// Ramban, Rashi, Onkelos, Targum Yonatan, …) que esté hoy en una galaxia de
-// texto base (tanakh/midrash/mishnah) se MUEVE a su galaxia correcta:
-//   · la PERSONA (el sabio) → Personajes (figure).
+// Tanaj. Cualquier nodo cosechado que sea un COMENTARISTA o Targum (Ibn Ezra,
+// Ramban, Rashi, Onkelos, Targum Yonatan, …) hoy alojado en una galaxia de texto
+// base (tanakh/midrash/mishnah) se MUEVE a su galaxia correcta:
+//   · la OBRA del comentario al Tanaj → Comentarios (commentary).
+//   · la OBRA del comentario al Talmud/Mishná → su galaxia base (talmud/mishnah).
+//   · el NOMBRE suelto de la persona → Personajes (figure).
 //   · el Targum (la OBRA del Tanaj) → Comentarios (commentary).
-// commentatorNameToCat() es la fuente de la regla (alias verificados). Toca
-// nodos de cualquier source (la cosecha pudo crearlos como 'study'); NO toca la
-// galaxia Comunidad. Idempotente: tras mover, el WHERE deja de encontrarlos.
+//
+// La detección es GENERAL (no una lista de 3 nodos). Tres fuentes, en orden:
+//   1) commentatorFromLabel(label) → reconoce por PATRÓN de etiqueta en es/fa/en/he
+//      ("Rashi sobre Tehilim", "Rashi a 1 Reyes 16:34", "Comentario de Ibn Ezra a
+//      Génesis", "Tosafot a Berajot 2a", …), aislando la base para elegir destino.
+//      Devuelve además la PERSONA → la creamos/enlazamos en Personajes (figure).
+//   2) commentatorNameToCat(label|id) → nombre suelto del comentarista/Targum.
+//   3) disciplineFromRef(id) → por si el id sí es un ref de Sefaria reconocible.
+//
+// Anti-falsos-positivos: commentatorFromLabel SOLO matchea si la etiqueta NOMBRA
+// a un comentarista conocido; el libro base suelto ("Tehilim") NUNCA matchea.
+// SOLO toca nodos COSECHADOS (source IN study/expand/community); jamás la semilla
+// curada (seed/sofer). Idempotente: tras mover, el WHERE deja de encontrarlos.
+const HARVESTED_SOURCES = ["study", "expand", "community"];
 export async function moveCommentatorsOutOfTanakh(): Promise<number> {
   const sql = getSql();
   if (!sql) return 0;
   try {
-    // candidatos: nodos en galaxias de texto base (donde NO deben vivir personas)
+    // candidatos: nodos COSECHADOS en galaxias de texto base
     const rows = (await sql`
       SELECT id, label, cat FROM brain_nodes
       WHERE cat IN ('tanakh','midrash','mishnah')
-        AND cat <> 'comunidad'
+        AND source = ANY(${HARVESTED_SOURCES})
     `) as Array<{ id: string; label: string; cat: string }>;
     let fixed = 0;
     for (const r of rows) {
-      // probamos por label y por id (la cosecha pudo nombrarlos distinto)
+      // 1) detección por ETIQUETA (general, multi-idioma) → mueve OBRA + persona
+      const byLabel =
+        commentatorFromLabel(r.label) ?? commentatorFromLabel(r.id);
+      if (byLabel) {
+        if (byLabel.cat !== r.cat) {
+          await sql`UPDATE brain_nodes SET cat = ${byLabel.cat}
+                    WHERE id = ${r.id} AND source = ANY(${HARVESTED_SOURCES})`;
+          fixed++;
+        }
+        // asegura la PERSONA del comentarista en Personajes (figure) y la enlaza.
+        if (byLabel.person) {
+          await ensureFigureAndLink(sql, byLabel.person, r.id);
+        }
+        continue;
+      }
+      // 2/3) nombre suelto del comentarista/Targum, o ref reconocible por catálogo
       const correct =
         commentatorNameToCat(r.label) ?? commentatorNameToCat(r.id) ?? disciplineFromRef(r.id);
       if (correct && correct !== r.cat && (correct === "figure" || correct === "commentary")) {
-        await sql`UPDATE brain_nodes SET cat = ${correct} WHERE id = ${r.id}`;
+        await sql`UPDATE brain_nodes SET cat = ${correct}
+                  WHERE id = ${r.id} AND source = ANY(${HARVESTED_SOURCES})`;
         fixed++;
       }
     }
     return fixed;
   } catch {
     return 0; // nunca romper la lectura del cerebro
+  }
+}
+
+// Asegura que el nodo PERSONA del comentarista exista en Personajes (figure) y
+// crea la arista obra→persona (pending, origin 'study'). No pisa una persona ya
+// curada (ON CONFLICT DO NOTHING). person = nombre canónico (ej. "Rashi").
+async function ensureFigureAndLink(
+  sql: NonNullable<ReturnType<typeof getSql>>,
+  person: string,
+  workId: string,
+): Promise<void> {
+  try {
+    await sql`
+      INSERT INTO brain_nodes (id, label, cat, level, status, source)
+      VALUES (${person}, ${person}, 'figure', 3, 'approved', 'study')
+      ON CONFLICT (id) DO NOTHING
+    `;
+    if (person !== workId) {
+      await sql`
+        INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
+        VALUES (${edgeKey(person, workId)}, ${person}, ${workId}, 'rel', 1, 'pending', 'study')
+        ON CONFLICT (id) DO NOTHING
+      `;
+    }
+  } catch {
+    /* enlazar la persona nunca debe romper la migración */
   }
 }
 
