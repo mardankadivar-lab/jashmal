@@ -16,10 +16,8 @@
 export const MAPA_REGLA_DE_ORO = {
   es:
     "El mazal describe la materia prima, no el resultado. Tu signo y la letra de tu mes señalan la TENDENCIA con la que tu alma bajó al mundo — el material de tu trabajo, el campo de tu batalla. Nunca señalan cómo termina. El desenlace lo decide tu libre albedrío sometido a Dios. Por eso esto es tikún, no fortuna. אֵין מַזָּל לְיִשְׂרָאֵל — 'no hay astro que gobierne a Israel' (Shabat 156a).",
-  // TODO(fa): la spec del Mapa solo trae la Regla de Oro en español; el Sofer
-  // entregará el fa. Mientras tanto el disclaimer (que SÍ está en fa) cubre lo
-  // esencial en farsi. No traducir aquí por nuestra cuenta.
-  fa: null as string | null,
+  fa:
+    "مَزَّل، مادهٔ خام را توصیف می‌کند، نه نتیجه را. برج تو و حرفِ ماهِ تو، گرایشی را نشان می‌دهند که روحِ تو با آن به جهان فرود آمد — مادهٔ کارَت، میدانِ نبردَت. اینها هرگز نشان نمی‌دهند که چگونه پایان می‌یابد. فرجامِ کار را ارادهٔ آزادِ تو که به خداوند سپرده شده، رقم می‌زند. به همین سبب این تیکون است، نه بخت. אֵין מַזָּל לְיִשְׂרָאֵל — «هیچ ستاره‌ای بر اسرائیل فرمان نمی‌رانَد» (شبات ۱۵۶a).",
   en: null as string | null, // TODO(en)
 };
 
@@ -36,7 +34,8 @@ export const MAPA_DISCLAIMER = {
 export const MAPA_GEMATRIA_TEXTO = {
   es:
     "Tu nombre tiene una raíz numérica — un sello, no un hechizo. La suma de sus letras (gematría) es una raíz para meditar sobre el sentido de tu nombre, no un número mágico de suerte. Buscar palabras/versículos del mismo valor es una invitación a pensar, una puerta de estudio. Lo que hagas con tu nombre lo decides tú.",
-  fa: null as string | null, // TODO(fa)
+  fa:
+    "نامِ تو ریشه‌ای عددی دارد — مُهری، نه وِردی جادویی. مجموعِ حروفِ آن (گیماتریا) ریشه‌ای است برای تأمل در معنایِ نامَت، نه عددی جادویی برای بخت و اقبال. جستجویِ واژه‌ها و آیه‌هایِ هم‌ارزش، دعوتی است به اندیشیدن، دری برای مطالعه. آنچه با نامت می‌کنی، خودت تصمیم می‌گیری.",
   en: null as string | null, // TODO(en)
 };
 
@@ -44,7 +43,8 @@ export const MAPA_GEMATRIA_TEXTO = {
 export const MAPA_MADRE_NOTA = {
   es:
     "Costumbre devocional de la tefilá: «[Nombre] ben/bat [nombre de la madre]». No tiene efectos automáticos ni mágicos, nunca es requisito ni un «amplificador de poder». Es opcional.",
-  fa: null as string | null, // TODO(fa)
+  fa:
+    "رسمی نیایشی در تِفیلا (دعا): «[نام] بِن/بَت [نامِ مادر]». هیچ اثرِ خودکار یا جادویی ندارد، هرگز شرط نیست و «تقویت‌کنندهٔ نیرو» نیز نیست. اختیاری است.",
   en: null as string | null, // TODO(en)
 };
 
@@ -288,7 +288,8 @@ export const ESPEJO_DISCLAIMER = {
 export const ESPEJO_NOTA_ARIZAL = {
   es:
     "Nota de honestidad: la «metoposcopía de las 22 letras en la frente» del Arizal NO es citable con folio en el Shaar Ruaj HaKodesh; se menciona el Arizal solo como tradición atestiguada por Rabí Jaim Vital, con temor del Cielo y dependiente de ruaj hakodesh. No se inventa folio.",
-  fa: null as string | null, // TODO(fa)
+  fa:
+    "یادداشتی از سرِ صداقت: «خواندنِ بیست‌ودو حرف بر پیشانی» منسوب به آریزال را نمی‌توان با ارجاعِ دقیق به برگ (دَف) در «شَعَر روحَ هَقودِش» نقل کرد؛ آریزال تنها همچون سنتی یاد می‌شود که رَبّی حَییم ویتال بر آن گواهی داده است، با ترسِ آسمان و وابسته به روحَ هَقودِش (الهامِ قدسی). ما هیچ ارجاعِ ساختگی به برگ نمی‌سازیم.",
   en: null as string | null, // TODO(en)
 };
 
@@ -614,7 +615,8 @@ export const PREGUNTAS: Pregunta[] = [
 export const ESPEJO_CIERRE = {
   es:
     "Recuerda: esto es un espejo aproximado, no un veredicto. El rasgo es maleable; el opuesto-luminoso es tu meta, no una sentencia. Por encima de todo rasgo están tu libre albedrío y tu entrega a Dios. Tú eliges quién ser.",
-  fa: null as string | null, // TODO(fa)
+  fa:
+    "به یاد داشته باش: این آینه‌ای تقریبی است، نه حُکم. ویژگی، شکل‌پذیر است؛ ضدِّ نورانی هدفِ توست، نه سرنوشتِ محتوم. فراتر از هر ویژگی، ارادهٔ آزاد و سپردنِ خویش به خداوند است. این تو هستی که برمی‌گزینی که چه کسی باشی.",
   en: null as string | null, // TODO(en)
 };
 
