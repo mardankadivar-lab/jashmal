@@ -27,8 +27,9 @@ export const COMPLEX_OVERRIDES: Record<string, RichBook[]> = {
 // Ben Porat Yosef: comentario jasídico al Génesis de R' Yaakov Yosef de Polnoye,
 // discípulo principal del Baal Shem Tov. Estructura COMPLEJA (21 secciones de
 // nombre, no numéricas): como el Zohar/Etz Jaim, queda como UN solo chip; al
-// abrirlo BookBrowser lo intercepta por id y muestra BenPoratNavigator (TOC
-// agrupado). units aquí es irrelevante (la navegación la maneja el navegador).
+// abrirlo BookBrowser lo intercepta por id y muestra ParshaWorkNavigator (TOC
+// agrupado, estructura BEN_PORAT_GROUPS). units aquí es irrelevante (la
+// navegación la maneja el navegador).
 export const EXTRA_BOOKS: Record<string, RichBook[]> = {
   Chasidut: [
     {
@@ -59,6 +60,15 @@ export const REF_OVERRIDES: Record<string, Partial<RichBook>> = {
     // intercepta en BookBrowser y se delega a EtzChaimNavigator, que arma los
     // refs de cada sección (igual que el Zohar nunca usa sus units del catálogo).
     units: 51,
+  },
+  // Me'or Einayim YA está en el catálogo generado (Chasidut). Es una obra
+  // COMPLEJA por parashá (49 nodos depth 1, refs "Me'or Einayim, {Parashá}");
+  // sus units numéricos del catálogo están ROTOS (no existe "Me'or Einayim 1").
+  // Aquí solo damos al chip el he CON nikud para que se vea digno; la navegación
+  // la intercepta BookBrowser por id y la delega a ParshaWorkNavigator
+  // (estructura MEOR_EINAYIM_GROUPS), igual que Etz Jaim y Ben Porat Yosef.
+  "Me'or Einayim": {
+    he: "מְאוֹר עֵינַיִם",
   },
 };
 
@@ -220,66 +230,180 @@ export const ZOHAR_GROUPS: ZoharGroup[] = [
   },
 ];
 
-// ─── Estructura de Ben Porat Yosef (para BenPoratNavigator) ─────────────────
-// 21 secciones EXACTAS de Sefaria, verificadas contra la API (2026-06-15).
-// El ref de cada nodo es "Ben Porat Yosef, {refTitle}" (título inglés de Sefaria).
-// 19 nodos son profundidad 1 (se cargan ENTEROS con getText). Los 2 de Sermones
-// (Shabbat HaGadol / Shabbat Shuva) son profundidad 2 (Capítulo→Párrafo): para
-// el MVP se abren también como nodo completo; getText devuelve el nodo y el
-// flatten existente lo aplana.
-export interface BenPoratNode {
-  id: string;      // ref Sefaria completo: "Ben Porat Yosef, Vayechi"
-  label: string;   // español
-  labelFa: string; // farsi
-  he: string;
-  special?: boolean;  // ★ destacado normal (introducción)
-  star?: boolean;     // ★★ texto estrella (la Carta del Baal Shem Tov)
+// ─── Navegador GENÉRICO de obras por parashá (ParshaWorkNavigator) ──────────
+// Modelo común para obras COMPLEJAS ordenadas por parashá (o por sección de
+// nombre) cuyos nodos se cargan ENTEROS, no por capítulos: Ben Porat Yosef,
+// Me'or Einayim, y los próximos. El ref de cada sección es "{bookId}, {refTitle}"
+// (el navegador lo arma); por eso aquí solo guardamos el refTitle, no el ref
+// completo. Agregar una obra nueva = declarar su estructura de grupos y cablear
+// la intercepción por id en BookBrowser. Sin lógica nueva.
+export interface ParshaWorkSection {
+  refTitle: string; // título inglés del nodo en Sefaria (ej. "Bereshit", "Ki Tisa")
+  label: string;    // español
+  labelFa: string;  // farsi
+  he: string;       // hebreo con nikud
+  star?: boolean;   // ★ sección destacada (texto estrella)
 }
-export interface BenPoratGroup {
+export interface ParshaWorkGroup {
   id: string;
   label: string;   // español
   labelFa: string; // farsi
   he: string;
-  nodes: BenPoratNode[];
+  sections: ParshaWorkSection[];
 }
 
-const BPY = (refTitle: string) => `Ben Porat Yosef, ${refTitle}`;
+// Reutiliza el labelFa de una parashá tal como ya está en ZOHAR_GROUPS, para
+// mantener coherencia de transliteración farsi entre libros. Busca por refTitle
+// (la parte tras "Zohar, " del id). Si la parashá no existe en el Zohar (p.ej.
+// Re'eh, Ki Tavo, Nitzavim), hay que dar el labelFa explícito en la estructura.
+const ZOHAR_FA: Record<string, string> = Object.fromEntries(
+  ZOHAR_GROUPS.flatMap((g) =>
+    g.parashot.map((p) => [p.id.replace(/^Zohar, /, ""), p.labelFa] as const)
+  )
+);
+function parshaFa(refTitle: string): string {
+  const fa = ZOHAR_FA[refTitle];
+  if (!fa) {
+    throw new Error(`parshaFa: no hay labelFa de Zohar para "${refTitle}" — dalo explícito`);
+  }
+  return fa;
+}
 
-export const BEN_PORAT_GROUPS: BenPoratGroup[] = [
+// ─── Estructura de Ben Porat Yosef (para ParshaWorkNavigator) ───────────────
+// 21 secciones EXACTAS de Sefaria, verificadas contra la API (2026-06-15).
+// 19 nodos son profundidad 1 (se cargan ENTEROS con getText). Los 2 de Sermones
+// (Shabbat HaGadol / Shabbat Shuva) son profundidad 2 (Capítulo→Párrafo): para
+// el MVP se abren también como nodo completo; getText devuelve el nodo y el
+// flatten existente lo aplana. La Carta del Baal Shem Tov es el texto estrella (★).
+export const BEN_PORAT_GROUPS: ParshaWorkGroup[] = [
   {
     id: "aperturas", label: "Aperturas", labelFa: "گشایش‌ها", he: "פְּתִיחוֹת",
-    nodes: [
-      { id: BPY("Foreword"),     label: "Apertura",      labelFa: "گشایش", he: "פְּתִיחָה" },
-      { id: BPY("Introduction"), label: "Introducción",  labelFa: "مقدمه", he: "הַקְדָּמָה", special: true },
+    sections: [
+      { refTitle: "Foreword",     label: "Apertura",      labelFa: "گشایش", he: "פְּתִיחָה" },
+      { refTitle: "Introduction", label: "Introducción",  labelFa: "مقدمه", he: "הַקְדָּמָה" },
     ],
   },
   {
     id: "bereshit", label: "Bereshit · Génesis", labelFa: "برئشیت · پیدایش", he: "בְּרֵאשִׁית",
-    nodes: [
-      { id: BPY("Bereshit"),    label: "Bereshit",     labelFa: "برئشیت",  he: "בְּרֵאשִׁית" },
-      { id: BPY("Noach"),       label: "Noaj",         labelFa: "نوح",     he: "נֹחַ" },
-      { id: BPY("Lech Lecha"),  label: "Lej Lejá",     labelFa: "لخ لخا",  he: "לֶךְ לְךָ" },
-      { id: BPY("Vayera"),      label: "Vayerá",       labelFa: "وَیّرا",  he: "וַיֵּרָא" },
-      { id: BPY("Chayei Sara"), label: "Jayéi Sará",   labelFa: "حَیّی سارا", he: "חַיֵּי שָׂרָה" },
-      { id: BPY("Toldot"),      label: "Toledot",      labelFa: "تولدوت",  he: "תּוֹלְדוֹת" },
-      { id: BPY("Vayetzei"),    label: "Vayetzé",      labelFa: "وَیّتسی", he: "וַיֵּצֵא" },
-      { id: BPY("Vayishlach"),  label: "Vayishlaj",    labelFa: "وَیشلَح", he: "וַיִּשְׁלַח" },
-      { id: BPY("Vayeshev"),    label: "Vayeshev",     labelFa: "وَیّشِو", he: "וַיֵּשֶׁב" },
-      { id: BPY("Miketz"),      label: "Mikets",       labelFa: "مِقّتس",  he: "מִקֵּץ" },
-      { id: BPY("Vayigash"),    label: "Vayigash",     labelFa: "وَیگَش",  he: "וַיִּגַּשׁ" },
-      { id: BPY("Vayechi"),     label: "Vayejí",       labelFa: "وَیْحی",  he: "וַיְחִי" },
+    sections: [
+      { refTitle: "Bereshit",    label: "Bereshit",     labelFa: "برئشیت",  he: "בְּרֵאשִׁית" },
+      { refTitle: "Noach",       label: "Noaj",         labelFa: "نوح",     he: "נֹחַ" },
+      { refTitle: "Lech Lecha",  label: "Lej Lejá",     labelFa: "لخ لخا",  he: "לֶךְ לְךָ" },
+      { refTitle: "Vayera",      label: "Vayerá",       labelFa: "وَیّرا",  he: "וַיֵּרָא" },
+      { refTitle: "Chayei Sara", label: "Jayéi Sará",   labelFa: "حَیّی سارا", he: "חַיֵּי שָׂרָה" },
+      { refTitle: "Toldot",      label: "Toledot",      labelFa: "تولدوت",  he: "תּוֹלְדוֹת" },
+      { refTitle: "Vayetzei",    label: "Vayetzé",      labelFa: "وَیّتسی", he: "וַיֵּצֵא" },
+      { refTitle: "Vayishlach",  label: "Vayishlaj",    labelFa: "وَیشلَح", he: "וַיִּשְׁלַח" },
+      { refTitle: "Vayeshev",    label: "Vayeshev",     labelFa: "وَیّشِو", he: "וַיֵּשֶׁב" },
+      { refTitle: "Miketz",      label: "Mikets",       labelFa: "مِقّتس",  he: "מִקֵּץ" },
+      { refTitle: "Vayigash",    label: "Vayigash",     labelFa: "وَیگَش",  he: "וַיִּגַּשׁ" },
+      { refTitle: "Vayechi",     label: "Vayejí",       labelFa: "وَیْحی",  he: "וַיְחִי" },
     ],
   },
   {
     id: "otras", label: "Otras secciones", labelFa: "بخش‌های دیگر", he: "שְׁאָר חֲלָקִים",
-    nodes: [
-      { id: BPY("Likkutim"),                label: "Recopilaciones (Likutim)",          labelFa: "گزیده‌ها",          he: "לִקּוּטִים" },
-      { id: BPY("Discourse"),               label: "Disertación (Jiluk)",               labelFa: "رساله",             he: "חִלּוּק" },
-      { id: BPY("Responsa"),                label: "Responsa (She'elot u-Teshuvot)",    labelFa: "پرسش و پاسخ",       he: "שׁוּ\"ת" },
-      { id: BPY("Shabbat HaGadol Sermons"), label: "Sermones de Shabat HaGadol",        labelFa: "خطبه‌های شبات هَگادول", he: "דְּרָשׁוֹת שַׁבָּת הַגָּדוֹל" },
-      { id: BPY("Shabbat Shuva Sermons"),   label: "Sermones de Shabat Teshuvá",        labelFa: "خطبه‌های شبات تشووا",  he: "דְּרָשׁוֹת שַׁבָּת תְּשׁוּבָה" },
-      { id: BPY("Kuntres Acharon"),         label: "Cuaderno Final (Kuntrés Ajarón)",   labelFa: "دفترچهٔ پایانی",    he: "קוּנְטְרֵס אַחֲרוֹן" },
-      { id: BPY("Baal Shem Tov's Letter"),  label: "La Carta del Baal Shem Tov",        labelFa: "نامهٔ بعل شم טوב",  he: "אִגֶּרֶת מֵהַבַּעַשְׁ\"ט", star: true },
+    sections: [
+      { refTitle: "Likkutim",                label: "Recopilaciones (Likutim)",          labelFa: "گزیده‌ها",          he: "לִקּוּטִים" },
+      { refTitle: "Discourse",               label: "Disertación (Jiluk)",               labelFa: "رساله",             he: "חִלּוּק" },
+      { refTitle: "Responsa",                label: "Responsa (She'elot u-Teshuvot)",    labelFa: "پرسش و پاسخ",       he: "שׁוּ\"ת" },
+      { refTitle: "Shabbat HaGadol Sermons", label: "Sermones de Shabat HaGadol",        labelFa: "خطبه‌های شبات هَگادول", he: "דְּרָשׁוֹת שַׁבָּת הַגָּדוֹל" },
+      { refTitle: "Shabbat Shuva Sermons",   label: "Sermones de Shabat Teshuvá",        labelFa: "خطبه‌های شبات تشووا",  he: "דְּרָשׁוֹת שַׁבָּת תְּשׁוּבָה" },
+      { refTitle: "Kuntres Acharon",         label: "Cuaderno Final (Kuntrés Ajarón)",   labelFa: "دفترچهٔ پایانی",    he: "קוּנְטְרֵס אַחֲרוֹן" },
+      { refTitle: "Baal Shem Tov's Letter",  label: "La Carta del Baal Shem Tov",        labelFa: "نامهٔ بعل شم טوב",  he: "אִגֶּרֶת מֵהַבַּעַשְׁ\"ט", star: true },
+    ],
+  },
+];
+
+// ─── Estructura de Me'or Einayim (para ParshaWorkNavigator) ─────────────────
+// מְאוֹר עֵינַיִם — comentario jasídico de R' Menajem Najum de Chernóbil, ordenado
+// por parashá. 49 nodos EXACTOS de Sefaria, verificados contra la API (2026-06-15),
+// todos profundidad 1 (se cargan ENTEROS con getText). El ref de cada nodo es
+// "Me'or Einayim, {refTitle}". NO hay Vayechi. Los labelFa de las parashot se
+// REUTILIZAN de ZOHAR_GROUPS (parshaFa) para coherencia; los nodos que no son
+// parashá (Portada, Aprobaciones, Introducción, Likutim) llevan su farsi propio.
+export const MEOR_EINAYIM_GROUPS: ParshaWorkGroup[] = [
+  {
+    id: "preliminares", label: "Preliminares", labelFa: "پیش‌گفتارها", he: "הַקְדָּמוֹת",
+    sections: [
+      { refTitle: "Title",        label: "Portada",       labelFa: "شناسنامه",  he: "שַׁעַר" },
+      { refTitle: "Approbations", label: "Aprobaciones",  labelFa: "تأییدیه‌ها", he: "הַסְכָּמוֹת" },
+      { refTitle: "Introduction", label: "Introducción",  labelFa: "مقدمه",     he: "הַקְדָּמָה", star: true },
+    ],
+  },
+  {
+    id: "bereshit", label: "Bereshit · Génesis", labelFa: "برشیت · پیدایش", he: "בְּרֵאשִׁית",
+    sections: [
+      { refTitle: "Bereshit",    label: "Bereshit",   labelFa: parshaFa("Bereshit"),    he: "בְּרֵאשִׁית", star: true },
+      { refTitle: "Noach",       label: "Noaj",       labelFa: parshaFa("Noach"),       he: "נֹחַ" },
+      { refTitle: "Lech Lecha",  label: "Lej Lejá",   labelFa: parshaFa("Lech Lecha"),  he: "לֶךְ לְךָ" },
+      { refTitle: "Vayera",      label: "Vayerá",     labelFa: parshaFa("Vayera"),      he: "וַיֵּרָא" },
+      { refTitle: "Chayei Sara", label: "Jayéi Sará", labelFa: parshaFa("Chayei Sara"), he: "חַיֵּי שָׂרָה" },
+      { refTitle: "Toldot",      label: "Toledot",    labelFa: parshaFa("Toldot"),      he: "תּוֹלְדוֹת" },
+      { refTitle: "Vayetzei",    label: "Vayetzé",    labelFa: parshaFa("Vayetzei"),    he: "וַיֵּצֵא" },
+      { refTitle: "Vayishlach",  label: "Vayishlaj",  labelFa: parshaFa("Vayishlach"),  he: "וַיִּשְׁלַח" },
+      { refTitle: "Vayeshev",    label: "Vayeshev",   labelFa: parshaFa("Vayeshev"),    he: "וַיֵּשֶׁב" },
+      { refTitle: "Miketz",      label: "Mikets",     labelFa: parshaFa("Miketz"),      he: "מִקֵּץ" },
+      { refTitle: "Vayigash",    label: "Vayigash",   labelFa: parshaFa("Vayigash"),    he: "וַיִּגַּשׁ" },
+    ],
+  },
+  {
+    id: "shemot", label: "Shemot · Éxodo", labelFa: "شموت · خروج", he: "שְׁמוֹת",
+    sections: [
+      { refTitle: "Shemot",    label: "Shemot",    labelFa: parshaFa("Shemot"),    he: "שְׁמוֹת", star: true },
+      { refTitle: "Vaera",     label: "Vaerá",     labelFa: parshaFa("Vaera"),     he: "וָאֵרָא" },
+      { refTitle: "Bo",        label: "Bó",        labelFa: parshaFa("Bo"),        he: "בֹּא" },
+      { refTitle: "Beshalach", label: "Beshalaj",  labelFa: parshaFa("Beshalach"), he: "בְּשַׁלַּח" },
+      { refTitle: "Yitro",     label: "Yitró",     labelFa: parshaFa("Yitro"),     he: "יִתְרוֹ" },
+      { refTitle: "Mishpatim", label: "Mishpatim", labelFa: parshaFa("Mishpatim"), he: "מִשְׁפָּטִים" },
+      { refTitle: "Terumah",   label: "Terumá",    labelFa: parshaFa("Terumah"),   he: "תְּרוּמָה" },
+      { refTitle: "Tetzaveh",  label: "Tetzavé",   labelFa: parshaFa("Tetzaveh"),  he: "תְּצַוֶּה" },
+      { refTitle: "Ki Tisa",   label: "Ki Tisá",   labelFa: parshaFa("Ki Tisa"),   he: "כִּי תִשָּׂא" },
+      { refTitle: "Vayakhel",  label: "Vayakhél",  labelFa: parshaFa("Vayakhel"),  he: "וַיַּקְהֵל" },
+      { refTitle: "Pekudei",   label: "Pekudéi",   labelFa: parshaFa("Pekudei"),   he: "פְקוּדֵי" },
+    ],
+  },
+  {
+    id: "vayikra", label: "Vayikrá · Levítico", labelFa: "وییقرا · لاویان", he: "וַיִּקְרָא",
+    sections: [
+      { refTitle: "Vayikra",    label: "Vayikrá",    labelFa: parshaFa("Vayikra"),    he: "וַיִּקְרָא" },
+      { refTitle: "Tzav",       label: "Tzav",       labelFa: parshaFa("Tzav"),       he: "צַו" },
+      { refTitle: "Shmini",     label: "Shminí",     labelFa: parshaFa("Shmini"),     he: "שְׁמִינִי" },
+      { refTitle: "Metzora",    label: "Metzorá",    labelFa: parshaFa("Metzora"),    he: "מְצֹרָע" },
+      { refTitle: "Achrei Mot", label: "Ajaréi Mot", labelFa: parshaFa("Achrei Mot"), he: "אַחֲרֵי מוֹת" },
+      { refTitle: "Kedoshim",   label: "Kedoshim",   labelFa: parshaFa("Kedoshim"),   he: "קְדוֹשִׁים" },
+      { refTitle: "Emor",       label: "Emor",       labelFa: parshaFa("Emor"),       he: "אֱמֹר" },
+      { refTitle: "Bechukotai", label: "Bejukotái",  labelFa: parshaFa("Bechukotai"), he: "בְּחֻקֹּתַי" },
+    ],
+  },
+  {
+    id: "bamidbar", label: "Bamidbar · Números", labelFa: "بمیدبار · اعداد", he: "בְּמִדְבַּר",
+    sections: [
+      { refTitle: "Bamidbar",     label: "Bamidbar",    labelFa: parshaFa("Bamidbar"),      he: "בְּמִדְבַּר" },
+      { refTitle: "Nasso",        label: "Nasó",        labelFa: parshaFa("Nasso"),         he: "נָשֹׂא" },
+      { refTitle: "Beha'alotcha", label: "Behaalotjá",  labelFa: parshaFa("Beha'alotcha"),  he: "בְּהַעֲלֹתְךָ" },
+      { refTitle: "Sh'lach",      label: "Shelaj",      labelFa: parshaFa("Sh'lach"),       he: "שְׁלַח" },
+      { refTitle: "Chukat",       label: "Jukat",       labelFa: parshaFa("Chukat"),        he: "חֻקַּת" },
+      { refTitle: "Pinchas",      label: "Pinjas",      labelFa: parshaFa("Pinchas"),       he: "פִּינְחָס" },
+      { refTitle: "Matot",        label: "Matot",       labelFa: parshaFa("Matot"),         he: "מַטּוֹת" },
+    ],
+  },
+  {
+    id: "devarim", label: "Devarim · Deuteronomio", labelFa: "دواریم · تثنیه", he: "דְּבָרִים",
+    sections: [
+      { refTitle: "Devarim",    label: "Devarim",    labelFa: "دواریم",               he: "דְּבָרִים" },
+      { refTitle: "Vaetchanan", label: "Vaetjanán",  labelFa: parshaFa("Vaetchanan"), he: "וָאֶתְחַנַּן" },
+      { refTitle: "Re'eh",      label: "Reé",        labelFa: "رئه",                  he: "רְאֵה" },
+      { refTitle: "Ki Teitzei", label: "Ki Tetzé",   labelFa: parshaFa("Ki Teitzei"), he: "כִּי תֵצֵא" },
+      { refTitle: "Ki Tavo",    label: "Ki Tavó",    labelFa: "کی تاوو",              he: "כִּי תָבוֹא" },
+      { refTitle: "Nitzavim",   label: "Nitzavim",   labelFa: "نیتصاویم",             he: "נִצָּבִים" },
+      { refTitle: "Vayeilech",  label: "Vayelej",    labelFa: parshaFa("Vayeilech"),  he: "וַיֵּלֶךְ" },
+      { refTitle: "Ha'Azinu",   label: "Haazinú",    labelFa: parshaFa("Ha'Azinu"),   he: "הַאֲזִינוּ" },
+    ],
+  },
+  {
+    id: "apendice", label: "Apéndice", labelFa: "گردآوری‌ها", he: "לִקּוּטִים",
+    sections: [
+      { refTitle: "Additions", label: "Likutim (Recopilaciones)", labelFa: "لیکوتیم", he: "לִקּוּטִים" },
     ],
   },
 ];

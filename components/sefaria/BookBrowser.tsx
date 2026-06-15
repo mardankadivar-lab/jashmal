@@ -12,8 +12,11 @@ import {
 import BookSummary from "./BookSummary";
 import ZoharNavigator from "./ZoharNavigator";
 import EtzChaimNavigator from "./EtzChaimNavigator";
-import BenPoratNavigator from "./BenPoratNavigator";
-import type { RichBook } from "@/lib/sources/catalogOverrides";
+import ParshaWorkNavigator from "./ParshaWorkNavigator";
+import {
+  BEN_PORAT_GROUPS,
+  MEOR_EINAYIM_GROUPS,
+} from "@/lib/sources/catalogOverrides";
 
 interface BookBrowserProps {
   category: CategoryId;
@@ -63,7 +66,11 @@ export default function BookBrowser({
     );
   }
 
-  // ---- Navegador especial de Ben Porat Yosef (21 nodos agrupados en TOC) ----
+  // ---- Navegadores especiales de obras por parashá (ParshaWorkNavigator) ----
+  // Obras complejas ordenadas por parashá cuyos nodos se cargan ENTEROS (no por
+  // capítulos): Ben Porat Yosef, Me'or Einayim, … Cada una queda como UN solo
+  // chip; al abrirlo se intercepta el id y se muestra el navegador genérico con
+  // su estructura de grupos. Agregar la próxima obra = una entrada aquí.
   if (selectedBook?.id === "Ben Porat Yosef") {
     return (
       <div className="mt-4">
@@ -72,19 +79,48 @@ export default function BookBrowser({
           <span className="hebrew me-2 text-gold/80">בֶּן פּוֹרָת יוֹסֵף</span>
           {locale === "fa" ? "یک بخش را انتخاب کنید" : "Elige una sección"}
         </p>
-        <BenPoratNavigator onSelectNode={(book) => onSelectBook(book as CatBook)} />
+        <ParshaWorkNavigator
+          bookId="Ben Porat Yosef"
+          groups={BEN_PORAT_GROUPS}
+          defaultOpenGroup="bereshit"
+          onSelectSection={(book) => onSelectBook(book as CatBook)}
+        />
       </div>
     );
   }
 
-  // ---- Nodo de Ben Porat Yosef ya elegido → se estudia ENTERO (sin capítulos) ----
-  // Los nodos se reportan con id "Ben Porat Yosef, …" y un refTemplate que es el
-  // ref completo del nodo. En vez de mostrar una rejilla con un único "1", damos
-  // un botón claro que abre la sección entera.
-  if (selectedBook?.id.startsWith("Ben Porat Yosef, ")) {
+  if (selectedBook?.id === "Me'or Einayim") {
     return (
       <div className="mt-4">
-        <BookSummary bookId="Ben Porat Yosef" />
+        <BookSummary bookId={selectedBook.id} />
+        <p className="mb-2 text-sm text-muted">
+          <span className="hebrew me-2 text-gold/80">מְאוֹר עֵינַיִם</span>
+          {locale === "fa" ? "یک بخش را انتخاب کنید" : "Elige una sección"}
+        </p>
+        <ParshaWorkNavigator
+          bookId="Me'or Einayim"
+          groups={MEOR_EINAYIM_GROUPS}
+          defaultOpenGroup="bereshit"
+          onSelectSection={(book) => onSelectBook(book as CatBook)}
+        />
+      </div>
+    );
+  }
+
+  // ---- Nodo de una obra por parashá ya elegido → se estudia ENTERO ----
+  // Los nodos se reportan con id "{Libro}, {refTitle}" y un refTemplate que es el
+  // ref completo del nodo. En vez de mostrar una rejilla con un único "1", damos
+  // un botón claro que abre la sección entera.
+  if (
+    selectedBook?.id.startsWith("Ben Porat Yosef, ") ||
+    selectedBook?.id.startsWith("Me'or Einayim, ")
+  ) {
+    const parentId = selectedBook.id.startsWith("Me'or Einayim, ")
+      ? "Me'or Einayim"
+      : "Ben Porat Yosef";
+    return (
+      <div className="mt-4">
+        <BookSummary bookId={parentId} />
         <p className="mb-2 text-sm text-muted">
           <span className="text-parchment/80">{selectedBook.label}</span>
           <span className="hebrew ms-2 text-gold/60">{selectedBook.he}</span>

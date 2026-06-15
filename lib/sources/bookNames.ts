@@ -56,6 +56,7 @@ export const BOOK_NAMES: Record<string, Name> = {
   "Sefat Emet": { es: "Sefat Emet", fa: "سفت امت" },
   "Kedushat Levi": { es: "Kedushat Levi", fa: "قدوشت لوی" },
   "Ben Porat Yosef": { es: "Ben Porat Yosef", fa: "بن پورت یوسف" },
+  "Me'or Einayim": { es: "Me'or Einayim", fa: "مئور عینایم" },
   Zohar: { es: "Zohar", fa: "زوهر" },
   "Sefer Yetzirah": { es: "Séfer Yetzirá", fa: "سفر یصیرا" },
 };

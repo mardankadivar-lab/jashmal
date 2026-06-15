@@ -32,7 +32,12 @@ const VERIFIED_INFO: Record<string, { heTitle: string; es: string; fa: string }>
   "Ben Porat Yosef": {
     heTitle: "בֶּן פּוֹרָת יוֹסֵף",
     es: "Comentarios jasídicos sobre el Génesis por R' Yaakov Yosef de Polnoye, discípulo principal del Baal Shem Tov. Uno de los primeros libros jasídicos impresos (Koretz, 1781) y fuente primaria de las enseñanzas del Baal Shem Tov.",
-    fa: "تفسیرهای حسیدی بر سفر پیدایش از ربی یعقوب یوسف از پولنوآ، شاگرد برجستهٔ بَعْل شِم טوב. از نخستین کتاب‌های چاپ‌شدهٔ حسیدی (کورتس، ۱۷۸۱) و سرچشمهٔ اصلی آموزه‌های بعل شم טوב.",
+    fa: "تفسیرهای حسیدی بر سفر پیدایش از ربی یعقوب یوسف از پولنوآ، شاگرد برجستهٔ بَعْل شِم טوب. از نخستین کتاب‌های چاپ‌شدهٔ حسیدی (کورتس، ۱۷۸۱) و سرچشمهٔ اصلی آموزه‌های بعل شم טوب.",
+  },
+  "Me'or Einayim": {
+    heTitle: "מְאוֹר עֵינַיִם",
+    es: "Comentario jasídico clásico de R' Menajem Najum de Chernóbil (1730–1797), discípulo del Baal Shem Tov y del Maguid de Mezritch, ordenado por parashá semanal. Una de las obras fundacionales del jasidismo.",
+    fa: "تفسیر کلاسیک حسیدی از ربی مناخم نخوم چرنوبیل (۱۷۳۰–۱۷۹۷)، شاگرد بعل شم טوب و مגید مزریטש، که بر پایهٔ پاراشای هفتگی تنظیم شده است. از آثار بنیادین جنبش حسیدیت.",
   },
 };
 
