@@ -13,8 +13,23 @@ import {
   MAPA_DISCLAIMER,
   MAPA_GEMATRIA_TEXTO,
   MAPA_MADRE_NOTA,
+  MAPA_TRANSLIT_NOTA,
+  MAPA_TRANSLIT_UI,
   type MesHebreo,
 } from "@/lib/content/autoconocimiento";
+
+// Grafía devuelta por /api/translit (gematría recalculada en backend).
+interface GrafiaSalida {
+  hebreo: string;
+  nota: string;
+  gematria: number;
+  desglose: { letter: string; value: number }[];
+}
+
+// ¿El texto contiene al menos una letra hebrea? (rango Unicode hebreo base)
+function tieneHebreo(s: string): boolean {
+  return /[א-ת]/.test(s);
+}
 
 // ─── Etiquetas de UI por idioma (es obligatorio; fa con texto del Sofer donde
 //     existe; en queda como TODO y cae al español marcado con tri()). ──────────
@@ -59,6 +74,46 @@ export default function MapaDelAlma() {
   const [nombre, setNombre] = useState("");
   const [madre, setMadre] = useState("");
   const [mesN, setMesN] = useState<number | null>(null);
+
+  // Transcripción de nombres no-hebreos (IA → backend protege la API key).
+  const [origen, setOrigen] = useState<"es" | "en" | "fa">(fa ? "fa" : "es");
+  const [grafias, setGrafias] = useState<GrafiaSalida[] | null>(null);
+  const [transliCargando, setTransliCargando] = useState(false);
+  const [transliError, setTransliError] = useState(false);
+  // El nombre escrito NO es hebreo → ofrecer convertir.
+  const necesitaConvertir = nombre.trim().length > 0 && !tieneHebreo(nombre);
+
+  const tNota = tri(locale, MAPA_TRANSLIT_NOTA.es, MAPA_TRANSLIT_NOTA.fa, MAPA_TRANSLIT_NOTA.en);
+
+  async function convertirNombre() {
+    const q = nombre.trim();
+    if (!q) return;
+    setTransliCargando(true);
+    setTransliError(false);
+    setGrafias(null);
+    try {
+      const res = await fetch("/api/translit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nombre: q, origen, locale }),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      const data = (await res.json()) as { grafias?: GrafiaSalida[] };
+      if (!data.grafias || data.grafias.length === 0) throw new Error("empty");
+      setGrafias(data.grafias);
+    } catch {
+      setTransliError(true);
+    } finally {
+      setTransliCargando(false);
+    }
+  }
+
+  // Al elegir una grafía: poner el nombre en hebreo y cerrar el conversor.
+  function elegirGrafia(g: GrafiaSalida) {
+    setNombre(g.hebreo);
+    setGrafias(null);
+    setTransliError(false);
+  }
 
   const consonantes = useMemo(() => stripNiqud(nombre), [nombre]);
   const valor = useMemo(() => (consonantes ? gematria(nombre) : 0), [nombre, consonantes]);
@@ -133,12 +188,110 @@ export default function MapaDelAlma() {
           </label>
           <input
             value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            dir="rtl"
-            lang="he"
+            onChange={(e) => {
+              setNombre(e.target.value);
+              setGrafias(null);
+              setTransliError(false);
+            }}
+            dir={tieneHebreo(nombre) || nombre === "" ? "rtl" : "ltr"}
+            lang={tieneHebreo(nombre) ? "he" : undefined}
             placeholder={L(locale, UI.namePlaceholder).value}
             className="hebrew w-full rounded-xl border border-gold/25 bg-ink/60 px-4 py-3 text-2xl text-parchment placeholder:text-muted/40 focus:border-gold/60 focus:outline-none"
           />
+
+          {/* ── CONVERSOR: si el nombre NO es hebreo, ofrecer convertirlo ── */}
+          {necesitaConvertir && (
+            <div className="mt-3 rounded-xl border border-gold/20 bg-ink/40 p-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[11px] uppercase tracking-widest text-muted/70">
+                  {L(locale, MAPA_TRANSLIT_UI.langLabel).value}:
+                </span>
+                {(["es", "en", "fa"] as const).map((o) => {
+                  const sel = origen === o;
+                  const lbl =
+                    o === "es"
+                      ? L(locale, MAPA_TRANSLIT_UI.langEs).value
+                      : o === "en"
+                        ? L(locale, MAPA_TRANSLIT_UI.langEn).value
+                        : L(locale, MAPA_TRANSLIT_UI.langFa).value;
+                  return (
+                    <button
+                      key={o}
+                      type="button"
+                      onClick={() => setOrigen(o)}
+                      className={
+                        "rounded-full border px-2.5 py-1 text-xs transition-colors " +
+                        (sel
+                          ? "border-gold/60 bg-gold/15 text-gold"
+                          : "border-gold/20 text-muted hover:border-gold/40")
+                      }
+                    >
+                      {lbl}
+                    </button>
+                  );
+                })}
+              </div>
+              <button
+                type="button"
+                onClick={convertirNombre}
+                disabled={transliCargando}
+                className="mt-3 w-full rounded-full border border-gold/50 bg-gold/10 px-4 py-2.5 font-cinzel text-xs uppercase tracking-[0.18em] text-gold transition-all hover:bg-gold/20 disabled:opacity-50"
+              >
+                {transliCargando
+                  ? L(locale, MAPA_TRANSLIT_UI.loading).value
+                  : L(locale, MAPA_TRANSLIT_UI.convertir).value}
+              </button>
+
+              {transliError && (
+                <p className="mt-3 text-xs leading-relaxed text-red-300/80" dir={fa ? "rtl" : "ltr"}>
+                  {L(locale, MAPA_TRANSLIT_UI.error).value}
+                </p>
+              )}
+
+              {/* Opciones de grafía + gematría (recalculada en backend) */}
+              {grafias && grafias.length > 0 && (
+                <div className="mt-4">
+                  <p className="mb-2 font-cinzel text-[10px] uppercase tracking-[0.25em] text-gold/60">
+                    {L(locale, MAPA_TRANSLIT_UI.pickLabel).value}
+                  </p>
+                  <div className="space-y-2">
+                    {grafias.map((g, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => elegirGrafia(g)}
+                        className="flex w-full items-center justify-between gap-3 rounded-xl border border-gold/20 bg-ink/50 px-3 py-2.5 text-start transition-all hover:border-gold/60 hover:bg-gold/[0.07]"
+                      >
+                        <span className="flex flex-col">
+                          <span className="hebrew text-xl text-parchment" dir="rtl">
+                            {g.hebreo}
+                          </span>
+                          {g.nota && (
+                            <span className="mt-0.5 text-[11px] italic text-muted/80">{g.nota}</span>
+                          )}
+                        </span>
+                        <span className="flex shrink-0 flex-col items-center">
+                          <span className="font-cinzel text-2xl font-bold text-gold">{g.gematria}</span>
+                          <span className="text-[9px] uppercase tracking-widest text-muted/60">gematría</span>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                  {/* Honestidad: aproximado, variantes, no un número fijo */}
+                  <p className="mt-2 text-center text-[10px] italic text-muted/60">
+                    {L(locale, MAPA_TRANSLIT_UI.approxLabel).value}
+                  </p>
+                  <p
+                    className="mt-2 text-xs leading-relaxed text-muted"
+                    dir={tNota.shownIn === "fa" ? "rtl" : "ltr"}
+                  >
+                    {tNota.value}
+                    {tNota.missing && <TranslationBadge className="ms-2" available={tNota.available} />}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Nombre de la madre — opcional, con nota devocional */}

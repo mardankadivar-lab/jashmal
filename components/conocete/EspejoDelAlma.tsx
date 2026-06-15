@@ -8,8 +8,7 @@ import { tri } from "@/lib/i18n/i18nContent";
 import TranslationBadge from "@/components/TranslationBadge";
 import {
   PREGUNTAS,
-  RASGOS,
-  rasgoById,
+  calcularEspejo,
   ESPEJO_DISCLAIMER,
   ESPEJO_NOTA_ARIZAL,
   ESPEJO_CIERRE,
@@ -24,6 +23,7 @@ const UI = {
   of: { es: "de", fa: "از", en: null as string | null },
   back: { es: "Atrás", fa: "بازگشت", en: null as string | null },
   resultLabel: { es: "Tu rasgo-tema dominante", fa: "گرایشِ غالبِ تو", en: null as string | null },
+  secondaryLabel: { es: "Rasgo secundario", fa: "گرایشِ ثانوی", en: null as string | null },
   sourceLabel: { es: "Fuente", fa: "منبع", en: null as string | null },
   midaLabel: { es: "Midá · avodá", fa: "میدا · عَبودا", en: null as string | null },
   espejoLabel: { es: "Pregunta-espejo", fa: "پرسشِ آینه", en: null as string | null },
@@ -31,8 +31,25 @@ const UI = {
   arizalLabel: { es: "Sobre las fuentes", fa: "دربارهٔ منابع", en: null as string | null },
   again: { es: "Mirar de nuevo", fa: "نگاهی دوباره", en: null as string | null },
   noPhoto: {
-    es: "Sin foto. Sin juicio sobre nadie. Solo cuatro preguntas a ti mismo.",
-    fa: "بدونِ عکس. بدونِ قضاوت دربارهٔ کسی. تنها چهار پرسش از خودت.",
+    es: "Sin foto. Sin juicio sobre nadie. Solo doce preguntas a ti mismo.",
+    fa: "بدونِ عکس. بدونِ قضاوت دربارهٔ کسی. تنها دوازده پرسش از خودت.",
+    en: null as string | null,
+  },
+  askAi: {
+    es: "Pedir mi espejo a la mente de Jashmal",
+    fa: "درخواست آینه از ذهنِ خَشمَل",
+    en: null as string | null,
+  },
+  aiLoading: { es: "La mente de Jashmal está mirando…", fa: "ذهنِ خَشمَل در حالِ نگریستن است…", en: null as string | null },
+  aiLabel: { es: "La lectura de la mente de Jashmal", fa: "خوانشِ ذهنِ خَشمَل", en: null as string | null },
+  aiError: {
+    es: "No se pudo componer la lectura ahora. Intenta de nuevo en un momento.",
+    fa: "اکنون امکانِ نوشتنِ خوانش نبود. لحظه‌ای دیگر دوباره تلاش کن.",
+    en: null as string | null,
+  },
+  aiDisclaimer: {
+    es: "Lectura aproximada — un espejo, no un veredicto. Por encima de todo rasgo, tu libre albedrío y tu entrega a Dios.",
+    fa: "خوانشی تقریبی — آینه‌ای، نه حُکم. فراتر از هر ویژگی، ارادهٔ آزاد و تسلیمِ تو به خداوند.",
     en: null as string | null,
   },
 };
@@ -57,26 +74,56 @@ export default function EspejoDelAlma() {
   const notaArizal = tri(locale, ESPEJO_NOTA_ARIZAL.es, ESPEJO_NOTA_ARIZAL.fa, ESPEJO_NOTA_ARIZAL.en);
   const cierre = tri(locale, ESPEJO_CIERRE.es, ESPEJO_CIERRE.fa, ESPEJO_CIERRE.en);
 
-  // Suma de respuestas → rasgo-tema dominante.
-  const dominante: RasgoTema | null = useMemo(() => {
-    if (fase !== "resultado") return null;
-    const conteo: Record<string, number> = {};
-    for (const r of respuestas) {
-      if (!r) continue;
-      for (const id of r) conteo[id] = (conteo[id] ?? 0) + 1;
-    }
-    // Orden estable: por conteo desc, y a empate por el orden de RASGOS.
-    let mejor: RasgoTema["id"] | null = null;
-    let mejorN = -1;
-    for (const rasgo of RASGOS) {
-      const n = conteo[rasgo.id] ?? 0;
-      if (n > mejorN) {
-        mejorN = n;
-        mejor = rasgo.id;
-      }
-    }
-    return mejor ? rasgoById(mejor) : null;
+  // Suma de respuestas (pesos: conducta/midá = 2, físico = 1) → dominante + secundario.
+  const { dominante, secundario } = useMemo(() => {
+    if (fase !== "resultado") return { dominante: null as RasgoTema | null, secundario: null as RasgoTema | null };
+    return calcularEspejo(respuestas);
   }, [fase, respuestas]);
+
+  // ── Lectura de la IA (la "mente de Jashmal"), vía /api/espejo (streaming) ──
+  const [lectura, setLectura] = useState("");
+  const [aiCargando, setAiCargando] = useState(false);
+  const [aiError, setAiError] = useState(false);
+  const aiDisc = tri(locale, UI.aiDisclaimer.es, UI.aiDisclaimer.fa, UI.aiDisclaimer.en);
+
+  async function pedirEspejoIA() {
+    if (!dominante || aiCargando) return;
+    setAiCargando(true);
+    setAiError(false);
+    setLectura("");
+    try {
+      const res = await fetch("/api/espejo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          locale,
+          dominanteId: dominante.id,
+          secundarioId: secundario?.id ?? null,
+        }),
+      });
+      if (!res.ok || !res.body) throw new Error(String(res.status));
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let acumulado = "";
+      let huboError = false;
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        if (chunk.includes("\x01error")) {
+          huboError = true;
+          break;
+        }
+        acumulado += chunk;
+        setLectura(acumulado);
+      }
+      if (huboError || !acumulado.trim()) throw new Error("stream");
+    } catch {
+      setAiError(true);
+    } finally {
+      setAiCargando(false);
+    }
+  }
 
   function elegir(opcionRasgos: RasgoTema["id"][]) {
     setRespuestas((prev) => {
@@ -95,6 +142,9 @@ export default function EspejoDelAlma() {
     setRespuestas(PREGUNTAS.map(() => null));
     setPaso(0);
     setFase("umbral");
+    setLectura("");
+    setAiError(false);
+    setAiCargando(false);
   }
 
   const acento = dominante?.color ?? "#c9a43e";
@@ -168,41 +218,54 @@ export default function EspejoDelAlma() {
         </section>
       )}
 
-      {/* ── PREGUNTAS (4) ── */}
-      {fase === "preguntas" && (
+      {/* ── PREGUNTAS (12) ── */}
+      {fase === "preguntas" && (() => {
+        const preg = PREGUNTAS[paso];
+        const pregT = tri(locale, preg.texto, preg.textoFa, null);
+        return (
         <section className="rounded-2xl border border-gold/20 bg-ink/50 p-6">
           {/* Progreso */}
-          <div className="mb-5 flex items-center justify-between">
+          <div className="mb-3 flex items-center justify-between">
             <span className="font-cinzel text-[11px] uppercase tracking-[0.25em] text-gold/60">
               {L(locale, UI.step).value} {paso + 1} {L(locale, UI.of).value} {PREGUNTAS.length}
             </span>
-            <div className="flex gap-1.5">
-              {PREGUNTAS.map((p, i) => (
-                <span
-                  key={p.id}
-                  className="h-1.5 w-6 rounded-full transition-colors"
-                  style={{ background: i <= paso ? "#c9a43e" : "rgba(201,164,62,0.2)" }}
-                />
-              ))}
-            </div>
+            {pregT.missing && <TranslationBadge available={pregT.available} />}
+          </div>
+          {/* Barra de progreso (12 preguntas no caben como puntos) */}
+          <div className="mb-5 h-1.5 w-full overflow-hidden rounded-full bg-gold/15">
+            <span
+              className="block h-full rounded-full bg-gold transition-all"
+              style={{ width: `${((paso + 1) / PREGUNTAS.length) * 100}%` }}
+            />
           </div>
 
-          <p className="mb-5 text-lg leading-relaxed text-parchment">
-            {PREGUNTAS[paso].texto}
+          <p
+            className="mb-5 text-lg leading-relaxed text-parchment"
+            dir={pregT.shownIn === "fa" ? "rtl" : "ltr"}
+          >
+            {pregT.value}
           </p>
 
           <div className="space-y-3">
-            {PREGUNTAS[paso].opciones.map((op, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => elegir(op.rasgos)}
-                className="flex w-full items-center gap-3 rounded-xl border border-gold/20 bg-ink/40 px-4 py-3.5 text-start transition-all hover:border-gold/60 hover:bg-gold/[0.07]"
-              >
-                <span className="hebrew text-base text-gold/50">{["א", "ב", "ג", "ד"][i]}</span>
-                <span className="text-sm leading-relaxed text-parchment/90">{op.texto}</span>
-              </button>
-            ))}
+            {preg.opciones.map((op, i) => {
+              const opT = tri(locale, op.texto, op.textoFa, null);
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => elegir(op.rasgos)}
+                  className="flex w-full items-center gap-3 rounded-xl border border-gold/20 bg-ink/40 px-4 py-3.5 text-start transition-all hover:border-gold/60 hover:bg-gold/[0.07]"
+                >
+                  <span className="hebrew text-base text-gold/50">{["א", "ב", "ג", "ד"][i]}</span>
+                  <span
+                    className="text-sm leading-relaxed text-parchment/90"
+                    dir={opT.shownIn === "fa" ? "rtl" : "ltr"}
+                  >
+                    {opT.value}
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
           {paso > 0 && (
@@ -216,7 +279,8 @@ export default function EspejoDelAlma() {
             </button>
           )}
         </section>
-      )}
+        );
+      })()}
 
       {/* ── RESULTADO: rasgo-tema + fuente + midá + espejo + opuesto-luminoso ── */}
       {fase === "resultado" && dominante && (
@@ -238,6 +302,14 @@ export default function EspejoDelAlma() {
             >
               {dominante.titulo}
             </h2>
+            {secundario && (
+              <p className="relative mt-3 text-xs text-muted">
+                <span className="uppercase tracking-[0.2em] text-gold/50">
+                  {L(locale, UI.secondaryLabel).value}:
+                </span>{" "}
+                <span className="text-parchment/80">{secundario.titulo}</span>
+              </p>
+            )}
           </div>
 
           <div className="space-y-5 border-t border-gold/10 px-6 py-6">
@@ -265,6 +337,66 @@ export default function EspejoDelAlma() {
                 {dominante.opuesto}
               </p>
             </Bloque>
+
+            {/* Rasgo secundario: fuente verificada */}
+            {secundario && (
+              <Bloque label={`${L(locale, UI.secondaryLabel).value} · ${L(locale, UI.sourceLabel).value}`} acento={secundario.color}>
+                <p className="text-sm font-medium text-parchment/90">{secundario.titulo}</p>
+                <p className="mt-0.5 text-xs text-muted">{secundario.fuente}</p>
+                <p className="hebrew mt-2 text-base leading-relaxed text-parchment/75" dir="rtl">
+                  {secundario.citaHe}
+                </p>
+                <p className="mt-2 text-xs italic leading-relaxed text-parchment/80">{secundario.espejo}</p>
+              </Bloque>
+            )}
+          </div>
+
+          {/* ── LECTURA DE LA MENTE DE JASHMAL (IA) ── */}
+          <div className="border-t border-gold/10 px-6 py-6">
+            {!lectura && !aiCargando && (
+              <button
+                type="button"
+                onClick={pedirEspejoIA}
+                className="w-full rounded-full border border-gold/50 bg-gold/10 px-5 py-3 font-cinzel text-sm uppercase tracking-[0.18em] text-gold transition-all hover:bg-gold/20"
+              >
+                {L(locale, UI.askAi).value}
+              </button>
+            )}
+
+            {aiCargando && !lectura && (
+              <p className="text-center text-sm italic text-muted animate-pulse" dir={fa ? "rtl" : "ltr"}>
+                {L(locale, UI.aiLoading).value}
+              </p>
+            )}
+
+            {(lectura || (aiCargando && lectura)) && (
+              <div>
+                <p className="mb-3 font-cinzel text-[11px] uppercase tracking-[0.25em] text-gold/60">
+                  {L(locale, UI.aiLabel).value}
+                </p>
+                <div
+                  className="whitespace-pre-wrap text-sm leading-relaxed text-parchment/90"
+                  dir={fa ? "rtl" : "ltr"}
+                >
+                  {lectura}
+                  {aiCargando && <span className="ms-0.5 animate-pulse text-gold">▋</span>}
+                </div>
+                {/* Disclaimer SIEMPRE visible bajo la lectura de IA */}
+                <p
+                  className="mt-4 rounded-lg border border-gold/15 bg-black/20 px-3 py-2.5 text-xs leading-relaxed text-muted"
+                  dir={aiDisc.shownIn === "fa" ? "rtl" : "ltr"}
+                >
+                  {aiDisc.value}
+                  {aiDisc.missing && <TranslationBadge className="ms-2" available={aiDisc.available} />}
+                </p>
+              </div>
+            )}
+
+            {aiError && (
+              <p className="mt-3 text-center text-xs text-red-300/80" dir={fa ? "rtl" : "ltr"}>
+                {L(locale, UI.aiError).value}
+              </p>
+            )}
           </div>
 
           {/* Cierre: tendencia, no destino */}

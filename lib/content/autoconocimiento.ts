@@ -48,6 +48,39 @@ export const MAPA_MADRE_NOTA = {
   en: null as string | null, // TODO(en)
 };
 
+// ─── TRANSCRIPCIÓN DE NOMBRES (latino/persa → hebreo) — spec del Mapa,
+//     §"TRANSCRIPCIÓN DE NOMBRES" (Sofer 2026-06-15). NOTA HONESTA es+fa
+//     completas en la spec. El número de gematría NUNCA lo decide la IA: se
+//     recalcula en código con gematria() de lib/sources/lexicon.ts. ──────────
+export const MAPA_TRANSLIT_NOTA = {
+  es:
+    "Los nombres extranjeros no tienen UNA sola forma hebrea: según cómo se marquen las vocales hay varias grafías razonables, y por tanto varias gematrías posibles. Por eso te mostramos opciones, no un número único. La gematría de tu nombre es una raíz para meditar y estudiar —una puerta— no un número fijo ni mágico ni de suerte. Lo que hagas con tu nombre lo decides tú.",
+  fa:
+    "نام‌های بیگانه یک شکلِ عبریِ یگانه ندارند: بسته به اینکه واکه‌ها چگونه نوشته شوند، چند املای منطقی و در نتیجه چند گیماتریای ممکن وجود دارد. به همین دلیل گزینه‌ها را نشان می‌دهیم، نه یک عددِ واحد. گیماتریای نامِ تو ریشه‌ای برای تأمل و مطالعه است — دری — نه عددی ثابت یا جادویی یا شانس. آنچه با نامت می‌کنی، خودت تصمیم می‌گیری.",
+  en: null as string | null, // TODO(en)
+};
+
+export const MAPA_TRANSLIT_UI = {
+  /** botón "convertir al hebreo" */
+  convertir: { es: "Convertir al hebreo", fa: "تبدیل به عبری", en: null as string | null },
+  langLabel: { es: "Idioma del nombre", fa: "زبانِ نام", en: null as string | null },
+  langEs: { es: "Español", fa: "اسپانیایی", en: null as string | null },
+  langEn: { es: "Inglés", fa: "انگلیسی", en: null as string | null },
+  langFa: { es: "Persa", fa: "فارسی", en: null as string | null },
+  pickLabel: { es: "Elige una grafía", fa: "یک املا را برگزین", en: null as string | null },
+  approxLabel: {
+    es: "Aproximado · variantes, no un número fijo",
+    fa: "تقریبی · گونه‌ها، نه عددی ثابت",
+    en: null as string | null,
+  },
+  loading: { es: "Buscando grafías…", fa: "در جستجوی املاها…", en: null as string | null },
+  error: {
+    es: "No se pudo convertir ahora. Intenta de nuevo o escribe el nombre directamente en hebreo.",
+    fa: "اکنون امکان تبدیل نبود. دوباره تلاش کن یا نام را مستقیم به عبری بنویس.",
+    en: null as string | null,
+  },
+};
+
 export interface MesHebreo {
   /** orden 1..12 */
   n: number;
@@ -193,9 +226,9 @@ export const MESES: MesHebreo[] = [
 // DISCLAIMER del Espejo (mostrar ANTES de entrar; es + fa completos en la spec)
 export const ESPEJO_DISCLAIMER = {
   es:
-    "מַרְאָה — El Espejo del Alma. Esto no es adivinación ni un juicio sobre ti ni sobre nadie. Son tendencias GENERALES del alma, presentadas como espejo para tu avodá, según el secreto del Zohar (Yitró, Raza de-Razin) y la tradición del Arizal. Nunca son tu destino. El Zohar enseña que el Santo grabó estas señales 'para entender, no para predecir'. Estos secretos se transmitían con temor del Cielo y solo a los dignos. Por encima de todo rasgo está tu libre albedrío y tu entrega a Dios: como escribió Rabbeinu Bachya, 'lo esencial no es el saber, sino la rectitud del carácter'. Tú eliges quién ser.",
+    "מַרְאָה — El Espejo del Alma. Esto no es adivinación, ni un juicio sobre ti ni sobre nadie. Son tendencias GENERALES del alma, presentadas como espejo para tu avodá, según el secreto del Zohar (Yitró, Raza de-Razin) y la tradición atestiguada por el Arizal. Nunca son tu destino. Es aproximado: un espejo, no un veredicto. Por encima de todo rasgo está tu libre albedrío y tu entrega a Dios. Como escribió Rabbeinu Bachya sobre este mismo versículo, 'lo esencial de la sabiduría no es sino la rectitud de las midot, igual que lo esencial del árbol no es sino el fruto' (Shemot 18:21). El rasgo es el árbol; el fruto lo eliges tú.",
   fa:
-    "מַרְאָה — آینهٔ روح. این پیشگویی نیست و دربارهٔ تو یا هیچ‌کس قضاوت نمی‌کند. اینها گرایش‌های کلی روح هستند، آینه‌ای برای عَبودای تو، بر پایهٔ راز زوهر (یترو، رازا دِرازین) و سنت آریزال. اینها هرگز سرنوشت تو نیستند. زوهر می‌آموزد که خداوند این نشانه‌ها را 'برای فهمیدن، نه پیشگویی' نقش بسته است. این رازها با ترس از آسمان و تنها به شایستگان سپرده می‌شد. فراتر از هر ویژگی، ارادهٔ آزاد و تسلیم تو به خداوند است: چنان‌که رَبِّنو بَحیا نوشت، 'اصل، دانش نیست، بلکه راستیِ منش است.' تو انتخاب می‌کنی که چه کسی باشی.",
+    "מַרְאָה — آینهٔ روح. این پیشگویی نیست و دربارهٔ تو یا هیچ‌کس قضاوت نمی‌کند. اینها گرایش‌های کلیِ روح هستند، آینه‌ای برای عَبودای تو، بر پایهٔ راز زوهر (یترو، رازا دِرازین) و سنتی که آریزال گواه آن است. اینها هرگز سرنوشت تو نیستند. این تقریبی است: آینه‌ای، نه حُکم. فراتر از هر ویژگی، ارادهٔ آزاد و تسلیم تو به خداوند است. چنان‌که رَبِّنو بَحیا دربارهٔ همین آیه نوشت: 'اصلِ حکمت چیزی جز راستیِ منش نیست، همان‌گونه که اصلِ درخت چیزی جز میوه نیست' (شموت ۱۸:۲۱). ویژگی، درخت است؛ میوه را تو برمی‌گزینی.",
   en: null as string | null, // TODO(en)
 };
 
@@ -211,9 +244,11 @@ export interface RasgoTema {
   id: "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8";
   /** título corto del rasgo-tema */
   titulo: string;
-  /** fuente exacta verificada (Zohar §/folio o Rabbeinu Bachya) */
+  /** fuente exacta verificada, texto legible (ej. "Zohar, Yitró 6:77") */
   fuente: string;
-  /** cita hebrea verificada */
+  /** referencia real de Sefaria (para la IA / enlazar) */
+  fuenteRef: string;
+  /** cita aramea verificada VERBATIM (de la spec corregida por el Sofer) */
   citaHe: string;
   /** la midá / avodá a trabajar */
   mida: string;
@@ -224,16 +259,22 @@ export interface RasgoTema {
   color: string;
 }
 
-// LOS 8 RASGOS-TEMA — transcripción fiel de la spec §"LOS 8 RASGOS-TEMA".
-// El "opuesto-luminoso" se deriva de la midá/avodá que la spec ya nombra para
-// cada rasgo (la spec pide "ofrecer el opuesto-luminoso como meta").
+// LOS 8 RASGOS-TEMA — transcripción fiel de la spec CORREGIDA §"LOS 8 RASGOS-TEMA"
+// (Sofer 2026-06-15). Cada rasgo lleva su REFERENCIA REAL de Sefaria (Zohar,
+// Yitró capítulo:párrafo — versión vocalizada) y su cita aramea VERBATIM, tal
+// como el Sofer la verificó una por una. Se eliminaron los folios/§ inventados
+// de la versión anterior ("Vilna 72a §6", "§5", etc.) y los wordings que NO
+// existen en Sefaria. NO inventar ni alterar.
+// El "opuesto-luminoso" se deriva de la midá/avodá que la spec nombra.
 export const RASGOS: RasgoTema[] = [
   {
     id: "R1",
     titulo: "La mente inquieta / impaciente",
-    fuente: "Zohar Yitró §6 (Vilna 72a)",
-    citaHe: "מצחא דקיק וחד… לא מתיישבא בדעתיה, חשיב דאיהו חכים ולא ידע",
-    mida: "יישוב הדעת (asentar la mente).",
+    fuente: "Zohar, Yitró 6:77",
+    fuenteRef: "Zohar, Yitro 6:77",
+    citaHe:
+      "מִצְחָא דְּאִיהוּ דָּקִיק וְחַד, בְּלָא עִגּוּלָא, דָּא הוּא בַּר נָשׁ דְּלָא מִתְיַישְׁבָא בְּדַעְתֵּיהּ, חָשִׁיב דְּאִיהוּ חַכִּים וְלֹא יָדַע",
+    mida: "יִשּׁוּב הַדַּעַת (asentar la mente).",
     espejo: "¿Hablo antes de escuchar de verdad? ¿Confundo rapidez con sabiduría?",
     opuesto: "La mente que se asienta: escuchar hasta el final y dejar que la sabiduría madure antes de hablar.",
     color: "#e0533a",
@@ -241,8 +282,10 @@ export const RASGOS: RasgoTema[] = [
   {
     id: "R2",
     titulo: "El corazón sereno y compasivo",
-    fuente: "Zohar Yitró §6 (72a)",
-    citaHe: "מצחא דקיק בעיגולא… רחמן איהו על כלא… אי ישתדל באורייתא להוי חכים יתיר",
+    fuente: "Zohar, Yitró 6:79",
+    fuenteRef: "Zohar, Yitro 6:79",
+    citaHe:
+      "מִצְחָא דָּקִיק בְּעִגּוּלָא, דָּא אִיהוּ בַּר נָשׁ חַכִּימָא… רַחֲמָן אִיהוּ עַל כֹּלָּא… אִי יִשְׁתַּדַּל בְּאוֹרַיְיתָא לֶהֱוֵי חַכִּים יַתִּיר",
     mida: "Don a no desperdiciar: convertir la calma en estudio constante.",
     espejo: "¿Pongo mi calma al servicio del crecimiento, o me acomodo?",
     opuesto: "La calma fértil: una serenidad que se convierte en estudio constante y crecimiento, no en comodidad.",
@@ -251,9 +294,11 @@ export const RASGOS: RasgoTema[] = [
   {
     id: "R3",
     titulo: "El temperamento de fuego / ira contenida",
-    fuente: "Zohar Yitró §5 (71a)",
-    citaHe: "שעריה קמיט וסליק… מאריה דרגיזו, לביה קמיט",
-    mida: "כעס → סבלנות (de la ira a la paciencia).",
+    fuente: "Zohar, Yitró 12:230",
+    fuenteRef: "Zohar, Yitro 12:230",
+    citaHe:
+      "שַׂעֲרֵיהּ קָמִיט, וְלָא כָּל כַּךְ… טָב אִיהוּ, מָארֵי דִּמְהֵימְנוּתָא, מָארֵי דְּרוּגְזָא תַּקִּיף בְּשַׁעֲתָא דְּאַרְגִּיז",
+    mida: "כַּעַס → סַבְלָנוּת (de la ira a la paciencia).",
     espejo: "Mi intensidad, ¿quema a los que amo o ilumina? ¿Dónde se me cierra el corazón?",
     opuesto: "El fuego que ilumina: una intensidad transformada en paciencia, que calienta y alumbra en vez de quemar.",
     color: "#e08a2e",
@@ -261,8 +306,10 @@ export const RASGOS: RasgoTema[] = [
   {
     id: "R4",
     titulo: "El alma de aguas tranquilas / fluidez",
-    fuente: "Zohar Yitró §5 (71a)",
-    citaHe: "שערא שעיע… טב איהו לשותפו… ואיהו בלחודוי לאו הכי",
+    fuente: "Zohar, Yitró 5:70",
+    fuenteRef: "Zohar, Yitro 5:70",
+    citaHe:
+      "שַׂעֲרָא שְׁעִיעַ יַתִּיר וְתָלֵי לְתַתָּא, טָב אִיהוּ לְשׁוּתָפוּ… וְאִיהוּ בִּלְחוֹדוֹי לָאו הָכִי",
     mida: "Cultivar eje propio (gevurá interior) para no diluirse.",
     espejo: "¿Fluyo con todos hasta perderme? ¿Tengo eje propio a solas?",
     opuesto: "El agua con cauce: una fluidez con eje propio, capaz de unirse a otros sin perderse a sí misma.",
@@ -271,19 +318,23 @@ export const RASGOS: RasgoTema[] = [
   {
     id: "R5",
     titulo: "La palabra hiriente / lashón hará",
-    fuente: "Zohar Yitró §9",
-    citaHe: "שפוון רברבן… ממלל בלישנא בישא",
-    mida: "שמירת הלשון (cuidar la lengua).",
+    fuente: "Zohar, Yitró 9:115",
+    fuenteRef: "Zohar, Yitro 9:115",
+    citaHe:
+      "שִׂפְוָון רַבְרְבָן, דָּא אִיהוּ בַּר נָשׁ מַלִּיל בְּלִישָׁנָא בִּישָׁא… מָארֵי דְּמַחְלוֹקֶת, רְכִילָא אִיהוּ בֵּין הַאי לְהַאי",
+    mida: "שְׁמִירַת הַלָּשׁוֹן (cuidar la lengua).",
     espejo: "Mi palabra hoy, ¿levantó o derribó? ¿Hablo a espaldas?",
     opuesto: "La palabra que construye: una lengua guardada que levanta, bendice y dice en presencia lo que no diría a espaldas.",
     color: "#9b59b6",
   },
   {
     id: "R6",
-    titulo: "La soberbia espiritual disfrazada",
-    fuente: "Zohar Yitró §6 (72a)",
-    citaHe: "אתחכם… אבל לא לשמה, אלא בגין לאתגאה בפני עמא",
-    mida: "לשמה (sinceridad): hacer el bien en lo oculto.",
+    titulo: "La soberbia espiritual disfrazada (no lishmá)",
+    fuente: "Zohar, Yitró 6:82",
+    fuenteRef: "Zohar, Yitro 6:82",
+    citaHe:
+      "אִתְחַכָּם בְּמָה דְּאִשְׁתַּדַּל, וַאֲפִילּוּ בְּאוֹרַיְיתָא, אֲבָל לָא לִשְׁמָהּ, אֶלָּא בְּגִין לְאִתְגָּאָה בִּפְנֵי עַמָּא… לְאַחֲזָאָה דְּאִיהוּ זַכָּאָה וְלָאו הָכִי",
+    mida: "לִשְׁמָהּ (sinceridad): hacer el bien en lo oculto.",
     espejo: "Lo bueno que hago, ¿lo haría igual si nadie me viera?",
     opuesto: "El bien lishmá: hacer lo bueno por sí mismo, igual de fiel cuando nadie mira que cuando todos miran.",
     color: "#c9a43e",
@@ -291,8 +342,10 @@ export const RASGOS: RasgoTema[] = [
   {
     id: "R7",
     titulo: "El que oye demasiado el ruido del mundo",
-    fuente: "Zohar Yitró §10",
-    citaHe: "אודנין רברבין, טפשא בליביה ושגעונא",
+    fuente: "Zohar, Yitró 10:119",
+    fuenteRef: "Zohar, Yitro 10:119",
+    citaHe:
+      "מַאן דְּאוּדְנוֹי רַבְרְבִין, טִפְּשָׁא בְּלִיבֵּיהּ וְשִׁגְעוֹנָא בְּרוּחֵיהּ; מַאן דְּאוּדְנוֹי זְעִירִין וְקַיְימִין עַל קִיּוּמָא, פְּקִיחָא דְּלִבָּא… צָבֵי לְאִשְׁתַּדְּלָא בְּכֹלָּא",
     mida: "Discernir qué escuchar (Shemá: escucha enfocada en lo Uno).",
     espejo: "¿Escucho con discernimiento o me arrastra todo lo que entra?",
     opuesto: "El oído que discierne: una escucha enfocada en lo Uno, que filtra el ruido del mundo en vez de dejarse arrastrar.",
@@ -300,65 +353,205 @@ export const RASGOS: RasgoTema[] = [
   },
   {
     id: "R8",
-    titulo: "El guardián de secretos / alma profunda",
-    fuente: "Zohar Yitró §5 (71a)",
-    citaHe: "מארי דרזין… ברזין זעירין לא קיימא בהו",
-    mida: "Bajar la grandeza a lo cotidiano (בכל דרכיך דעהו).",
+    titulo: "El guardián de secretos / alma profunda, descuidada en lo pequeño",
+    fuente: "Zohar, Yitró 5:70",
+    fuenteRef: "Zohar, Yitro 5:70",
+    citaHe:
+      "מָארֵי דְּרָזִין אִיהוּ בְּאִינּוּן רָזִין עִלָּאִין, בְּרָזִין זְעִירִין לָא קַיְּימָא בְּהוּ; עוֹבָדוֹי כַּשְׁרָאן וְלָא כַּשְׁרָאָן",
+    mida: "Bajar la grandeza a lo cotidiano (בְּכָל דְּרָכֶיךָ דָעֵהוּ).",
     espejo: "¿Fiel en lo grande pero descuidado en lo diario?",
-    opuesto: "La profundidad encarnada: una grandeza que también honra lo pequeño y cotidiano, «en todos tus caminos conócelo».",
+    opuesto: "La grandeza encarnada: una profundidad que también se sostiene en los secretos pequeños y lo cotidiano, «en todos tus caminos conócelo».",
     color: "#4aa3c9",
   },
 ];
 
-// FLUJO: 4 preguntas (NO elegir rasgo de lista) — spec §"FLUJO RECOMENDADO".
-// Cada opción suma a uno o más rasgos. La suma da el rasgo-tema dominante.
+// Rabbeinu Bachya sobre Shemot 18:21 — VERBATIM (cierre obligatorio del Espejo).
+// Verificado por el Sofer en la spec corregida §"VERIFICACIÓN DE FUENTES".
+export const ESPEJO_BACHYA = {
+  fuente: "Rabbeinu Bachya, Shemot 18:21",
+  fuenteRef: "Rabbeinu Bahya, Shemot 18:21",
+  citaHe:
+    "כִּי אֵין עִיקַּר הַחָכְמָה אֶלָּא יוֹשֶׁר הַמִּדּוֹת, כְּשֵׁם שֶׁאֵין הָאִילָן עִיקָּר אֶלָּא הַפְּרִי",
+  es:
+    "«Lo esencial de la sabiduría no es sino la rectitud de las midot, igual que lo esencial del árbol no es sino el fruto» (Rabbeinu Bachya, Shemot 18:21). El rasgo es el árbol; el fruto lo eliges tú.",
+};
+
+// ─── CUESTIONARIO AMPLIADO (12 preguntas) — spec CORREGIDA §"CUESTIONARIO
+//     AMPLIADO". Mezcla conducta/midot + rasgos físicos AUTO-DESCRITOS (sin foto).
+//     La persona NO elige un rasgo de la lista; responde y el sistema suma:
+//     rasgo DOMINANTE + SECUNDARIO. Las preguntas de conducta/midá pesan 2; las
+//     físicas auto-descritas pesan 1 (describen tendencia material, no elección).
+//     Las opciones "sin peso" no suman a ningún rasgo (rasgos: []).
+//     El farsi de las 12 preguntas está marcado TODO(fa) en la spec → fa: null
+//     en cada pregunta/opción; la UI cae al español con la insignia "ES".
+// ───────────────────────────────────────────────────────────────────────────
+export type Categoria = "conducta" | "midá" | "fisico";
+
 export interface Opcion {
   texto: string;
+  /** rasgos a los que suma esta opción (vacío = sin peso) */
   rasgos: RasgoTema["id"][];
+  /** fa de la opción (TODO(fa) en la spec → null por ahora) */
+  textoFa?: string | null;
 }
 export interface Pregunta {
   id: number;
   texto: string;
+  /** fa de la pregunta (TODO(fa) en la spec → null por ahora) */
+  textoFa?: string | null;
+  categoria: Categoria;
+  /** peso de la pregunta: conducta/midá = 2, físico = 1 */
+  peso: 1 | 2;
   opciones: Opcion[];
 }
 
 export const PREGUNTAS: Pregunta[] = [
   {
     id: 1,
+    categoria: "conducta",
+    peso: 2,
     texto: "Cuando algo me molesta, mi primer impulso es:",
+    textoFa: null, // TODO(fa)
     opciones: [
-      { texto: "responder rápido / encenderme", rasgos: ["R3", "R1"] },
-      { texto: "callar y guardarlo", rasgos: ["R8"] },
-      { texto: "ceder para evitar conflicto", rasgos: ["R4"] },
-      { texto: "observar antes de actuar", rasgos: ["R2"] },
+      { texto: "responder rápido / encenderme", rasgos: ["R3"], textoFa: null },
+      { texto: "callar y guardarlo", rasgos: ["R8"], textoFa: null },
+      { texto: "ceder para evitar conflicto", rasgos: ["R4"], textoFa: null },
+      { texto: "observar antes de actuar", rasgos: ["R2"], textoFa: null },
     ],
   },
   {
     id: 2,
+    categoria: "conducta",
+    peso: 2,
     texto: "Las cosas buenas que hago, suelo:",
+    textoFa: null, // TODO(fa)
     opciones: [
-      { texto: "hacerlas mejor si alguien las ve", rasgos: ["R6"] },
-      { texto: "hacerlas igual en lo oculto", rasgos: ["R2"] },
-      { texto: "contarlas / comentarlas", rasgos: ["R5"] },
+      { texto: "hacerlas mejor si alguien las ve", rasgos: ["R6"], textoFa: null },
+      { texto: "hacerlas igual en lo oculto", rasgos: ["R2"], textoFa: null },
+      { texto: "contarlas / comentarlas", rasgos: ["R5"], textoFa: null },
     ],
   },
   {
     id: 3,
+    categoria: "conducta",
+    peso: 2,
     texto: "Mi mayor distracción es:",
+    textoFa: null, // TODO(fa)
     opciones: [
-      { texto: "mi prisa por opinar", rasgos: ["R1"] },
-      { texto: "todo lo que oigo de otros", rasgos: ["R7"] },
-      { texto: "lo cotidiano me aburre, busco lo profundo", rasgos: ["R8"] },
+      { texto: "mi prisa por opinar", rasgos: ["R1"], textoFa: null },
+      { texto: "todo lo que oigo de otros", rasgos: ["R7"], textoFa: null },
+      { texto: "lo cotidiano me aburre, busco lo profundo", rasgos: ["R8"], textoFa: null },
     ],
   },
   {
     id: 4,
-    texto: "Con los demás, tiendo a:",
+    categoria: "conducta",
+    peso: 2,
+    texto: "Con los demás tiendo a:",
+    textoFa: null, // TODO(fa)
     opciones: [
-      { texto: "hablar de más sobre ellos", rasgos: ["R5"] },
-      { texto: "chocar / encenderme", rasgos: ["R3"] },
-      { texto: "diluirme en lo que quieren", rasgos: ["R4"] },
-      { texto: "ser tibio en lo pequeño", rasgos: ["R8"] },
+      { texto: "hablar de más sobre ellos", rasgos: ["R5"], textoFa: null },
+      { texto: "chocar / encenderme", rasgos: ["R3"], textoFa: null },
+      { texto: "diluirme en lo que quieren", rasgos: ["R4"], textoFa: null },
+      { texto: "ser tibio en lo pequeño", rasgos: ["R8"], textoFa: null },
+    ],
+  },
+  {
+    id: 5,
+    categoria: "conducta",
+    peso: 2,
+    texto: "Cuando estudio o aprendo algo, lo hago sobre todo:",
+    textoFa: null, // TODO(fa)
+    opciones: [
+      { texto: "para entenderlo de verdad", rasgos: ["R2"], textoFa: null },
+      { texto: "para poder mostrarlo", rasgos: ["R6"], textoFa: null },
+      { texto: "rápido, paso al siguiente", rasgos: ["R1"], textoFa: null },
+    ],
+  },
+  {
+    id: 6,
+    categoria: "fisico",
+    peso: 1,
+    texto: "Mi cabello es más bien:",
+    textoFa: null, // TODO(fa)
+    opciones: [
+      { texto: "lacio/liso que cae", rasgos: ["R4"], textoFa: null },
+      { texto: "rizado/crespo", rasgos: ["R3"], textoFa: null },
+      { texto: "ninguno claramente / no aplica", rasgos: [], textoFa: null },
+    ],
+  },
+  {
+    id: 7,
+    categoria: "fisico",
+    peso: 1,
+    texto: "Mi frente la describiría como:",
+    textoFa: null, // TODO(fa)
+    opciones: [
+      { texto: "estrecha", rasgos: ["R1"], textoFa: null },
+      { texto: "fina y redondeada", rasgos: ["R2"], textoFa: null },
+      { texto: "amplia y redonda", rasgos: ["R2"], textoFa: null },
+      { texto: "muy lisa / sin marcar", rasgos: [], textoFa: null },
+    ],
+  },
+  {
+    id: 8,
+    categoria: "fisico",
+    peso: 1,
+    texto: "Mis ojos / mi mirada los siento:",
+    textoFa: null, // TODO(fa)
+    opciones: [
+      { texto: "alegres, que sonríen", rasgos: ["R2"], textoFa: null },
+      { texto: "intensos, que se encienden", rasgos: ["R3"], textoFa: null },
+      { texto: "serenos", rasgos: ["R4"], textoFa: null },
+    ],
+  },
+  {
+    id: 9,
+    categoria: "fisico",
+    peso: 1,
+    texto: "Mi boca / mis labios:",
+    textoFa: null, // TODO(fa)
+    opciones: [
+      { texto: "hablo mucho, boca expresiva", rasgos: ["R5"], textoFa: null },
+      { texto: "hablo poco, mido las palabras", rasgos: ["R8"], textoFa: null },
+    ],
+  },
+  {
+    id: 10,
+    categoria: "fisico",
+    peso: 1,
+    texto: "Mis orejas las describiría como:",
+    textoFa: null, // TODO(fa)
+    opciones: [
+      { texto: "más bien grandes", rasgos: ["R7"], textoFa: null },
+      { texto: "pequeñas / pegadas", rasgos: [], textoFa: null }, // opuesto-luminoso de R7 (sin peso)
+      { texto: "no sé", rasgos: [], textoFa: null },
+    ],
+  },
+  {
+    id: 11,
+    categoria: "midá",
+    peso: 2,
+    texto: "La midá que más me cuesta es:",
+    textoFa: null, // TODO(fa)
+    opciones: [
+      { texto: "paciencia", rasgos: ["R3"], textoFa: null },
+      { texto: "cuidar mi lengua", rasgos: ["R5"], textoFa: null },
+      { texto: "humildad sincera (lishmá)", rasgos: ["R6"], textoFa: null },
+      { texto: "firmeza / tener eje", rasgos: ["R4"], textoFa: null },
+    ],
+  },
+  {
+    id: 12,
+    categoria: "midá",
+    peso: 2,
+    texto: "Lo que más quiero trabajar este año:",
+    textoFa: null, // TODO(fa)
+    opciones: [
+      { texto: "asentar mi mente", rasgos: ["R1"], textoFa: null },
+      { texto: "escuchar mejor lo correcto", rasgos: ["R7"], textoFa: null },
+      { texto: "bajar lo grande a lo diario", rasgos: ["R8"], textoFa: null },
+      { texto: "poner mi calma a producir", rasgos: ["R2"], textoFa: null },
     ],
   },
 ];
@@ -366,11 +559,38 @@ export const PREGUNTAS: Pregunta[] = [
 // Cierre fijo "tendencia, no destino" — spec §FLUJO ("cierra recordando…").
 export const ESPEJO_CIERRE = {
   es:
-    "Recuerda: esto es una tendencia, no un destino. El rasgo es maleable; el opuesto-luminoso es tu meta, no una sentencia. Tú eliges quién ser.",
+    "Recuerda: esto es un espejo aproximado, no un veredicto. El rasgo es maleable; el opuesto-luminoso es tu meta, no una sentencia. Por encima de todo rasgo están tu libre albedrío y tu entrega a Dios. Tú eliges quién ser.",
   fa: null as string | null, // TODO(fa)
   en: null as string | null, // TODO(en)
 };
 
 export function rasgoById(id: RasgoTema["id"]): RasgoTema {
   return RASGOS.find((r) => r.id === id)!;
+}
+
+// ─── Cálculo dominante + secundario (pesos: conducta/midá = 2, físico = 1) ───
+// `respuestas[i]` = los rasgos de la opción elegida en la pregunta i (o null).
+export interface ResultadoEspejo {
+  dominante: RasgoTema | null;
+  secundario: RasgoTema | null;
+  /** puntaje por rasgo, para depurar/mostrar */
+  conteo: Record<string, number>;
+}
+
+export function calcularEspejo(
+  respuestas: (RasgoTema["id"][] | null)[],
+): ResultadoEspejo {
+  const conteo: Record<string, number> = {};
+  respuestas.forEach((rasgos, i) => {
+    if (!rasgos || rasgos.length === 0) return;
+    const peso = PREGUNTAS[i]?.peso ?? 1;
+    for (const id of rasgos) conteo[id] = (conteo[id] ?? 0) + peso;
+  });
+  // Orden estable: por puntaje desc; a empate, por el orden de RASGOS.
+  const ordenados = [...RASGOS]
+    .map((r) => ({ r, n: conteo[r.id] ?? 0 }))
+    .sort((a, b) => b.n - a.n);
+  const dom = ordenados[0]?.n > 0 ? ordenados[0].r : null;
+  const sec = ordenados[1]?.n > 0 ? ordenados[1].r : null;
+  return { dominante: dom, secundario: sec, conteo };
 }
