@@ -240,8 +240,12 @@ export default function TreeOfLife() {
 
         {/* ── Overlays flotantes ───────────────────────── */}
 
-        {/* Botón cerrar (volver a la web) */}
-        <div className="absolute start-4 top-4 z-40 flex items-center gap-3">
+        {/* Botón cerrar (volver a la web)
+            En mobile los dos botones en una sola fila eran tan anchos que
+            invadían el centro y tapaban Keter (la sefirá superior). Los
+            apilamos en columna pegados a la izquierda para que no se monten
+            entre sí ni tapen el árbol; en desktop quedan en fila como antes. */}
+        <div className="absolute start-4 top-4 z-40 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
           <button
             onClick={() => router.push("/estudio")}
             className="rounded-full border border-gold/20 bg-ink/80 px-3 py-1.5 font-cinzel text-xs text-muted backdrop-blur-md transition-colors hover:text-gold"

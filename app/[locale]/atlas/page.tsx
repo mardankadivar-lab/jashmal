@@ -426,11 +426,14 @@ export default function AtlasPage() {
         </Canvas>
       </Suspense>
 
-      {/* Título + volver */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between p-4">
-        <div>
+      {/* Título + volver
+          En mobile el subtítulo es largo y antes se metía debajo del botón
+          "Volver" y del buscador (top-16): limitamos el ancho del bloque de
+          título y bajamos el tracking para que respire y no se solape. */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex items-start justify-between gap-3 p-4">
+        <div className="min-w-0 max-w-[62%] sm:max-w-none">
           <p className="hebrew text-2xl text-gold" style={{ filter: "drop-shadow(0 0 10px #c9a43e55)" }}>{T.title}</p>
-          <p className="font-cinzel text-xs uppercase tracking-[0.25em] text-gold/50">{T.subtitle}</p>
+          <p className="font-cinzel text-[10px] uppercase tracking-[0.15em] text-gold/50 sm:text-xs sm:tracking-[0.25em]">{T.subtitle}</p>
           <p className="mt-0.5 font-cinzel text-[9px] uppercase tracking-[0.2em] text-gold/35">
             {places.length} {isFa ? "مکان" : "lugares"}
             {harvestedCount > 0 && <span className="text-gold/55"> · +{harvestedCount} {isFa ? "تازه" : "cosechados"}</span>}
@@ -442,8 +445,9 @@ export default function AtlasPage() {
         </Link>
       </div>
 
-      {/* Buscador */}
-      <div className="pointer-events-none absolute inset-x-0 top-16 z-20 flex justify-center px-4">
+      {/* Buscador — en mobile el título ocupa ~3 líneas, así que bajamos el
+          buscador para que no se monte encima (en desktop cabe en top-16). */}
+      <div className="pointer-events-none absolute inset-x-0 top-28 z-20 flex justify-center px-4 sm:top-16">
         <div className="pointer-events-auto w-[min(340px,86vw)]">
           <div className="relative">
             <input

@@ -27,6 +27,16 @@ export default function CreacionPage() {
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
+
+    // Bloqueo del documento mientras el viaje está montado: la página es
+    // fixed inset-0, pero el <html>/<body> sigue pudiendo "overscrollear" y
+    // disparar el gesto de "volver atrás" del navegador (que sacaba al usuario
+    // a /es). Contenemos el overscroll en la raíz para sellar el viaje.
+    const rootEl = document.documentElement;
+    const prevHtmlOverscroll = rootEl.style.overscrollBehavior;
+    const prevBodyOverscroll = document.body.style.overscrollBehavior;
+    rootEl.style.overscrollBehavior = "none";
+    document.body.style.overscrollBehavior = "none";
     const onScroll = () => {
       const scrollTop = el.scrollTop;
       const maxScroll = el.scrollHeight - el.clientHeight;
@@ -61,6 +71,8 @@ export default function CreacionPage() {
       cancelAnimationFrame(rafId);
       clearTimeout(readyFallback);
       lenis.destroy();
+      rootEl.style.overscrollBehavior = prevHtmlOverscroll;
+      document.body.style.overscrollBehavior = prevBodyOverscroll;
     };
   }, []);
 
@@ -91,8 +103,14 @@ export default function CreacionPage() {
   // bordes de cada etapa (su contenido cambia mientras está invisible), así
   // las escenas se funden como un solo descenso, sin "pop" abrupto.
   const stageProgress = Math.max(0, Math.min(1, scrollProgress * TOTAL - activeStage));
-  const textOpacity =
-    Math.min(1, stageProgress / 0.16) * Math.min(1, (1 - stageProgress) / 0.16);
+  // Desvanecido en los bordes de cada etapa para fundir las escenas. PERO la
+  // PRIMERA etapa (portada Ein Sof) debe verse YA al cargar, sin tener que
+  // scrollear (antes quedaba en blanco con opacidad 0); y la ÚLTIMA debe quedar
+  // visible al final del scroll. Por eso solo fundimos hacia ADENTRO del viaje.
+  const fadeIn = activeStage === 0 ? 1 : Math.min(1, stageProgress / 0.16);
+  const fadeOut =
+    activeStage === TOTAL - 1 ? 1 : Math.min(1, (1 - stageProgress) / 0.16);
+  const textOpacity = fadeIn * fadeOut;
 
   return (
     <div className="always-dark fixed inset-0 z-50 overflow-hidden" style={{ background: bgColor, transition: "background 1.2s ease" }}>
@@ -121,7 +139,10 @@ export default function CreacionPage() {
       <div
         ref={scrollRef}
         className="absolute inset-0 z-10 overflow-y-scroll"
-        style={{ scrollbarWidth: "none" }}
+        // overscrollBehavior: "none" evita que el "scroll de más" (overscroll del
+        // trackpad/touch en el borde superior) dispare el gesto de "volver atrás"
+        // del navegador y saque al usuario del viaje hacia la home /es. CRÍTICO.
+        style={{ scrollbarWidth: "none", overscrollBehavior: "none" }}
       >
         {/* Espacio total: 14 pantallas */}
         <div style={{ height: `${TOTAL * 100}vh` }} />
@@ -254,12 +275,21 @@ export default function CreacionPage() {
         />
       </div>
 
-      {/* ── Controles superiores ──────────────────────────────────── */}
+      {/* ── Controles superiores ──────────────────────────────────────
+            En las DOS escenas de fondo claro (Ein Sof y Tikún) el gold sobre
+            negro translúcido se ve como un gris turbio ilegible: ahí cambiamos
+            a chip claro con texto oscuro. En las escenas oscuras se mantiene el
+            chip gold sobre negro de siempre. ── */}
       <div className="pointer-events-auto absolute start-4 top-4 z-40 flex items-center gap-3">
         {/* Volver a la página principal (inicio), igual que en /misterios */}
         <button
           onClick={() => router.push("/")}
-          className="flex items-center gap-1.5 rounded-full border border-gold/20 bg-black/40 px-3 py-1.5 font-cinzel text-xs text-gold/70 backdrop-blur-md transition-colors hover:text-gold"
+          className="flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-cinzel text-xs backdrop-blur-md transition-colors"
+          style={
+            isLight
+              ? { borderColor: "rgba(11,7,18,0.35)", background: "rgba(255,253,245,0.7)", color: "#1c1408" }
+              : { borderColor: "rgba(201,164,62,0.2)", background: "rgba(0,0,0,0.4)", color: "rgba(201,164,62,0.7)" }
+          }
         >
           <span>{locale === "fa" ? "→" : "←"}</span>
           <span className="hebrew">חַשְׁמַל</span>
@@ -268,7 +298,12 @@ export default function CreacionPage() {
         {/* Acceso directo al motor de estudio */}
         <button
           onClick={() => router.push("/estudio")}
-          className="rounded-full border border-gold/20 bg-black/40 px-3 py-1.5 font-cinzel text-xs text-gold/60 backdrop-blur-md transition-colors hover:text-gold"
+          className="rounded-full border px-3 py-1.5 font-cinzel text-xs backdrop-blur-md transition-colors"
+          style={
+            isLight
+              ? { borderColor: "rgba(11,7,18,0.35)", background: "rgba(255,253,245,0.7)", color: "#1c1408" }
+              : { borderColor: "rgba(201,164,62,0.2)", background: "rgba(0,0,0,0.4)", color: "rgba(201,164,62,0.6)" }
+          }
         >
           {locale === "fa" ? "مطالعه" : "Estudio"}
         </button>
