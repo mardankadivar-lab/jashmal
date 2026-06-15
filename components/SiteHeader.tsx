@@ -50,6 +50,19 @@ const GROUPS: Group[] = [
 // Comunidad va suelta (sin micro-encabezado) como destino único y destacado.
 const COMMUNITY: Item = ["/comunidad", "nav.community"];
 
+// Clave de localStorage donde recordamos qué secciones están abiertas/cerradas.
+const NAV_SECTIONS_KEY = "jashmal_nav_sections";
+
+// Estado por defecto del acordeón: "Explorar" (la más larga, 5 ítems) arranca
+// COLAPSADA para acortar el menú; las demás abiertas. Mardan puede abrir
+// "Explorar" y su preferencia se recuerda en localStorage.
+const DEFAULT_OPEN: Record<string, boolean> = {
+  "nav.groupStudy": true,
+  "nav.groupExplore": false,
+  "nav.groupJourney": true,
+  "nav.groupLearn": true,
+};
+
 type SessionState =
   | { status: "loading" }
   | { status: "guest" }
@@ -80,6 +93,31 @@ export default function SiteHeader() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [session, setSession] = useState<SessionState>({ status: "loading" });
+
+  // Estado abierto/cerrado de cada sección del acordeón. Arranca con los
+  // valores por defecto y, tras montar, se hidrata desde localStorage.
+  const [sections, setSections] = useState<Record<string, boolean>>(DEFAULT_OPEN);
+
+  // Hidratar preferencia guardada (solo en cliente, una vez).
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(NAV_SECTIONS_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw) as Record<string, boolean>;
+        setSections((prev) => ({ ...prev, ...saved }));
+      }
+    } catch {}
+  }, []);
+
+  function toggleSection(titleKey: string) {
+    setSections((prev) => {
+      const next = { ...prev, [titleKey]: !prev[titleKey] };
+      try {
+        localStorage.setItem(NAV_SECTIONS_KEY, JSON.stringify(next));
+      } catch {}
+      return next;
+    });
+  }
 
   // cerrar con Escape
   useEffect(() => {
@@ -148,18 +186,44 @@ export default function SiteHeader() {
           <nav className="absolute end-5 top-full z-50 mt-2 flex max-h-[calc(100vh-80px)] w-[min(300px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-gold/15 bg-ink/95 shadow-2xl shadow-black/50 backdrop-blur-md">
             {/* Zona con scroll: secciones de navegación */}
             <div className="flex-1 overflow-y-auto overscroll-contain p-2">
-              {GROUPS.map((g) => (
-                <div key={g.titleKey} className="mb-1.5 last:mb-0">
-                  <p className="px-3 pb-1 pt-2 font-cinzel text-[10px] uppercase tracking-[0.2em] text-gold/55">
-                    {t(g.titleKey)}
-                  </p>
-                  <div className="flex flex-col">
-                    {g.items.map(([href, key]) => (
-                      <NavItem key={href} href={href} label={t(key)} onClick={() => setOpen(false)} />
-                    ))}
+              {GROUPS.map((g) => {
+                const isOpen = sections[g.titleKey] ?? true;
+                const panelId = `nav-sec-${g.titleKey.replace(/\W+/g, "-")}`;
+                return (
+                  <div key={g.titleKey} className="mb-1.5 last:mb-0">
+                    {/* Encabezado = toggle del acordeón. El chevron rota para
+                        indicar el estado; en RTL se voltea con scale-x. */}
+                    <button
+                      type="button"
+                      onClick={() => toggleSection(g.titleKey)}
+                      aria-expanded={isOpen}
+                      aria-controls={panelId}
+                      className="flex w-full items-center justify-between rounded-lg px-3 pb-1 pt-2 text-start font-cinzel text-[10px] uppercase tracking-[0.2em] text-gold/55 transition-colors hover:text-gold/80"
+                    >
+                      <span>{t(g.titleKey)}</span>
+                      <span
+                        aria-hidden="true"
+                        className={`text-[9px] text-gold/45 transition-transform duration-300 rtl:-scale-x-100 ${isOpen ? "rotate-90" : ""}`}
+                      >
+                        ▸
+                      </span>
+                    </button>
+                    {/* Panel con animación suave de altura (grid-rows truco). */}
+                    <div
+                      id={panelId}
+                      className={`grid transition-[grid-template-rows] duration-300 ease-out ${isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+                    >
+                      <div className="overflow-hidden">
+                        <div className="flex flex-col">
+                          {g.items.map(([href, key]) => (
+                            <NavItem key={href} href={href} label={t(key)} onClick={() => setOpen(false)} />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
 
               {/* Comunidad: destino destacado, sin micro-encabezado */}
               <div className="mt-1 border-t border-gold/10 pt-1.5">
