@@ -39,6 +39,13 @@ const GROUPS: Group[] = [
     ],
   },
   {
+    titleKey: "nav.groupKnowYourself",
+    items: [
+      ["/mapa-del-alma", "nav.soulMap"],
+      ["/espejo-del-alma", "nav.soulMirror"],
+    ],
+  },
+  {
     titleKey: "nav.groupLearn",
     items: [
       ["/que-es-cabala", "nav.whatIsKabbalah"],
@@ -60,6 +67,7 @@ const DEFAULT_OPEN: Record<string, boolean> = {
   "nav.groupStudy": true,
   "nav.groupExplore": false,
   "nav.groupJourney": true,
+  "nav.groupKnowYourself": true,
   "nav.groupLearn": true,
 };
 

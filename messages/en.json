@@ -27,7 +27,10 @@
     "account": "Account",
     "signIn": "Sign in",
     "signOut": "Sign out",
-    "language": "Language"
+    "language": "Language",
+    "groupKnowYourself": "Know Yourself",
+    "soulMap": "Map of the Soul",
+    "soulMirror": "The Mirror of the Soul"
   },
   "hero": {
     "kicker": "Kabbalah and Jewish philosophy",

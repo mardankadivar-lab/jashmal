@@ -27,7 +27,10 @@
     "account": "Cuenta",
     "signIn": "Entrar",
     "signOut": "Salir",
-    "language": "Idioma"
+    "language": "Idioma",
+    "groupKnowYourself": "Conócete",
+    "soulMap": "Mapa del Alma",
+    "soulMirror": "El Espejo del Alma"
   },
   "hero": {
     "kicker": "Cabalá y filosofía judía",
