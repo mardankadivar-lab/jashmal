@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured, getSql } from "@/lib/infra/db";
-import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addAvrahamKabLote2, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch } from "@/lib/nodes/brainStore";
+import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, reclassifyHarvestedDisciplines, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addAvrahamKabLote2, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch } from "@/lib/nodes/brainStore";
 import { BNODES, BEDGES } from "@/lib/nodes/brainData";
 
 export const runtime = "nodejs";
@@ -21,6 +21,9 @@ function ensureInit(): Promise<void> {
       }
       // migración Brain v2: unificar Torá/Tanaj (idempotente)
       await unifyTanakh();
+      // migración: re-clasificar nodos cosechados mal categorizados (Etz Jaim,
+      // Zohar, etc. que el bug del default "tanakh" metió en la galaxia de Tanaj)
+      await reclassifyHarvestedDisciplines();
       // estudio verificado del Sofer: 42 estaciones / Nombre de 42 / Ana BeKoaj
       await addMaseiStudy();
       // Brain v4: personajes bíblicos + dominios temáticos (verificado por el Sofer)

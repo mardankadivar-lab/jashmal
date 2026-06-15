@@ -9,6 +9,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 import { getSql } from "@/lib/infra/db";
+import { disciplineFromRef } from "@/lib/sources/discipline";
 import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, STUDY2_NODES, STUDY2_EDGES, STUDY3_NODES, STUDY3_EDGES, BRIT21_NODES, BRIT21_EDGES, MADRES_NODES, MADRES_EDGES, TOHU_NODES, TOHU_EDGES, AVRAHAM_KAB_NODES, AVRAHAM_KAB_EDGES, GILGUL_CAIN_HEVEL_NODES, GILGUL_CAIN_HEVEL_EDGES, GILGUL_VESSEL_NODES, TIKUN_SILENCIO_NODES, TIKUN_SILENCIO_EDGES, ENOCH_NODES, ENOCH_EDGES, type BNode } from "@/lib/nodes/brainData";
 
 export type BrainGraph = { nodes: BNode[]; edges: [string, string][] };
@@ -202,6 +203,35 @@ export async function unifyTanakh(): Promise<void> {
     }
   } catch {
     /* nunca romper la lectura del cerebro */
+  }
+}
+
+// ── Migración: re-clasificar nodos COSECHADOS mal categorizados ───────────
+// Bug histórico: el harvest de un estudio de TEXTO asignaba la galaxia "tanakh"
+// por defecto, así que obras cabalísticas/talmúdicas/etc. (ej. "Sefer Etz Chaim
+// 25:1:1") caían en Tanaj. Aquí re-derivamos la disciplina REAL desde el catálogo
+// de Sefaria (disciplineFromRef) para cada nodo COSECHADO cuyo id es una ref que
+// el catálogo reconoce. SOLO toca nodos `source = 'study'` (cosechados): jamás
+// los nodos curados por el Sofer ('seed'/'sofer'/'community'). Idempotente: tras
+// corregirlos, el WHERE deja de encontrar filas con la cat equivocada.
+export async function reclassifyHarvestedDisciplines(): Promise<number> {
+  const sql = getSql();
+  if (!sql) return 0;
+  try {
+    const rows = (await sql`
+      SELECT id, cat FROM brain_nodes WHERE source = 'study'
+    `) as Array<{ id: string; cat: string }>;
+    let fixed = 0;
+    for (const r of rows) {
+      const correct = disciplineFromRef(r.id);
+      if (correct && correct !== r.cat) {
+        await sql`UPDATE brain_nodes SET cat = ${correct} WHERE id = ${r.id} AND source = 'study'`;
+        fixed++;
+      }
+    }
+    return fixed;
+  } catch {
+    return 0; // nunca romper la lectura del cerebro
   }
 }
 

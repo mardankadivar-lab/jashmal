@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { dbConfigured } from "@/lib/infra/db";
 import { harvestFromStudy } from "@/lib/nodes/brainHarvest";
+import { disciplineFromRef } from "@/lib/sources/discipline";
 import type { BNode } from "@/lib/nodes/brainData";
 
 export const runtime = "nodejs";
@@ -40,10 +41,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, reason: "insufficient" });
   }
 
-  // categoría/nivel del sujeto (mejor estimación; el Sofer lo ajusta)
-  let subjectCat = "tanakh";
+  // categoría/nivel del sujeto (mejor estimación; el Sofer lo ajusta).
+  // Letras/conceptos → Cabalá. Estudios de TEXTO → derivamos la disciplina REAL
+  // del texto desde el catálogo de Sefaria (Tanaj/Talmud/Midrash/Cabalá/Jasidut…),
+  // NO un "tanakh" por defecto que metía obras cabalísticas (Etz Jaim, Zohar…) en
+  // la galaxia de Tanaj. Si el catálogo no reconoce el libro, recién ahí cae a
+  // "tanakh" como último recurso (el Sofer lo ajusta en la revisión).
   const subjectLevel: BNode["level"] = 3;
-  if (body.mode === "letter" || body.mode === "concept") subjectCat = "kabbalah";
+  let subjectCat: string;
+  if (body.mode === "letter" || body.mode === "concept") {
+    subjectCat = "kabbalah";
+  } else {
+    subjectCat = disciplineFromRef(subject) ?? "tanakh";
+  }
 
   try {
     const res = await harvestFromStudy({
