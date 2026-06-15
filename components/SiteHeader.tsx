@@ -14,6 +14,7 @@ const NAV: [string, string][] = [
   ["/misterios", "nav.mysteries"],
   ["/gematrias", "nav.gematria"],
   ["/creacion", "nav.creation"],
+  ["/viaje", "nav.journey"],
   ["/arbol", "nav.tree"],
   ["/mente-cosmica", "nav.brain"],
   ["/comunidad", "nav.community"],
