@@ -7,13 +7,35 @@ import React from "react";
 import { parseHyperlinks } from "@/lib/relations/hyperlinks";
 import { segmentText } from "@/lib/relations/refDetector";
 
-const HEBREW = /[֐-׿]/;
+// Tramo CONTINUO de hebreo (palabras + espacios/maqaf entre ellas). Aísla SOLO
+// el hebreo, no el latín que lo rodea: si envolviéramos el fragmento entero en
+// <bdi class="hebrew-inline">, el español heredaría la fuente hebrea y el tamaño
+// 1.2em, desordenando el párrafo (bug bidi real).
+const HE_RUN = /[֐-׿][֐-׿\s־]*[֐-׿]|[֐-׿]/g;
 
 function withHebrew(text: string, key: string): React.ReactNode {
-  if (HEBREW.test(text)) {
-    return <bdi key={key} className="hebrew-inline">{text}</bdi>;
+  const out: React.ReactNode[] = [];
+  let last = 0;
+  let i = 0;
+  let m: RegExpExecArray | null;
+  HE_RUN.lastIndex = 0;
+  while ((m = HE_RUN.exec(text)) !== null) {
+    if (m.index > last) {
+      out.push(<React.Fragment key={`${key}-t${i}`}>{text.slice(last, m.index)}</React.Fragment>);
+    }
+    out.push(
+      <bdi key={`${key}-h${i}`} dir="rtl" className="hebrew-inline">
+        {m[0]}
+      </bdi>
+    );
+    last = m.index + m[0].length;
+    i++;
   }
-  return <React.Fragment key={key}>{text}</React.Fragment>;
+  if (last < text.length) {
+    out.push(<React.Fragment key={`${key}-t${i}`}>{text.slice(last)}</React.Fragment>);
+  }
+  // Si no había hebreo, devolvemos el texto tal cual (un solo fragmento).
+  return out.length ? <React.Fragment key={key}>{out}</React.Fragment> : <React.Fragment key={key}>{text}</React.Fragment>;
 }
 
 function renderBold(text: string, keyPrefix: string): React.ReactNode[] {

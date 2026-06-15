@@ -3,19 +3,35 @@
 import React from "react";
 import { parseHyperlinks } from "@/lib/relations/hyperlinks";
 
-const HEBREW = /[֐-׿]/;
+// Tramo CONTINUO de hebreo (palabras + espacios/maqaf entre ellas).
+const HE_RUN = /[֐-׿][֐-׿\s־]*[֐-׿]|[֐-׿]/g;
 
-// Aísla cada palabra hebrea con <bdi> para que no desordene el párrafo latino
-// (RTL/LTR mezclados). bdi aísla la dirección sin voltear el texto circundante.
+// Aísla SOLO los tramos hebreos con <bdi> para que no desordenen el párrafo
+// latino (RTL/LTR mezclados). bdi aísla la dirección sin voltear el texto
+// circundante. Clave: envolver SOLO el hebreo — no el español que lo rodea —
+// para que el latín no herede la fuente hebrea ni el tamaño 1.2em.
 function withHebrew(text: string, key: string): React.ReactNode {
-  if (HEBREW.test(text)) {
-    return (
-      <bdi key={key} className="hebrew-inline">
-        {text}
+  const out: React.ReactNode[] = [];
+  let last = 0;
+  let i = 0;
+  let m: RegExpExecArray | null;
+  HE_RUN.lastIndex = 0;
+  while ((m = HE_RUN.exec(text)) !== null) {
+    if (m.index > last) {
+      out.push(<React.Fragment key={`${key}-t${i}`}>{text.slice(last, m.index)}</React.Fragment>);
+    }
+    out.push(
+      <bdi key={`${key}-h${i}`} dir="rtl" className="hebrew-inline">
+        {m[0]}
       </bdi>
     );
+    last = m.index + m[0].length;
+    i++;
   }
-  return <React.Fragment key={key}>{text}</React.Fragment>;
+  if (last < text.length) {
+    out.push(<React.Fragment key={`${key}-t${i}`}>{text.slice(last)}</React.Fragment>);
+  }
+  return out.length ? <React.Fragment key={key}>{out}</React.Fragment> : <React.Fragment key={key}>{text}</React.Fragment>;
 }
 
 // Resalta **negritas** dentro de un fragmento de texto plano.
