@@ -79,6 +79,13 @@ export const MAPA_TRANSLIT_UI = {
     fa: "اکنون امکان تبدیل نبود. دوباره تلاش کن یا نام را مستقیم به عبری بنویس.",
     en: null as string | null,
   },
+  /** invitación cuando el nombre está en otro alfabeto: la gematría se calcula
+      sobre letras hebreas, así que primero hay que convertir el nombre. */
+  invitacion: {
+    es: "La gematría se calcula sobre las letras hebreas. Convierte tu nombre al hebreo para revelar su raíz numérica.",
+    fa: "گِماتریا بر پایهٔ حروفِ عبری محاسبه می‌شود. نامَت را به عبری تبدیل کن تا ریشهٔ عددیِ آن آشکار شود.",
+    en: null as string | null,
+  },
 };
 
 export interface MesHebreo {

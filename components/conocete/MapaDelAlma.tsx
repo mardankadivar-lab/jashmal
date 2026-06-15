@@ -119,6 +119,10 @@ export default function MapaDelAlma() {
   const consonantes = useMemo(() => stripNiqud(nombre), [nombre]);
   const valor = useMemo(() => (consonantes ? gematria(nombre) : 0), [nombre, consonantes]);
   const desglose = useMemo(() => (consonantes ? gematriaBreakdown(nombre) : []), [nombre, consonantes]);
+  // Solo hay gematría "real" si el nombre tiene letras hebreas que suman valor.
+  // (stripNiqud NO quita el latín, así que "Mardan" daría consonantes truthy y
+  //  gematría 0 → no debe mostrarse la tarjeta de RAÍZ/SELLO con un "0".)
+  const hebreoValido = valor > 0;
   const mes: MesHebreo | null = useMemo(
     () => (mesN ? MESES.find((m) => m.n === mesN) ?? null : null),
     [mesN],
@@ -202,7 +206,14 @@ export default function MapaDelAlma() {
 
           {/* ── CONVERSOR: si el nombre NO es hebreo, ofrecer convertirlo ── */}
           {necesitaConvertir && (
-            <div className="mt-3 rounded-xl border border-gold/20 bg-ink/40 p-3">
+            <div className="mt-3 rounded-xl border border-gold/40 bg-gold/[0.06] p-4">
+              {/* Invitación clara: la gematría vive en las letras hebreas. */}
+              <p
+                className="mb-3 text-sm leading-relaxed text-parchment/90"
+                dir={fa ? "rtl" : "ltr"}
+              >
+                {L(locale, MAPA_TRANSLIT_UI.invitacion).value}
+              </p>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-[11px] uppercase tracking-widest text-muted/70">
                   {L(locale, MAPA_TRANSLIT_UI.langLabel).value}:
@@ -342,8 +353,10 @@ export default function MapaDelAlma() {
         </div>
       </section>
 
-      {/* RAÍZ / SELLO DEL NOMBRE (gematría) */}
-      {consonantes && (
+      {/* RAÍZ / SELLO DEL NOMBRE (gematría) — SOLO si hay letras hebreas que
+          suman valor. Un nombre en latín/persa da gematría 0; en ese caso no
+          se muestra esta tarjeta sino la invitación a convertir (más arriba). */}
+      {hebreoValido && (
         <section
           className="mb-6 overflow-hidden rounded-2xl border border-gold/30 bg-ink/60 p-5"
         >
@@ -390,7 +403,7 @@ export default function MapaDelAlma() {
           La matemática la calcula el backend/módulo determinista; la IA hace el
           derash con el system prompt blindado de la spec. Aparece cuando ya hay
           un nombre en hebreo. */}
-      {consonantes && consonantes.length >= 2 && (
+      {hebreoValido && consonantes.length >= 2 && (
         <LecturaNombre nombreHebreo={consonantes} />
       )}
 
