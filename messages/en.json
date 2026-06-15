@@ -239,7 +239,7 @@
   },
   "tree": {
     "title": "Tree of Life",
-    "subtitle": "The 10 Sefirot and 22 paths. Click a Sefira to see its textual references as rays. 'Enter' to descend to the inner level — each Sefira contains all 10.",
+    "subtitle": "The 10 Sefirot across the three pillars, joined by 22 paths of light. Touch a Sefira: it lights up and reveals its light.",
     "enter": "Enter",
     "back": "Back",
     "root": "Tree",
@@ -258,7 +258,11 @@
     "letterPath": "Path",
     "letterForm": "The form",
     "letterInner": "Inner meaning",
-    "letterConsciousness": "Channel of consciousness"
+    "letterConsciousness": "Channel of consciousness",
+    "tapHint": "Touch a Sefira",
+    "close": "Close",
+    "emptyPanel": "Touch any of the ten spheres to let its light be revealed: its name, its pillar, and its function in creation.",
+    "immersive": "Enter the tree in 3D"
   },
   "tour": {
     "next": "Next →",

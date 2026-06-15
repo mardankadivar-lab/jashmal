@@ -239,7 +239,7 @@
   },
   "tree": {
     "title": "Árbol de la Vida",
-    "subtitle": "Los 10 sefirot y los 22 senderos. Clic sobre una sefirá para ver sus referencias textuales. 'Entrar' para descender al nivel interior — cada sefirá contiene las 10.",
+    "subtitle": "Los 10 sefirot en los tres pilares, unidos por 22 senderos de luz. Toca una sefirá: se ilumina y revela su luz.",
     "enter": "Entrar",
     "back": "Volver",
     "root": "Árbol",
@@ -258,7 +258,11 @@
     "letterPath": "Sendero",
     "letterForm": "La forma",
     "letterInner": "Significado interior",
-    "letterConsciousness": "Canal de consciencia"
+    "letterConsciousness": "Canal de consciencia",
+    "tapHint": "Toca una sefirá",
+    "close": "Cerrar",
+    "emptyPanel": "Toca cualquiera de las diez esferas para que su luz se revele: su nombre, su pilar y su función en la creación.",
+    "immersive": "Entrar al árbol en 3D"
   },
   "tour": {
     "next": "Siguiente →",
