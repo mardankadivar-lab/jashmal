@@ -180,6 +180,18 @@ export const MISTERIOS: Misterio[] = [
     orden: 8.3,
   },
   {
+    slug: "machlokot-koraj",
+    numero: "578",
+    he: "מַחֲלֹקֶת",
+    titulo: "Koraj — cuando la verdad se vuelve un arma",
+    tituloFa: "قورَح — وقتی حقیقت به سلاح بدل می‌شود",
+    gancho: "Koraj tenía razón: «todos somos santos» es verdad. Pero la usó como arma. Machlóket (disputa) = 578 = Shalom (paz, 376) + Rav (grandeza, 202). La paz más el ego produce la guerra.",
+    ganchoFa: "قورَح حق داشت: «همه مقدسیم» راست است. اما آن را چون سلاح به کار برد. مَحلوقت (نزاع) = ۵۷۸ = شالوم (صلح، ۳۷۶) + رَو (بزرگی، ۲۰۲). صلح به‌علاوهٔ خودبزرگی، جنگ می‌زاید.",
+    serie: "gematria",
+    color: "#b0413e",
+    orden: 8.7,
+  },
+  {
     slug: "enoch",
     numero: "84",
     he: "חֲנוֹךְ",
