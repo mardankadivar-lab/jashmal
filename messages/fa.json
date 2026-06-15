@@ -19,7 +19,15 @@
     "myStudies": "مطالعات من",
     "whatIsKabbalah": "کابالا چیست؟",
     "openMenu": "باز کردن منو",
-    "closeMenu": "بستن منو"
+    "closeMenu": "بستن منو",
+    "groupStudy": "مطالعه",
+    "groupExplore": "کاوش",
+    "groupJourney": "سفرِ آفرینش",
+    "groupLearn": "آموختن",
+    "account": "حساب کاربری",
+    "signIn": "ورود",
+    "signOut": "خروج",
+    "language": "زبان"
   },
   "hero": {
     "kicker": "کابالا و فلسفهٔ یهودی",

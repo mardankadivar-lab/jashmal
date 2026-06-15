@@ -19,7 +19,15 @@
     "myStudies": "Mis Estudios",
     "whatIsKabbalah": "¿Qué es la Cabalá?",
     "openMenu": "Abrir menú",
-    "closeMenu": "Cerrar menú"
+    "closeMenu": "Cerrar menú",
+    "groupStudy": "Estudiar",
+    "groupExplore": "Explorar",
+    "groupJourney": "El Viaje de la Creación",
+    "groupLearn": "Aprender",
+    "account": "Cuenta",
+    "signIn": "Entrar",
+    "signOut": "Salir",
+    "language": "Idioma"
   },
   "hero": {
     "kicker": "Cabalá y filosofía judía",
