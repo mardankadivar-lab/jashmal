@@ -219,6 +219,51 @@ export const MESES: MesHebreo[] = [
   },
 ];
 
+// ───────────────────────────────────────────────────────────────────────────
+//  LECTURA DEL NOMBRE — קְרִיאַת הַשֵּׁם  (función dentro del Mapa del Alma)
+//  Spec: docs/specs/lectura-del-nombre.md §"NOTA HONESTA para la UI" (es+fa
+//  verbatim del Sofer). La matemática la calcula el backend (lib/sources/
+//  nameReading.ts); la IA solo compone el derash.
+// ───────────────────────────────────────────────────────────────────────────
+
+// NOTA HONESTA — SIEMPRE visible junto a la función (es + fa completos en la spec)
+export const LECTURA_NOMBRE_NOTA = {
+  es:
+    "La Lectura del Nombre es un derash: una interpretación creativa y meditativa sobre tu nombre, a la manera en que los sabios judíos lo hacían como puerta de estudio. No determina quién eres ni predice tu futuro: un nombre admite muchas lecturas, y aquí te ofrecemos una para meditar. El libre albedrío y la entrega a Dios están por encima de cualquier nombre.",
+  fa:
+    "«خواندنِ نام» یک دِراش است: تفسیری خلاقانه و مراقبه‌گونه بر نامِ توست، به همان شیوه‌ای که حکیمانِ یهودی نام را همچون دروازه‌ای برای مطالعه می‌گشودند. این نه سرنوشتِ تو را تعیین می‌کند و نه آینده‌ات را پیش‌گویی می‌کند؛ یک نام خوانش‌های بسیاری را برمی‌تابد و ما در اینجا یکی را برای تأمل به تو پیشنهاد می‌کنیم. ارادهٔ آزاد و سپردنِ خویش به خدا برتر از هر نامی است.",
+  en: null as string | null, // TODO(en)
+};
+
+// Etiquetas de UI de la Lectura del Nombre (es obligatorio; fa del Sofer; en TODO)
+export const LECTURA_NOMBRE_UI = {
+  he: "קְרִיאַת הַשֵּׁם",
+  title: { es: "Lectura del Nombre", fa: "خواندنِ نام", en: null as string | null },
+  cta: { es: "Leer las letras de mi nombre", fa: "خواندنِ حروفِ نامم", en: null as string | null },
+  intro: {
+    es: "Las letras de tu nombre como puerta de meditación — un derash, nunca un destino.",
+    fa: "حروفِ نامِ تو همچون دروازه‌ای برای تأمل — یک دِراش، نه سرنوشت.",
+    en: null as string | null,
+  },
+  calcLabel: { es: "Lo que calcula Jashmal (no la IA)", fa: "آنچه خَشمَل محاسبه می‌کند (نه هوش مصنوعی)", en: null as string | null },
+  lettersLabel: { es: "Las letras", fa: "حروف", en: null as string | null },
+  gematriaLabel: { es: "Gematría del nombre", fa: "گیماتریای نام", en: null as string | null },
+  rosheiLabel: { es: "Primera + última letra", fa: "نخستین + واپسین حرف", en: null as string | null },
+  particionLabel: { es: "Partición (notarikón)", fa: "بخش‌بندی (نوتاریکون)", en: null as string | null },
+  atbashLabel: { es: "Atbash (א↔ת)", fa: "آتباش (א↔ת)", en: null as string | null },
+  tzerufLabel: { es: "Tzeruf (anagrama)", fa: "تْزِروف (واروسازیِ حروف)", en: null as string | null },
+  equivLabel: { es: "Mismo valor (gematría)", fa: "هم‌ارزشِ گیماتریایی", en: null as string | null },
+  miluiLabel: { es: "Milui (deletreo)", fa: "میلوی (هجّی‌کردن)", en: null as string | null },
+  silencio: { es: "sin lectura clara — el nombre guarda silencio aquí", fa: "بدونِ خوانشِ روشن — نام اینجا خاموش می‌مانَد", en: null as string | null },
+  derashLabel: { es: "La lectura de la mente de Jashmal", fa: "خوانشِ ذهنِ خَشمَل", en: null as string | null },
+  loading: { es: "Jashmal está leyendo las letras de tu nombre…", fa: "خَشمَل در حالِ خواندنِ حروفِ نامِ توست…", en: null as string | null },
+  error: {
+    es: "No se pudo componer la lectura ahora. Intenta de nuevo en un momento.",
+    fa: "اکنون امکانِ نوشتنِ خوانش نبود. لحظه‌ای دیگر دوباره تلاش کن.",
+    en: null as string | null,
+  },
+};
+
 // ===========================================================================
 //  FUNCIÓN 2 — מַרְאָה — El Espejo del Alma
 // ===========================================================================
@@ -382,8 +427,10 @@ export const ESPEJO_BACHYA = {
 //     rasgo DOMINANTE + SECUNDARIO. Las preguntas de conducta/midá pesan 2; las
 //     físicas auto-descritas pesan 1 (describen tendencia material, no elección).
 //     Las opciones "sin peso" no suman a ningún rasgo (rasgos: []).
-//     El farsi de las 12 preguntas está marcado TODO(fa) en la spec → fa: null
-//     en cada pregunta/opción; la UI cae al español con la insignia "ES".
+//     FARSI CABLEADO (2026-06-15): la spec corregida trae la línea FA: de cada
+//     una de las 12 preguntas (enunciado + opciones en persa). Transcrita aquí
+//     VERBATIM en textoFa. En /fa el cuestionario sale en persa (RTL); ya no cae
+//     al español. (en sigue TODO → fallback español con insignia.)
 // ───────────────────────────────────────────────────────────────────────────
 export type Categoria = "conducta" | "midá" | "fisico";
 
@@ -411,12 +458,12 @@ export const PREGUNTAS: Pregunta[] = [
     categoria: "conducta",
     peso: 2,
     texto: "Cuando algo me molesta, mi primer impulso es:",
-    textoFa: null, // TODO(fa)
+    textoFa: "وقتی چیزی آزارم می‌دهد، نخستین واکنشم این است:",
     opciones: [
-      { texto: "responder rápido / encenderme", rasgos: ["R3"], textoFa: null },
-      { texto: "callar y guardarlo", rasgos: ["R8"], textoFa: null },
-      { texto: "ceder para evitar conflicto", rasgos: ["R4"], textoFa: null },
-      { texto: "observar antes de actuar", rasgos: ["R2"], textoFa: null },
+      { texto: "responder rápido / encenderme", rasgos: ["R3"], textoFa: "زود پاسخ می‌دهم / برافروخته می‌شوم" },
+      { texto: "callar y guardarlo", rasgos: ["R8"], textoFa: "ساکت می‌مانم و در دلم نگه می‌دارم" },
+      { texto: "ceder para evitar conflicto", rasgos: ["R4"], textoFa: "برای پرهیز از کشمکش کوتاه می‌آیم" },
+      { texto: "observar antes de actuar", rasgos: ["R2"], textoFa: "پیش از کنش، نظاره می‌کنم" },
     ],
   },
   {
@@ -424,11 +471,11 @@ export const PREGUNTAS: Pregunta[] = [
     categoria: "conducta",
     peso: 2,
     texto: "Las cosas buenas que hago, suelo:",
-    textoFa: null, // TODO(fa)
+    textoFa: "کارهای نیکی که می‌کنم، معمولاً:",
     opciones: [
-      { texto: "hacerlas mejor si alguien las ve", rasgos: ["R6"], textoFa: null },
-      { texto: "hacerlas igual en lo oculto", rasgos: ["R2"], textoFa: null },
-      { texto: "contarlas / comentarlas", rasgos: ["R5"], textoFa: null },
+      { texto: "hacerlas mejor si alguien las ve", rasgos: ["R6"], textoFa: "اگر کسی ببیند، بهتر انجامشان می‌دهم" },
+      { texto: "hacerlas igual en lo oculto", rasgos: ["R2"], textoFa: "در نهان نیز همان‌گونه انجامشان می‌دهم" },
+      { texto: "contarlas / comentarlas", rasgos: ["R5"], textoFa: "از آنها می‌گویم / بازگو می‌کنم" },
     ],
   },
   {
@@ -436,11 +483,11 @@ export const PREGUNTAS: Pregunta[] = [
     categoria: "conducta",
     peso: 2,
     texto: "Mi mayor distracción es:",
-    textoFa: null, // TODO(fa)
+    textoFa: "بزرگ‌ترین چیزی که حواسم را پرت می‌کند این است:",
     opciones: [
-      { texto: "mi prisa por opinar", rasgos: ["R1"], textoFa: null },
-      { texto: "todo lo que oigo de otros", rasgos: ["R7"], textoFa: null },
-      { texto: "lo cotidiano me aburre, busco lo profundo", rasgos: ["R8"], textoFa: null },
+      { texto: "mi prisa por opinar", rasgos: ["R1"], textoFa: "شتابم برای اظهارنظر" },
+      { texto: "todo lo que oigo de otros", rasgos: ["R7"], textoFa: "هر آنچه از دیگران می‌شنوم" },
+      { texto: "lo cotidiano me aburre, busco lo profundo", rasgos: ["R8"], textoFa: "امور روزمره خسته‌ام می‌کند، در پی ژرفا هستم" },
     ],
   },
   {
@@ -448,12 +495,12 @@ export const PREGUNTAS: Pregunta[] = [
     categoria: "conducta",
     peso: 2,
     texto: "Con los demás tiendo a:",
-    textoFa: null, // TODO(fa)
+    textoFa: "در رابطه با دیگران، گرایش دارم که:",
     opciones: [
-      { texto: "hablar de más sobre ellos", rasgos: ["R5"], textoFa: null },
-      { texto: "chocar / encenderme", rasgos: ["R3"], textoFa: null },
-      { texto: "diluirme en lo que quieren", rasgos: ["R4"], textoFa: null },
-      { texto: "ser tibio en lo pequeño", rasgos: ["R8"], textoFa: null },
+      { texto: "hablar de más sobre ellos", rasgos: ["R5"], textoFa: "بیش از اندازه درباره‌شان حرف بزنم" },
+      { texto: "chocar / encenderme", rasgos: ["R3"], textoFa: "برخورد کنم / برافروخته شوم" },
+      { texto: "diluirme en lo que quieren", rasgos: ["R4"], textoFa: "در خواسته‌هایشان حل شوم" },
+      { texto: "ser tibio en lo pequeño", rasgos: ["R8"], textoFa: "در چیزهای کوچک سهل‌انگار باشم" },
     ],
   },
   {
@@ -461,11 +508,11 @@ export const PREGUNTAS: Pregunta[] = [
     categoria: "conducta",
     peso: 2,
     texto: "Cuando estudio o aprendo algo, lo hago sobre todo:",
-    textoFa: null, // TODO(fa)
+    textoFa: "وقتی چیزی می‌آموزم یا مطالعه می‌کنم، بیش از همه:",
     opciones: [
-      { texto: "para entenderlo de verdad", rasgos: ["R2"], textoFa: null },
-      { texto: "para poder mostrarlo", rasgos: ["R6"], textoFa: null },
-      { texto: "rápido, paso al siguiente", rasgos: ["R1"], textoFa: null },
+      { texto: "para entenderlo de verdad", rasgos: ["R2"], textoFa: "برای آنکه به‌راستی دریابمش" },
+      { texto: "para poder mostrarlo", rasgos: ["R6"], textoFa: "برای آنکه بتوانم به نمایش بگذارمش" },
+      { texto: "rápido, paso al siguiente", rasgos: ["R1"], textoFa: "شتاب‌زده، و سراغ بعدی می‌روم" },
     ],
   },
   {
@@ -473,11 +520,11 @@ export const PREGUNTAS: Pregunta[] = [
     categoria: "fisico",
     peso: 1,
     texto: "Mi cabello es más bien:",
-    textoFa: null, // TODO(fa)
+    textoFa: "موهای من بیشتر:",
     opciones: [
-      { texto: "lacio/liso que cae", rasgos: ["R4"], textoFa: null },
-      { texto: "rizado/crespo", rasgos: ["R3"], textoFa: null },
-      { texto: "ninguno claramente / no aplica", rasgos: [], textoFa: null },
+      { texto: "lacio/liso que cae", rasgos: ["R4"], textoFa: "صاف/لخت که فرومی‌ریزد" },
+      { texto: "rizado/crespo", rasgos: ["R3"], textoFa: "فرفری/مجعد" },
+      { texto: "ninguno claramente / no aplica", rasgos: [], textoFa: "هیچ‌کدام به‌روشنی / صدق نمی‌کند" },
     ],
   },
   {
@@ -485,12 +532,12 @@ export const PREGUNTAS: Pregunta[] = [
     categoria: "fisico",
     peso: 1,
     texto: "Mi frente la describiría como:",
-    textoFa: null, // TODO(fa)
+    textoFa: "پیشانی‌ام را این‌گونه توصیف می‌کنم:",
     opciones: [
-      { texto: "estrecha", rasgos: ["R1"], textoFa: null },
-      { texto: "fina y redondeada", rasgos: ["R2"], textoFa: null },
-      { texto: "amplia y redonda", rasgos: ["R2"], textoFa: null },
-      { texto: "muy lisa / sin marcar", rasgos: [], textoFa: null },
+      { texto: "estrecha", rasgos: ["R1"], textoFa: "باریک/تنگ" },
+      { texto: "fina y redondeada", rasgos: ["R2"], textoFa: "ظریف و گِرد" },
+      { texto: "amplia y redonda", rasgos: ["R2"], textoFa: "پهن و گِرد" },
+      { texto: "muy lisa / sin marcar", rasgos: [], textoFa: "بسیار صاف / بی‌نشان" },
     ],
   },
   {
@@ -498,11 +545,11 @@ export const PREGUNTAS: Pregunta[] = [
     categoria: "fisico",
     peso: 1,
     texto: "Mis ojos / mi mirada los siento:",
-    textoFa: null, // TODO(fa)
+    textoFa: "چشمان / نگاهم را چنین حس می‌کنم:",
     opciones: [
-      { texto: "alegres, que sonríen", rasgos: ["R2"], textoFa: null },
-      { texto: "intensos, que se encienden", rasgos: ["R3"], textoFa: null },
-      { texto: "serenos", rasgos: ["R4"], textoFa: null },
+      { texto: "alegres, que sonríen", rasgos: ["R2"], textoFa: "شاد، که لبخند می‌زنند" },
+      { texto: "intensos, que se encienden", rasgos: ["R3"], textoFa: "پرشور، که برمی‌افروزند" },
+      { texto: "serenos", rasgos: ["R4"], textoFa: "آرام و آسوده" },
     ],
   },
   {
@@ -510,10 +557,10 @@ export const PREGUNTAS: Pregunta[] = [
     categoria: "fisico",
     peso: 1,
     texto: "Mi boca / mis labios:",
-    textoFa: null, // TODO(fa)
+    textoFa: "دهان / لب‌هایم:",
     opciones: [
-      { texto: "hablo mucho, boca expresiva", rasgos: ["R5"], textoFa: null },
-      { texto: "hablo poco, mido las palabras", rasgos: ["R8"], textoFa: null },
+      { texto: "hablo mucho, boca expresiva", rasgos: ["R5"], textoFa: "زیاد سخن می‌گویم، دهانی گویا" },
+      { texto: "hablo poco, mido las palabras", rasgos: ["R8"], textoFa: "کم سخن می‌گویم، واژه‌ها را می‌سنجم" },
     ],
   },
   {
@@ -521,11 +568,11 @@ export const PREGUNTAS: Pregunta[] = [
     categoria: "fisico",
     peso: 1,
     texto: "Mis orejas las describiría como:",
-    textoFa: null, // TODO(fa)
+    textoFa: "گوش‌هایم را این‌گونه توصیف می‌کنم:",
     opciones: [
-      { texto: "más bien grandes", rasgos: ["R7"], textoFa: null },
-      { texto: "pequeñas / pegadas", rasgos: [], textoFa: null }, // opuesto-luminoso de R7 (sin peso)
-      { texto: "no sé", rasgos: [], textoFa: null },
+      { texto: "más bien grandes", rasgos: ["R7"], textoFa: "نسبتاً بزرگ" },
+      { texto: "pequeñas / pegadas", rasgos: [], textoFa: "کوچک / چسبیده" }, // opuesto-luminoso de R7 (sin peso)
+      { texto: "no sé", rasgos: [], textoFa: "نمی‌دانم" },
     ],
   },
   {
@@ -533,12 +580,12 @@ export const PREGUNTAS: Pregunta[] = [
     categoria: "midá",
     peso: 2,
     texto: "La midá que más me cuesta es:",
-    textoFa: null, // TODO(fa)
+    textoFa: "دشوارترین میدا (midá، صفتِ منش) برایم این است:",
     opciones: [
-      { texto: "paciencia", rasgos: ["R3"], textoFa: null },
-      { texto: "cuidar mi lengua", rasgos: ["R5"], textoFa: null },
-      { texto: "humildad sincera (lishmá)", rasgos: ["R6"], textoFa: null },
-      { texto: "firmeza / tener eje", rasgos: ["R4"], textoFa: null },
+      { texto: "paciencia", rasgos: ["R3"], textoFa: "صبر (ساولانوت)" },
+      { texto: "cuidar mi lengua", rasgos: ["R5"], textoFa: "پاسداشتِ زبانم" },
+      { texto: "humildad sincera (lishmá)", rasgos: ["R6"], textoFa: "فروتنیِ خالصانه (لیشماه)" },
+      { texto: "firmeza / tener eje", rasgos: ["R4"], textoFa: "استواری / داشتنِ محور درونی" },
     ],
   },
   {
@@ -546,12 +593,12 @@ export const PREGUNTAS: Pregunta[] = [
     categoria: "midá",
     peso: 2,
     texto: "Lo que más quiero trabajar este año:",
-    textoFa: null, // TODO(fa)
+    textoFa: "امسال بیش از همه می‌خواهم روی این کار کنم:",
     opciones: [
-      { texto: "asentar mi mente", rasgos: ["R1"], textoFa: null },
-      { texto: "escuchar mejor lo correcto", rasgos: ["R7"], textoFa: null },
-      { texto: "bajar lo grande a lo diario", rasgos: ["R8"], textoFa: null },
-      { texto: "poner mi calma a producir", rasgos: ["R2"], textoFa: null },
+      { texto: "asentar mi mente", rasgos: ["R1"], textoFa: "آرام‌کردن و نشاندنِ ذهنم" },
+      { texto: "escuchar mejor lo correcto", rasgos: ["R7"], textoFa: "بهتر شنیدنِ آنچه درست است" },
+      { texto: "bajar lo grande a lo diario", rasgos: ["R8"], textoFa: "فروآوردنِ امور بزرگ به زندگیِ روزمره" },
+      { texto: "poner mi calma a producir", rasgos: ["R2"], textoFa: "به‌بار نشاندنِ آرامشم" },
     ],
   },
 ];

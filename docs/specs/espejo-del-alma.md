@@ -156,40 +156,74 @@ Cada pregunta está anclada a un rasgo-tema y a su fuente.
 Q1 (conducta) "Cuando algo me molesta, mi primer impulso es:"
   a) responder rápido / encenderme → R3 (Yitro 12:230) · b) callar y guardarlo → R8 (Yitro 5:70)
   · c) ceder para evitar conflicto → R4 (Yitro 5:70) · d) observar antes de actuar → R2 (Yitro 6:79).
-  TODO(fa)
+  FA: «وقتی چیزی آزارم می‌دهد، نخستین واکنشم این است:»
+  الف) زود پاسخ می‌دهم / برافروخته می‌شوم → R3 · ب) ساکت می‌مانم و در دلم نگه می‌دارم → R8
+  · ج) برای پرهیز از کشمکش کوتاه می‌آیم → R4 · د) پیش از کنش، نظاره می‌کنم → R2.
 Q2 (conducta) "Las cosas buenas que hago, suelo:"
   a) hacerlas mejor si alguien las ve → R6 (Yitro 6:82) · b) hacerlas igual en lo oculto → R2
-  (Yitro 6:79) · c) contarlas / comentarlas → R5 (Yitro 9:115). TODO(fa)
+  (Yitro 6:79) · c) contarlas / comentarlas → R5 (Yitro 9:115).
+  FA: «کارهای نیکی که می‌کنم، معمولاً:»
+  الف) اگر کسی ببیند، بهتر انجامشان می‌دهم → R6 · ب) در نهان نیز همان‌گونه انجامشان می‌دهم → R2
+  · ج) از آنها می‌گویم / بازگو می‌کنم → R5.
 Q3 (conducta) "Mi mayor distracción es:"
   a) mi prisa por opinar → R1 (Yitro 6:77) · b) todo lo que oigo de otros → R7 (Yitro 10:119)
-  · c) lo cotidiano me aburre, busco lo profundo → R8 (Yitro 5:70). TODO(fa)
+  · c) lo cotidiano me aburre, busco lo profundo → R8 (Yitro 5:70).
+  FA: «بزرگ‌ترین چیزی که حواسم را پرت می‌کند این است:»
+  الف) شتابم برای اظهارنظر → R1 · ب) هر آنچه از دیگران می‌شنوم → R7
+  · ج) امور روزمره خسته‌ام می‌کند، در پی ژرفا هستم → R8.
 Q4 (conducta) "Con los demás tiendo a:"
   a) hablar de más sobre ellos → R5 (Yitro 9:115) · b) chocar / encenderme → R3 (Yitro 12:230)
-  · c) diluirme en lo que quieren → R4 (Yitro 5:70) · d) ser tibio en lo pequeño → R8 (Yitro 5:70). TODO(fa)
+  · c) diluirme en lo que quieren → R4 (Yitro 5:70) · d) ser tibio en lo pequeño → R8 (Yitro 5:70).
+  FA: «در رابطه با دیگران، گرایش دارم که:»
+  الف) بیش از اندازه درباره‌شان حرف بزنم → R5 · ب) برخورد کنم / برافروخته شوم → R3
+  · ج) در خواسته‌هایشان حل شوم → R4 · د) در چیزهای کوچک سهل‌انگار باشم → R8.
 Q5 (conducta) "Cuando estudio o aprendo algo, lo hago sobre todo:"
   a) para entenderlo de verdad → R2 (Yitro 6:79) · b) para poder mostrarlo → R6 (Yitro 6:82)
-  · c) rápido, paso al siguiente → R1 (Yitro 6:77). TODO(fa)
+  · c) rápido, paso al siguiente → R1 (Yitro 6:77).
+  FA: «وقتی چیزی می‌آموزم یا مطالعه می‌کنم، بیش از همه:»
+  الف) برای آنکه به‌راستی دریابمش → R2 · ب) برای آنکه بتوانم به نمایش بگذارمش → R6
+  · ج) شتاب‌زده، و سراغ بعدی می‌روم → R1.
 Q6 (físico — cabello) "Mi cabello es más bien:"
   a) lacio/liso que cae → R4 (Yitro 5:70) · b) rizado/crespo → R3 (Yitro 12:230)
-  · c) ninguno claramente / no aplica → (sin peso). TODO(fa)
+  · c) ninguno claramente / no aplica → (sin peso).
+  FA: «موهای من بیشتر:»
+  الف) صاف/لخت که فرومی‌ریزد → R4 · ب) فرفری/مجعد → R3
+  · ج) هیچ‌کدام به‌روشنی / صدق نمی‌کند → (بدون وزن).
 Q7 (físico — frente) "Mi frente la describiría como:"
   a) estrecha → R1 (Yitro 6:77) · b) fina y redondeada → R2 (Yitro 6:79) · c) amplia y redonda
-  → R2/perspicacia (Yitro 6:83) · d) muy lisa / sin marcar → (sin peso). TODO(fa)
+  → R2/perspicacia (Yitro 6:83) · d) muy lisa / sin marcar → (sin peso).
+  FA: «پیشانی‌ام را این‌گونه توصیف می‌کنم:»
+  الف) باریک/تنگ → R1 · ب) ظریف و گِرد → R2 · ج) پهن و گِرد → R2/تیزهوشی
+  · د) بسیار صاف / بی‌نشان → (بدون وزن).
 Q8 (físico — ojos) "Mis ojos / mi mirada los siento:"
   a) alegres, que sonríen → R2 (Yitro 7:86) · b) intensos, que se encienden → R3 (Yitro 7:91)
-  · c) serenos → R4 (Yitro 5:70). TODO(fa)
+  · c) serenos → R4 (Yitro 5:70).
+  FA: «چشمان / نگاهم را چنین حس می‌کنم:»
+  الف) شاد، که لبخند می‌زنند → R2 · ب) پرشور، که برمی‌افروزند → R3
+  · ج) آرام و آسوده → R4.
 Q9 (físico — labios) "Mi boca / mis labios:"
   a) hablo mucho, boca expresiva → R5 (Yitro 9:115) · b) hablo poco, mido las palabras → R8
-  (Yitro 5:70). TODO(fa)
+  (Yitro 5:70).
+  FA: «دهان / لب‌هایم:»
+  الف) زیاد سخن می‌گویم، دهانی گویا → R5 · ب) کم سخن می‌گویم، واژه‌ها را می‌سنجم → R8.
 Q10 (físico — orejas) "Mis orejas las describiría como:"
   a) más bien grandes → R7 (Yitro 10:119) · b) pequeñas / pegadas → opuesto-luminoso de R7
-  (Yitro 10:119) · c) no sé → (sin peso). TODO(fa)
+  (Yitro 10:119) · c) no sé → (sin peso).
+  FA: «گوش‌هایم را این‌گونه توصیف می‌کنم:»
+  الف) نسبتاً بزرگ → R7 · ب) کوچک / چسبیده → نقطهٔ روشنِ مقابلِ R7
+  · ج) نمی‌دانم → (بدون وزن).
 Q11 (midá) "La midá que más me cuesta es:"
   a) paciencia → R3 · b) cuidar mi lengua → R5 · c) humildad sincera (lishmá) → R6 · d) firmeza
-  / tener eje → R4. TODO(fa)
+  / tener eje → R4.
+  FA: «دشوارترین میدا (midá، صفتِ منش) برایم این است:»
+  الف) صبر (ساولانوت) → R3 · ب) پاسداشتِ زبانم → R5 · ج) فروتنیِ خالصانه (لیشماه) → R6
+  · د) استواری / داشتنِ محور درونی → R4.
 Q12 (midá) "Lo que más quiero trabajar este año:"
   a) asentar mi mente → R1 · b) escuchar mejor lo correcto → R7 · c) bajar lo grande a lo
-  diario → R8 · d) poner mi calma a producir → R2. TODO(fa)
+  diario → R8 · d) poner mi calma a producir → R2.
+  FA: «امسال بیش از همه می‌خواهم روی این کار کنم:»
+  الف) آرام‌کردن و نشاندنِ ذهنم → R1 · ب) بهتر شنیدنِ آنچه درست است → R7
+  · ج) فروآوردنِ امور بزرگ به زندگیِ روزمره → R8 · د) به‌بار نشاندنِ آرامشم → R2.
 
 Cálculo: sumar puntos por rasgo (las preguntas de conducta y midá pesan 2; las físicas
 auto-descritas pesan 1, porque describen tendencia material, no elección). El rasgo con más

@@ -7,6 +7,7 @@ import type { Locale } from "@/i18n/routing";
 import { gematria, gematriaBreakdown, stripNiqud } from "@/lib/sources/lexicon";
 import { tri } from "@/lib/i18n/i18nContent";
 import TranslationBadge from "@/components/TranslationBadge";
+import LecturaNombre from "@/components/conocete/LecturaNombre";
 import {
   MESES,
   MAPA_REGLA_DE_ORO,
@@ -383,6 +384,14 @@ export default function MapaDelAlma() {
             {gemTexto.missing && <TranslationBadge className="ms-2" available={gemTexto.available} />}
           </p>
         </section>
+      )}
+
+      {/* LECTURA DEL NOMBRE — קְרִיאַת הַשֵּׁם (derash de las letras del nombre).
+          La matemática la calcula el backend/módulo determinista; la IA hace el
+          derash con el system prompt blindado de la spec. Aparece cuando ya hay
+          un nombre en hebreo. */}
+      {consonantes && consonantes.length >= 2 && (
+        <LecturaNombre nombreHebreo={consonantes} />
       )}
 
       {/* TARJETA DEL MAZAL DEL MES */}
