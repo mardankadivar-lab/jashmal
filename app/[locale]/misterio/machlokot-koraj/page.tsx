@@ -226,6 +226,67 @@ export default function PageMachlokotKoraj() {
           </div>
         </Section>
 
+        {/* SECCIÓN SOD — capa luriana (jidush de Mardan, verificado por el Sofer) */}
+        <Section>
+          <h3 className="mb-2 mt-16 font-cinzel text-sm uppercase tracking-[0.3em] text-gold/60">
+            {/* TODO(fa): revisar con Mardan (hablante nativo) */}
+            {fa ? "סוֹד" : "סוֹד"}
+            <span className="ms-3 hebrew text-lg text-gold/40">סוֹד</span>
+          </h3>
+          <h4 className="mb-7 font-cinzel text-lg font-bold text-parchment/90">
+            {/* TODO(fa): revisar con Mardan (hablante nativo) */}
+            {fa
+              ? "قورَح و رازِ دایره‌ها بدونِ خطِ مستقیم"
+              : "Koraj y el secreto de los Círculos sin la Línea recta"}
+          </h4>
+
+          <div className="space-y-5 text-sm leading-relaxed text-parchment/85" dir={fa ? "rtl" : "ltr"}>
+            <p>
+              {/* TODO(fa): revisar con Mardan (hablante nativo) */}
+              {fa
+                ? "کابالای آریزال (ربی ییتسحاق لوریا) کتابِ עץ חיים («درختِ زندگی»، اثرِ مادرِ کابالای لوریانی) را با دو الگو می‌گشاید از این‌که نورِ الهی چگونه نظم می‌یابد، و این دو در سراسرِ آفرینش هم‌زی‌اند: עיגולים و יושר (עץ חיים، شَعَر ۱، عَنَف ۲)."
+                : <>La Cabalá del Arizal (Rabí Yitzjak Luria) abre el <em>Etz Jaim</em> (el «Árbol de Vida», la obra madre de la Cabalá luriana) con dos modelos de cómo se ordena la luz divina, que coexisten en toda la creación: <span className="text-gold/90">Igulim</span> y <span className="text-gold/90">Yosher</span> (Etz Jaim, Shaar 1, Anaf 2).</>}
+            </p>
+            <p>
+              {/* TODO(fa): revisar con Mardan (hablante nativo) */}
+              {fa
+                ? "עיگולים (عیگولیم، «دایره‌ها») نورهایی‌اند چیده‌شده چون حلقه‌های هم‌مرکز، که همگی گردِ یک مرکز می‌گردند. نه بالایی هست نه پایینی، نه سلسله‌مراتبی: هر مرتبه به یک اندازه از مرکز فاصله دارد. این بُعدِ برابری است."
+                : <>Igulim (<span className="hebrew">עיגולים</span>, «círculos») son las luces dispuestas como anillos concéntricos, todos rodeando un mismo centro. No hay arriba ni abajo, no hay jerarquía: todo nivel está a la misma distancia del Centro. Es la dimensión de la <em>igualdad</em>.</>}
+            </p>
+            <p>
+              {/* TODO(fa): revisar con Mardan (hablante nativo) */}
+              {fa
+                ? "יושר (یوشِر، «راستی») همان نورهاست که چون پیکری ایستاده نظم یافته‌اند — پیکرِ אדם קדמון (آدام قَدمون، «انسانِ نخستین») — با سر، بازوان و تنه. اینجا نظم هست، مراتب هست، نوری که «سر» است و نوری که «پا». این بُعدِ ساختارِ سلسله‌مراتبی است. آریزال می‌آموزد که آفرینشِ سالم به هر دو نیاز دارد: עیگول (همه پیشِ بی‌نهایت یکسان محبوب) و یوشِر (نظمی که نور از مرتبه‌ای به مرتبهٔ دیگر فرود می‌آید). برداشتنِ یکی، جهان را می‌شکند."
+                : <>Yosher (<span className="hebrew">יושר</span>, «rectitud») son esas mismas luces ordenadas como una figura erguida —la figura de <span className="text-gold/90">Adam Kadmón</span> (<span className="hebrew">אדם קדמון</span>, «el Hombre Primordial»)— con cabeza, brazos, torso. Aquí sí hay orden, niveles, una luz que es «cabeza» y otra que es «pie». Es la dimensión de la <em>estructura jerárquica</em>. El Arizal enseña que la creación sana necesita las dos: el Igul (todos amados por igual ante el Infinito) y el Yosher (un orden por el cual la luz desciende de un nivel a otro). Quitar una rompe el mundo.</>}
+            </p>
+            <p>
+              {/* TODO(fa): revisar con Mardan (hablante nativo) */}
+              {fa
+                ? "اینجاست رازِ قورَح. فریادِ او — «تمامِ جماعت، همهٔ آنها، مقدسند و خداوند در میانِ آنهاست» (بمیدبار ۱۶:۳) — کلمه به کلمه همان حقیقتِ עیگولیم است: همه به یک اندازه از مرکز فاصله دارند. قورَح دروغی نساخت؛ نیمی از حقیقت را برگرفت. دایره‌ها را با وضوحی خیره‌کننده دید. آنچه انکار کرد یوشِر بود: نظمی که موشه پیش‌تر دریافت می‌کند و انتقال می‌دهد، نظمی که اهارون را کوهِن می‌سازد. از این‌روست که اعتراضش چنین پایان می‌گیرد: «چرا خود را بر جماعت برمی‌افرازید؟». قورَح جهانی از עیگولِ ناب خواست، بی یوشِر. و چنان جهانی نمی‌تواند نور را نگاه دارد: فرومی‌پاشد. از این‌رو زمین او را به پایین فروبرد — آن‌که فرودِ منظم از فراز را انکار کرد، بی‌نظم به ژرفا افتاد."
+                : <>Aquí está el secreto de Koraj. Su grito —«toda la congregación, todos ellos, son santos, y en medio de ellos está Hashem» (Bamidbar 16:3)— es, palabra por palabra, la verdad de Igulim: todos equidistantes del Centro. Koraj no inventó una mentira; tomó <em>media</em> verdad. Vio los Círculos con claridad deslumbrante. Lo que negó fue el Yosher: el orden por el cual Moshé recibe antes y transmite, por el cual Aharón es kohén. Por eso su reclamo termina: «¿por qué se elevan sobre la congregación?». Koraj quiso un mundo de puro Igul, sin Yosher. Y un mundo así no puede sostener la luz: colapsa. Por eso la tierra se lo tragó hacia abajo — el que negó el descenso ordenado de lo alto cayó sin orden hacia lo profundo.</>}
+            </p>
+            <p>
+              {/* TODO(fa): revisar con Mardan (hablante nativo) */}
+              {fa
+                ? "نام آن را مهر می‌زند. קֹרַח / قورَح، تحت‌اللفظ، یعنی «کچل» (از ریشهٔ קֵרֵחַ، کِرِئَح). و در کابالا موها جزئیاتی بی‌اهمیت نیستند: שערות (سِعاروت، «موها») کانال‌هایی‌اند که نورِ احاطه‌کننده از آنها فرود می‌آید، پالوده و تار به تار، تا به نورِ درونی بدل شود که جان می‌تواند آن را دریابد. کابالیست‌ها این را گذار از אור מקיף (اور مَکیف، «نورِ احاطه‌کننده» که گردِ ما هست اما درون نمی‌آید) به אור פנימי (اور پِنیمی، «نورِ درونی» که می‌توانیم در خود نگاه داریم) می‌نامند. سرچشمهٔ کلاسیکِ این رازِ مو، אִדְרָא רַבָּא (اِدرا رَبّا، «انجمنِ بزرگ»، در زوهر جلد سوم، پاراشاتِ נשא، ناسو) است."
+                : <>El nombre lo sella. <span className="hebrew">קֹרַח</span> / Koraj significa, literalmente, «calvo» (de la raíz <em>keréaj</em>). Y en la Cabalá los cabellos no son un detalle: los <span className="text-gold/90">se'arot</span> (<span className="hebrew">שערות</span>, «cabellos») son los canales por los que la luz envolvente desciende, filtrada e hilo a hilo, para volverse luz interior que el alma puede recibir. A esto los cabalistas llaman el paso de <span className="text-gold/90">Ohr Makif</span> (<span className="hebrew">אור מקיף</span>, la «luz circundante» que nos rodea pero no entra) a <span className="text-gold/90">Ohr Pnimi</span> (<span className="hebrew">אור פנימי</span>, la «luz interior» que sí podemos contener). La fuente clásica de este misterio del cabello es la <span className="text-gold/90">Idra Rabba</span> (la «Asamblea Mayor», en el Zohar III, parashat Naso).</>}
+            </p>
+            <p>
+              {/* TODO(fa): revisar con Mardan (hablante nativo) */}
+              {fa
+                ? "و آنگاه همه‌چیز جفت می‌شود: قورَحِ «کچل» جانی است بی کانال‌هایِ مو — آن‌که از دستگاهی که نورِ احاطه‌کننده را با نظم و شکیبایی به نورِ درونی فرومی‌آورد بی‌بهره است. تمامِ نور را یکجا خواست، یکسان برای همه، بی میانجیگریِ یوشِر. خواست עیگولِ ناب باشد: قداست بی ساختار. و قداستی که از فرودِ منظم سر باز می‌زند روشن نمی‌کند: ویران می‌کند."
+                : <>Y entonces todo encaja: Koraj el «calvo» es el alma sin los canales del cabello — el que carece del aparato que hace descender, con orden y paciencia, la luz envolvente hacia la luz interior. Quiso toda la luz de golpe, igual para todos, sin la mediación del Yosher. Quiso ser Igul puro: santidad sin estructura. Y la santidad que rehúsa descender ordenadamente no ilumina: arrasa.</>}
+            </p>
+
+            <p className="border-t border-gold/10 pt-4 text-[12px] italic leading-relaxed text-muted/70">
+              {/* TODO(fa): revisar con Mardan (hablante nativo) */}
+              {fa
+                ? "تأملی در کلیدِ لوریانی (סוד): این معنایِ ظاهریِ آیه نیست، بلکه لایه‌ای از راز است. بر منابعِ راستی‌آزمایی‌پذیر تکیه دارد: עץ חיים شَعَر ۱ عَنَف ۲، بمیدبار ۱۶:۳، و اِدرا رَبّا (زوهر جلد سوم، ناسو)."
+                : "Una contemplación en clave luriana (Sod): no es el sentido llano del versículo, sino una capa de secreto. Se apoya en fuentes verificables: Etz Jaim Shaar 1 Anaf 2, Bamidbar 16:3, y la Idra Rabba (Zohar III, Naso)."}
+            </p>
+          </div>
+        </Section>
+
         {/* CIERRE CONTEMPLATIVO */}
         <Section>
           <div className="mt-14 text-center">

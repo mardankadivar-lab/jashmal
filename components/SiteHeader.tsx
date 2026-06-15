@@ -18,6 +18,7 @@ const NAV: [string, string][] = [
   ["/mente-cosmica", "nav.brain"],
   ["/comunidad", "nav.community"],
   ["/atlas", "nav.atlas"],
+  ["/que-es-cabala", "nav.whatIsKabbalah"],
   ["/acerca", "nav.about"],
 ];
 
