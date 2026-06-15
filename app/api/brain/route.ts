@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured, getSql } from "@/lib/infra/db";
-import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, reclassifyHarvestedDisciplines, resyncCuratedDisciplines, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addAvrahamKabLote2, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch } from "@/lib/nodes/brainStore";
+import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, reclassifyHarvestedDisciplines, resyncCuratedDisciplines, moveCommentatorsOutOfTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addAvrahamKabLote2, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch, addCommentary } from "@/lib/nodes/brainStore";
 import { BNODES, BEDGES } from "@/lib/nodes/brainData";
 
 export const runtime = "nodejs";
@@ -50,14 +50,20 @@ function ensureInit(): Promise<void> {
       await addGilgulVessels();
       // Jidush de Mardan: El Tikún del Silencio (נחש 358 = משיח) — galaxia Jashmal
       await addTikunSilencio();
-      // Jidush de Mardan: Janóoj — la gracia que asciende (חנוך → Metatrón) — Jashmal
+      // Jidush de Mardan: Janóoj — la gracia que asciende (Janoj a Metatron) — Jashmal
       await addEnoch();
+      // Galaxia Comentarios (Parshanut): obras de comentaristas del Tanaj + autores
+      await addCommentary();
       // CORRECCIÓN DE RAÍZ (galaxias mezcladas): re-sincroniza la `cat`
       // AUTORITATIVA de la semilla curada (brainData.ts) sobre la BD, para
       // descongelar nodos del núcleo cuya galaxia quedó vieja/errada (seedBrain
       // y addMaseiStudy insertan con DO NOTHING). Va al FINAL, tras sembrar todo,
       // y solo toca nodos 'seed'/'sofer' — nunca cosechados ni de comunidad.
       await resyncCuratedDisciplines();
+      // Tanaj SOLO libros base: saca a comentaristas/Targumim de Tanaj/Midrash/
+      // Mishná → Personajes (la persona) / Comentarios (el Targum). Va al final,
+      // tras resync, para que ni la semilla ni la cosecha dejen comentaristas en Tanaj.
+      await moveCommentatorsOutOfTanakh();
     })().catch((e) => {
       initPromise = null; // permite reintentar en la próxima llamada
       throw e;
@@ -66,7 +72,7 @@ function ensureInit(): Promise<void> {
   return initPromise;
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   // Respaldo estático (semilla) — si la BD no está, el cerebro igual funciona.
   const fallback = { nodes: BNODES, edges: BEDGES, source: "seed" as const };
 
@@ -74,14 +80,28 @@ export async function GET() {
     return NextResponse.json(fallback);
   }
 
+  // ── Puerta de curaduría ──
+  // Por DEFECTO la vista pública muestra SOLO lo APROBADO (semilla + cosecha
+  // vetada por el Sofer). Los nodos 'pending' (cosecha nueva sin revisar) NO se
+  // exponen al público. El toggle ?pending=1 solo funciona con el ADMIN_TOKEN
+  // (header x-admin-token o ?token=) → así el Sofer/Mardan puede previsualizar lo
+  // pendiente atenuado sin filtrarlo a cualquiera.
+  const url = new URL(req.url);
+  const wantsPending = url.searchParams.get("pending") === "1";
+  const adminToken = process.env.ADMIN_TOKEN;
+  const provided = req.headers.get("x-admin-token") || url.searchParams.get("token");
+  const includePending = wantsPending && !!adminToken && provided === adminToken;
+
   try {
     await ensureInit();
-    const g = await getBrainGraph();
+    const g = await getBrainGraph(includePending);
     if (g && g.nodes.length > 0) {
-      return NextResponse.json(
-        { ...g, source: "db" as const },
-        { headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } },
-      );
+      // Si se incluyen pendientes (vista admin), NO cachear (es contenido vivo y
+      // depende del token). La vista pública aprobada sí se cachea en el borde.
+      const headers = includePending
+        ? { "Cache-Control": "no-store" }
+        : { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" };
+      return NextResponse.json({ ...g, source: "db" as const, includePending }, { headers });
     }
   } catch {
     // cae al respaldo

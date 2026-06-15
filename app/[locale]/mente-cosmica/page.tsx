@@ -1077,6 +1077,12 @@ function BrainScene({
   // "Tanaj" en la leyenda enciende también el núcleo Torá (misma galaxia)
   const catHit = (c: string) => c === activeCat || (activeCat === "tanakh" && c === "torah");
   const intensityOf = (n: BNode): number => {
+    // Vista del Sofer (?pending=1): los nodos PENDIENTES se muestran MUY tenues
+    // (atenuados), para distinguirlos a simple vista de los ya aprobados.
+    if (n.pending) return intensityCore(n) * 0.28;
+    return intensityCore(n);
+  };
+  const intensityCore = (n: BNode): number => {
     const awakeBase = n.level <= 1 ? 0.55 : n.level === 2 ? 0.32 : 0.18; // latente
     if (gilgulActive && gilgulReach) {
       if (n.id === gilgulRoot) return 1.4;          // la raíz del alma, intensa
@@ -1252,6 +1258,11 @@ export default function GrafoPage() {
   // el cerebro lee sus sinapsis/conexiones de /api/brain (BD); semilla como respaldo
   const [graph, setGraph] = useState<Graph>({ nodes: BNODES, edges: BEDGES });
   const [expanding, setExpanding] = useState(false);
+  // Puerta de curaduría: la vista pública muestra SOLO lo aprobado. Si el Sofer
+  // entró al panel (token en localStorage), puede activar "ver pendientes" para
+  // previsualizar la cosecha nueva atenuada. El público nunca ve pendientes.
+  const [showPending, setShowPending] = useState(false);
+  const [hasAdminToken, setHasAdminToken] = useState(false);
   const [searchQ, setSearchQ] = useState("");
   const [suggestOpen, setSuggestOpen] = useState(false); // mostrar sugerencias solo al escribir
   const [compare, setCompare] = useState<string[]>([]); // modo comparación (Cmd/Ctrl-clic)
@@ -1300,9 +1311,22 @@ export default function GrafoPage() {
     [graph.edges],
   );
 
+  // ¿hay token de admin guardado? (lo guarda el panel /admin/cerebro). Solo
+  // entonces ofrecemos el toggle "ver pendientes".
+  useEffect(() => {
+    setHasAdminToken(!!localStorage.getItem("jashmal_admin_token"));
+  }, []);
+
   useEffect(() => {
     let alive = true;
-    fetch("/api/brain")
+    // Por defecto: vista pública aprobada. Con el toggle del Sofer + token →
+    // ?pending=1 (el backend exige el ADMIN_TOKEN para devolver pendientes).
+    let url = "/api/brain";
+    if (showPending && hasAdminToken) {
+      const tok = localStorage.getItem("jashmal_admin_token") || "";
+      url = `/api/brain?pending=1&token=${encodeURIComponent(tok)}`;
+    }
+    fetch(url)
       .then((r) => r.json())
       .then((d) => {
         if (alive && d && Array.isArray(d.nodes) && d.nodes.length && Array.isArray(d.edges)) {
@@ -1313,7 +1337,7 @@ export default function GrafoPage() {
     return () => {
       alive = false;
     };
-  }, []);
+  }, [showPending, hasAdminToken]);
 
   const selNode = selected ? graph.nodes.find((n) => n.id === selected) ?? null : null;
   const hovNode = hovered ? graph.nodes.find((n) => n.id === hovered) ?? null : null;
@@ -2023,6 +2047,27 @@ export default function GrafoPage() {
                 );
               })}
             </ul>
+          )}
+          {/* Puerta de curaduría (solo si el Sofer entró al panel): previsualizar
+              la cosecha PENDIENTE atenuada. El público nunca ve este control. */}
+          {hasAdminToken && (
+            <button
+              onClick={() => setShowPending((v) => !v)}
+              className={`mt-2 flex w-full items-center justify-center gap-1.5 rounded-full border px-3 py-1 text-[11px] uppercase tracking-wide backdrop-blur-md transition-colors ${
+                showPending
+                  ? "border-amber-400/60 bg-amber-400/15 text-amber-200"
+                  : "border-gold/20 bg-ink/70 text-muted/60 hover:text-gold"
+              }`}
+              title={tri(
+                "Vista del Sofer: mostrar también los nodos pendientes de aprobar",
+                "نمای سوفر: نمایش گره‌های در انتظار تأیید",
+                "Sofer view: also show nodes pending approval",
+              )}
+            >
+              {showPending
+                ? tri("● viendo pendientes", "● در حال نمایش در انتظار", "● showing pending")
+                : tri("○ ver pendientes (Sofer)", "○ دیدن در انتظار (سوفر)", "○ show pending (Sofer)")}
+            </button>
           )}
         </div>
       </div>

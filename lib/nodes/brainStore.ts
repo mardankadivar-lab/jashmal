@@ -9,8 +9,8 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 import { getSql } from "@/lib/infra/db";
-import { disciplineFromRef } from "@/lib/sources/discipline";
-import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, STUDY2_NODES, STUDY2_EDGES, STUDY3_NODES, STUDY3_EDGES, BRIT21_NODES, BRIT21_EDGES, MADRES_NODES, MADRES_EDGES, TOHU_NODES, TOHU_EDGES, AVRAHAM_KAB_NODES, AVRAHAM_KAB_EDGES, GILGUL_CAIN_HEVEL_NODES, GILGUL_CAIN_HEVEL_EDGES, GILGUL_VESSEL_NODES, TIKUN_SILENCIO_NODES, TIKUN_SILENCIO_EDGES, ENOCH_NODES, ENOCH_EDGES, type BNode } from "@/lib/nodes/brainData";
+import { disciplineFromRef, commentatorNameToCat } from "@/lib/sources/discipline";
+import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, STUDY2_NODES, STUDY2_EDGES, STUDY3_NODES, STUDY3_EDGES, BRIT21_NODES, BRIT21_EDGES, MADRES_NODES, MADRES_EDGES, TOHU_NODES, TOHU_EDGES, AVRAHAM_KAB_NODES, AVRAHAM_KAB_EDGES, GILGUL_CAIN_HEVEL_NODES, GILGUL_CAIN_HEVEL_EDGES, GILGUL_VESSEL_NODES, TIKUN_SILENCIO_NODES, TIKUN_SILENCIO_EDGES, ENOCH_NODES, ENOCH_EDGES, COMMENTARY_ALL_NODES, COMMENTARY_EDGES, type BNode } from "@/lib/nodes/brainData";
 
 export type BrainGraph = { nodes: BNode[]; edges: [string, string][] };
 
@@ -226,6 +226,42 @@ export async function reclassifyHarvestedDisciplines(): Promise<number> {
       const correct = disciplineFromRef(r.id);
       if (correct && correct !== r.cat) {
         await sql`UPDATE brain_nodes SET cat = ${correct} WHERE id = ${r.id} AND source = 'study'`;
+        fixed++;
+      }
+    }
+    return fixed;
+  } catch {
+    return 0; // nunca romper la lectura del cerebro
+  }
+}
+
+// ── Migración (Sofer): Tanaj SOLO libros base · comentaristas → su galaxia ──
+// Exigencia de Mardan: la galaxia Tanaj debe contener SOLO los 24 libros del
+// Tanaj. Cualquier nodo cuyo nombre sea un COMENTARISTA o Targum (Ibn Ezra,
+// Ramban, Rashi, Onkelos, Targum Yonatan, …) que esté hoy en una galaxia de
+// texto base (tanakh/midrash/mishnah) se MUEVE a su galaxia correcta:
+//   · la PERSONA (el sabio) → Personajes (figure).
+//   · el Targum (la OBRA del Tanaj) → Comentarios (commentary).
+// commentatorNameToCat() es la fuente de la regla (alias verificados). Toca
+// nodos de cualquier source (la cosecha pudo crearlos como 'study'); NO toca la
+// galaxia Comunidad. Idempotente: tras mover, el WHERE deja de encontrarlos.
+export async function moveCommentatorsOutOfTanakh(): Promise<number> {
+  const sql = getSql();
+  if (!sql) return 0;
+  try {
+    // candidatos: nodos en galaxias de texto base (donde NO deben vivir personas)
+    const rows = (await sql`
+      SELECT id, label, cat FROM brain_nodes
+      WHERE cat IN ('tanakh','midrash','mishnah')
+        AND cat <> 'comunidad'
+    `) as Array<{ id: string; label: string; cat: string }>;
+    let fixed = 0;
+    for (const r of rows) {
+      // probamos por label y por id (la cosecha pudo nombrarlos distinto)
+      const correct =
+        commentatorNameToCat(r.label) ?? commentatorNameToCat(r.id) ?? disciplineFromRef(r.id);
+      if (correct && correct !== r.cat && (correct === "figure" || correct === "commentary")) {
+        await sql`UPDATE brain_nodes SET cat = ${correct} WHERE id = ${r.id}`;
         fixed++;
       }
     }
@@ -701,6 +737,40 @@ export async function addEnoch(): Promise<void> {
   }
 }
 
+// ── Galaxia "Comentarios" (Parshanut) — verificada por el Sofer ───────────
+// Siembra (idempotente, en cada arranque) las obras de comentaristas del Tanaj
+// (galaxia commentary) + sus autores (galaxia figure) + Targumim, con la arista
+// obra→autor (persona≠obra). UPSERT: la versión curada gana sobre cualquier
+// 'pending' previo con el mismo id (ej. un "Ibn Ezra" cosechado).
+export async function addCommentary(): Promise<void> {
+  const sql = getSql();
+  if (!sql) return;
+  try {
+    for (const n of COMMENTARY_ALL_NODES) {
+      await sql`
+        INSERT INTO brain_nodes (id, label, label_fa, label_en, cat, level, url, region, status, source)
+        VALUES (${n.id}, ${n.label}, ${n.labelFa ?? null}, ${n.labelEn ?? null}, ${n.cat}, ${n.level},
+                ${n.url ?? null}, ${n.region ?? null}, 'approved', 'sofer')
+        ON CONFLICT (id) DO UPDATE SET
+          label = EXCLUDED.label, label_fa = EXCLUDED.label_fa, label_en = EXCLUDED.label_en,
+          cat = EXCLUDED.cat, level = EXCLUDED.level,
+          status = 'approved', source = 'sofer'
+      `;
+    }
+    for (const e of COMMENTARY_EDGES) {
+      try {
+        await sql`
+          INSERT INTO brain_edges (id, source_id, target_id, kind, weight, status, origin)
+          VALUES (${edgeKey(e.a, e.b)}, ${e.a}, ${e.b}, ${e.kind}, 1, 'approved', 'sofer')
+          ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, status = 'approved'
+        `;
+      } catch { /* arista a nodo inexistente → se ignora */ }
+    }
+  } catch {
+    /* nunca romper la lectura del cerebro */
+  }
+}
+
 // ── Leer el grafo aprobado (lo que el cerebro enciende) ───────────────────
 // Devuelve null si la BD no está configurada → el front usa la semilla estática.
 export async function getBrainGraph(includePending = false): Promise<BrainGraph | null> {
@@ -709,12 +779,12 @@ export async function getBrainGraph(includePending = false): Promise<BrainGraph 
   try {
     const statuses = includePending ? ["approved", "pending"] : ["approved"];
     const nodeRows = (await sql`
-      SELECT id, label, label_fa, label_en, cat, level, url, region, author
+      SELECT id, label, label_fa, label_en, cat, level, url, region, author, status
       FROM brain_nodes
       WHERE status = ANY(${statuses})
     `) as Array<{
       id: string; label: string; label_fa: string | null; label_en: string | null; cat: string;
-      level: number; url: string | null; region: string | null; author: string | null;
+      level: number; url: string | null; region: string | null; author: string | null; status: string;
     }>;
     const edgeRows = (await sql`
       SELECT source_id, target_id
@@ -733,6 +803,7 @@ export async function getBrainGraph(includePending = false): Promise<BrainGraph 
       url: r.url ?? undefined,
       region: r.region ?? undefined,
       author: r.author ?? undefined,
+      pending: r.status === "pending" ? true : undefined, // vista admin: se atenúa
     }));
     // solo aristas cuyos dos extremos existen
     const edges: [string, string][] = edgeRows
@@ -954,6 +1025,19 @@ export async function setNodeStatus(id: string, status: "approved" | "rejected")
         AND target_id IN (SELECT id FROM brain_nodes WHERE status='approved')
     `;
   }
+}
+
+// Recategorizar un nodo: el Sofer corrige su galaxia (cat) antes/al aprobar.
+// Valida contra el set de galaxias conocidas para no escribir basura.
+const KNOWN_CATS = new Set([
+  "torah", "tanakh", "mishnah", "talmud", "midrash", "commentary", "kabbalah",
+  "chasidut", "halakhah", "philosophy", "science", "figure", "tema", "jashmal", "comunidad",
+]);
+export async function setNodeCat(id: string, cat: string): Promise<boolean> {
+  const sql = getSql();
+  if (!sql || !KNOWN_CATS.has(cat)) return false;
+  await sql`UPDATE brain_nodes SET cat = ${cat} WHERE id = ${id}`;
+  return true;
 }
 
 export async function setEdgeStatus(id: string, status: "approved" | "rejected"): Promise<void> {

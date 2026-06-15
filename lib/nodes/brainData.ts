@@ -26,6 +26,7 @@ export type BNode = {
   url?: string;    // atajo real del sitio (solo donde existe)
   region?: string; // override de región (si difiere de la de su categoría)
   author?: string; // autor (estrella de la galaxia Comunidad = el estudiante)
+  pending?: boolean; // solo en vista admin con ?pending=1: nodo aún sin aprobar (se atenúa)
 };
 
 // ─── Paleta de categorías (color = LUZ; permanente, nunca cambia al tocar) ──
@@ -35,6 +36,7 @@ export const BRAIN_CATS: Record<string, { c: string; label: string; labelFa?: st
   mishnah:    { c: "#3f7bff", label: "Mishná",    labelFa: "میشنا", labelEn: "Mishnah" },   // azul eléctrico
   talmud:     { c: "#e0a93f", label: "Talmud",    labelFa: "تلمود", labelEn: "Talmud" },   // ámbar cálido
   midrash:    { c: "#9b6cff", label: "Midrash",   labelFa: "میدراش", labelEn: "Midrash" },  // violeta
+  commentary: { c: "#8fb4c9", label: "Comentarios", labelFa: "تفاسیر", labelEn: "Commentaries" }, // Parshanut · פַּרְשָׁנוּת (azul-pizarra)
   kabbalah:   { c: "#1fd8e0", label: "Cabalá",    labelFa: "کابالا", labelEn: "Kabbalah" },  // cian eléctrico
   chasidut:   { c: "#9ad6a0", label: "Jasidut",   labelFa: "حسیدوت", labelEn: "Chasidut" },  // verde cálido
   halakhah:   { c: "#cfe0ff", label: "Halajá",    labelFa: "هلاخا", labelEn: "Halakhah" },   // blanco-azul
@@ -676,7 +678,7 @@ export const TIKUN_SILENCIO_EDGES: MaseiEdge[] = [
 // duplicarlo; reusa "Tikún del Silencio" como puente temático jashmal.
 export const ENOCH_NODES: BNode[] = [
   { id: "Janóoj-gracia", label: "Janóoj — la gracia que asciende (חנוך · 84)", labelFa: "حَنوخ — فیضی که بالا می‌رود (חنوך · ۸۴)", labelEn: "Enoch — the Grace that Ascends (חנוך · 84)", cat: "jashmal",  level: 2, url: "/enoch" },
-  { id: "Targum Yonatan", label: "Targum Yonatan",                  labelFa: "تَرگوم یوناتان", labelEn: "Targum Yonatan",              cat: "midrash",  level: 2 },
+  { id: "Targum Yonatan", label: "Targum Yonatan",                  labelFa: "تَرگوم یوناتان", labelEn: "Targum Yonatan",              cat: "commentary",  level: 2 }, // Sofer: todos los Targumim del Tanaj → Comentarios
   { id: "Shaddai",        label: "Shaddai · שדי (314)",             labelFa: "شَدّای · שדי (۳۱۴)", labelEn: "Shaddai · שדי (314)",          cat: "kabbalah", level: 3 },
   { id: "Jen",            label: "Jen · חן (gracia · 58)",          labelFa: "خِن · חן (فیض · ۵۸)", labelEn: "Chen · חן (grace · 58)",         cat: "kabbalah", level: 3 },
   { id: "Jinuj",          label: "Jinuj · חינוך (educación del alma)", labelFa: "خینوخ · חینוך (تربیت روح)", labelEn: "Chinuch · חינוך (education of the soul)", cat: "kabbalah", level: 3 },
@@ -763,6 +765,59 @@ export const GILGUL_VESSEL_NODES: BNode[] = [
   { id: "Yoash",            label: "Yoash HaMélej",               labelFa: "یوآش پادشاه", labelEn: "Joash the King",            cat: "figure", level: 4 },
 ];
 
+// ─── Galaxia "Comentarios" (Parshanut · פַּרְשָׁנוּת) — regla del Sofer ───────
+// Mardan exige que Tanaj contenga SOLO los 24 libros base. Los comentaristas del
+// Tanaj viven aquí (la OBRA) + en Personajes (la PERSONA). Regla persona≠obra:
+// la PERSONA (el sabio) → figure; la OBRA (su comentario al Tanaj) → commentary,
+// con arista obra→autor. Targumim del Tanaj → commentary (la obra) + su autor en
+// figure. Comentaristas del Talmud (Rashi sobre Berajot, Tosafot) NO van aquí:
+// se quedan en la galaxia Talmud (el estudiante los espera pegados a la guemará).
+export const COMMENTARY_NODES: BNode[] = [
+  // — Personas (el sabio) → Personajes (figure) —
+  { id: "Ibn Ezra",   label: "Ibn Ezra (Abraham ibn Ezra)", labelFa: "ابن‌عزرا", labelEn: "Ibn Ezra (Abraham ibn Ezra)", cat: "figure", level: 3 },
+  { id: "Ramban",     label: "Ramban (Najmánides)",         labelFa: "رامبان (نحمانیدس)", labelEn: "Ramban (Nachmanides)",   cat: "figure", level: 3 },
+  { id: "Sforno",     label: "Sforno",                      labelFa: "سفورنو", labelEn: "Sforno",                  cat: "figure", level: 3 },
+  { id: "Abarbanel",  label: "Abarbanel",                   labelFa: "آبارباننل", labelEn: "Abarbanel",            cat: "figure", level: 3 },
+  { id: "Malbim",     label: "Malbim",                      labelFa: "مَلبیم", labelEn: "Malbim",                  cat: "figure", level: 3 },
+  { id: "Or HaJaim",  label: "Or HaJaim (Jaim ben Atar)",   labelFa: "اور هَحَییم", labelEn: "Or HaChaim",          cat: "figure", level: 3 },
+  { id: "Rashbam",    label: "Rashbam",                     labelFa: "رَشبام", labelEn: "Rashbam",                 cat: "figure", level: 3 },
+  { id: "Radak",      label: "Radak",                       labelFa: "رَداک", labelEn: "Radak",                   cat: "figure", level: 3 },
+  { id: "Baal HaTurim", label: "Baal HaTurim",              labelFa: "بَعَل هَطوریم", labelEn: "Baal HaTurim",      cat: "figure", level: 3 },
+  // — Obras (el comentario al Tanaj) → Comentarios (commentary) —
+  { id: "Comentario de Ibn Ezra",  label: "Comentario de Ibn Ezra (Torá)", labelFa: "تفسیر ابن‌عزرا", labelEn: "Ibn Ezra on the Torah", cat: "commentary", level: 3 },
+  { id: "Comentario del Ramban",   label: "Comentario del Ramban (Torá)",  labelFa: "تفسیر رامبان", labelEn: "Ramban on the Torah",   cat: "commentary", level: 3 },
+  { id: "Comentario de Rashi",     label: "Comentario de Rashi (Tanaj)",   labelFa: "تفسیر راشی", labelEn: "Rashi on the Tanakh",     cat: "commentary", level: 3 },
+  // — Targumim del Tanaj → Comentarios (la obra); Targum Yonatan ya existe (ENOCH_NODES) —
+  { id: "Targum Onkelos", label: "Targum Onkelos",          labelFa: "تَرگوم اونکِلوس", labelEn: "Targum Onkelos", cat: "commentary", level: 2 },
+];
+
+export const COMMENTARY_EDGES: MaseiEdge[] = [
+  // obra → autor (persona) [persona≠obra]
+  { a: "Comentario de Ibn Ezra", b: "Ibn Ezra", kind: "solid" },
+  { a: "Comentario del Ramban",  b: "Ramban",   kind: "solid" },
+  { a: "Comentario de Rashi",    b: "Rashi",    kind: "solid" }, // Rashi (persona) ya existe en GILGUL? no; se crea aquí su persona via figure si falta
+  { a: "Targum Onkelos",         b: "Onkelos",  kind: "solid" },
+  { a: "Targum Yonatan",         b: "Yonatan ben Uziel", kind: "solid" },
+  // obras / autores ↔ el texto base que comentan (el Tanaj / la Torá)
+  { a: "Comentario de Ibn Ezra", b: "Bereshit", kind: "solid" },
+  { a: "Comentario del Ramban",  b: "Bereshit", kind: "solid" },
+  { a: "Comentario de Rashi",    b: "Bereshit", kind: "solid" },
+  { a: "Targum Onkelos",         b: "Bereshit", kind: "solid" },
+  // los comentaristas como cadena de la tradición (parshanut)
+  { a: "Ibn Ezra", b: "Ramban",  kind: "interp" },
+  { a: "Rashbam",  b: "Ibn Ezra", kind: "interp" },
+];
+
+// — Personas que las aristas de arriba referencian y que aún no existen como nodo —
+const COMMENTARY_PERSON_EXTRA: BNode[] = [
+  { id: "Rashi",            label: "Rashi (Shlomó Yitzjaki)",   labelFa: "راشی (شلومو ییصحاقی)", labelEn: "Rashi (Shlomo Yitzchaki)", cat: "figure", level: 3 },
+  { id: "Onkelos",          label: "Onkelos (el converso)",     labelFa: "اونکِلوس", labelEn: "Onkelos the Convert",  cat: "figure", level: 3 },
+  { id: "Yonatan ben Uziel", label: "Yonatan ben Uziel",        labelFa: "یوناتان بن عوزیئل", labelEn: "Yonatan ben Uziel", cat: "figure", level: 3 },
+];
+
+// Unión completa (obras + personas) — la usa el seeder idempotente addCommentary().
+export const COMMENTARY_ALL_NODES: BNode[] = [...COMMENTARY_NODES, ...COMMENTARY_PERSON_EXTRA];
+
 // ─── Nodos ───────────────────────────────────────────────────────────────
 export const BNODES: BNode[] = [
   // ── Nivel 0 — corazón (Torá y Tanaj UNIFICADOS: la Torá es el núcleo del Tanaj) ──
@@ -792,7 +847,7 @@ export const BNODES: BNode[] = [
 
   // ── Nivel 2 — obras / tratados ──
   { id: "Berajot",       label: "Berajot",       labelFa: "بِراخوت", labelEn: "Berachot",   cat: "talmud",   level: 2 },
-  { id: "Rosh Hashaná",  label: "Rosh Hashaná",  labelFa: "روش هَشانا", labelEn: "Rosh Hashanah", cat: "mishnah",  level: 2 },
+  { id: "Rosh Hashaná",  label: "Rosh Hashaná",  labelFa: "روش هَشانا", labelEn: "Rosh Hashanah", cat: "talmud",  level: 2 }, // Sofer: tratado que existe en Mishná+Talmud se ancla en Talmud
   { id: "Bereshit Rabá", label: "Bereshit Rabá", labelFa: "بِرِشیت رَبا", labelEn: "Bereshit Rabbah", cat: "midrash", level: 2 },
   { id: "Zohar",         label: "Zohar",         labelFa: "زوهَر", labelEn: "Zohar",     cat: "kabbalah", level: 2 },
   { id: "Etz Jaim",      label: "Etz Jaim",      labelFa: "عِتص حَییم", labelEn: "Etz Chaim (Tree of Life)", cat: "kabbalah", level: 2 },
@@ -872,6 +927,9 @@ export const BNODES: BNode[] = [
   ...ENOCH_NODES,
   // ── Vasijas del Sha'ar HaGilgulim (capa Gilgul, verificadas por el Sofer) ──
   ...GILGUL_VESSEL_NODES,
+  // ── Galaxia Comentarios (Parshanut): obras + autores (persona≠obra) ──
+  ...COMMENTARY_NODES,
+  ...COMMENTARY_PERSON_EXTRA,
 ];
 
 // ─── Aristas (relaciones reales, NO dirigidas). Se deduplican antes de render ─
@@ -889,7 +947,7 @@ const RAW_EDGES: [string, string][] = [
   ["Adam HaRishon", "Javá"], ["Adam HaRishon", "Tzelem Elohim"], ["Adam HaRishon", "Gan Edén"],
   ["Najash", "Gan Edén"], ["Najash", "Javá"],
   // Mishná / Talmud / Midrash
-  ["Mishná", "Rosh Hashaná"], ["Talmud", "Berajot"], ["Talmud", "Mishná"], ["Midrash", "Bereshit Rabá"],
+  ["Mishná", "Rosh Hashaná"], ["Talmud", "Rosh Hashaná"], ["Talmud", "Berajot"], ["Talmud", "Mishná"], ["Midrash", "Bereshit Rabá"],
   ["Bereshit Rabá", "Bereshit"], ["Berajot", "Tehilim"],
   // Cabalá
   ["Cabalá", "Zohar"], ["Cabalá", "Etz Jaim"], ["Cabalá", "Tzimtzum"], ["Cabalá", "Shevirá"],
@@ -941,6 +999,8 @@ const RAW_EDGES: [string, string][] = [
   ...TIKUN_SILENCIO_EDGES.map((e) => [e.a, e.b] as [string, string]),
   // Jidush Janóoj — la gracia que asciende (חנוך → Metatrón, vía חן/ו/ך)
   ...ENOCH_EDGES.map((e) => [e.a, e.b] as [string, string]),
+  // Galaxia Comentarios: obra→autor (persona≠obra) + obra↔texto base
+  ...COMMENTARY_EDGES.map((e) => [e.a, e.b] as [string, string]),
 ];
 
 // dedup + descarta aristas a nodos inexistentes (p.ej. placeholders)
@@ -967,6 +1027,7 @@ const _KINDED_EDGES: MaseiEdge[] = [
   ...MASEI_EDGES, ...V4_EDGES, ...STUDY2_EDGES, ...STUDY3_EDGES,
   ...BRIT21_EDGES, ...MADRES_EDGES, ...TOHU_EDGES, ...AVRAHAM_KAB_EDGES,
   ...GILGUL_CAIN_HEVEL_EDGES, ...TIKUN_SILENCIO_EDGES, ...ENOCH_EDGES,
+  ...COMMENTARY_EDGES,
 ];
 const EDGE_KIND = new Map<string, "solid" | "interp">();
 for (const e of _KINDED_EDGES) {
@@ -1021,6 +1082,7 @@ const GALAXY_DIR: Record<string, [number, number, number]> = {
   talmud:     [0.58, 0.62, -0.52],
   mishnah:    [0.22, 0.78, 0.55],
   midrash:    [-0.55, 0.55, -0.62],
+  commentary: [-0.80, 0.30, -0.50],  // Parshanut: junto al Tanaj/Midrash (los comentarios giran alrededor del texto base)
   halakhah:   [-0.42, 0.82, 0.30],
   kabbalah:   [0.95, -0.32, -0.22],
   chasidut:   [-0.92, -0.38, -0.20],
@@ -1100,6 +1162,7 @@ export const CAT_REGION: Record<string, string> = {
   talmud: "parietal",
   halakhah: "cerebellum",
   midrash: "temporal",
+  commentary: "temporal",
   chasidut: "temporal",
   kabbalah: "occipital",
   science: "occipital",

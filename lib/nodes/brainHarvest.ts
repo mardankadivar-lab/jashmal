@@ -9,7 +9,7 @@
 import { parseHyperlinks } from "@/lib/relations/hyperlinks";
 import { addNode, addEdge, existingNodeIds, hasPersianArabic } from "@/lib/nodes/brainStore";
 import { resolveHebrewLetter } from "@/lib/nodes/hebrewLetters";
-import { disciplineFromRef } from "@/lib/sources/discipline";
+import { disciplineFromRef, commentatorNameToCat } from "@/lib/sources/discipline";
 import type { BNode } from "@/lib/nodes/brainData";
 
 function titleCase(s: string): string {
@@ -110,7 +110,12 @@ export async function harvestFromStudy(
     // derivamos su disciplina REAL en vez de meterlo siempre en Cabalá; un
     // término puramente conceptual (sin libro reconocido) sí cae a "kabbalah"
     // como mejor estimación (queda 'pending' → el Sofer lo ajusta).
-    const conceptCat = disciplineFromRef(id) ?? "kabbalah";
+    // Comentarista/Targum como nombre suelto (ej. "Ibn Ezra") → su galaxia
+    // correcta (persona→Personajes, Targum→Comentarios); luego ref de libro
+    // (disciplineFromRef, que ya reconoce comentaristas→Comentarios); por
+    // último un concepto puro cae a "kabbalah" (queda 'pending' → el Sofer ajusta).
+    const conceptCat =
+      commentatorNameToCat(rawId) ?? commentatorNameToCat(id) ?? disciplineFromRef(id) ?? "kabbalah";
     await addNode(
       { id, label: termFa ? id : rawId, labelFa: termFa ? rawId : undefined, cat: conceptCat, level: 3 },
       "pending",

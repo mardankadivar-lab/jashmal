@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured } from "@/lib/infra/db";
-import { listPending, setNodeStatus, setEdgeStatus, setAllPending, rejectNodeIds, approveNodeIds } from "@/lib/nodes/brainStore";
+import { listPending, setNodeStatus, setEdgeStatus, setAllPending, rejectNodeIds, approveNodeIds, setNodeCat } from "@/lib/nodes/brainStore";
 
 export const runtime = "nodejs";
 
@@ -32,11 +32,18 @@ export async function POST(req: Request) {
   if (!dbConfigured()) {
     return NextResponse.json({ error: "no_db" }, { status: 503 });
   }
-  let body: { action?: string; kind?: string; id?: string; all?: boolean; ids?: string[] };
+  let body: { action?: string; kind?: string; id?: string; all?: boolean; ids?: string[]; cat?: string };
   try {
     body = await req.json();
   } catch {
     return NextResponse.json({ error: "invalid_body" }, { status: 400 });
+  }
+  // RECATEGORIZAR: { action:"recat", id, cat } → cambia la galaxia del nodo (el
+  // Sofer corrige antes/al aprobar). Opcionalmente aprueba en el mismo paso.
+  if (body.action === "recat" && body.id && body.cat) {
+    const ok = await setNodeCat(body.id, body.cat);
+    if (!ok) return NextResponse.json({ error: "invalid_cat" }, { status: 400 });
+    return NextResponse.json({ ok: true, recat: true });
   }
   // SELECCIÓN MÚLTIPLE / LIMPIEZA: { action:"approve"|"reject", ids:[...] }
   if (Array.isArray(body.ids) && body.ids.length && (body.action === "approve" || body.action === "reject")) {

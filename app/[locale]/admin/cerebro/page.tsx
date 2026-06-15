@@ -6,6 +6,11 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { LocalizedLink } from "@/i18n/navigation";
+import { BRAIN_CATS } from "@/lib/nodes/brainData";
+
+// Galaxias disponibles para recategorizar (excluye 'comunidad' y 'torah', que
+// no se asignan a mano desde la cola de cosecha).
+const RECAT_CATS = Object.entries(BRAIN_CATS).filter(([k]) => k !== "comunidad" && k !== "torah");
 
 type PNode = { id: string; label: string; cat: string; level: number; url: string | null; source: string | null; dup?: boolean };
 type PEdge = { id: string; source_id: string; target_id: string; source_label: string | null; target_label: string | null; origin: string | null };
@@ -84,6 +89,16 @@ export default function CerebroAdminPage() {
         s.delete(id);
         return s;
       });
+    } catch {
+      /* ignore */
+    }
+  }
+
+  // recategorizar un nodo (cambiar su galaxia) — el Sofer corrige la disciplina
+  async function recat(id: string, cat: string) {
+    setNodes((p) => p.map((n) => (n.id === id ? { ...n, cat } : n))); // optimista
+    try {
+      await post({ action: "recat", id, cat });
     } catch {
       /* ignore */
     }
@@ -227,7 +242,21 @@ export default function CerebroAdminPage() {
                       <div className="min-w-0 flex-1">
                         <span className="text-base text-[#e8e4d8]">{n.label}</span>
                         {n.dup && <span className="ml-2 rounded bg-amber-500/15 px-1.5 py-0.5 text-[10px] text-amber-300/80">duplicado</span>}
-                        <span className="ml-2 text-xs text-[#9a958a]">· {n.cat} · nivel {n.level}{n.source ? ` · ${n.source}` : ""}</span>
+                        <span className="ml-2 text-xs text-[#9a958a]">· nivel {n.level}{n.source ? ` · ${n.source}` : ""}</span>
+                        {/* recategorizar: el Sofer elige la galaxia correcta antes de aprobar */}
+                        <select
+                          value={n.cat}
+                          onChange={(e) => recat(n.id, e.target.value)}
+                          onClick={(e) => e.stopPropagation()}
+                          className="ml-2 rounded border border-[#c9a43e]/30 bg-black/50 px-1.5 py-0.5 text-xs text-[#c9a43e] outline-none focus:border-[#c9a43e]/70"
+                          title="Galaxia (recategorizar)"
+                        >
+                          {RECAT_CATS.map(([k, v]) => (
+                            <option key={k} value={k} className="bg-[#05050a] text-[#e8e4d8]">
+                              {v.label}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                       <div className="flex shrink-0 gap-1.5">
                         <button onClick={() => act("node", n.id, "approve")} className="rounded-md border border-emerald-500/40 px-2 py-1 text-xs text-emerald-300 hover:bg-emerald-500/15" title="Aprobar">✓</button>

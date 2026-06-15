@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { dbConfigured } from "@/lib/infra/db";
 import { harvestFromStudy } from "@/lib/nodes/brainHarvest";
-import { disciplineFromRef } from "@/lib/sources/discipline";
+import { disciplineFromRef, commentatorNameToCat } from "@/lib/sources/discipline";
 import type { BNode } from "@/lib/nodes/brainData";
 
 export const runtime = "nodejs";
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
   if (body.mode === "letter" || body.mode === "concept") {
     subjectCat = "kabbalah";
   } else {
-    subjectCat = disciplineFromRef(subject) ?? "tema";
+    subjectCat = commentatorNameToCat(subject) ?? disciplineFromRef(subject) ?? "tema";
   }
 
   try {

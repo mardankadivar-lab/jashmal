@@ -9,7 +9,7 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 const ALLOWED_CATS = new Set([
-  "tanakh", "mishnah", "talmud", "midrash", "halakhah",
+  "tanakh", "mishnah", "talmud", "midrash", "commentary", "halakhah",
   "kabbalah", "chasidut", "philosophy", "science", "jashmal",
 ]);
 
