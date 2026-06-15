@@ -45,14 +45,15 @@ export async function POST(req: Request) {
   // Letras/conceptos → Cabalá. Estudios de TEXTO → derivamos la disciplina REAL
   // del texto desde el catálogo de Sefaria (Tanaj/Talmud/Midrash/Cabalá/Jasidut…),
   // NO un "tanakh" por defecto que metía obras cabalísticas (Etz Jaim, Zohar…) en
-  // la galaxia de Tanaj. Si el catálogo no reconoce el libro, recién ahí cae a
-  // "tanakh" como último recurso (el Sofer lo ajusta en la revisión).
+  // la galaxia de Tanaj. Si el catálogo NO reconoce el libro, ya no ensuciamos
+  // Tanaj: cae a "tema" (Temas), un bucket HONESTO y neutral para lo no
+  // reconocido; el nodo queda 'pending' y el Sofer le asigna la galaxia real.
   const subjectLevel: BNode["level"] = 3;
   let subjectCat: string;
   if (body.mode === "letter" || body.mode === "concept") {
     subjectCat = "kabbalah";
   } else {
-    subjectCat = disciplineFromRef(subject) ?? "tanakh";
+    subjectCat = disciplineFromRef(subject) ?? "tema";
   }
 
   try {

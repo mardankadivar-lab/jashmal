@@ -235,6 +235,52 @@ export async function reclassifyHarvestedDisciplines(): Promise<number> {
   }
 }
 
+// ── Semilla curada COMPLETA (fuente de verdad de la GALAXIA de cada nodo) ───
+// brainData.ts es la AUTORIDAD: aquí cada nodo tiene su `cat` (galaxia) correcta,
+// decidida/verificada por el Sofer. BNODES ya incluye (spread) todos los
+// ..._NODES de estudios, salvo GILGUL_VESSEL_NODES (vasijas) que se siembran por
+// separado; lo añadimos para no dejar fuera su disciplina (figure/talmud).
+const ALL_SEED_NODES: BNode[] = [...BNODES, ...GILGUL_VESSEL_NODES];
+
+// Índice id → cat curada. Si un id se repitiera entre arrays, la PRIMERA
+// aparición (BNODES, la canónica) gana.
+const CURATED_CAT: Map<string, string> = (() => {
+  const m = new Map<string, string>();
+  for (const n of ALL_SEED_NODES) if (!m.has(n.id)) m.set(n.id, n.cat);
+  return m;
+})();
+
+// ── Migración: RE-SINCRONIZAR la galaxia de los nodos CURADOS ──────────────
+// Causa raíz del "todavía hay nodos mezclados": los seeders del núcleo
+// (seedBrain, addMaseiStudy) insertan con ON CONFLICT DO NOTHING y solo corren
+// con la tabla vacía, así que cualquier nodo cuya `cat` quedó CONGELADA en la BD
+// con un valor viejo/errado jamás se corregía aunque arregláramos brainData.ts.
+// Esta pasada empuja la `cat` AUTORITATIVA de la semilla a la BD, pero SOLO para
+// nodos curados (`source IN ('seed','sofer')`): nunca toca nodos cosechados
+// ('study') ni de la comunidad ('community'), cuya disciplina es decisión viva.
+// Idempotente: tras igualar, el WHERE deja de encontrar discrepancias.
+export async function resyncCuratedDisciplines(): Promise<number> {
+  const sql = getSql();
+  if (!sql) return 0;
+  try {
+    const rows = (await sql`
+      SELECT id, cat FROM brain_nodes WHERE source IN ('seed','sofer')
+    `) as Array<{ id: string; cat: string }>;
+    let fixed = 0;
+    for (const r of rows) {
+      const correct = CURATED_CAT.get(r.id);
+      if (correct && correct !== r.cat) {
+        await sql`UPDATE brain_nodes SET cat = ${correct}
+                  WHERE id = ${r.id} AND source IN ('seed','sofer')`;
+        fixed++;
+      }
+    }
+    return fixed;
+  } catch {
+    return 0; // nunca romper la lectura del cerebro
+  }
+}
+
 // ── Estudio verificado: 42 estaciones / Nombre de 42 / Ana BeKoaj ─────────
 // Inserta el estudio del Sofer como APROBADO (ya verificado). Idempotente.
 // Guarda en cada arista su 'kind': 'solid' (fuente clásica) | 'interp' (meditativo).

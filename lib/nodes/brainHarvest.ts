@@ -9,6 +9,7 @@
 import { parseHyperlinks } from "@/lib/relations/hyperlinks";
 import { addNode, addEdge, existingNodeIds, hasPersianArabic } from "@/lib/nodes/brainStore";
 import { resolveHebrewLetter } from "@/lib/nodes/hebrewLetters";
+import { disciplineFromRef } from "@/lib/sources/discipline";
 import type { BNode } from "@/lib/nodes/brainData";
 
 function titleCase(s: string): string {
@@ -104,8 +105,14 @@ export async function harvestFromStudy(
     // traducciones que falten). `label` SIEMPRE latino; si el término venía en
     // persa (estudio en farsi), va a label_fa, su columna correcta.
     const termFa = hasPersianArabic(rawId);
+    // Galaxia del concepto cosechado: si el término es un LIBRO/texto reconocido
+    // por el catálogo de Sefaria (ej. {{study:Berajot}}, {{study:Tehilim}}),
+    // derivamos su disciplina REAL en vez de meterlo siempre en Cabalá; un
+    // término puramente conceptual (sin libro reconocido) sí cae a "kabbalah"
+    // como mejor estimación (queda 'pending' → el Sofer lo ajusta).
+    const conceptCat = disciplineFromRef(id) ?? "kabbalah";
     await addNode(
-      { id, label: termFa ? id : rawId, labelFa: termFa ? rawId : undefined, cat: "kabbalah", level: 3 },
+      { id, label: termFa ? id : rawId, labelFa: termFa ? rawId : undefined, cat: conceptCat, level: 3 },
       "pending",
       "study",
     );

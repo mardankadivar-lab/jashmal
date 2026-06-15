@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured, getSql } from "@/lib/infra/db";
-import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, reclassifyHarvestedDisciplines, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addAvrahamKabLote2, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch } from "@/lib/nodes/brainStore";
+import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, reclassifyHarvestedDisciplines, resyncCuratedDisciplines, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addAvrahamKabLote2, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch } from "@/lib/nodes/brainStore";
 import { BNODES, BEDGES } from "@/lib/nodes/brainData";
 
 export const runtime = "nodejs";
@@ -52,6 +52,12 @@ function ensureInit(): Promise<void> {
       await addTikunSilencio();
       // Jidush de Mardan: Janóoj — la gracia que asciende (חנוך → Metatrón) — Jashmal
       await addEnoch();
+      // CORRECCIÓN DE RAÍZ (galaxias mezcladas): re-sincroniza la `cat`
+      // AUTORITATIVA de la semilla curada (brainData.ts) sobre la BD, para
+      // descongelar nodos del núcleo cuya galaxia quedó vieja/errada (seedBrain
+      // y addMaseiStudy insertan con DO NOTHING). Va al FINAL, tras sembrar todo,
+      // y solo toca nodos 'seed'/'sofer' — nunca cosechados ni de comunidad.
+      await resyncCuratedDisciplines();
     })().catch((e) => {
       initPromise = null; // permite reintentar en la próxima llamada
       throw e;
