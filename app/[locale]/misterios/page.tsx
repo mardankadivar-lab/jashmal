@@ -16,7 +16,8 @@ export default function MisteriosPage() {
   const fa = locale === "fa";
 
   // Categorías (su rótulo viene del diccionario, no hardcodeado por idioma).
-  const cats: { serie: string; key: "dosFilos" | "gematria" | "sanidad"; he: string }[] = [
+  const cats: { serie: string; key: "mashiaj" | "dosFilos" | "gematria" | "sanidad"; he: string }[] = [
+    { serie: "mashiaj", key: "mashiaj", he: "הַמָּשִׁיחַ" },
     { serie: "dos-filos", key: "dosFilos", he: "שְׁנֵי פִּיּוֹת" },
     { serie: "gematria", key: "gematria", he: "גִּימַטְרִיָּה" },
     { serie: "sanidad", key: "sanidad", he: "רְפוּאָה" },
