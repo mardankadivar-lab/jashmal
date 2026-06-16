@@ -299,6 +299,17 @@ export const MISTERIOS: Misterio[] = [
     orden: 0.04,
   },
   {
+    slug: "simiente-mesianica",
+    he: "הַזֶּרַע הַמְּשִׁיחִי",
+    titulo: "La Simiente Mesiánica",
+    tituloFa: "بذرِ ماشیحی",
+    gancho: "Una simiente —una zéra— atraviesa toda la historia como si tuviera voluntad propia: un hilo fino de descendencia que sobrevive a cada intento de cortarlo y avanza por los caminos más improbables hasta el rey que repara la fractura del Edén. El Midrash la llama «la simiente que viene de otro lugar».",
+    ganchoFa: "بذری —یک زِرَع— گویی با ارادهٔ خود از سراسرِ تاریخ می‌گذرد: رشته‌ای باریک از نسل که از هر کوششی برای بریدنش جان به‌در می‌برد و از ناممکن‌ترین راه‌ها تا پادشاهی که شکافِ عدن را ترمیم می‌کند پیش می‌رود. میدراش آن را «بذری که از جای دیگر می‌آید» می‌نامد.",
+    serie: "mashiaj",
+    color: "#d8a24a",
+    orden: 0.05,
+  },
+  {
     slug: "ajarit-hayamim",
     he: "אַחֲרִית הַיָּמִים",
     titulo: "¿Qué es Ajarít HaYamim?",
