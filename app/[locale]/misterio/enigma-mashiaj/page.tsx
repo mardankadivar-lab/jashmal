@@ -4,6 +4,7 @@ import EstudioMisterio, { type EstudioData } from "@/components/misterio/Estudio
 
 // ════════════════════════════════════════════════════════════════════════════
 //  ESTUDIO 0 — חִידַת הַמָּשִׁיחַ · El Enigma del Mashíaj (LA PUERTA de la serie)
+//  CAPÍTULO 1 de la tríada de la Puerta — la TESIS (el despertar desde abajo).
 //  Serie "Del Enigma del Mashíaj al Ajarít HaYamim".
 //
 //  Versión REESCRITA (reenfocada): el corazón es CONCEPTUAL, no la gematría.
@@ -12,9 +13,13 @@ import EstudioMisterio, { type EstudioData } from "@/components/misterio/Estudio
 //  enterrado en el Sod. Fuente verificada por el Sofer:
 //  Desktop/Contenido/Mashiaj-AjaritHaYamim/00-enigma-del-mashiaj.md
 //
-//  Migrado al componente compartido EstudioMisterio (igual que los otros 12).
-//  Hero en modo "dimensiones" (sin gematría). Lleva la sección opcional
-//  הַבְחָנָה (Desambiguación) entre Mefarshim y PaRDeS. El voseo está en neutro
+//  Re-sincronizado con el .md actual: se ELIMINÓ la sección de desambiguación
+//  (הַבְחָנָה) — el .md ya no la trae — y se reenfocó la apertura y el umbral
+//  הֶמְשֵׁךְ para abrir hacia el Cap 2 (despertar-de-lo-alto) y el Cap 3
+//  (tercer-templo). CERO menciones a otras religiones, igual que el .md.
+//
+//  Montado con el componente compartido EstudioMisterio (igual que los otros 12).
+//  Hero en modo "dimensiones" (sin gematría). El voseo está en neutro
 //  (haz/elige/da/di/empieza/tú). El material "PARA REDES" y la "Nota del Sofer"
 //  del .md son internos y NO se montan en el sitio.
 //
@@ -24,15 +29,17 @@ import EstudioMisterio, { type EstudioData } from "@/components/misterio/Estudio
 const data: EstudioData = {
   slug: "enigma-mashiaj",
   hero: {
-    serielabel: "Serie «Del Enigma del Mashíaj al Ajarít HaYamim» · Estudio 0 — La Puerta",
-    serielabelFa: "سری «از معمای ماشیح تا آخریتِ روزها» · مطالعهٔ ۰ — دروازه",
+    serielabel:
+      "Serie «Del Enigma del Mashíaj al Ajarít HaYamim» · Estudio 0 — La Puerta · Capítulo 1 (la Tesis)",
+    serielabelFa:
+      "سری «از معمای ماشیح تا آخریتِ روزها» · مطالعهٔ ۰ — دروازه · فصل ۱ (نهاد)",
     he: "חִידַת הַמָּשִׁיחַ",
     titulo: "El Enigma del Mashíaj",
     tituloFa: "معمای ماشیح",
     ganchoEs:
-      "No es el mesías cristiano ni «otra religión». ¿Persona, conciencia colectiva o estado de conciencia? El Mashíaj es las tres a la vez — y ninguna caja sola lo contiene.",
+      "¿Persona, conciencia colectiva o estado de conciencia? El Mashíaj es las tres a la vez — y ninguna caja sola lo contiene. La Tesis: el despertar desde abajo, la redención que subimos con nuestras obras.",
     ganchoFa:
-      "نه مسیحِ مسیحیان است و نه «دینی دیگر». شخص، آگاهیِ جمعی یا حالتِ آگاهی؟ ماشیح هر سه است با هم — و هیچ جعبه‌ای به‌تنهایی او را در بر نمی‌گیرد.",
+      "شخص، آگاهیِ جمعی یا حالتِ آگاهی؟ ماشیح هر سه است با هم — و هیچ جعبه‌ای به‌تنهایی او را در بر نمی‌گیرد. نهاد: بیداری از پایین، رستگاری‌ای که با کارهای خود بالا می‌بریم.",
     dimensiones: [
       { es: "Persona", fa: "شخص" },
       { es: "Conciencia colectiva", fa: "آگاهیِ جمعی" },
@@ -55,7 +62,8 @@ const data: EstudioData = {
       },
     ],
     parrafos: [
-      `Antes de la primera fuente, una pregunta honesta. Casi todos creemos saber qué es el Mashíaj — y casi todos lo aprendimos de oídas, muchas veces desde fuera del judaísmo. Unos imaginan un hombre concreto que aparecerá un día. Otros, una idea espiritual sin rostro. Otros lo confunden con el mesías de otra religión y concluyen que «es lo mismo, otra fe más». La tradición judía dice algo más sutil y más grande: el Mashíaj se deja describir, a la vez, como una persona real (un rey humano de la casa de David), una conciencia colectiva (la redención de un pueblo y de la humanidad entera) y un estado de conciencia (una percepción transformada de la realidad, en la que se revela la Unidad de Dios). El «enigma» no es que falte información: es que ninguna de esas tres categorías, por sí sola, agota lo que la palabra significa. Esta Puerta recorre las tres — y muestra, al final, que son tres rostros de un mismo punto.`,
+      `La Puerta del Mashíaj se recorre en tres movimientos, como una sola respiración. Este es el Capítulo 1 — la Tesis: aquí el Mashíaj se lee como lo que sube desde abajo (אִתְעֲרוּתָא דִּלְתַתָּא), una persona, un pueblo y una conciencia que despiertan, reúnen las chispas y reparan el mundo con sus obras — el esfuerzo humano que provoca la redención. Es la mitad luminosa y activa del enigma. La {{study:despertar-de-lo-alto|Antítesis}} preguntará si el primer movimiento fue de veras nuestro; y la {{study:tercer-templo|Síntesis}} fundirá ambos. Lee este capítulo entero como está: es completo en sí mismo, y a la vez la primera de tres voces.`,
+      `Antes de la primera fuente, una pregunta honesta. Casi todos creemos saber qué es el Mashíaj — y casi todos lo aprendimos de oídas. Unos imaginan un hombre concreto que aparecerá un día. Otros, una idea espiritual sin rostro. Y casi nadie sospecha que la palabra, en la tradición judía, abarca a la vez mucho más de una sola cosa. La tradición dice algo más sutil y más grande: el Mashíaj se deja describir, a la vez, como una persona real (un rey humano de la casa de David), una conciencia colectiva (la redención de un pueblo y de la humanidad entera) y un estado de conciencia (una percepción transformada de la realidad, en la que se revela la Unidad de Dios). El «enigma» no es que falte información: es que ninguna de esas tres categorías, por sí sola, agota lo que la palabra significa. Esta Puerta recorre las tres — y muestra, al final, que son tres rostros de un mismo punto.`,
       `Bereshit 49:10 es la primera promesa mesiánica explícita de la Torá, en boca de Yaakov moribundo. Nótese lo concreto que es: habla de un cetro (שֵׁבֶט), de realeza, de una dinastía — la de Yehudá. El Mashíaj entra en la Escritura no como un dios que baja, sino como un rey que no termina de irse del todo: un linaje humano que culmina en «aquel a quien se congregarán los pueblos». Persona y reunión, juntas, desde el primer verso.`,
       `Y en Yeshayá 11 están, en un solo pasaje, las tres dimensiones. La persona: un descendiente real de Yishái (el padre de David). El estado de conciencia: sobre él reposa ruaj daat, un espíritu de conocimiento de Dios. Y la conciencia colectiva: el resultado no es la salvación de un individuo, sino una tierra entera llena del conocimiento de YHVH. El Mashíaj davídico se mide por lo que pasa con el mundo, no con un alma sola.`,
     ],
@@ -92,29 +100,6 @@ const data: EstudioData = {
       },
     ],
     glosa: `Glosa para el lector: Kelipot = «cáscaras», las envolturas que ocultan y aprisionan la luz divina. Tikún = reparación, rectificación. Birur = selección y elevación de las chispas santas atrapadas en lo material. Gematría = el valor numérico de las letras hebreas; un dato del nivel místico, nunca el fundamento de una creencia.`,
-  },
-  habchana: {
-    intro:
-      "Una sección necesaria, porque mucha gente llega a esta palabra ya cargada de imágenes de otra religión. Lo decimos con respeto y sin polémica: solo marcamos la diferencia conceptual de fondo.",
-    parrafos: [
-      `La palabra hebrea מָשִׁיחַ (mashíaj) significa, literalmente, «ungido» — alguien sobre quien se vertió aceite (shemen) en una ceremonia. Así se ungía a los reyes de Israel y a los kohanim (sacerdotes). «Mashíaj» es, por tanto, una función, un cargo humano, no un nombre divino. En su origen, todo rey de Israel era «un ungido de YHVH»; y hasta a un rey persa, Koresh (Ciro), Yeshayá 45:1 lo llama «su ungido». La palabra no implica divinidad: implica una misión recibida.`,
-    ],
-    tituloNo: "Lo que el Mashíaj NO es",
-    listaNo: [
-      `No es un dios hecho hombre. Es un ser humano, descendiente de David (Rambam, Hiljot Melajim 11:1). No se le adora.`,
-      `No salva por la fe en su persona. No hay un dogma de «creer en él para ser salvado»: Rambam es explícito en que se valida por obras verificables, no por milagros ni por fe (11:3–4).`,
-      `No expía el pecado muriendo. El judaísmo enseña la teshuvá (retorno) directa a Dios como vía de reparación; el Mashíaj no muere para perdonar pecados.`,
-      `No es el centro de un dogma de salvación individual. Su tarea no se mide por almas rescatadas del castigo, sino por el mundo rectificado.`,
-    ],
-    tituloSi: "Lo que el Mashíaj SÍ es",
-    listaSi: [
-      `Un ungido — rey (y, en su entorno, kohén) — un agente humano y un proceso que completa el tikún (la reparación) del mundo.`,
-      `El que reconstruye el Templo, reúne a los exiliados, restaura la Torá y trae paz (Rambam 11:1, 11:4).`,
-      `El punto en que «la tierra se llena del conocimiento de YHVH» (Yeshayá 11:9): un orden mundial de paz y de reconocimiento de la Unidad divina.`,
-    ],
-    cierre: [
-      `La diferencia de fondo, en una frase: el foco judío no es la salvación del alma individual por la fe en una persona, sino la transformación y perfección del mundo entero — un orden de paz, justicia y conocimiento de Dios para toda la humanidad. No es «otra religión con otro nombre para el mismo personaje»: es otra pregunta. La pregunta cristiana clásica es «¿cómo se salva el alma?». La pregunta judía del Mashíaj es «¿cómo se repara el mundo?». De ahí en adelante, todo diverge. Lo decimos sin atacar ninguna fe: solo para que quien estudia esta serie sepa de qué estamos hablando cuando decimos «Mashíaj».`,
-    ],
   },
   pardes: {
     subbloques: [
@@ -156,7 +141,7 @@ const data: EstudioData = {
     parrafos: [
       {
         etiqueta: "¿Qué me enseña este estudio?",
-        texto: `Que la palabra «Mashíaj» me había llegado encogida. La imaginaba como un solo tipo de cosa —o un hombre, o una idea, o un personaje de otra religión— y la tradición la sostiene como tres a la vez: un rey real que repara el mundo con obras, un pueblo y una humanidad que se reúnen, y una conciencia que percibe la Unidad de Dios. El enigma no era falta de datos: era mi intento de meterlo en una sola caja.`,
+        texto: `Que la palabra «Mashíaj» me había llegado encogida. La imaginaba como un solo tipo de cosa —o un hombre, o una idea sin rostro— y la tradición la sostiene como tres a la vez: un rey real que repara el mundo con obras, un pueblo y una humanidad que se reúnen, y una conciencia que percibe la Unidad de Dios. El enigma no era falta de datos: era mi intento de meterlo en una sola caja.`,
       },
       {
         etiqueta: "¿Qué patrones veo?",
@@ -182,11 +167,11 @@ const data: EstudioData = {
     items: [
       {
         etiqueta: "Idea principal:",
-        texto: `El Mashíaj no es una sola cosa. Es a la vez una persona (un rey humano de la casa de David, definido por Rambam por sus obras, no por milagros ni por la fe en él), una conciencia colectiva (la reunión de un pueblo y de la humanidad, «ben Yosef» y «ben David» como un proceso) y un estado de conciencia (la percepción de la Unidad de Dios, la chispa de Mashíaj en cada alma). El enigma se resuelve al ver que son tres rostros de la Yejidá revelándose en lo individual, lo colectivo y lo cósmico.`,
+        texto: `El Mashíaj no es una sola cosa. Es a la vez una persona (un rey humano de la casa de David, definido por Rambam por sus obras, no por milagros), una conciencia colectiva (la reunión de un pueblo y de la humanidad, «ben Yosef» y «ben David» como un proceso) y un estado de conciencia (la percepción de la Unidad de Dios, la chispa de Mashíaj en cada alma). El enigma se resuelve al ver que son tres rostros de la Yejidá revelándose en lo individual, lo colectivo y lo cósmico.`,
       },
       {
-        etiqueta: "Insight clave (desambiguación):",
-        texto: `Mashíaj = «ungido» — una función (rey/kohén ungido con aceite), no una divinidad. No es un dios-hombre, no salva por la fe en su persona, no expía pecados muriendo. El foco judío es la reparación del mundo entero (paz y conocimiento de Dios para todos), no la salvación del alma individual. No es «otra religión con otro nombre»: es otra pregunta — «¿cómo se repara el mundo?».`,
+        etiqueta: "Insight clave:",
+        texto: `Mashíaj = «ungido» — una función (rey o kohén ungido con aceite), no una divinidad: un agente humano y un proceso que completa el tikún (la reparación) del mundo. Su medida no es privada ni íntima, sino el mundo transformado — un orden de paz y de conocimiento de Dios para toda la humanidad (Yeshayá 11:9).`,
       },
       {
         etiqueta: "Insight espiritual:",
@@ -199,10 +184,11 @@ const data: EstudioData = {
     ],
   },
   hemshej: [
+    "{{study:despertar-de-lo-alto|¿Y si el primer movimiento no fue nuestro? ¿Y si Dios despertó primero —si la luz bajó antes de que pudiéramos pedirla, “no por ustedes, sino por Mi santo Nombre”? El despertar desde ARRIBA: la Antítesis.}}",
+    "{{study:tercer-templo|Si una redención sube y la otra baja, ¿cuál es la verdadera? El Tercer Templo responde: las dos a la vez. La Síntesis que funde los dos despertares.}}",
     "{{study:ajarit-hayamim|Si los “días del Mashíaj” no cambian el orden del mundo, ¿qué cambian exactamente? Gueulá, Yemot HaMashíaj, Olam HaBa y Tejiyat HaMetim no son lo mismo.}}",
     "{{study:mashiaj-jazal|Si el Mashíaj es un proceso colectivo, ¿por qué el Talmud habla de DOS —ben Yosef y ben David— y discute hasta su nombre?}}",
     "{{study:finalidad-creacion|Si la meta es “reparar el mundo”, ¿para qué se creó así de roto? “El Santo deseó una morada en lo de abajo”.}}",
-    "{{study:olam-haba|¿A dónde lleva todo esto? “En aquel día YHVH será Uno y Su Nombre Uno”.}}",
   ],
   ctaRef: "Genesis 49:10",
 };
