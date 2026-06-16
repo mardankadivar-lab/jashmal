@@ -155,6 +155,16 @@ export interface CajaDestacada {
   cuerpo?: string;    // texto secundario opcional
 }
 
+// "Ventana a la ciencia" — aside contemplativo y FIGURATIVO (no doctrina, no
+// física literal). Se pinta con una estética distinta (azul/violáceo, no el
+// dorado del cuerpo doctrinal) y un rótulo explícito de "interpretación", para
+// que el lector nunca lo confunda con la enseñanza clásica. Entiende {{study:…}}.
+export interface VentanaCiencia {
+  titulo: string;        // ej. "Ventana a la ciencia — el 137 de los dos despertares"
+  rotulo: string;        // aviso de integridad (itálica): "lectura figurativa, no física"
+  parrafos: string[];    // cuerpo (entiende {{study:…}})
+}
+
 export interface EstudioData {
   slug: string;
   hero: Hero;
@@ -183,7 +193,8 @@ export interface EstudioData {
   // 3. PaRDeS
   pardes: {
     subbloques: SubBloque[];
-    caja?: CajaDestacada;   // caja dorada de cierre (la fórmula)
+    caja?: CajaDestacada;        // caja dorada de cierre (la fórmula)
+    ventana?: VentanaCiencia;    // aside "Ventana a la ciencia" (opcional)
   };
   // 4. Hitbonenut
   hitbonenut: {
@@ -465,6 +476,30 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
                 </p>
               )}
             </div>
+          )}
+
+          {/* Aside "Ventana a la ciencia": estética FRÍA (azul/violácea), distinta
+              del dorado doctrinal, con rótulo explícito de lectura figurativa. */}
+          {data.pardes.ventana && (
+            <aside
+              className="my-10 rounded-2xl border border-sky-300/25 bg-sky-300/[0.05] p-6"
+              style={{ boxShadow: "0 0 24px rgba(125,170,220,0.08) inset" }}
+            >
+              <p className="mb-1 flex items-center gap-2 font-cinzel text-sm font-bold uppercase tracking-widest text-sky-200/90">
+                <span aria-hidden className="text-base">🪟</span>
+                {data.pardes.ventana.titulo}
+              </p>
+              <p className="mb-4 text-xs italic leading-relaxed text-sky-100/55">
+                {data.pardes.ventana.rotulo}
+              </p>
+              <div className="space-y-4">
+                {data.pardes.ventana.parrafos.map((t, i) => (
+                  <p key={i} className="text-sm leading-relaxed text-parchment/80">
+                    {renderStudyText(t)}
+                  </p>
+                ))}
+              </div>
+            </aside>
           )}
         </Section>
 

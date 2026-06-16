@@ -4,7 +4,10 @@
 //  TEJIDO DE ESTUDIOS — render de los hyperlinks internos del motor de estudio
 // ─────────────────────────────────────────────────────────────────────────
 //  El contenido erudito marca términos cruzables con esta sintaxis:
-//    {{study:slug|texto}}   → enlace dorado a /misterio/{slug}
+//    {{study:slug|texto}}   → enlace dorado a /misterio/{slug} (solo si el
+//                             misterio está registrado en lib/content/misterios;
+//                             si no, se pinta como término dorado destacado SIN
+//                             enlace, para no generar un 404).
 //    {{letter:slug|texto}}  → enlace dorado a /letra/{slug} (solo si la letra
 //                             está registrada en lib/letters; si no, se pinta
 //                             como término dorado destacado SIN enlace, para no
@@ -17,6 +20,7 @@
 import { Fragment, type ReactNode } from "react";
 import { Link } from "@/i18n/navigation";
 import { getLetter } from "@/lib/letters";
+import { getMisterio } from "@/lib/content/misterios";
 
 // {{tipo:slug|texto}}  — capturamos tipo, slug y texto visible.
 const TOKEN = /\{\{(study|letter):([^|}]+)\|([^}]+)\}\}/g;
@@ -47,10 +51,18 @@ export function renderStudyText(text: string): ReactNode[] {
     const slug = rawSlug.trim();
 
     if (tipo === "study") {
+      // study: enlazamos solo si el misterio está registrado; si no, span dorado.
+      const exists = !!getMisterio(slug);
       out.push(
-        <Link key={`l${key++}`} href={`/misterio/${slug}`} className={goldLink}>
-          {label}
-        </Link>,
+        exists ? (
+          <Link key={`l${key++}`} href={`/misterio/${slug}`} className={goldLink}>
+            {label}
+          </Link>
+        ) : (
+          <span key={`s${key++}`} className={goldSpan}>
+            {label}
+          </span>
+        ),
       );
     } else {
       // letter: enlazamos solo si la letra está registrada; si no, span dorado.

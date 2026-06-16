@@ -16,6 +16,13 @@ import EstudioMisterio, { type EstudioData } from "@/components/misterio/Estudio
 //  y la "Nota del Sofer" del .md son internos y NO se montan. El voseo de Maasé
 //  está en neutro. Aquí se sella la Puerta del Mashíaj.
 //
+//  Sincronizado con el .md ENRIQUECIDO: el Sod incorpora la capa "el cuerpo del
+//  constructor como canal" (Néfesh HaJaim) y el sello "betojam" (Shemot 25:8 —
+//  "moraré en ELLOS, no en el edificio"; fuente = Alshij Torat Moshe, NO Zóhar);
+//  ese sello permea también la caja del Sod, Hitbonenut y Jatimá. Se añade el
+//  aside "Ventana a la ciencia" (137 / α), ROTULADO como lectura contemplativa
+//  y figurativa (no física literal), con enlace interno {{study:137}}.
+//
 //  Idioma del análisis: español (trilingüe diferido; el chrome —nav/CTA— es es/fa).
 // ════════════════════════════════════════════════════════════════════════════
 
@@ -107,13 +114,25 @@ const data: EstudioData = {
         head: "סוֹד — Sod (el secreto), con la voz de Baal HaSulam",
         parrafos: [
           `En la voz de Rav Yehuda Ashlag (Baal HaSulam), la síntesis es la ley misma de la creación. Recordemos: la criatura es pura voluntad de recibir, y el Creador, pura voluntad de dar. La redención —el Tikún final— es el instante en que el recibir aprende a dar, y la criatura se equipara al Creador. Pero ese giro no lo puede hacer la criatura sola (sería despertar de abajo solamente, y no alcanza), ni se lo puede imponer el Creador solo (sería despertar de arriba solamente, y violaría la libertad de la criatura). Tiene que ser los dos: el hombre extiende su voluntad de dar hasta el límite de su fuerza (sube), y en ese punto el Creador desciende y la completa (baja). El encuentro de esas dos voluntades —la que sube refinada y la que baja gratuita— es el Mashíaj. El Tercer Templo es ese encuentro hecho lugar: el único vaso que no se rompe, porque por primera vez lo construyen el de abajo y el de Arriba a la vez.`,
+          `El cuerpo del constructor: la fuerza divina pasa POR MEDIO del hombre. Aquí la síntesis deja de ser teoría y se hace carne. Pregúntate quién levanta físicamente los muros del Tercer Templo. La respuesta no es «solo Dios» (sería despertar de arriba solamente) ni «solo el hombre» (sería despertar de abajo solamente): es Dios obrando POR MEDIO del cuerpo del hombre. Las manos que cargan la piedra son humanas, pero la fuerza que las mueve baja de lo Alto y pasa a través de ellas. Así se cumplen juntas, en un solo gesto, las dos mitades del enigma: «y me harán un Santuario» (Shemot 25:8 — el hombre obra) y «el Santuario que Tus manos establecieron» (Shemot 15:17 — las manos de Dios). No son dos construcciones, una humana y otra divina: son un solo cuerpo —el del constructor— por el que la fuerza del Cielo se vierte sobre la tierra. Esto no es invención de hoy: es el principio que Rav Jaim de Volozhin desarrolla en Néfesh HaJaim (Puerta I, caps. 5–7). El hombre fue compuesto, dice, «para enlazar al hombre de abajo con las cabezas de los mundos superiores, de modo que estos sean conducidos POR MEDIO de él» (Puerta I, cap. 5): un conducto por el que la fuerza divina desciende a mover la creación. El mismo principio late en el jasidut: el tzadik (y, en su medida, toda persona) es el vaso por el que pasa el shefa, la abundancia divina, hacia abajo. El constructor del Tercer Templo no es un albañil que Dios mira desde lejos: es el canal mismo por el que Dios construye.`,
+          `El sello: וְשָׁכַנְתִּי בְּתוֹכָם — «moraré en ellos», no «en él». Y aquí el Sod entrega su secreto más hondo, escrito en una sola letra. La Torá manda: «וְעָשׂוּ לִי מִקְדָּשׁ וְשָׁכַנְתִּי בְּתוֹכָם» —«y me harán un Santuario y moraré betojam»— (Shemot 25:8). Lee con cuidado el final: dice betojam, «en ellos» —en cada persona del pueblo—, y no betojó, «en él», en el edificio. La gramática lo grita: si la Presencia divina fuera a habitar la estructura, el versículo diría «y moraré en él (el Santuario)». Pero dice «en ellos» —en los constructores—. Enseñanza clásica, anclada en el Alshij (Torat Moshe) sobre Shemot 25:8 —que carga el versículo con el poder de los tzadikim de «hacer abajo una morada espiritual santa»— y en Néfesh HaJaim, donde el hombre es el verdadero Mikdash. El edificio de piedra es solo el ensayo; el Tercer Templo definitivo es el ser humano. Dios no quiere una casa: quiere morar en ti. Por eso el vaso que no se rompe no es de piedra —se construye en el cuerpo y el corazón del que edifica—, y por eso la fuerza divina pasa por medio del constructor: él es el Santuario que está levantando.`,
         ],
       },
     ],
     caja: {
-      titulo: "El Mashíaj es el punto donde lo que sube y lo que baja se vuelven un solo movimiento.",
+      titulo: "El Mashíaj es el punto donde lo que sube y lo que baja se vuelven un solo movimiento — y ese punto eres tú.",
       cuerpo:
-        "Tesis: la redención la subimos. Antítesis: la redención la baja Dios. Síntesis: el hombre levanta los muros y Dios trae el fuego — y solo el edificio construido por las dos manos permanece. «Tus manos establecieron» (Shemot 15:17) no borra «y me harán un Santuario» (Shemot 25:8): lo corona. El enigma de la Puerta se sella aquí: na'asé (hacemos, nosotros) y nishmá (recibimos, de Él), en un pacto recíproco que ningún despertar podría cumplir solo.",
+        "Tesis: la redención la subimos. Antítesis: la redención la baja Dios. Síntesis: el hombre levanta los muros y Dios trae el fuego, y la fuerza del Cielo pasa por medio del cuerpo del constructor — un solo gesto, dos manos. «Tus manos establecieron» (Shemot 15:17) no borra «y me harán un Santuario» (Shemot 25:8): lo corona. Y el sello está en una sola letra: «וְשָׁכַנְתִּי בְּתוֹכָם» — «moraré en ELLOS», no «en él»: Dios no habita el edificio, habita en cada persona. El Tercer Templo definitivo es el ser humano. El enigma de la Puerta se sella aquí: na'asé (hacemos, nosotros) y nishmá (recibimos, de Él), en un pacto recíproco que ningún despertar podría cumplir solo — y cuyo templo final no es de piedra, sino de carne y corazón.",
+    },
+    ventana: {
+      titulo: "Ventana a la ciencia — el 137 de los dos despertares",
+      rotulo:
+        "Lectura contemplativa y figurativa de Mardan — NO es física literal ni doctrina clásica. Es un puente poético: lo que sigue se ofrece como analogía, no como afirmación científica.",
+      parrafos: [
+        `Hay un número que tiende un puente curioso entre la sabiduría y la materia. La palabra קַבָּלָה (Kabbalah) suma exactamente 137 en gematría —verificado letra por letra: ק100 + ב2 + ל30 + ה5 = 137—. Y 137 es, casi, el inverso de la constante de estructura fina de la física (α ≈ 1/137), el número que gobierna con qué fuerza la luz y la materia se acoplan: cuán fuerte «se hablan» el fotón (luz) y el electrón (materia). Que la ciencia del enlace luz–materia y el nombre de la sabiduría escondida compartan número es, al menos, una coincidencia que invita a contemplar.`,
+        `En clave de este capítulo —los dos despertares— la analogía se ofrece sola. Léela como figura, no como dato: el fotón que baja de nivel (la luz que desciende) evoca a Dios que desciende al monte, it'aruta dile'eila, el despertar de arriba; el electrón en su frecuencia más alta (la materia que se eleva) evoca a Moshé que sube, it'aruta diletata, el despertar de abajo; y 137 sería la constante del intercambio —el punto exacto donde luz y materia se tocan, imagen del lugar donde los dos despertares se funden: el Mashíaj, el Tercer Templo, el cuerpo del constructor por el que la luz de Arriba pasa a la materia de abajo—.`,
+        `La honestidad del Sofer, sin adornos: la física real dice que α gobierna el acoplamiento electromagnético y la estructura fina de los espectros atómicos; no dice «el fotón cae al encuentro del electrón» en el sentido espiritual de aquí. Eso es un puente poético de Mardan, no un hecho científico. Lo único verificable es la gematría: קבלה = 137, sí, es real y comprobable. El vínculo con α es analogía contemplativa, no ciencia. En Jashmal, este 137 conversa con el misterio {{study:137|/137}}, también marcado como interpretación.`,
+      ],
     },
   },
   hitbonenut: {
@@ -129,7 +148,7 @@ const data: EstudioData = {
       },
       {
         etiqueta: "¿Cómo se relaciona con mi alma?",
-        texto: `Mi alma es a la vez constructora y receptora. La chispa de Mashíaj que llevo (Capítulo 1) hace su parte haciendo; la luz que la enciende (Capítulo 2) desciende sin que yo la fabrique. No tengo que elegir entre el activismo y la entrega: soy un Tercer Templo en pequeño — muros que pongo yo, fuego que pone Él. Mi tarea es construir sin soberbia y esperar sin pereza.`,
+        texto: `Mi alma es a la vez constructora y receptora. La chispa de Mashíaj que llevo (Capítulo 1) hace su parte haciendo; la luz que la enciende (Capítulo 2) desciende sin que yo la fabrique. No tengo que elegir entre el activismo y la entrega: soy un Tercer Templo en pequeño — muros que pongo yo, fuego que pone Él. Y más aún: Dios dijo que moraría betojam, «en ellos», no «en el edificio» — así que el Santuario que estoy levantando es mi propio cuerpo y mi corazón, y la fuerza que mueve mis manos pasa por medio de mí desde lo Alto. Mi tarea es construir sin soberbia y esperar sin pereza, sabiendo que el templo más verdadero soy yo mismo cuando me dejo habitar.`,
       },
       {
         etiqueta: "¿Cómo se relaciona con la creación?",
@@ -147,7 +166,7 @@ const data: EstudioData = {
     items: [
       {
         etiqueta: "Idea principal:",
-        texto: `Los dos despertares se funden, y el Tercer Templo es la prueba. El Primero (Shlomó) y el Segundo (Zerubavel y Ezra) los levantó el hombre — y cayeron. El Tercero es simbiosis: el hombre prepara la base, Dios la completa desde lo Alto. El Mashíaj es el punto donde lo que sube (Tesis) y lo que baja (Antítesis) se vuelven un solo movimiento.`,
+        texto: `Los dos despertares se funden, y el Tercer Templo es la prueba. El Primero (Shlomó) y el Segundo (Zerubavel y Ezra) los levantó el hombre — y cayeron. El Tercero es simbiosis: el hombre prepara la base, Dios la completa desde lo Alto, y la fuerza divina pasa por medio del cuerpo del constructor. El Mashíaj es el punto donde lo que sube (Tesis) y lo que baja (Antítesis) se vuelven un solo movimiento.`,
       },
       {
         etiqueta: "Insight clave (los Dos Filos armonizados):",
@@ -155,7 +174,7 @@ const data: EstudioData = {
       },
       {
         etiqueta: "Insight espiritual:",
-        texto: `El Sinaí ya fue el ensayo de la fusión: «que los de abajo suban y los de arriba bajen — y Yo soy el que empieza» (Shemot Rabbá 12:3; Tanjumá Va'erá 15), y la respuesta de Israel fue na'asé venishmá (hacemos y escuchamos) — pacto recíproco. Por eso los dos primeros Templos —vasos hechos solo desde abajo— se rompieron como los kelim de la Shevirá, y el Tercero —vaso de abajo, luz de arriba— será el Tikún que no se rompe.`,
+        texto: `El Sinaí ya fue el ensayo de la fusión: «que los de abajo suban y los de arriba bajen — y Yo soy el que empieza» (Shemot Rabbá 12:3; Tanjumá Va'erá 15), y la respuesta de Israel fue na'asé venishmá (hacemos y escuchamos) — pacto recíproco. Por eso los dos primeros Templos —vasos hechos solo desde abajo— se rompieron como los kelim de la Shevirá, y el Tercero —vaso de abajo, luz de arriba— será el Tikún que no se rompe. Y el sello de todo está en una letra: «וְשָׁכַנְתִּי בְּתוֹכָם» — Dios mora «en ELLOS», no «en él» (Shemot 25:8; enseñanza clásica del Alshij y de Néfesh HaJaim). El Tercer Templo definitivo no es de piedra: es el ser humano, el cuerpo y el corazón del que edifica, por el que la fuerza de lo Alto se vierte sobre la tierra.`,
       },
       {
         etiqueta: "Aplicación práctica:",
