@@ -149,3 +149,10 @@ export function allComplete(p?: M1Progress): boolean {
   const prog = p ?? readProgress();
   return LESSONS.every((l) => prog.completed.includes(l.slug));
 }
+
+// Verifica si TODAS las lecciones de una lista de slugs están completadas.
+// Usado por Modulo2Map y el banner de Modulo1Map para saber si M1 está listo.
+export function isModuleComplete(moduleSlugList: string[]): boolean {
+  const prog = readProgress();
+  return moduleSlugList.every((slug) => prog.completed.includes(slug));
+}
