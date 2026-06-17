@@ -2,13 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { Link } from "@/i18n/navigation";
-import { LESSONS2, MODULO2 } from "@/lib/academia/modulo2";
-import { LESSONS } from "@/lib/academia/modulo1";
+import { LESSONS3, MODULO3 } from "@/lib/academia/modulo3";
+import { LESSONS2 } from "@/lib/academia/modulo2";
 import { readProgress, isModuleComplete, M1_EVENT, type M1Progress } from "@/lib/academia/progress";
 
-// Mapa del Módulo 2 — las 6 lecciones de las letras vivas (semanas 7–12).
-// Se desbloquea solo cuando el estudiante completó todas las lecciones de M1.
-export default function Modulo2Map() {
+// M3 se desbloquea cuando M2 está completo.
+const M2_SLUGS = LESSONS2.map((l) => l.slug);
+
+// Mapa del Módulo 3 — las 4 lecciones de la gran narrativa (semanas 13–16).
+export default function Modulo3Map() {
   const [prog, setProg] = useState<M1Progress | null>(null);
 
   useEffect(() => {
@@ -22,22 +24,19 @@ export default function Modulo2Map() {
     };
   }, []);
 
-  const m1Slugs = LESSONS.map((l) => l.slug);
-  const m1Complete = prog ? isModuleComplete(m1Slugs) : false;
+  const m2Complete = prog ? isModuleComplete(M2_SLUGS) : false;
 
-  // Progreso de M2: cuántas lecciones de M2 están completadas
   const completed = prog?.completed ?? [];
   const seen = prog?.seen ?? [];
-  const doneCount = m1Complete
-    ? LESSONS2.filter((l) => completed.includes(l.slug)).length
+  const doneCount = m2Complete
+    ? LESSONS3.filter((l) => completed.includes(l.slug)).length
     : 0;
-  const pct = (doneCount / MODULO2.total) * 100;
+  const pct = (doneCount / MODULO3.total) * 100;
 
-  // Próxima lección disponible en M2
-  const current = m1Complete
-    ? LESSONS2.find((l) => !completed.includes(l.slug))?.slug ?? null
+  const current = m2Complete
+    ? LESSONS3.find((l) => !completed.includes(l.slug))?.slug ?? null
     : null;
-  const m2AllDone = m1Complete && LESSONS2.every((l) => completed.includes(l.slug));
+  const m3AllDone = m2Complete && LESSONS3.every((l) => completed.includes(l.slug));
 
   return (
     <div className="relative min-h-screen overflow-hidden" dir="ltr">
@@ -55,60 +54,60 @@ export default function Modulo2Map() {
           <Link href="/" className="hebrew text-xl transition hover:text-gold" style={{ filter: "drop-shadow(0 0 8px #c9a43e33)" }}>
             חַשְׁמַל
           </Link>
-          <Link href="/academia/modulo-1" className="font-cinzel text-[11px] uppercase tracking-[0.2em] transition hover:text-gold">
-            ← Módulo 1
+          <Link href="/academia/modulo-2" className="font-cinzel text-[11px] uppercase tracking-[0.2em] transition hover:text-gold">
+            ← Módulo 2
           </Link>
         </div>
 
         {/* grado actual + módulo */}
         <div className="mt-8 text-center">
           <p className="hebrew text-5xl text-gold" dir="rtl" style={{ filter: "drop-shadow(0 0 14px #c9a43e55)" }}>
-            {MODULO2.etapaHe}
+            {MODULO3.etapaHe}
           </p>
           <p className="mt-2 font-cinzel text-sm uppercase tracking-[0.3em] text-gold/70">
-            {MODULO2.etapa} · {MODULO2.etapaGloss}
+            {MODULO3.etapa} · {MODULO3.etapaGloss}
           </p>
           <p className="mt-1 text-xs text-muted">
-            Grado {MODULO2.etapaNum} de {MODULO2.etapasTotal} — las letras son la materia prima de todo.
+            Grado {MODULO3.etapaNum} de {MODULO3.etapasTotal} — el último módulo del primer año.
           </p>
 
           <div className="mt-7">
             <p className="font-cinzel text-[10px] uppercase tracking-[0.3em] text-gold/45">
-              Módulo 2 · <span className="hebrew text-gold/70">{MODULO2.he}</span>
+              Módulo 3 · <span className="hebrew text-gold/70">{MODULO3.he}</span>
             </p>
-            <h1 className="mt-1 font-cinzel text-2xl text-parchment sm:text-3xl">{MODULO2.titulo}</h1>
+            <h1 className="mt-1 font-cinzel text-2xl text-parchment sm:text-3xl">{MODULO3.titulo}</h1>
             <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted">
-              Seis lecciones guiadas. Álef, Bet, Guímel-Dálet, He-Vav, Yod, y las palabras-ancla.
+              Cuatro lecciones de Pshat narrativo. La Creación, el jardín, el primer pacto, el primer llamado.
             </p>
           </div>
         </div>
 
-        {/* aviso de bloqueo si M1 no está completo */}
-        {!m1Complete && (
+        {/* aviso de bloqueo si M2 no está completo */}
+        {!m2Complete && (
           <div className="mt-8 rounded-2xl border border-gold/20 bg-gold/[0.04] px-6 py-6 text-center">
             <p className="text-base text-parchment/80">
-              Completa el Módulo 1 para desbloquear las letras vivas.
+              Completa el Módulo 2 para desbloquear la gran narrativa.
             </p>
             <p className="mt-2 text-sm text-muted">
-              Entrega las tareas de las 6 lecciones del Módulo 1 — cada una abre la siguiente puerta.
+              Entrega las tareas de las 6 lecciones del Módulo 2 — cada una abre la siguiente puerta.
             </p>
             <div className="mt-5">
               <Link
-                href="/academia/modulo-1"
+                href="/academia/modulo-2"
                 className="inline-block rounded-full border border-gold/50 bg-gold/[0.06] px-7 py-3 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/15"
               >
-                Ir al Módulo 1 →
+                Ir al Módulo 2 →
               </Link>
             </div>
           </div>
         )}
 
-        {/* progreso (solo visible si M1 está completo) */}
-        {m1Complete && (
+        {/* progreso (solo visible si M2 está completo) */}
+        {m2Complete && (
           <div className="mt-8">
             <div className="flex items-center justify-between font-cinzel text-[10px] uppercase tracking-[0.2em] text-gold/55">
-              <span>{doneCount} de {MODULO2.total} lecciones</span>
-              <span className="hebrew text-gold/50" dir="rtl">{MODULO2.auroraHe}</span>
+              <span>{doneCount} de {MODULO3.total} lecciones</span>
+              <span className="hebrew text-gold/50" dir="rtl">{MODULO3.auroraHe}</span>
             </div>
             <div className="mt-2 h-[3px] w-full rounded-full bg-gold/10">
               <div className="h-full rounded-full bg-gold transition-all duration-700 ease-out" style={{ width: `${pct}%`, boxShadow: "0 0 8px #c9a43e" }} />
@@ -116,24 +115,37 @@ export default function Modulo2Map() {
           </div>
         )}
 
-        {/* banner de finalización */}
-        {m2AllDone && (
-          <div className="mt-8 rounded-2xl border border-gold/30 bg-gold/[0.07] px-6 py-6 text-center">
-            <p className="text-lg text-gold">Completaste el Módulo 2 🕯️</p>
-            <p className="mt-2 text-sm leading-relaxed text-parchment/80">
-              Ya no solo reconoces el alefato: lo habitas. Las letras son canales, cada una con forma, nombre y valor.
-              La aurora sigue creciendo.
+        {/* banner de finalización de TALMID */}
+        {m3AllDone && (
+          <div className="mt-8 rounded-2xl border border-gold/40 bg-gold/[0.07] px-6 py-7 text-center">
+            <p className="hebrew text-3xl text-gold" dir="rtl" style={{ filter: "drop-shadow(0 0 14px #c9a43e55)" }}>
+              תַּלְמִיד
             </p>
+            <p className="mt-3 font-cinzel text-sm uppercase tracking-[0.3em] text-gold/80">
+              Completaste TALMID
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-parchment/80">
+              Dieciséis semanas, tres módulos, el primer año de cimientos.
+              La gran narrativa del Génesis ya está en tus manos.
+            </p>
+            <div className="mt-5">
+              <Link
+                href="/academia/talmid-completo"
+                className="inline-block rounded-full border-2 border-gold bg-gold/10 px-8 py-3 font-cinzel text-xs font-bold uppercase tracking-widest text-gold transition-all hover:bg-gold/20 hover:shadow-[0_0_24px_rgba(201,164,62,0.25)]"
+              >
+                Ver el cierre de TALMID →
+              </Link>
+            </div>
           </div>
         )}
 
-        {/* la escalera de las 6 lecciones */}
+        {/* la escalera de las 4 lecciones */}
         <ol className="mt-8 flex flex-col gap-3">
-          {LESSONS2.map((l) => {
-            const isDone = m1Complete && completed.includes(l.slug);
-            const isSeenLesson = m1Complete && !isDone && seen.includes(l.slug);
-            const isCurrent = m1Complete && !m2AllDone && current === l.slug;
-            const isLocked = !m1Complete;
+          {LESSONS3.map((l) => {
+            const isDone = m2Complete && completed.includes(l.slug);
+            const isSeenLesson = m2Complete && !isDone && seen.includes(l.slug);
+            const isCurrent = m2Complete && !m3AllDone && current === l.slug;
+            const isLocked = !m2Complete;
 
             return (
               <li key={l.slug}>
@@ -155,7 +167,7 @@ export default function Modulo2Map() {
                   </div>
                 ) : (
                   <Link
-                    href={`/academia/modulo-2/${l.slug}`}
+                    href={`/academia/modulo-3/${l.slug}`}
                     className={`group flex items-center gap-4 rounded-2xl border px-4 py-4 transition-all ${
                       isCurrent
                         ? "border-gold/55 bg-gold/[0.08] shadow-[0_0_22px_rgba(201,164,62,0.18)]"
@@ -208,44 +220,6 @@ export default function Modulo2Map() {
             );
           })}
         </ol>
-
-        {/* banner Módulo 3 */}
-        <div className="mt-8">
-          {m2AllDone ? (
-            <Link
-              href="/academia/modulo-3"
-              className="flex items-center justify-between gap-4 rounded-2xl border border-gold/50 bg-gold/[0.08] px-6 py-5 shadow-[0_0_22px_rgba(201,164,62,0.15)] transition-all hover:border-gold hover:bg-gold/[0.13]"
-            >
-              <div>
-                <p className="font-cinzel text-[10px] uppercase tracking-[0.3em] text-gold/60">
-                  Módulo 3 · <span className="hebrew text-gold/80">מֵרֵאשִׁית</span>
-                </p>
-                <p className="mt-0.5 font-cinzel text-base text-parchment">La gran narrativa →</p>
-              </div>
-              <span className="shrink-0 rounded-full bg-gold/15 px-3 py-1 font-cinzel text-[10px] uppercase tracking-widest text-gold">
-                Desbloqueado
-              </span>
-            </Link>
-          ) : (
-            <div
-              className="flex cursor-not-allowed items-center justify-between gap-4 rounded-2xl border border-gold/15 bg-ink/20 px-6 py-5 opacity-60"
-              title="Completa las 6 lecciones del Módulo 2 para desbloquear la gran narrativa"
-            >
-              <div>
-                <p className="font-cinzel text-[10px] uppercase tracking-[0.3em] text-gold/45">
-                  Módulo 3 · <span className="hebrew text-gold/55">מֵרֵאשִׁית</span>
-                </p>
-                <p className="mt-0.5 font-cinzel text-base text-parchment/50">La gran narrativa</p>
-                <p className="mt-1 text-xs text-muted/60">
-                  Entrega las tareas de M2 para desbloquear
-                </p>
-              </div>
-              <span className="shrink-0 rounded-full border border-gold/20 px-3 py-1 font-cinzel text-[10px] uppercase tracking-widest text-gold/40">
-                Bloqueado
-              </span>
-            </div>
-          )}
-        </div>
 
         {/* puente sereno de vuelta */}
         <div className="mt-10 text-center">
