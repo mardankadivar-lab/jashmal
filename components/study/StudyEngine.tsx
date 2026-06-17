@@ -9,6 +9,7 @@ import BookBrowser from "@/components/sefaria/BookBrowser";
 import TextViewer from "@/components/sefaria/TextViewer";
 import StudyResult from "./StudyResult";
 import BeitMidrash from "./BeitMidrash";
+import TejidoCabalistico from "./TejidoCabalistico";
 import LexiconPanel from "./LexiconPanel";
 import ConceptPanel, { type ConceptTarget } from "./ConceptPanel";
 import StudyChat from "./StudyChat";
@@ -20,6 +21,7 @@ import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, type CatBook, type CategoryId } from "@/lib/sources/categories";
 import { getText, searchSuggestions, searchText, HL_OPEN, HL_CLOSE, type SefariaTextResult, type NameSuggestion, type TextSearchHit } from "@/lib/sources/sefaria";
 import { requestStudy, StudyError } from "@/lib/study/studyClient";
+import { scanKabbalah, type KabMatch } from "@/lib/nodes/kabbalisticScanner";
 import { requestTranslation } from "@/lib/i18n/translateClient";
 import { getParashaHashavua, type ParashaInfo } from "@/lib/infra/calendar";
 
@@ -60,6 +62,8 @@ export default function StudyEngine() {
   const [study, setStudy] = useState<string | null>(null);
   const [studyLoading, setStudyLoading] = useState(false);
   const [studyError, setStudyError] = useState<string | null>(null);
+  // Fase 4: entidades cabalísticas detectadas en el estudio activo.
+  const [kabMatches, setKabMatches] = useState<KabMatch[]>([]);
   // índice del versículo en curso, o -1 para pasaje completo, o null si inactivo.
   const [studyingIndex, setStudyingIndex] = useState<number | null>(null);
   // identificador del estudio mostrado, para asociar las reflexiones del Beit Midrash.
@@ -105,6 +109,7 @@ export default function StudyEngine() {
       setStudyRef(null);
       setStudyError(null);
       setOpenRefs([]);
+      setKabMatches([]);
     }
   }, [locale]);
 
@@ -393,6 +398,7 @@ export default function StudyEngine() {
     setStudyError(null);
     setStudy(null);
     setStudyRef(null);
+    setKabMatches([]);
 
     // Llevar la vista a donde se está generando el estudio (clave en móvil:
     // el análisis está debajo; en escritorio, arriba a la derecha si bajaste).
@@ -424,6 +430,13 @@ export default function StudyEngine() {
       );
       setStudy(text);
       setStudyRef(ref);
+      // Fase 4: escanear el texto final (no el streaming) para el panel cabalístico.
+      // Se hace al terminar (no en cada chunk) para que el scan sea sobre el texto completo.
+      try {
+        setKabMatches(scanKabbalah(text));
+      } catch {
+        // el scan nunca debe romper el estudio
+      }
     } catch (err) {
       const code = err instanceof StudyError ? err.code : "study_failed";
       setStudyError(code === "rate_limited" ? t("rateLimited") : t("errorStudy"));
@@ -773,6 +786,8 @@ export default function StudyEngine() {
                 setOpenRefs((prev) => prev.includes(ref) ? prev : [...prev, ref]);
               }}
             />
+            {/* Fase 4: panel de entidades cabalísticas detectadas en el estudio */}
+            <TejidoCabalistico matches={kabMatches} locale={locale} />
             {/* Panel de referencias cruzadas — aparece justo debajo del estudio
                 (antes estaba fuera de esta columna y se veía lejos del clic).
                 El scroll automático (useEffect sobre openRefs) lo trae a la vista. */}

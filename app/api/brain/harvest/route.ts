@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { dbConfigured } from "@/lib/infra/db";
 import { harvestFromStudy } from "@/lib/nodes/brainHarvest";
+import { addEdge } from "@/lib/nodes/brainStore";
+import { scanKabbalah } from "@/lib/nodes/kabbalisticScanner";
 import { disciplineFromRef, commentatorNameToCat } from "@/lib/sources/discipline";
 import type { BNode } from "@/lib/nodes/brainData";
 
@@ -65,7 +67,25 @@ export async function POST(req: Request) {
       url: body.url ? String(body.url).slice(0, 200) : undefined,
       text,
     });
-    return NextResponse.json({ ok: true, ...res });
+
+    // ── Fase 3b: scanner de entidades cabalísticas ────────────────────────
+    // Detecta entidades cabalísticas en el texto y crea aristas 'pending'
+    // entre el sujeto y los nodos del grafo que ya existen (ON CONFLICT DO NOTHING).
+    // NO crea nodos nuevos — solo aristas hacia nodos ya existentes.
+    let kabMatches = 0;
+    try {
+      const matches = scanKabbalah(text);
+      for (const match of matches) {
+        if (!match.graphNodeId) continue; // solo entidades que ya son nodos del grafo
+        if (match.graphNodeId === subject) continue; // evita auto-bucle
+        await addEdge(subject, match.graphNodeId, "pending", "kab-scan");
+        kabMatches++;
+      }
+    } catch {
+      // El scanner nunca debe romper la respuesta principal
+    }
+
+    return NextResponse.json({ ok: true, ...res, kabMatches });
   } catch {
     return NextResponse.json({ ok: false, reason: "error" });
   }
