@@ -450,6 +450,25 @@ export const MISTERIOS: Misterio[] = [
     color: "#b06a3c",
     orden: 0.99,
   },
+
+  // ── SERIE "CIENCIA" — Cabalá y física (libro «137: The Riddle of Creation») ──
+  {
+    slug: "cuatro-fuerzas",
+    numero: "4→1",
+    he: "יהוה · ד׳ כֹּחוֹת",
+    titulo: "Las cuatro fuerzas y el Nombre de Dios",
+    tituloFa: "چهار نیرو و نامِ خدا",
+    tituloEn: "The Four Forces and the Name of God",
+    gancho:
+      "La física tardó un siglo en hallar que solo cuatro fuerzas gobiernan todo el universo: gravedad, electromagnetismo y las fuerzas nucleares fuerte y débil. La Cabalá ya lo decía: son las cuatro letras del Nombre יהוה y los cuatro Mundos. Y antes del Big Bang, las cuatro eran Una.",
+    ganchoFa:
+      "فیزیک یک قرن زمان برد تا دریابد تنها چهار نیرو بر تمامِ جهان حکم می‌رانند: گرانش، الکترومغناطیس و دو نیرویِ هسته‌ایِ قوی و ضعیف. کابالا از پیش گفته بود: این‌ها چهار حرفِ نامِ یهوه و چهار جهان‌اند. و پیش از مِهبانگ، هر چهار یکی بودند.",
+    ganchoEn:
+      "It took physics a century to find that just four forces govern the whole universe: gravity, electromagnetism, and the strong and weak nuclear forces. Kabbalah had already said it: they are the four letters of the Name יהוה and the four Worlds. And before the Big Bang, all four were One.",
+    serie: "ciencia",
+    color: "#48b8f0",
+    orden: 14,
+  },
 ];
 
 export function getMisterio(slug: string): Misterio | undefined {
