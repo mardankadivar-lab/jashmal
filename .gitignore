@@ -34,3 +34,6 @@ next-env.d.ts
 # python (scripts de video/voz)
 __pycache__/
 *.pyc
+
+# script temporal de respaldo BD (rutina) — no versionar
+_backup_tmp.mjs
