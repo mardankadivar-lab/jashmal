@@ -486,6 +486,22 @@ export const MISTERIOS: Misterio[] = [
     color: "#6d7bf0",
     orden: 15,
   },
+
+  // ── SERIE "PARASHA" — Estudios completos de parashá con PaRDeS ───────────────
+  {
+    slug: "parashat-korach",
+    numero: "308",
+    he: "פָּרָשַׁת קֹרַח",
+    titulo: "Parashat Korach — el ego espiritual",
+    tituloFa: "پاراشات قورَح — منیت معنوی",
+    tituloEn: "Parashat Korach — the spiritual ego",
+    gancho: "Korach tenía razón en el diagnóstico. Se equivocó en la prescripción.",
+    ganchoFa: "قورَح در تشخیص درست بود. در نسخه اشتباه کرد.",
+    ganchoEn: "Korach was right about the diagnosis. He was wrong about the prescription.",
+    serie: "parasha",
+    color: "#8b3a3a",
+    orden: 16,
+  },
 ];
 
 export function getMisterio(slug: string): Misterio | undefined {
