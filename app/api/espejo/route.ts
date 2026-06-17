@@ -13,7 +13,7 @@ interface EspejoRequest {
   secundarioId?: RasgoTema["id"] | null;
 }
 
-const VALID_IDS = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"];
+const VALID_IDS = ["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10"];
 
 function originAllowed(req: Request): boolean {
   const allowed = (process.env.ALLOWED_ORIGINS ?? "")

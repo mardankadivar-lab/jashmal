@@ -294,7 +294,7 @@ export const ESPEJO_NOTA_ARIZAL = {
 };
 
 export interface RasgoTema {
-  id: "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8" | "R9";
+  id: "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8" | "R9" | "R10";
   /** título corto del rasgo-tema */
   titulo: string;
   /** fuente exacta verificada, texto legible (ej. "Zohar, Yitró 6:77") */
@@ -428,6 +428,21 @@ export const RASGOS: RasgoTema[] = [
     opuesto: "La mirada transparente: un ojo que «se asienta entero, sin hundirse» — la verdad dicha de frente, sin astucia ni doblez, sin nada oculto detrás.",
     color: "#56c5c0",
   },
+  {
+    // Sección de los OJOS (עַיְינִין). Ref real verificada en Sefaria por el Sofer
+    // (2026-06-17): Zohar, Yitro 7:88 — la cláusula de carácter del párrafo de los
+    // «ojos verdosos rodeados de blanco». Cita aramea VERBATIM de Sefaria.
+    id: "R10",
+    titulo: "La bondad que no daña, pero piensa primero en lo suyo",
+    fuente: "Zohar, Yitró 7:88",
+    fuenteRef: "Zohar, Yitro 7:88",
+    citaHe:
+      "רַחֲמָנָא אִיהוּ, וְאִיהוּ חָשִׁיב תָּדִיר לְתוֹעַלְתֵּיה, וְלָא חָשִׁיב לְנִזְקָא דְּאַחֲרָנִין כְּלוּם",
+    mida: "חֶסֶד: pasar de «no hago daño a nadie» a buscar activamente el bien del otro.",
+    espejo: "¿Me basta con no hacer daño? ¿Pienso en el provecho del otro tanto como en el mío?",
+    opuesto: "La bondad que se extiende: una compasión que no se conforma con no dañar, sino que busca el bien del otro como busca el propio.",
+    color: "#6cae9a",
+  },
 ];
 
 // Rabbeinu Bachya sobre Shemot 18:21 — VERBATIM (cierre obligatorio del Espejo).
@@ -521,6 +536,7 @@ export const PREGUNTAS: Pregunta[] = [
       { texto: "chocar / encenderme", rasgos: ["R3"], textoFa: "برخورد کنم / برافروخته شوم" },
       { texto: "diluirme en lo que quieren", rasgos: ["R4"], textoFa: "در خواسته‌هایشان حل شوم" },
       { texto: "ser tibio en lo pequeño", rasgos: ["R8"], textoFa: "در چیزهای کوچک سهل‌انگار باشم" },
+      { texto: "ser amable, pero pensando primero en lo mío", rasgos: ["R10"], textoFa: "مهربان باشم، اما نخست به سودِ خودم بیندیشم" },
     ],
   },
   {

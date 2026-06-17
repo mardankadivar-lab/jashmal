@@ -469,6 +469,23 @@ export const MISTERIOS: Misterio[] = [
     color: "#48b8f0",
     orden: 14,
   },
+  {
+    slug: "abrazo-cosmico",
+    numero: "496",
+    he: "מַלְכוּת",
+    titulo: "El abrazo cósmico",
+    tituloFa: "آغوشِ کیهانی",
+    tituloEn: "The Cosmic Embrace",
+    gancho:
+      "El universo entero se separa: cada galaxia huye de las demás, y cada vez más rápido. Y sin embargo no se deshace. Una fuerza invisible —que la ciencia aún no logra explicar, el 95 % oscuro del cosmos— lo abraza desde afuera. La Cabalá la llamó Maljut. Su número, 496, es exactamente la dimensión que la teoría de cuerdas necesita para que el universo sea posible.",
+    ganchoFa:
+      "تمامِ جهان از هم می‌گسلد: هر کهکشان از دیگران می‌گریزد، و هر دم تندتر. و با این همه از هم نمی‌پاشد. نیرویی نادیدنی —که علم هنوز نمی‌تواند توضیحش دهد، ۹۵٪ تاریکِ کیهان— آن را از بیرون در آغوش می‌گیرد. کابالا آن را مَلخوت نامید. عددش، ۴۹۶، دقیقاً همان بُعدی است که نظریهٔ ریسمان برای ممکن‌شدنِ جهان نیاز دارد.",
+    ganchoEn:
+      "The whole universe is flying apart: every galaxy fleeing the others, faster and faster. And yet it does not come undone. An invisible force —which science still cannot explain, the dark 95 % of the cosmos— embraces it from the outside. Kabbalah called it Malchut. Its number, 496, is exactly the dimension string theory needs for a universe to be possible.",
+    serie: "ciencia",
+    color: "#6d7bf0",
+    orden: 15,
+  },
 ];
 
 export function getMisterio(slug: string): Misterio | undefined {
