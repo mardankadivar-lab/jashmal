@@ -754,7 +754,7 @@ function FocusEdges({
   nodeMap: Map<string, BNode>;
   locale: string;
   filterCat: string | null; // chip-filtro activo → solo aristas hacia esa disciplina
-  onHover: (info: { key: string; toLabel: string; kind: "solid" | "interp" } | null) => void;
+  onHover: (info: { key: string; toLabel: string; kind: "solid" | "interp"; reason?: string; sourceRef?: string } | null) => void;
   onPick: (c: EdgeCurve) => void;
 }) {
   // aristas que tocan el nodo en foco, orientadas para que `a` sea SIEMPRE el foco.
@@ -787,6 +787,11 @@ function FocusEdges({
       {focusCurves.map(({ c, oriented }) => {
         const key = c.a + "→" + c.b;
         const toN = nodeMap.get(oriented.b);
+        // Curaduría rica del Sofer (lib/relations/edgeData.ts), si esta conexión
+        // está curada: razón breve + 1ª fuente exacta → se muestran en el tooltip.
+        const curated = getEdgeData(oriented.a, oriented.b);
+        const reason = curated?.data.short_explanation?.trim() || undefined;
+        const sourceRef = curated?.data.source_refs?.[0]?.ref?.trim() || undefined;
         return (
           <InteractiveEdge
             key={key}
@@ -795,7 +800,11 @@ function FocusEdges({
             colB={colorOf(toN?.cat)}
             isHot={hotKey === key}
             onHover={(h) =>
-              onHover(h ? { key, toLabel: toN ? nodeLabel(toN, locale) : oriented.b, kind: oriented.kind } : null)
+              onHover(
+                h
+                  ? { key, toLabel: toN ? nodeLabel(toN, locale) : oriented.b, kind: oriented.kind, reason, sourceRef }
+                  : null,
+              )
             }
             onPick={() => onPick(oriented)}
           />
@@ -948,7 +957,7 @@ function BrainScene({
   onFlewTo: () => void;
   onSelect: (id: string, additive: boolean) => void;
   onHover: (id: string | null) => void;
-  onEdgeHint: (hint: { toLabel: string; kind: "solid" | "interp" } | null) => void;
+  onEdgeHint: (hint: { toLabel: string; kind: "solid" | "interp"; reason?: string; sourceRef?: string } | null) => void;
   onGilgulHint: (hint: GilgulHint | null) => void;
   onDouble: (n: BNode) => void;
   onPickEdge: (from: string, to: string, pts: THREE.Vector3[]) => void;
@@ -1204,7 +1213,7 @@ function BrainScene({
             nodeMap={nodeMap}
             locale={locale}
             filterCat={selected ? filterCat : null}
-            onHover={(info) => { setHotEdge(info?.key ?? null); onEdgeHint(info ? { toLabel: info.toLabel, kind: info.kind } : null); }}
+            onHover={(info) => { setHotEdge(info?.key ?? null); onEdgeHint(info ? { toLabel: info.toLabel, kind: info.kind, reason: info.reason, sourceRef: info.sourceRef } : null); }}
             onPick={(c) => onPickEdge(c.a, c.b, c.pts)}
           />
         )}

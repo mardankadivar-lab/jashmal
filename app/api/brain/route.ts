@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured, getSql } from "@/lib/infra/db";
-import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, reclassifyHarvestedDisciplines, resyncCuratedDisciplines, moveCommentatorsOutOfTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addAvrahamKabLote2, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch, addCommentary } from "@/lib/nodes/brainStore";
+import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, reclassifyHarvestedDisciplines, resyncCuratedDisciplines, moveCommentatorsOutOfTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addAvrahamKabLote2, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch, addCommentary, addCuratedEdgeData } from "@/lib/nodes/brainStore";
 import { BNODES, BEDGES } from "@/lib/nodes/brainData";
 
 export const runtime = "nodejs";
@@ -64,6 +64,11 @@ function ensureInit(): Promise<void> {
       // Mishná → Personajes (la persona) / Comentarios (el Targum). Va al final,
       // tras resync, para que ni la semilla ni la cosecha dejen comentaristas en Tanaj.
       await moveCommentatorsOutOfTanakh();
+      // Capa de conexiones cabalísticas (Fase 2): vuelca la curaduría RICA del
+      // Sofer (lib/relations/edgeData.ts) a la metadata de las aristas ya
+      // sembradas (relationship_type, reason, source_ref, source_text). Va al
+      // FINAL: enriquece aristas existentes, no crea nada. Idempotente.
+      await addCuratedEdgeData();
     })().catch((e) => {
       initPromise = null; // permite reintentar en la próxima llamada
       throw e;

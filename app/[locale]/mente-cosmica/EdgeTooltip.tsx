@@ -13,7 +13,14 @@
 
 import { useEffect, useRef } from "react";
 
-export type EdgeHint = { toLabel: string; kind: "solid" | "interp" };
+export type EdgeHint = {
+  toLabel: string;
+  kind: "solid" | "interp";
+  // Curaduría rica del Sofer (opcional): si la conexión está curada, se muestran
+  // la razón breve y la fuente exacta debajo del rótulo de viaje.
+  reason?: string;
+  sourceRef?: string;
+};
 
 export default function EdgeTooltip({
   hint,
@@ -63,6 +70,12 @@ export default function EdgeTooltip({
           : "interp."
     : "";
 
+  // ¿hay curaduría rica del Sofer para esta conexión? (razón + fuente)
+  const hasCurated = !!(hint && (hint.reason || hint.sourceRef));
+  // la razón puede ser larga: la recortamos para que el tooltip no invada la pantalla.
+  const reasonShort = hint?.reason ? truncate(hint.reason, 150) : "";
+  const sourceLabel = isFa ? "منبع" : locale === "en" ? "source" : "fuente";
+
   return (
     <div
       ref={ref}
@@ -74,46 +87,88 @@ export default function EdgeTooltip({
         left: 0,
         zIndex: 60,
         pointerEvents: "none",
-        whiteSpace: "nowrap",
+        // con curaduría dejamos que el texto fluya en varias líneas (máx. ancho);
+        // sin ella conserva el chip de una sola línea original.
+        whiteSpace: hasCurated ? "normal" : "nowrap",
+        maxWidth: hasCurated ? "260px" : undefined,
         userSelect: "none",
         fontFamily: "var(--font-cinzel, serif)",
         fontSize: "11px",
         letterSpacing: "0.04em",
-        padding: "4px 11px",
-        borderRadius: "9999px",
+        padding: hasCurated ? "7px 12px" : "4px 11px",
+        borderRadius: hasCurated ? "12px" : "9999px",
         border: "1px solid rgba(201,164,62,0.45)",
         background: "rgba(5,5,10,0.88)",
         color: "#f0e6cf",
         backdropFilter: "blur(4px)",
         boxShadow: "0 0 16px rgba(201,164,62,0.25)",
         display: "flex",
-        alignItems: "center",
-        gap: "6px",
+        flexDirection: hasCurated ? "column" : "row",
+        alignItems: hasCurated ? (isFa ? "flex-end" : "flex-start") : "center",
+        gap: hasCurated ? "5px" : "6px",
         opacity: hint ? 1 : 0,
         transition: "opacity 120ms ease",
       }}
     >
       {hint && (
         <>
-          <span style={{ fontSize: "8px", textTransform: "uppercase", letterSpacing: "0.14em", opacity: 0.55 }}>
-            {travelTo}
-          </span>
-          <span style={{ color: "#c9a43e", fontWeight: 700 }}>{isFa ? "←" : "→"}</span>
-          <span style={{ color: "#ffe9a8", fontWeight: 700 }}>{hint.toLabel}</span>
-          <span
-            style={{
-              marginInlineStart: "4px",
-              fontSize: "8px",
-              textTransform: "uppercase",
-              letterSpacing: "0.12em",
-              opacity: 0.6,
-              color: hint.kind === "solid" ? "#c9a43e" : "#9aa6c4",
-            }}
-          >
-            {kindLabel}
-          </span>
+          {/* fila 1: el rótulo de viaje + tipo (clásica/interp) — siempre visible */}
+          <div style={{ display: "flex", alignItems: "center", gap: "6px", whiteSpace: "nowrap" }}>
+            <span style={{ fontSize: "8px", textTransform: "uppercase", letterSpacing: "0.14em", opacity: 0.55 }}>
+              {travelTo}
+            </span>
+            <span style={{ color: "#c9a43e", fontWeight: 700 }}>{isFa ? "←" : "→"}</span>
+            <span style={{ color: "#ffe9a8", fontWeight: 700 }}>{hint.toLabel}</span>
+            <span
+              style={{
+                marginInlineStart: "4px",
+                fontSize: "8px",
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                opacity: 0.6,
+                color: hint.kind === "solid" ? "#c9a43e" : "#9aa6c4",
+              }}
+            >
+              {kindLabel}
+            </span>
+          </div>
+
+          {/* fila 2 (solo si está curada): razón breve del Sofer */}
+          {reasonShort && (
+            <div
+              style={{
+                fontFamily: "var(--font-cormorant, serif)",
+                fontSize: "12px",
+                lineHeight: 1.35,
+                letterSpacing: "0.01em",
+                color: "#e6dcc4",
+                opacity: 0.92,
+                textAlign: isFa ? "right" : "left",
+              }}
+            >
+              {reasonShort}
+            </div>
+          )}
+
+          {/* fila 3 (solo si hay fuente): la referencia exacta estilo Sefaria */}
+          {hint.sourceRef && (
+            <div style={{ display: "flex", alignItems: "center", gap: "5px", whiteSpace: "nowrap" }}>
+              <span style={{ fontSize: "8px", textTransform: "uppercase", letterSpacing: "0.12em", opacity: 0.5 }}>
+                {sourceLabel}
+              </span>
+              <span style={{ fontSize: "10px", color: "#c9a43e", letterSpacing: "0.02em" }}>{hint.sourceRef}</span>
+            </div>
+          )}
         </>
       )}
     </div>
   );
+}
+
+// Recorta un texto a `max` caracteres en el último espacio, con elipsis.
+function truncate(s: string, max: number): string {
+  if (s.length <= max) return s;
+  const cut = s.slice(0, max);
+  const lastSpace = cut.lastIndexOf(" ");
+  return (lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut).trimEnd() + "…";
 }

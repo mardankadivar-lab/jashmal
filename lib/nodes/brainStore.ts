@@ -10,6 +10,7 @@
 
 import { getSql } from "@/lib/infra/db";
 import { disciplineFromRef, commentatorNameToCat, commentatorFromLabel } from "@/lib/sources/discipline";
+import { EDGE_DATA, normNodeId, type EdgeData } from "@/lib/relations/edgeData";
 import { BNODES, BEDGES, MASEI_NODES, MASEI_EDGES, V4_NODES, V4_EDGES, TREE_NODES, TREE_PATHS, STUDY2_NODES, STUDY2_EDGES, STUDY3_NODES, STUDY3_EDGES, BRIT21_NODES, BRIT21_EDGES, MADRES_NODES, MADRES_EDGES, TOHU_NODES, TOHU_EDGES, AVRAHAM_KAB_NODES, AVRAHAM_KAB_EDGES, GILGUL_CAIN_HEVEL_NODES, GILGUL_CAIN_HEVEL_EDGES, GILGUL_VESSEL_NODES, TIKUN_SILENCIO_NODES, TIKUN_SILENCIO_EDGES, ENOCH_NODES, ENOCH_EDGES, COMMENTARY_ALL_NODES, COMMENTARY_EDGES, type BNode } from "@/lib/nodes/brainData";
 
 export type BrainGraph = { nodes: BNode[]; edges: [string, string][] };
@@ -67,6 +68,20 @@ export async function ensureBrainTables(): Promise<boolean> {
   await sql`ALTER TABLE brain_nodes ADD COLUMN IF NOT EXISTS author text`;
   // columna 'label_en': etiqueta en inglés (Fase 3 del trilingüe es/fa/en)
   await sql`ALTER TABLE brain_nodes ADD COLUMN IF NOT EXISTS label_en text`;
+
+  // ── Capa de conexiones cabalísticas (Fase 1): metadata RICA de la arista ──
+  // Columnas NULLABLE y backward-compatible: el grafo sigue leyendo igual si
+  // están vacías. La distinción clásico/interpretativo YA la cubre `kind`
+  // ('solid'|'interp'), así que aquí NO se duplica ese eje. Estas columnas
+  // guardan la curaduría del Sofer (de lib/relations/edgeData.ts):
+  //   · relationship_type → tipo de relación ("sefirotic_attribute", "covenant"…)
+  //   · reason            → por qué se conectan los dos nodos (texto breve)
+  //   · source_ref        → referencia exacta estilo Sefaria ("Micah 7:20")
+  //   · source_text       → nombre de la obra de esa fuente ("Miqueas (Tanaj)")
+  await sql`ALTER TABLE brain_edges ADD COLUMN IF NOT EXISTS relationship_type text`;
+  await sql`ALTER TABLE brain_edges ADD COLUMN IF NOT EXISTS reason text`;
+  await sql`ALTER TABLE brain_edges ADD COLUMN IF NOT EXISTS source_ref text`;
+  await sql`ALTER TABLE brain_edges ADD COLUMN IF NOT EXISTS source_text text`;
   await sql`CREATE INDEX IF NOT EXISTS brain_edges_src ON brain_edges (source_id)`;
   await sql`CREATE INDEX IF NOT EXISTS brain_edges_tgt ON brain_edges (target_id)`;
   await sql`CREATE INDEX IF NOT EXISTS brain_nodes_status ON brain_nodes (status)`;
@@ -823,6 +838,66 @@ export async function addCommentary(): Promise<void> {
     }
   } catch {
     /* nunca romper la lectura del cerebro */
+  }
+}
+
+// ── Capa de conexiones cabalísticas (Fase 2): volcar la curaduría del Sofer ──
+// Lee EDGE_DATA (lib/relations/edgeData.ts) — las conexiones RICAS YA curadas y
+// verificadas ref por ref — y las vuelca a la metadata de la arista del grafo:
+//   · relationship_type ← EdgeData.relationship_type
+//   · reason            ← short_explanation (cae a directional_label si faltara)
+//   · source_ref        ← source_refs[0].ref     (referencia exacta Sefaria)
+//   · source_text       ← source_refs[0].text    (nombre de la obra)
+//
+// SOLO ENRIQUECE aristas que YA EXISTEN en brain_edges (no crea nodos ni aristas
+// nuevas, no toca `kind` ni `status`): la curaduría de EDGE_DATA acompaña a las
+// aristas de Abraham que ya siembran addAvrahamKab / addAvrahamKabLote2 / etc.
+// El `kind` (solid/interp) ya distingue clásico vs interpretativo y se respeta.
+//
+// Matching robusto e idempotente: para cada arista de la BD normalizamos sus dos
+// ids (mismo normNodeId que usa edgeData.ts) y buscamos la entrada de EDGE_DATA
+// en CUALQUIER dirección. Idempotente: re-correr reescribe los MISMOS valores.
+// Devuelve cuántas aristas quedaron enriquecidas (para el log de arranque).
+export async function addCuratedEdgeData(): Promise<number> {
+  const sql = getSql();
+  if (!sql) return 0;
+  try {
+    // 1) índice clave-normalizada → EdgeData (las claves de EDGE_DATA ya vienen
+    //    normalizadas, ej. "avraham→jesed"; las guardamos en un Map para lookup).
+    const byKey = new Map<string, EdgeData>(Object.entries(EDGE_DATA));
+
+    // 2) todas las aristas existentes con sus ids reales del grafo.
+    const rows = (await sql`SELECT id, source_id, target_id FROM brain_edges`) as Array<{
+      id: string; source_id: string; target_id: string;
+    }>;
+
+    let enriched = 0;
+    for (const r of rows) {
+      const a = normNodeId(r.source_id);
+      const b = normNodeId(r.target_id);
+      // buscamos la curaduría en las dos direcciones posibles
+      const data = byKey.get(`${a}→${b}`) ?? byKey.get(`${b}→${a}`);
+      if (!data) continue;
+
+      const reason = (data.short_explanation || data.directional_label || "").trim() || null;
+      const first = data.source_refs?.[0];
+      const sourceRef = first?.ref?.trim() || null;
+      const sourceText = first?.text?.trim() || null;
+      const relType = data.relationship_type?.trim() || null;
+
+      await sql`
+        UPDATE brain_edges
+           SET relationship_type = ${relType},
+               reason            = ${reason},
+               source_ref        = ${sourceRef},
+               source_text       = ${sourceText}
+         WHERE id = ${r.id}
+      `;
+      enriched++;
+    }
+    return enriched;
+  } catch {
+    return 0; // la metadata es cosmética: nunca romper la lectura del cerebro
   }
 }
 
