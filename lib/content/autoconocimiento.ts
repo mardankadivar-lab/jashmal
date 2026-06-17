@@ -294,7 +294,7 @@ export const ESPEJO_NOTA_ARIZAL = {
 };
 
 export interface RasgoTema {
-  id: "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8";
+  id: "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8" | "R9";
   /** título corto del rasgo-tema */
   titulo: string;
   /** fuente exacta verificada, texto legible (ej. "Zohar, Yitró 6:77") */
@@ -415,6 +415,18 @@ export const RASGOS: RasgoTema[] = [
     espejo: "¿Fiel en lo grande pero descuidado en lo diario?",
     opuesto: "La grandeza encarnada: una profundidad que también se sostiene en los secretos pequeños y lo cotidiano, «en todos tus caminos conócelo».",
     color: "#4aa3c9",
+  },
+  {
+    id: "R9",
+    titulo: "La mirada recta / la honestidad transparente",
+    fuente: "Zohar, Yitró 7:85",
+    fuenteRef: "Zohar, Yitro 7:85",
+    citaHe:
+      "וּכְמָה דְּיָתְבָא עֵינָא, דְּיָתְבָא עַל שְׁלִימוּ, דְּלָא שְׁקִיעַ, הַאי לָאו רַמָּאָה הִיא, וְרָחִיק מֵרַמָּאוּתָא, דְּלָא אִית בֵּיהּ כְּלָל",
+    mida: "אֱמֶת (verdad): hablar de frente, sin rodeo ni doblez.",
+    espejo: "¿Digo las cosas de frente, o doy rodeos para quedar bien? ¿Hay distancia entre lo que muestro y lo que pienso?",
+    opuesto: "La mirada transparente: un ojo que «se asienta entero, sin hundirse» — la verdad dicha de frente, sin astucia ni doblez, sin nada oculto detrás.",
+    color: "#56c5c0",
   },
 ];
 
@@ -558,6 +570,7 @@ export const PREGUNTAS: Pregunta[] = [
       { texto: "alegres, que sonríen", rasgos: ["R2"], textoFa: "شاد، که لبخند می‌زنند" },
       { texto: "intensos, que se encienden", rasgos: ["R3"], textoFa: "پرشور، که برمی‌افروزند" },
       { texto: "serenos", rasgos: ["R4"], textoFa: "آرام و آسوده" },
+      { texto: "firmes y directos, que sostienen la mirada", rasgos: ["R9"], textoFa: "ثابت و مستقیم، که نگاه را نگه می‌دارند" },
     ],
   },
   {
