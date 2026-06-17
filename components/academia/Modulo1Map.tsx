@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { LESSONS, MODULO1 } from "@/lib/academia/modulo1";
 import { readProgress, nextOpenSlug, allComplete, M1_EVENT, type M1Progress } from "@/lib/academia/progress";
+// seen (llegó al sello, pendiente de entregar tarea) → borde dorado outline
+// completed (tarea entregada) → relleno dorado
 
 // El mapa del Módulo 1: la escalera de las 6 lecciones. El alumno SIEMPRE ve cuál
 // completó, cuál sigue (la próxima piedra, encendida) y su grado actual (Talmid).
@@ -23,6 +25,7 @@ export default function Modulo1Map() {
   }, []);
 
   const completed = prog?.completed ?? [];
+  const seen = prog?.seen ?? [];
   const doneCount = LESSONS.filter((l) => completed.includes(l.slug)).length;
   const current = prog ? nextOpenSlug(prog) : null; // próxima piedra (null = todo hecho)
   const finished = prog ? allComplete(prog) : false;
@@ -101,6 +104,7 @@ export default function Modulo1Map() {
         <ol className="mt-8 flex flex-col gap-3">
           {LESSONS.map((l) => {
             const isDone = completed.includes(l.slug);
+            const isSeen = !isDone && seen.includes(l.slug);
             const isCurrent = !finished && current === l.slug;
             return (
               <li key={l.slug}>
@@ -111,13 +115,25 @@ export default function Modulo1Map() {
                       ? "border-gold/55 bg-gold/[0.08] shadow-[0_0_22px_rgba(201,164,62,0.18)]"
                       : isDone
                       ? "border-gold/20 bg-gold/[0.03] hover:border-gold/40"
+                      : isSeen
+                      ? "border-gold/35 bg-gold/[0.04] hover:border-gold/50"
                       : "border-gold/12 bg-ink/30 hover:border-gold/30"
                   }`}
                 >
-                  {/* número / estado */}
+                  {/* número / estado:
+                      completed → círculo relleno dorado con ✓
+                      seen      → círculo con borde dorado y número (sin relleno)
+                      current   → círculo relleno dorado con número
+                      rest      → círculo tenue */}
                   <span
                     className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-cinzel text-sm ${
-                      isCurrent ? "bg-gold text-ink" : isDone ? "bg-gold/20 text-gold" : "bg-gold/10 text-gold/60"
+                      isCurrent
+                        ? "bg-gold text-ink"
+                        : isDone
+                        ? "bg-gold/20 text-gold"
+                        : isSeen
+                        ? "border-2 border-gold/70 bg-transparent text-gold"
+                        : "bg-gold/10 text-gold/60"
                     }`}
                   >
                     {isDone ? "✓" : l.n}
@@ -125,7 +141,7 @@ export default function Modulo1Map() {
 
                   {/* título + fuente */}
                   <span className="min-w-0 flex-1">
-                    <span className={`block text-base leading-snug ${isCurrent || isDone ? "text-parchment" : "text-parchment/70"}`}>
+                    <span className={`block text-base leading-snug ${isCurrent || isDone || isSeen ? "text-parchment" : "text-parchment/70"}`}>
                       {l.title}
                     </span>
                     <span className="mt-0.5 block truncate text-[11px] text-muted/70">{l.fuentes[0]}</span>
@@ -139,6 +155,10 @@ export default function Modulo1Map() {
                       </span>
                     ) : isDone ? (
                       <span className="text-gold/55">Repasar</span>
+                    ) : isSeen ? (
+                      <span className="rounded-full border border-gold/40 px-3 py-1 text-gold/70">
+                        Tarea pendiente
+                      </span>
                     ) : (
                       <span className="text-muted/50">más adelante</span>
                     )}

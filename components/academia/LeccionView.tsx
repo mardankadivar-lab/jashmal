@@ -13,7 +13,8 @@ import {
   resolveThread,
   threadHref,
 } from "@/lib/academia/modulo1";
-import { markComplete, setLast } from "@/lib/academia/progress";
+import { markSeen, setLast } from "@/lib/academia/progress";
+import TareaInput from "./TareaInput";
 
 // Los cinco momentos del ritmo de estudio (§6). Una cosa a la vez.
 const BEATS = [
@@ -34,9 +35,10 @@ export default function LeccionView({ lesson }: { lesson: Lesson }) {
     setLast(lesson.slug);
   }, [lesson.slug]);
 
-  // Al llegar al sello (חֲתִימָה), la lección queda completada.
+  // Al llegar al sello (חֲתִימָה), la lección queda marcada como "vista".
+  // "Completada" solo ocurre cuando el estudiante entrega la tarea (TareaInput).
   useEffect(() => {
-    if (beat === 4) markComplete(lesson.slug);
+    if (beat === 4) markSeen(lesson.slug);
   }, [beat, lesson.slug]);
 
   function go(to: number) {
@@ -101,7 +103,12 @@ export default function LeccionView({ lesson }: { lesson: Lesson }) {
           {beat === 1 && <BeatEstudio lesson={lesson} />}
           {beat === 2 && <BeatContempla lesson={lesson} />}
           {beat === 3 && <BeatAccion lesson={lesson} />}
-          {beat === 4 && <BeatSello lesson={lesson} next={next} />}
+          {beat === 4 && (
+            <>
+              <BeatSello lesson={lesson} next={next} />
+              <TareaInput tarea={lesson.tarea} lessonSlug={lesson.slug} />
+            </>
+          )}
         </div>
 
         {/* navegación entre momentos (en el sello, la navegación va en el propio bloque) */}

@@ -31,6 +31,15 @@ export type Block =
 // "Sigue el hilo": un puente clicable hacia otro estudio/letra existente o futuro.
 export type Hilo = { kind: "study" | "letter"; ref: string; label: string };
 
+// Tarea semanal de la lección (datos del §10.4 del Sofer).
+export type TareaData = {
+  semana: number;       // número de semana (1-16)
+  herramienta: string;  // herramienta hermenéutica introducida esa semana
+  enunciado: string;    // el texto exacto de la tarea (del §10.4 del Sofer)
+  palabrasMin: number;  // mínimo de palabras (150 para tareas semanales)
+  palabrasMax: number;  // máximo (300 para tareas semanales)
+};
+
 export type Lesson = {
   n: number;            // número de lección (1–6)
   id: string;           // id del currículo, p. ej. "E1·M1·L1"
@@ -44,6 +53,7 @@ export type Lesson = {
   hilos: Hilo[];                            // chips "Sigue el hilo"
   fuentes: string[];                        // fuentes exactas (tira de integridad)
   closeModule?: string;                     // solo L6: cierre del Módulo 1
+  tarea: TareaData;                         // tarea semanal (§10.4 del Sofer)
 };
 
 // ── Las 6 lecciones (§5, verbatim del Sofer) ────────────────────────────────
@@ -104,6 +114,14 @@ export const LESSONS: Lesson[] = [
       { kind: "study", ref: "torá oral", label: "¿Y que la mitad de la Torá nunca se escribió?" },
     ],
     fuentes: ["Pirké Avot 1:1 ✅", "Torá = 611 · Makot 24a 🔢"],
+    tarea: {
+      semana: 1,
+      herramienta: "Escucha activa del texto",
+      enunciado:
+        "¿Qué significa para ti la palabra «Torá» antes de esta semana? Escribe 1 párrafo. Luego escribe otro párrafo con la definición que aprendiste hoy (Torá = enseñanza, de י-ר-ה; la cadena de Avot 1:1). ¿En qué cambia lo que entendías?",
+      palabrasMin: 150,
+      palabrasMax: 300,
+    },
   },
 
   // ── L2 ────────────────────────────────────────────────────────────────────
@@ -156,6 +174,14 @@ export const LESSONS: Lesson[] = [
       { kind: "study", ref: "nevi'im", label: "¿Por qué hacían falta profetas si ya estaba la Torá?" },
     ],
     fuentes: ["Tanaj: 24 libros · Bava Batra 14b"],
+    tarea: {
+      semana: 2,
+      herramienta: "Nomenclatura del Tanaj",
+      enunciado:
+        "Escribe las tres partes del Tanaj (T-N-K), qué significa cada nombre en hebreo y cuántos libros tiene. Sin copiar — con tus palabras. Luego cita Bava Batra 14b como la fuente que habla del orden de los libros.",
+      palabrasMin: 150,
+      palabrasMax: 300,
+    },
   },
 
   // ── L3 ────────────────────────────────────────────────────────────────────
@@ -210,6 +236,14 @@ export const LESSONS: Lesson[] = [
       { kind: "letter", ref: "bet", label: "Vuelve a la bet de El Umbral y revisa su fuente con tus nuevos ojos." },
     ],
     fuentes: ["Génesis 1:1 ✅", "daf + amud · Shabat 31a"],
+    tarea: {
+      semana: 3,
+      herramienta: "La regla de la fuente (Kelal ha-Makor)",
+      enunciado:
+        "Abre Génesis 1:1 en Sefaria (sefaria.org). Copia el texto hebreo y la traducción al español. Escribe: ¿qué significa que puedas verificar esto tú mismo? ¿Qué cambia en cómo recibes una enseñanza cuando tienes la fuente delante?",
+      palabrasMin: 150,
+      palabrasMax: 300,
+    },
   },
 
   // ── L4 ────────────────────────────────────────────────────────────────────
@@ -264,6 +298,14 @@ export const LESSONS: Lesson[] = [
       { kind: "study", ref: "pardes", label: "Ya tienes las letras. ¿Lista para el método que las lee en cuatro niveles?" },
     ],
     fuentes: ["Sefer Yetzirah 1:1–1:2 ✅", "Sefer Yetzirah 2:2 ✅", "lev = 32 🔢"],
+    tarea: {
+      semana: 4,
+      herramienta: "Letras como números (base del mispar hejrají)",
+      enunciado:
+        "Escribe el valor numérico de tu nombre (transliterado al hebreo lo mejor que puedas, o usa un nombre hebreo si lo tienes). Muestra la suma letra por letra. No importa si el resultado no significa nada aún — el ejercicio es practicar el sistema.",
+      palabrasMin: 150,
+      palabrasMax: 300,
+    },
   },
 
   // ── L5 ────────────────────────────────────────────────────────────────────
@@ -320,6 +362,14 @@ export const LESSONS: Lesson[] = [
       { kind: "study", ref: "zohar", label: "¿Por qué Jashmal no te deja empezar por el Zohar? La respuesta está en Jaguigá 14b." },
     ],
     fuentes: ["Jaguigá 14b ✅"],
+    tarea: {
+      semana: 5,
+      herramienta: "PaRDeS como contenedor orientador",
+      enunciado:
+        "Escribe con tus palabras los cuatro niveles de PaRDeS (no copies la definición — explícalos como si se los explicaras a un amigo que nunca oyó la palabra). Para cada nivel, escribe un ejemplo de qué tipo de pregunta haría alguien que lee en ese nivel.",
+      palabrasMin: 150,
+      palabrasMax: 300,
+    },
   },
 
   // ── L6 ────────────────────────────────────────────────────────────────────
@@ -376,6 +426,14 @@ export const LESSONS: Lesson[] = [
       { kind: "study", ref: "el-nombre", label: "¿Por qué el Nombre YHVH no se pronuncia?" },
     ],
     fuentes: ["Devarim 6:4 — Shemá ✅", "Ejad 13 · Ahavá 13 · YHVH 26 🔢"],
+    tarea: {
+      semana: 6,
+      herramienta: "Pshat — el nivel literal",
+      enunciado:
+        "Toma el versículo de la Shemá (Deuteronomio 6:4). Escribe en un párrafo qué dice en Pshat (sentido literal, qué afirma el texto sin interpretación). Luego escribe en otro párrafo qué número aparece en la palabra 'Ejad' (álef=1, jet=8, dálet=4). No necesitas saber qué significa ese número todavía — solo calcula y anota.",
+      palabrasMin: 150,
+      palabrasMax: 300,
+    },
     closeModule:
       "En seis semanas, un forastero total ya sabe qué es la Torá y el Tanaj, lee una cita, reconoce el alefato, entiende PaRDeS y leyó un versículo en los cuatro niveles. Nunca te soltamos sin rumbo: cada lección dijo cuál era la siguiente piedra. La aurora ya empezó a crecer.",
   },
