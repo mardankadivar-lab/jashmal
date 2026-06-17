@@ -25,11 +25,12 @@ export const EX4 = {
   titulo: "Tres voces, un texto: mi primer análisis en dos niveles de PaRDeS",
   enunciado: `Elige UN versículo de cualquier texto estudiado en el currículo (Génesis 1–12 preferiblemente) y analízalo en Pshat y Remez usando al menos dos comentaristas (Rashi + Ibn Ezra o Ramban).
 
-1. Pshat con Rashi (la queshtiá — identificar la dificultad antes de leer la respuesta)
-2. Remez con al menos una Gezerah Shavá o gematría verificada letra por letra
-3. Distinción explícita entre los niveles PaRDeS — nombrar cada nivel
-4. Cita de al menos 2 comentaristas con referencia exacta
-5. Hiddush propio — algo que el estudiante ve y marca honestamente como 'hiddush propio'
+1. La queshtiá es tuya, no de Rashi — antes de leer el comentario, escribe en una oración qué te perturbaba en el versículo. Luego muestra cómo Rashi responde (o no responde) a esa perturbación.
+2. Remez con al menos una Gezerah Shavá o gematría verificada letra por letra — escribe el cálculo explícito.
+3. Distinción explícita entre los niveles PaRDeS — nombrar cada nivel.
+4. Cita de al menos 2 comentaristas con referencia exacta.
+5. Hiddush propio — no una síntesis elegante, sino algo que todavía no cuadra del todo o que ningún comentarista preguntó. Márcalo: "hiddush propio — no es fuente verificada."
+6. Una oración al final: ¿por qué este versículo y no otro? ¿Qué te llevó a elegirlo?
 
 Extensión: 2.000–3.000 palabras.`,
   palabrasMin: 2000,
@@ -95,7 +96,7 @@ export const LESSONS9: Lesson[] = [
       semana: 41,
       herramienta: "Lectura del Ibn Ezra: identificar la pregunta gramatical y compararla con la pregunta de Rashi",
       enunciado:
-        "Busca en Sefaria 'Ibn Ezra on Genesis 1:1'. Lee el primer párrafo. Escribe: ¿qué pregunta hace Ibn Ezra sobre la palabra bereshit? ¿Cómo difiere de la pregunta de Rashi sobre el mismo versículo?",
+        "Busca 'Ibn Ezra on Genesis 1:1' en Sefaria. Lee el primer párrafo. Escribe qué pregunta hace Ibn Ezra sobre bereshit. Luego responde: ¿entendiste su argumento la primera vez que lo leíste, o tuviste que releerlo? ¿Qué parte todavía no te queda del todo clara? Si dices que entendiste todo a la primera, explica el argumento en exactamente tres pasos — un paso por oración, sin generalizar.",
       palabrasMin: 200,
       palabrasMax: 400,
     },
@@ -166,7 +167,7 @@ export const LESSONS9: Lesson[] = [
       semana: 42,
       herramienta: "Lectura del Ramban: identificar dimensiones del texto que van más allá de la gramática",
       enunciado:
-        "Busca en Sefaria 'Ramban on Genesis 1:2'. Lee hasta donde habla del tohu va-vohu. Escribe: ¿qué dice el Ramban sobre el caos primordial? ¿Menciona algún concepto que no encuentres en Rashi ni en Ibn Ezra sobre el mismo versículo?",
+        "Busca 'Ramban on Genesis 1:2' en Sefaria. Lee hasta donde habla del tohu va-vohu. Escribe qué dice. Luego elige: ¿en qué punto el Ramban te parece más satisfactorio que Ibn Ezra (de la semana pasada), y en qué punto te parece menos satisfactorio? No respondas 'los dos tienen aspectos buenos' — elige uno que prefieras para explicar Génesis 1:1–2 y di por qué.",
       palabrasMin: 200,
       palabrasMax: 400,
     },
@@ -248,7 +249,7 @@ export const LESSONS9: Lesson[] = [
       semana: 43,
       herramienta: "Hashvaat ha-perushim: comparar tres comentaristas sobre el mismo versículo — acuerdo, diferencia, prioridad hermenéutica",
       enunciado:
-        "Pon los tres comentarios (Rashi, Ibn Ezra, Ramban sobre Génesis 1:1) uno al lado del otro en Sefaria. Escribe: (1) ¿en qué punto están los tres de acuerdo? (2) ¿en qué punto el desacuerdo es más profundo? (3) ¿cuál de las tres preguntas te parece más importante y por qué?",
+        "Pon los tres comentarios (Rashi, Ibn Ezra, Ramban sobre Génesis 1:1) en Sefaria al mismo tiempo. Escribe: ¿qué punto de desacuerdo entre ellos no habías notado cuando los leíste por separado en TS-41 y TS-42? ¿Qué cambia verlos juntos? De los tres, ¿cuál habrías preferido no leer — el que más complica lo que creías entender? Explica la complicación.",
       palabrasMin: 200,
       palabrasMax: 400,
     },
@@ -320,7 +321,7 @@ export const LESSONS9: Lesson[] = [
       semana: 44,
       herramienta: "Remez: identificar una estructura numérica o verbal en el texto y buscar su explicación en los comentaristas",
       enunciado:
-        "Lee Génesis 1:1–31 y cuenta cuántas veces aparece la frase 'va-yar Elohim ki tov' (y vio Dios que era bueno). ¿En qué día no aparece? Busca el comentario de Rashi a ese día en Sefaria. ¿Qué explica Rashi? Escribe tu análisis usando las palabras 'Pshat' y 'Remez' para distinguir los niveles.",
+        "Lee Génesis 1:1–31 y cuenta cuántas veces aparece 'va-yar Elohim ki tov'. Escribe el número y los versículos exactos. ¿En qué día no aparece? Antes de buscar el Rashi: escribe tu hipótesis propia sobre por qué falta en ese día — una oración, aunque no estés seguro. Luego lee el Rashi a ese día en Sefaria. ¿Tu hipótesis tenía algo en común con lo que dice Rashi, o era completamente diferente? Usa las palabras Pshat y Remez para clasificar la respuesta de Rashi.",
       palabrasMin: 200,
       palabrasMax: 400,
     },
@@ -402,7 +403,7 @@ export const LESSONS9: Lesson[] = [
       semana: 45,
       herramienta: "PaRDeS completo aplicado: Pshat, Remez, Drash, Sod sobre un versículo — con comentaristas y hiddush propio",
       enunciado:
-        "Escribe un análisis en Pshat y Remez de Génesis 1:1 usando Rashi y un comentarista más de tu elección (Ibn Ezra o Ramban). Marca claramente qué es Pshat y qué es Remez. Añade un hiddush propio al final — algo que ves en el texto y que ningún comentarista señaló explícitamente. Márcalo honestamente como intuición propia.",
+        "Escribe un análisis en Pshat y Remez de Génesis 1:1 usando Rashi y un comentarista más. Marca cada nivel claramente. Al final, escribe tu hiddush. Importante: el hiddush no es una síntesis elegante de los comentaristas ni una conclusión que 'cuadra bien'. Es algo que todavía te resulta extraño, incómodo o que no encaja del todo con ninguno de ellos. Si todo te cuadra perfectamente, escribe: '¿por qué ninguno de los tres preguntó X?' — y responde con tu propia hipótesis. Márcalo explícitamente como intuición propia, no como fuente.",
       palabrasMin: 200,
       palabrasMax: 400,
     },

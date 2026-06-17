@@ -91,7 +91,7 @@ export const LESSONS10: Lesson[] = [
       semana: 46,
       herramienta: "Distinción entre Nombres sagrados y epítetos; la regla de la fuente aplicada a la halajá (Shevuot 35a como texto talmúdico verificado).",
       enunciado:
-        "Lee Shevuot 35a (busca en Sefaria 'Shevuot 35a'). Lista los siete Nombres que no se pueden borrar. Escribe: ¿por qué crees que la halajá protege los Nombres escritos con esta prohibición específica? (150–300 palabras.)",
+        "Lee Shevuot 35a en Sefaria. Lista los siete Nombres que no se pueden borrar. De los siete, ¿cuál te resulta más extraño que esté en la lista, y cuál te resulta más extraño que NO esté en la lista? No respondas la segunda pregunta con 'ninguno me parece que falte' — piensa qué Nombre del hebreo bíblico conoces que esperarías encontrar y no está. Escribe la pregunta que te surge; no la respuesta.",
       palabrasMin: 150,
       palabrasMax: 300,
     },
@@ -192,7 +192,7 @@ export const LESSONS10: Lesson[] = [
       semana: 47,
       herramienta: "Lectura de cambio de Nombre en el texto bíblico como herramienta hermenéutica de Pshat; uso de Rashi como comentarista verificado sobre textos narrativos.",
       enunciado:
-        "Lee Génesis 1:1–5 y Génesis 2:4–7. Cuenta: ¿cuántas veces aparece solo Elohim? ¿Cuándo aparece YHVH por primera vez? Luego lee Rashi sobre Génesis 2:4. Escribe: ¿qué enseña Rashi sobre la diferencia entre los dos Nombres en estos capítulos? (150–300 palabras.)",
+        "Lee Génesis 1:1–5 y 2:4–7. Cuenta las apariciones de Elohim y escribe cuándo aparece YHVH por primera vez. Antes de leer el Rashi a Génesis 2:4: escribe tu hipótesis propia sobre por qué el texto usa dos Nombres distintos — una o dos oraciones, sin que sea correcta. Luego lee el Rashi. ¿Tu hipótesis tenía algo en común con él, o era completamente diferente? (150–300 palabras.)",
       palabrasMin: 150,
       palabrasMax: 300,
     },
@@ -278,7 +278,7 @@ export const LESSONS10: Lesson[] = [
       semana: 48,
       herramienta: "Guematría honesta aplicada a la teología (ejad y ahavá como equivalencias verificadas); lectura del Pshat de un texto litúrgico fundamental.",
       enunciado:
-        "Calcula la gematría de ejad (álef=1, jet=8, dálet=4) y de ahavá (álef=1, he=5, bet=2, he=5). Escribe el resultado. ¿Qué te dice que la unidad y el amor tengan el mismo valor? ¿Es coincidencia o significa algo? (150–300 palabras.)",
+        "Calcula la gematría de ejad y ahavá letra por letra — escribe el cálculo explícito. Ambas suman 13. Ahora la pregunta concreta: ¿recitaste la Shemá esta semana, o la escuchaste, o pensaste en ella? Si sí, conecta ese momento específico con la ecuación ejad=ahavá. Si no, escribe qué te impediría incorporarla — no una respuesta teológica, una respuesta honesta sobre tu vida. (150–300 palabras.)",
       palabrasMin: 150,
       palabrasMax: 300,
     },
@@ -394,7 +394,7 @@ export const LESSONS10: Lesson[] = [
       semana: 49,
       herramienta: "Análisis estructural de una plegaria en dos partes; identificación del primer uso litúrgico de un concepto (tikkun olam); lectura de fuentes proféticas citadas en la liturgia.",
       enunciado:
-        "Lee el texto del Alenu (búscalo en cualquier Sidur o en Sefaria como 'Aleinu'). Escribe: (1) ¿qué dice la primera parte? (2) ¿qué dice la segunda parte? (3) ¿qué frase describe el tikkun olam? Cita el versículo de Zacarías que aparece al final. (150–300 palabras.)",
+        "Lee el Alenu completo (Sefaria o cualquier Sidur). Reformula con tus propias palabras cada parte — no copies el texto, reformula. Luego: la primera parte habla de particularidad (nosotros), la segunda del tikkun olam para todos. ¿Ves tensión entre esas dos ideas, o te parecen naturalmente compatibles? Escribe la tensión si la ves, o explica por qué no la ves. Cita el versículo de Zacarías. (150–300 palabras.)",
       palabrasMin: 150,
       palabrasMax: 300,
     },

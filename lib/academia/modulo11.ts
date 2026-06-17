@@ -26,12 +26,14 @@ export const EX5 = {
   titulo: "Mi primer mapa cabalístico: una sefirot, un texto, cuatro niveles",
   enunciado: `El Proyecto Final de JAVER. Elige UNA sefirot de las diez y estúdiala en los cuatro niveles de PaRDeS:
 
-1. Pshat — qué dice el Sefer Yetzirah sobre esa sefirot (con referencia exacta)
-2. Remez — su valor numérico y conexiones gematricas (verificadas letra por letra)
-3. Drash — cómo aparece en el Midrash o los comentaristas
-4. Sod — lo que el estudiante intuye, marcado explícitamente como intuición ('hiddush propio', no fuente verificada)
+0. Antes de empezar — un párrafo obligatorio: ¿por qué elegiste esta sefirot y no las otras nueve? No es una pregunta retórica. Una elección real tiene una razón real.
 
-Herramientas exigidas: PaRDeS completo · al menos 3 fuentes verificadas · gematría verificada · distinción ✅/⚠️ · hiddush genuino.
+1. Pshat — qué dice el Sefer Yetzirah sobre esa sefirot (con referencia exacta al texto).
+2. Remez — su valor numérico y al menos una conexión gematríca verificada letra por letra. Escribe el cálculo explícito.
+3. Drash — cómo aparece en el Midrash o los comentaristas. Al menos una fuente primaria con referencia exacta.
+4. Sod — tu intuición. No uses "quizás" para suavizarlo. Afírmalo, y luego márcalo: "hiddush propio — no es fuente verificada." Un hiddush tibio no cuenta.
+
+Herramientas exigidas: PaRDeS completo · al menos 3 fuentes verificadas (✅) · gematría verificada · distinción ✅/⚠️ · hiddush genuino en Sod.
 Extensión: 2.500–4.000 palabras.`,
   palabrasMin: 2500,
   palabrasMax: 4000,
@@ -113,7 +115,7 @@ export const LESSONS11: Lesson[] = [
       semana: 50,
       herramienta: "Primera lectura del Sefer Yetzirah: identificar los 32 senderos y verificar la gematría de lev",
       enunciado:
-        "Lee Sefer Yetzirah 1:1 en Sefaria. Escribe: ¿qué son los 32 senderos de sabiduría? ¿Qué son las 10 sefirot y las 22 letras según el texto? Calcula la gematría de lev (לֵב = lamed+bet). ¿Coincide con 32? ¿Qué te sugiere que el número de los senderos sea el número del corazón?",
+        "Lee Sefer Yetzirah 1:1 en Sefaria. Escribe qué son los 32 senderos, las 10 sefirot y las 22 letras según el texto. Calcula la gematría de lev (לֵב) letra por letra. Antes de buscar ningún comentarista: ¿qué te resulta extraño en la frase 'b'shloshim u-shtayim netivot Jojmá' — 32 senderos de Jojmá? Escribe la extrañeza primera, antes de que la lección la resuelva. Si no encuentras nada extraño, escribe exactamente qué esperabas que dijera y no dijo.",
       palabrasMin: 200,
       palabrasMax: 400,
     },
@@ -201,7 +203,7 @@ export const LESSONS11: Lesson[] = [
       semana: 51,
       herramienta: "Las diez sefirot: nombres, gematrías y la regla de exactamente diez",
       enunciado:
-        "Lee Sefer Yetzirah 1:2–4 en Sefaria. Escribe el nombre de las 10 sefirot en orden. ¿Qué significa belimá? Busca en Sefaria si hay algún comentarista que explique esa palabra. Verifica la gematría de Jojmá (חָכְמָה) letra por letra y escribe el cálculo.",
+        "Lee Sefer Yetzirah 1:2–4 en Sefaria. Escribe los nombres de las 10 sefirot en orden y el significado de belimá. Verifica la gematría de Jojmá letra por letra — escribe el cálculo. Luego: de las diez sefirot, ¿cuál entiendes peor después de la lección — no la que suena más rara, sino la que después de leer todavía no termina de cuajar? Explica específicamente qué parte de la explicación no te convence todavía.",
       palabrasMin: 200,
       palabrasMax: 400,
     },
@@ -284,7 +286,7 @@ export const LESSONS11: Lesson[] = [
       semana: 52,
       herramienta: "Síntesis del Año 1: reflexión sobre el camino recorrido y el horizonte que se abre",
       enunciado:
-        "Lee Proverbios 3:18–19. Escribe una reflexión libre (200–400 palabras): ¿qué cambió en cómo lees un texto desde que empezaste en El Umbral? ¿Qué herramienta aprendiste que más usas? ¿Qué pregunta te quedó sin responder y esperas que MAGUID responda?",
+        "Lee Proverbios 3:18–19. Cierre del Año 1: vuelve a tu tarea TS-35 — la primera semana de JAVER. Cita una frase exacta de lo que escribiste ahí. ¿Hoy la responderías igual, o de otra manera? Si algo cambió, escribe qué y en qué semana cambió. Si nada cambió en 18 semanas, escribe exactamente por qué crees que eso es — no digas 'ya sabía todo', di qué esperabas que cambiara y no cambió.",
       palabrasMin: 200,
       palabrasMax: 400,
     },

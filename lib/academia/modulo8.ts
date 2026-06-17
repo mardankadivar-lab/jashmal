@@ -84,7 +84,7 @@ export const LESSONS8: Lesson[] = [
       semana: 35,
       herramienta: "Lectura del Mussar: identificar la pregunta fundacional del Ramjal y relacionarla con la propia vida",
       enunciado:
-        "Lee Mesilat Yesharim cap. 1 en Sefaria. Escribe la respuesta del Ramjal a '¿cuál es el deber del hombre en su mundo?' con tus propias palabras. ¿Estás de acuerdo con esa respuesta? ¿Por qué? Cita Mesilat Yesharim cap. 1 en tu respuesta.",
+        "Lee Mesilat Yesharim cap. 1 en Sefaria. Antes de escribir tu respuesta, escribe en una sola oración lo que creías que era el Mussar antes de esta lección. Luego escribe lo que dice el Ramjal sobre el deber del hombre. ¿En qué punto estabas equivocado o incompleto? Si no estabas equivocado en nada, explica exactamente por qué — no digas 'ya lo sabía', di de dónde venía ese saber. Cita Mesilat Yesharim cap. 1.",
       palabrasMin: 200,
       palabrasMax: 400,
     },
@@ -149,7 +149,7 @@ export const LESSONS8: Lesson[] = [
       semana: 36,
       herramienta: "Cheshbon ha-nefesh: examen honesto del alma al final del día — identificar una postergación o una acción con motivación impura",
       enunciado:
-        "Al final del día de hoy, haz un cheshbon ha-nefesh breve: ¿hubo un momento en que postergaste algo que sabías que debías hacer? ¿Un momento en que actuaste por honra más que por convicción? Escribe 1 párrafo honesto. Cita Lamentaciones 3:40 en tu respuesta.",
+        "Haz el cheshbon ha-nefesh sobre hoy — no un día genérico, no 'suelo hacer'. Anota la hora aproximada del momento en que el alma usó una de las justificaciones que describe el Ramjal en cap. 3 (aplazamiento, 'hay cosas más urgentes', 'ya soy suficientemente bueno'). Si hoy no pasó, describe cuándo fue la última vez y cuántos días hace. Cita Lamentaciones 3:40 dentro de la reflexión, no al final como decoración.",
       palabrasMin: 200,
       palabrasMax: 400,
     },
@@ -215,7 +215,7 @@ export const LESSONS8: Lesson[] = [
       semana: 37,
       herramienta: "Zerizut aplicada: identificar una postergación concreta del alma y nombrar la excusa que la sostiene",
       enunciado:
-        "Lee Proverbios 6:6–8. Escribe: ¿qué cualidad de la hormiga señala el texto? ¿Cómo defines la diferencia entre zerizut (diligencia espiritual), prisa y ansiedad? Da un ejemplo concreto de cada una desde tu propia experiencia.",
+        "Lee Proverbios 6:6–8. Escribe la diferencia entre zerizut y jipazón (prisa ansiosa). Ahora vuelve a la tarea TS-36: la postergación que describiste ahí, ¿es falta de zerizut o es jipazón disfrazado de zerizut? Son opuestos — pero el alma los confunde. Cita Proverbios 6:6 y di cuál de los dos está operando en ese caso tuyo concreto. No respondas 'los dos un poco' — elige uno y defiéndelo.",
       palabrasMin: 200,
       palabrasMax: 400,
     },
@@ -281,7 +281,7 @@ export const LESSONS8: Lesson[] = [
       semana: 38,
       herramienta: "Nekiut: distinguir entre la limpieza del acto (externo) y la limpieza de la intención (interno)",
       enunciado:
-        "Lee Salmos 24:4. Escribe: ¿cuál es la diferencia entre la limpieza del acto (manos) y la limpieza de la intención (corazón)? Da un ejemplo concreto de una acción que puede tener manos limpias pero corazón impuro — no genérico, sino desde tu propia experiencia o imaginación honesta.",
+        "Lee Salmos 24:4. Escribe la diferencia entre manos limpias y corazón limpio. Luego describe una acción que hiciste esta semana que era correcta externamente pero que el examen interior revela que la intención no era pura — honra, aprobación, imagen, miedo al juicio. Si no puedes identificar ninguna, escribe esto: ¿es porque genuinamente no hubo ninguna, o porque el alma prefiere no mirar? La nekiut empieza en saber cuál de las dos es.",
       palabrasMin: 200,
       palabrasMax: 400,
     },
@@ -348,7 +348,7 @@ export const LESSONS8: Lesson[] = [
       semana: 39,
       herramienta: "Anavá: repensar la humildad como claridad sobre uno mismo — no como negación del propio valor",
       enunciado:
-        "Lee Números 12:3 (Moisés, el más humilde). Escribe: ¿cómo puede ser Moisés el hombre más humilde y al mismo tiempo confrontar al Faraón, subir al Sinaí y liderar a millones? ¿Qué idea de la humildad te exige repensar este versículo? Menciona explícitamente la distinción entre humildad verdadera e inseguridad.",
+        "Lee Números 12:3. Escribe la distinción entre anavá (humildad) e inseguridad — son opuestos aunque parecen lo mismo. Ahora revisa lo que escribiste en TS-36 y TS-38: en esos textos, ¿dónde aparecía anavá verdadera y dónde aparecía inseguridad disfrazada de humildad? Cita una frase exacta de alguna de tus tareas anteriores y di a cuál de las dos pertenece. Si no encuentras ningún ejemplo, escribe por qué crees que eso es.",
       palabrasMin: 200,
       palabrasMax: 400,
     },
@@ -460,7 +460,7 @@ export const LESSONS8: Lesson[] = [
       semana: 40,
       herramienta: "Síntesis del Mussar: el mapa completo de las 10 madregot y la auto-ubicación honesta en la escalera",
       enunciado:
-        "Dibuja (en palabras) la escalera completa de la Mesilat Yesharim — las 10 escaleras en orden. Para cada una escribe una frase que describa qué hace el alma en ese peldaño. Consulta el cap. 1 en Sefaria. Luego escribe: ¿en cuál madregá sientes que el alma trabaja actualmente? ¿Cómo lo sabes?",
+        "Consulta Mesilat Yesharim cap. 1 en Sefaria. Escribe las 10 madregot en orden — para cada una, una sola frase sobre qué hace el alma ahí. Luego mira las cinco tareas anteriores (TS-35 a TS-39): ¿qué midá apareció más veces sin que la invitaras — en tus ejemplos, en tus confusiones, en lo que no quisiste escribir? Esa midá es donde trabaja el alma ahora. Nómbrala y explica cómo la detectaste en el propio recorrido de J1.",
       palabrasMin: 200,
       palabrasMax: 400,
     },
