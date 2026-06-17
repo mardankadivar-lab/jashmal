@@ -51,9 +51,11 @@ function statusLabel(status: string): { text: string; color: string } {
 export default function TareaInput({
   tarea,
   lessonSlug,
+  onEntregada,
 }: {
   tarea: TareaData;
   lessonSlug: string;
+  onEntregada?: () => void;
 }) {
   const [sessionChecked, setSessionChecked] = useState(false);
   const [hasSession, setHasSession] = useState(false);
@@ -170,6 +172,7 @@ export default function TareaInput({
       markComplete(lessonSlug);
       setSubmitted(data.tarea as TareaRecord);
       setFlash("Tarea entregada. El Sofer la leerá pronto.");
+      onEntregada?.();
     } catch {
       setError("Error de red. Intenta de nuevo.");
     } finally {

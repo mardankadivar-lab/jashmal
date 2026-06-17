@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { LESSONS, MODULO1 } from "@/lib/academia/modulo1";
-import { readProgress, nextOpenSlug, allComplete, M1_EVENT, type M1Progress } from "@/lib/academia/progress";
+import { readProgress, nextOpenSlug, allComplete, isModuleComplete, M1_EVENT, type M1Progress } from "@/lib/academia/progress";
 // seen (llegó al sello, pendiente de entregar tarea) → borde dorado outline
 // completed (tarea entregada) → relleno dorado
 
@@ -30,6 +30,8 @@ export default function Modulo1Map() {
   const current = prog ? nextOpenSlug(prog) : null; // próxima piedra (null = todo hecho)
   const finished = prog ? allComplete(prog) : false;
   const pct = (doneCount / MODULO1.total) * 100;
+  const m1Slugs = LESSONS.map((l) => l.slug);
+  const m1Complete = prog ? isModuleComplete(m1Slugs) : false;
 
   return (
     <div className="relative min-h-screen overflow-hidden" dir="ltr">
@@ -93,9 +95,6 @@ export default function Modulo1Map() {
             <p className="mt-2 text-sm leading-relaxed text-parchment/80">
               Sabes qué es la Torá y el Tanaj, lees una cita, reconoces el alefato, entiendes PaRDeS y
               leíste un versículo en los cuatro niveles. La aurora ya empezó a crecer.
-            </p>
-            <p className="mt-3 text-xs text-muted">
-              Módulo 2 · <span className="hebrew text-gold/70">אוֹתִיּוֹת</span> Las letras vivas — llega pronto.
             </p>
           </div>
         )}
@@ -168,6 +167,44 @@ export default function Modulo1Map() {
             );
           })}
         </ol>
+
+        {/* banner Módulo 2 */}
+        <div className="mt-8">
+          {m1Complete ? (
+            <Link
+              href="/academia/modulo-2"
+              className="flex items-center justify-between gap-4 rounded-2xl border border-gold/50 bg-gold/[0.08] px-6 py-5 shadow-[0_0_22px_rgba(201,164,62,0.15)] transition-all hover:border-gold hover:bg-gold/[0.13]"
+            >
+              <div>
+                <p className="font-cinzel text-[10px] uppercase tracking-[0.3em] text-gold/60">
+                  Módulo 2 · <span className="hebrew text-gold/80">אוֹתִיּוֹת</span>
+                </p>
+                <p className="mt-0.5 font-cinzel text-base text-parchment">Las letras vivas →</p>
+              </div>
+              <span className="shrink-0 rounded-full bg-gold/15 px-3 py-1 font-cinzel text-[10px] uppercase tracking-widest text-gold">
+                Desbloquado
+              </span>
+            </Link>
+          ) : (
+            <div
+              className="flex cursor-not-allowed items-center justify-between gap-4 rounded-2xl border border-gold/15 bg-ink/20 px-6 py-5 opacity-60"
+              title="Completa las 6 lecciones del Módulo 1 para desbloquear las letras vivas"
+            >
+              <div>
+                <p className="font-cinzel text-[10px] uppercase tracking-[0.3em] text-gold/45">
+                  Módulo 2 · <span className="hebrew text-gold/55">אוֹתִיּוֹת</span>
+                </p>
+                <p className="mt-0.5 font-cinzel text-base text-parchment/50">Las letras vivas</p>
+                <p className="mt-1 text-xs text-muted/60">
+                  Entrega las tareas de M1 para desbloquear
+                </p>
+              </div>
+              <span className="shrink-0 rounded-full border border-gold/20 px-3 py-1 font-cinzel text-[10px] uppercase tracking-widest text-gold/40">
+                Bloqueado
+              </span>
+            </div>
+          )}
+        </div>
 
         {/* puente sereno de vuelta */}
         <div className="mt-10 text-center">

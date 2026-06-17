@@ -8,11 +8,10 @@ import {
   type Lesson,
   type Block,
   type Hilo,
-  MODULO1,
-  nextLesson,
-  resolveThread,
-  threadHref,
-} from "@/lib/academia/modulo1";
+  MODULO7,
+  nextLesson7,
+  resolveThreadHref7,
+} from "@/lib/academia/modulo7";
 import { markSeen, setLast } from "@/lib/academia/progress";
 import TareaInput from "./TareaInput";
 
@@ -25,18 +24,16 @@ const BEATS = [
   { he: "חֲתִימָה", label: "El sello" },
 ] as const;
 
-export default function LeccionView({ lesson }: { lesson: Lesson }) {
+export default function LeccionView7({ lesson }: { lesson: Lesson }) {
   const [beat, setBeat] = useState(0);
   const [animKey, setAnimKey] = useState(0);
-  const next = nextLesson(lesson.slug);
+  const [shoelDone, setShoelDone] = useState(false);
+  const next = nextLesson7(lesson.slug);
 
-  // Al abrir la lección, recuérdala como "última visitada" (para retomar).
   useEffect(() => {
     setLast(lesson.slug);
   }, [lesson.slug]);
 
-  // Al llegar al sello (חֲתִימָה), la lección queda marcada como "vista".
-  // "Completada" solo ocurre cuando el estudiante entrega la tarea (TareaInput).
   useEffect(() => {
     if (beat === 4) markSeen(lesson.slug);
   }, [beat, lesson.slug]);
@@ -47,11 +44,17 @@ export default function LeccionView({ lesson }: { lesson: Lesson }) {
     if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  // Callback invocado por TareaInput cuando se entrega la tarea de L34.
+  function handleTareaEntregada() {
+    if (lesson.closeModule) {
+      setShoelDone(true);
+    }
+  }
+
   const progress = ((beat + 1) / BEATS.length) * 100;
 
   return (
     <div className="relative min-h-screen overflow-hidden" dir="ltr">
-      {/* halo dorado de fondo, sereno */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
@@ -60,7 +63,6 @@ export default function LeccionView({ lesson }: { lesson: Lesson }) {
         }}
       />
 
-      {/* barra de progreso de la lección (5 momentos) */}
       <div className="fixed inset-x-0 top-0 z-20 h-[3px] bg-gold/10">
         <div
           className="h-full bg-gold transition-all duration-700 ease-out"
@@ -69,14 +71,13 @@ export default function LeccionView({ lesson }: { lesson: Lesson }) {
       </div>
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-2xl flex-col px-6 py-12">
-        {/* cabecera: dónde estoy, y salida al mapa siempre visible */}
         <header className="mb-8">
           <div className="flex items-center justify-between text-gold/70">
             <Link href="/" className="hebrew text-xl transition hover:text-gold" style={{ filter: "drop-shadow(0 0 8px #c9a43e33)" }}>
               חַשְׁמַל
             </Link>
             <Link
-              href="/academia/modulo-1"
+              href="/academia/modulo-7"
               className="font-cinzel text-[11px] uppercase tracking-[0.2em] transition hover:text-gold"
             >
               ☰ Mapa
@@ -84,15 +85,15 @@ export default function LeccionView({ lesson }: { lesson: Lesson }) {
           </div>
           <div className="mt-5 text-center">
             <p className="font-cinzel text-[10px] uppercase tracking-[0.3em] text-gold/45">
-              Módulo 1 · Lección {lesson.n} de {MODULO1.total}
+              Módulo 7 · Lección {lesson.n} de {MODULO7.total}
             </p>
             <h1 className="mt-2 font-cinzel text-2xl leading-snug text-parchment sm:text-3xl">
               {lesson.title}
             </h1>
             <span className="mt-3 inline-flex items-center gap-2 rounded-full border border-gold/25 bg-gold/[0.05] px-3 py-1">
-              <span className="hebrew text-sm text-gold">{MODULO1.etapaHe}</span>
+              <span className="hebrew text-sm text-gold">{MODULO7.etapaHe}</span>
               <span className="font-cinzel text-[10px] uppercase tracking-widest text-gold/60">
-                {MODULO1.etapa}
+                {MODULO7.etapa}
               </span>
             </span>
           </div>
@@ -106,12 +107,33 @@ export default function LeccionView({ lesson }: { lesson: Lesson }) {
           {beat === 4 && (
             <>
               <BeatSello lesson={lesson} next={next} />
-              <TareaInput tarea={lesson.tarea} lessonSlug={lesson.slug} />
+              <TareaInput
+                tarea={lesson.tarea}
+                lessonSlug={lesson.slug}
+                onEntregada={lesson.closeModule ? handleTareaEntregada : undefined}
+              />
+              {/* Botón de cierre de SHOEL — aparece tras entregar la tarea de L34 */}
+              {shoelDone && (
+                <div className="mt-10 flex flex-col items-center gap-4 text-center">
+                  <div className="h-px w-24 bg-gold/30" />
+                  <p className="hebrew text-2xl text-gold" dir="rtl" style={{ filter: "drop-shadow(0 0 12px #c9a43e55)" }}>
+                    שׁוֹאֵל
+                  </p>
+                  <p className="font-cinzel text-sm uppercase tracking-widest text-gold/70">
+                    Completaste SHOEL
+                  </p>
+                  <Link
+                    href="/academia/shoel-completo"
+                    className="mt-2 inline-block rounded-full border-2 border-gold bg-gold/10 px-10 py-4 font-cinzel text-sm font-bold uppercase tracking-widest text-gold transition-all hover:bg-gold/20 hover:shadow-[0_0_24px_rgba(201,164,62,0.30)]"
+                  >
+                    Completaste SHOEL →
+                  </Link>
+                </div>
+              )}
             </>
           )}
         </div>
 
-        {/* navegación entre momentos (en el sello, la navegación va en el propio bloque) */}
         {beat < 4 && (
           <div className="mt-12 flex flex-col items-center gap-5">
             <GoldButton onClick={() => go(beat + 1)}>Continuar →</GoldButton>
@@ -126,7 +148,6 @@ export default function LeccionView({ lesson }: { lesson: Lesson }) {
           </div>
         )}
 
-        {/* puntos de los 5 momentos */}
         <div className="mt-10 flex items-center justify-center gap-2.5">
           {BEATS.map((_, n) => (
             <button
@@ -188,7 +209,6 @@ function BlockView({ b, i }: { b: Block; i: number }) {
   if (b.t === "verse") {
     return <LessonVerse he={b.he} es={b.es} refLabel={b.ref} sefaria={b.sefaria} />;
   }
-  // párrafo, según su tono
   const inner = <RichText text={b.text} keyPrefix={`b${i}`} />;
   if (b.tone === "gematria") {
     return (
@@ -223,7 +243,6 @@ function BeatEstudio({ lesson }: { lesson: Lesson }) {
           <BlockView key={i} b={b} i={i} />
         ))}
       </div>
-      {/* tira de integridad: las fuentes exactas de la lección */}
       <div className="mt-9 rounded-xl border border-gold/12 bg-ink/30 px-4 py-3">
         <p className="font-cinzel text-[10px] uppercase tracking-[0.25em] text-gold/45">Fuentes de esta lección</p>
         <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted/80">
@@ -282,31 +301,32 @@ function BeatAccion({ lesson }: { lesson: Lesson }) {
 
 // ── 5 · חֲתִימָה (el sello) + Sigue el hilo + próxima piedra ──────────────────
 function BeatSello({ lesson, next }: { lesson: Lesson; next: Lesson | null }) {
-  // Chips "Sigue el hilo", deduplicando el que ya es la próxima lección (CTA principal).
   const hilos = lesson.hilos.filter((h) => {
-    const t = resolveThread(h);
-    return !(t.kind === "lesson" && next && t.slug === next.slug);
+    const href = resolveThreadHref7(h);
+    if (!href) return true;
+    // Si el hilo apunta a la siguiente lección, no lo mostramos en el chip.
+    if (next && href === `/academia/modulo-7/${next.slug}`) return false;
+    return true;
   });
 
   return (
     <div>
       <Rubric he="חֲתִימָה" label="El sello" />
 
-      {/* el sello, memorizables */}
       <div className="mx-auto max-w-xl rounded-2xl border border-gold/25 bg-gold/[0.05] px-6 py-7 text-center">
         <p className="text-lg leading-relaxed text-parchment sm:text-xl">
           <RichText text={lesson.sello} keyPrefix="sl" />
         </p>
       </div>
 
-      {/* cierre del Módulo 1 (solo L6) */}
+      {/* cierre de SHOEL (solo L34) */}
       {lesson.closeModule && (
         <div className="mx-auto mt-7 max-w-xl rounded-2xl border border-gold/20 bg-ink/40 px-6 py-6 text-center">
           <p className="hebrew text-lg text-gold" dir="rtl" style={{ filter: "drop-shadow(0 0 8px #c9a43e44)" }}>
-            {MODULO1.auroraHe}
+            {MODULO7.auroraHe}
           </p>
           <p className="mt-1 font-cinzel text-[10px] uppercase tracking-[0.25em] text-gold/45">
-            Cierre del Módulo 1
+            Cierre de S4 · Módulo 7 · Cierre de SHOEL
           </p>
           <p className="mt-4 text-base leading-relaxed text-parchment/85">
             <RichText text={lesson.closeModule} keyPrefix="cm" />
@@ -314,12 +334,11 @@ function BeatSello({ lesson, next }: { lesson: Lesson; next: Lesson | null }) {
         </div>
       )}
 
-      {/* la próxima piedra: SIEMPRE clara (esto resuelve el "lo soltamos sin rumbo") */}
       <div className="mt-10 text-center">
         {next ? (
           <>
             <Link
-              href={`/academia/modulo-1/${next.slug}`}
+              href={`/academia/modulo-7/${next.slug}`}
               className="inline-block rounded-full border-2 border-gold bg-gold/10 px-9 py-4 font-cinzel text-sm font-bold uppercase tracking-widest text-gold transition-all hover:bg-gold/20 hover:shadow-[0_0_24px_rgba(201,164,62,0.25)]"
             >
               Siguiente · L{next.n}: {next.title} →
@@ -329,22 +348,18 @@ function BeatSello({ lesson, next }: { lesson: Lesson; next: Lesson | null }) {
         ) : (
           <>
             <Link
-              href="/academia/modulo-1"
+              href="/academia/modulo-7"
               className="inline-block rounded-full border-2 border-gold bg-gold/10 px-9 py-4 font-cinzel text-sm font-bold uppercase tracking-widest text-gold transition-all hover:bg-gold/20 hover:shadow-[0_0_24px_rgba(201,164,62,0.25)]"
             >
-              Completaste el Módulo 1 · Volver al mapa →
+              Mapa del Módulo 7 →
             </Link>
             <p className="mt-3 text-xs text-muted">
-              Módulo 2 · <span className="hebrew text-gold/70">אוֹתִיּוֹת</span>{" "}
-              <Link href="/academia/modulo-2" className="text-gold/70 underline-offset-2 transition hover:text-gold hover:underline">
-                Las letras vivas →
-              </Link>
+              Entrega tu tarea — y el cierre de SHOEL te espera.
             </p>
           </>
         )}
       </div>
 
-      {/* Sigue el hilo: puentes secundarios hacia otros estudios */}
       {hilos.length > 0 && (
         <div className="mt-10">
           <div className="mb-4 flex items-center justify-center gap-3">
@@ -363,13 +378,12 @@ function BeatSello({ lesson, next }: { lesson: Lesson; next: Lesson | null }) {
         </div>
       )}
 
-      {/* salida serena al mapa */}
       <div className="mt-10 text-center">
         <Link
-          href="/academia/modulo-1"
+          href="/academia/modulo-7"
           className="font-cinzel text-[11px] uppercase tracking-widest text-parchment/55 underline-offset-4 transition hover:text-gold hover:underline"
         >
-          ← Volver al mapa del Módulo 1
+          ← Volver al mapa del Módulo 7
         </Link>
       </div>
     </div>
@@ -377,10 +391,8 @@ function BeatSello({ lesson, next }: { lesson: Lesson; next: Lesson | null }) {
 }
 
 function ThreadChip({ hilo }: { hilo: Hilo }) {
-  const target = resolveThread(hilo);
-  const href = threadHref(target);
+  const href = resolveThreadHref7(hilo);
 
-  // Concepto de un módulo futuro: teaser, no enlace muerto.
   if (!href) {
     return (
       <div className="study-threshold__chip flex items-center justify-between gap-3 opacity-70">
