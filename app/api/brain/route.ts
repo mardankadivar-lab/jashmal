@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConfigured, getSql } from "@/lib/infra/db";
-import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, reclassifyHarvestedDisciplines, resyncCuratedDisciplines, moveCommentatorsOutOfTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addAvrahamKabLote2, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch, addCommentary, addCuratedEdgeData } from "@/lib/nodes/brainStore";
+import { ensureBrainTables, seedBrain, getBrainGraph, unifyTanakh, reclassifyHarvestedDisciplines, resyncCuratedDisciplines, moveCommentatorsOutOfTanakh, addMaseiStudy, addV4Content, addTreePaths, addStudies2, addStudies3, addBrit21, addMadres, addTohu, addAvrahamKab, addAvrahamKabLote2, addGilgulCainHevel, addGilgulVessels, addTikunSilencio, addEnoch, addCommentary, addCuratedEdgeData, mergeAccentDuplicates } from "@/lib/nodes/brainStore";
 import { BNODES, BEDGES } from "@/lib/nodes/brainData";
 
 export const runtime = "nodejs";
@@ -69,6 +69,10 @@ function ensureInit(): Promise<void> {
       // sembradas (relationship_type, reason, source_ref, source_text). Va al
       // FINAL: enriquece aristas existentes, no crea nada. Idempotente.
       await addCuratedEdgeData();
+      // Corrección de raíz (i18n/duplicados): fusiona nodos cosechados que son
+      // duplicados por acento del curado (ej. "Tikun" → "Tikún"). Va al FINAL
+      // porque necesita que todos los nodos curados ya estén en la BD.
+      await mergeAccentDuplicates();
     })().catch((e) => {
       initPromise = null; // permite reintentar en la próxima llamada
       throw e;

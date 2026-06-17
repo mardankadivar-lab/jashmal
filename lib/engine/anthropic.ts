@@ -252,8 +252,10 @@ REGLAS:
 - Usa nombres canónicos y reconocibles (ej: Rashi, Zohar, Akedá, Avraham, Tzimtzum, Tiféret, Génesis 22, Bereshit Rabá). Esto permite reconectar con nodos que ya existen.
 - "label": SIEMPRE el nombre canónico en ESPAÑOL (transliterado al alfabeto latino si es
   nombre propio hebreo; ej: Tzimtzum, Ein Sof, Baal Shem Tov, Moshé, Tania), corto (1–4
-  palabras). Esta es la clave de identidad del nodo: NUNCA la escribas en otro alfabeto
-  (ni hebreo, ni árabe/persa), pase lo que pase con el idioma del usuario.
+  palabras). Esta es la clave de identidad del nodo: NUNCA la escribas en otro idioma ni
+  alfabeto — NI inglés, NI hebreo, NI árabe/persa — aunque el usuario esté en inglés o
+  farsi. Inglés incorrecto: "curse of Adam", "Tree of Life". Español correcto: "Maldición
+  de Adán", "Árbol de la Vida". El campo "label" es SOLO Y SIEMPRE ESPAÑOL.
 - "labelLoc": EXACTAMENTE el mismo concepto, pero escrito en ${lang} (la lengua del usuario).${
     locale === "es" ? " Como el idioma es español, repite aquí el mismo valor de \"label\"." : ""}
 - "cat": EXACTAMENTE una de: tanakh, mishnah, talmud, midrash, halakhah, kabbalah, chasidut, philosophy, science, jashmal.

@@ -132,6 +132,38 @@ export async function ensureBrainTables(): Promise<boolean> {
     /* la limpieza nunca debe romper la creación de tablas */
   }
 
+  // ── Limpieza idempotente: nodos de INGLÉS en el campo `label` ────────────
+  // Bug histórico: cuando el usuario expandía en modo inglés (/en), el prompt de
+  // buildExpandPrompt no prohibía explícitamente el inglés en "label" (solo
+  // prohibía hebreo/árabe/persa). Claude a veces ponía inglés en `label`
+  // (ej. "curse of Adam", "Tree of Life") en lugar del español canónico. Esos
+  // nodos se ven en español aunque el usuario esté en /es. Solo borramos nodos
+  // COSECHADOS (source='expand'/'study') — nunca la semilla curada.
+  // Detección: "of" o "the" como palabra completa en minúsculas → inglés seguro
+  // (nunca aparecen solos en español ni en transliteraciones hebreo→español).
+  try {
+    await sql`
+      DELETE FROM brain_edges
+       WHERE source_id IN (
+         SELECT id FROM brain_nodes
+          WHERE source IN ('expand','study')
+            AND (lower(label) ~ '\\m(of|the)\\M')
+       )
+          OR target_id IN (
+         SELECT id FROM brain_nodes
+          WHERE source IN ('expand','study')
+            AND (lower(label) ~ '\\m(of|the)\\M')
+       )
+    `;
+    await sql`
+      DELETE FROM brain_nodes
+       WHERE source IN ('expand','study')
+         AND (lower(label) ~ '\\m(of|the)\\M')
+    `;
+  } catch {
+    /* la limpieza nunca debe romper la creación de tablas */
+  }
+
   return true;
 }
 
@@ -1065,6 +1097,10 @@ export async function existingNodeIds(): Promise<Map<string, string>> {
     const put = (k: string | null | undefined, id: string) => {
       const key = (k ?? "").trim().toLowerCase();
       if (key && !map.has(key)) map.set(key, id);
+      // También indexa la versión sin acentos: "tikun" → "Tikún" (previene duplicados
+      // por acento como "Tikun"/"Tikún" o "Maasé"/"Maase").
+      const stripped = key.normalize("NFD").replace(/[̀-ͯ]/g, "");
+      if (stripped && stripped !== key && !map.has(stripped)) map.set(stripped, id);
     };
     for (const r of rows) {
       put(r.label, r.id);
@@ -1174,6 +1210,65 @@ export async function setEdgeStatus(id: string, status: "approved" | "rejected")
   const sql = getSql();
   if (!sql) return;
   await sql`UPDATE brain_edges SET status = ${status} WHERE id = ${id}`;
+}
+
+// ── Migración: fusionar duplicados por acento (Tikun ↔ Tikún, Maase ↔ Maasé…) ──
+// Causa raíz: existingNodeIds() usaba .toLowerCase() sin quitar acentos; un nodo
+// cosechado "Tikun" (sin acento) no reconocía al semilla "Tikún" → duplicado.
+// Aquí: para cada par de nodos aprobados con el mismo normLabel (es/fa/en sin
+// acento), conservamos el CURADO (seed/sofer) y rechazamos el cosechado. Las
+// aristas del rechazado se redirigen al ganador. Idempotente.
+export async function mergeAccentDuplicates(): Promise<number> {
+  const sql = getSql();
+  if (!sql) return 0;
+  try {
+    const rows = (await sql`
+      SELECT id, label, source FROM brain_nodes WHERE status = 'approved'
+    `) as Array<{ id: string; label: string; source: string }>;
+
+    const groupByNorm = new Map<string, Array<{ id: string; label: string; source: string }>>();
+    for (const r of rows) {
+      const key = normLabel(r.label);
+      if (!key) continue;
+      if (!groupByNorm.has(key)) groupByNorm.set(key, []);
+      groupByNorm.get(key)!.push(r);
+    }
+
+    let merged = 0;
+    const CURATED = new Set(["seed", "sofer"]);
+    for (const [, group] of groupByNorm) {
+      if (group.length < 2) continue;
+      // Ganador: curado primero; en empate, el que tiene acento (más largo por diacrítico)
+      group.sort((a, b) => {
+        const pa = CURATED.has(a.source) ? 0 : 1;
+        const pb = CURATED.has(b.source) ? 0 : 1;
+        if (pa !== pb) return pa - pb;
+        return b.label.length - a.label.length;
+      });
+      const winner = group[0];
+      for (let i = 1; i < group.length; i++) {
+        const loser = group[i];
+        if (loser.id === winner.id) continue;
+        // Redirigir aristas del perdedor al ganador
+        await sql`UPDATE brain_edges SET source_id = ${winner.id} WHERE source_id = ${loser.id}`;
+        await sql`UPDATE brain_edges SET target_id = ${winner.id} WHERE target_id = ${loser.id}`;
+        // Eliminar auto-bucles y duplicados generados por la redirección
+        await sql`DELETE FROM brain_edges WHERE source_id = target_id`;
+        await sql`
+          DELETE FROM brain_edges a USING brain_edges b
+           WHERE a.id > b.id
+             AND a.source_id = b.source_id
+             AND a.target_id = b.target_id
+        `;
+        // Rechazar el duplicado
+        await sql`UPDATE brain_nodes SET status = 'rejected' WHERE id = ${loser.id}`;
+        merged++;
+      }
+    }
+    return merged;
+  } catch {
+    return 0; // nunca romper la lectura del cerebro
+  }
 }
 
 // Aprobar / rechazar TODO lo pendiente de una vez (botón "aprobar todo").
