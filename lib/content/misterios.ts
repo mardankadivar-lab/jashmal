@@ -488,13 +488,15 @@ export const MISTERIOS: Misterio[] = [
   },
 
   // ── SERIE "PARASHA" — Estudios completos de parashá con PaRDeS ───────────────
+  // Cada entrada de parashá es el ÍNDICE de enseñanzas en /misterio/{slug}.
+  // Las sub-enseñanzas viven en /misterio/{slug}/{enseñanza}/page.tsx.
   {
     slug: "parashat-korach",
     numero: "308",
     he: "פָּרָשַׁת קֹרַח",
-    titulo: "Parashat Korach — el ego espiritual",
-    tituloFa: "پاراشات قورَح — منیت معنوی",
-    tituloEn: "Parashat Korach — the spiritual ego",
+    titulo: "Parashat Korach",
+    tituloFa: "پاراشات قورَح",
+    tituloEn: "Parashat Korach",
     gancho: "Korach tenía razón en el diagnóstico. Se equivocó en la prescripción.",
     ganchoFa: "قورَح در تشخیص درست بود. در نسخه اشتباه کرد.",
     ganchoEn: "Korach was right about the diagnosis. He was wrong about the prescription.",
