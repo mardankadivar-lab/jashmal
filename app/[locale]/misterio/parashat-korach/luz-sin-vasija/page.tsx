@@ -23,6 +23,7 @@ const data: EstudioData = {
     numero: { valor: "250", rom: "נֵר · Ner" },
     ganchoEs: "Tenía la llama. No tenía la mecha. Por eso ardió.",
     ganchoFa: "شعله داشت. فتیله نداشت. به همین دلیل سوخت.",
+    fecha: "Shabat · 5 Tammuz 5786 · 20 jun 2026",
   },
   targum: {
     citas: [

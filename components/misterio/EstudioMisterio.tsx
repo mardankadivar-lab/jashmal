@@ -135,6 +135,9 @@ export interface Hero {
   // gematría. Lo usa el Estudio 0 (Persona · Conciencia colectiva · Estado de
   // conciencia). Cada pilar lleva su rótulo es/fa.
   dimensiones?: Array<{ es: string; fa: string }>;
+  // fecha del Shabat en que se leyó esta parashá (solo parashiot)
+  // formato: "Shabat · 5 Tammuz 5786 · 20 jun 2026"
+  fecha?: string;
 }
 
 // Bloque de párrafo del cuerpo: puede llevar una etiqueta dorada (ej. "Rashi.").
@@ -339,6 +342,12 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
           <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-muted/80">
             {fa ? h.ganchoFa : h.ganchoEs}
           </p>
+
+          {h.fecha && (
+            <p className="mt-4 font-cinzel text-[10px] uppercase tracking-[0.3em] text-gold/35">
+              {h.fecha}
+            </p>
+          )}
         </div>
 
         {/* ── 1. תַּרְגּוּם — Traducción ──────────────────────────────────────── */}

@@ -28,6 +28,7 @@ const data: EstudioData = {
       "Korach tenía razón en el diagnóstico. Se equivocó en la prescripción.",
     ganchoFa:
       "قورَح در تشخیص درست بود. در نسخه اشتباه کرد.",
+    fecha: "Shabat · 5 Tammuz 5786 · 20 jun 2026",
   },
   targum: {
     citas: [
