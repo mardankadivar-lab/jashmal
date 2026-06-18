@@ -307,6 +307,19 @@ function ShoelCompletoView() {
           </p>
         </div>
 
+        {/* banner Cohorte 1 */}
+        <div className="mb-4 rounded-xl border border-gold/25 bg-gold/[0.04] px-6 py-4 text-center">
+          <p className="font-cinzel text-xs uppercase tracking-[0.2em] text-gold/70">
+            Cohorte 1 · Rosh Hashaná 5787
+          </p>
+          <p className="mt-1 text-sm text-parchment/70">
+            El Año 1 de JAVER abre el 22 de septiembre.{" "}
+            <Link href="/academia/lista-de-espera" className="text-gold underline-offset-4 hover:underline">
+              Únete a la lista →
+            </Link>
+          </p>
+        </div>
+
         {/* puente de vuelta */}
         <div className="mt-10 text-center">
           <Link

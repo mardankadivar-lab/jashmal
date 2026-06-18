@@ -114,13 +114,16 @@ function JaverInicioView() {
           </p>
         </div>
 
-        {/* botón de entrada — activo */}
-        <div className="mt-12 text-center">
+        {/* CTA Cohorte 1 */}
+        <div className="mt-12 text-center space-y-4">
+          <p className="font-cinzel text-xs uppercase tracking-[0.2em] text-gold/55">
+            La Cohorte 1 arranca el 22 de septiembre — Rosh Hashaná.
+          </p>
           <Link
-            href="/academia/modulo-8"
+            href="/academia/lista-de-espera"
             className="inline-block rounded-full border-2 border-gold bg-gold/10 px-10 py-4 font-cinzel text-sm font-bold uppercase tracking-widest text-gold transition-all hover:bg-gold/20 hover:shadow-[0_0_24px_rgba(201,164,62,0.30)]"
           >
-            Empezar con Mussar →
+            Unirme a la lista de espera →
           </Link>
         </div>
 
