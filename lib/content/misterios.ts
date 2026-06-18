@@ -486,6 +486,23 @@ export const MISTERIOS: Misterio[] = [
     color: "#6d7bf0",
     orden: 15,
   },
+  {
+    slug: "137-y-la-edad",
+    numero: "137",
+    he: "מַה־טּוֹב לָאָדָם",
+    titulo: "137 — el número entre la vida y la muerte",
+    tituloFa: "۱۳۷ — عددِ میانِ زندگی و مرگ",
+    tituloEn: "137 — The Number Between Life and Death",
+    gancho:
+      "El mismo 137 que gobierna la luz mide la vida humana: Ismael, Leví y Amram vivieron exactamente 137 años, y Abraham tenía 137 cuando murió Sará. Y en física, 137 decide cuánto vive una partícula —y si el gato de Schrödinger está vivo o muerto. El número del umbral entre el ser y el no-ser.",
+    ganchoFa:
+      "همان ۱۳۷ که بر نور حکم می‌راند، زندگیِ انسان را اندازه می‌گیرد: اسماعیل، لاوی و عَمرام دقیقاً ۱۳۷ سال زیستند، و ابراهیم هنگامِ مرگِ سارا ۱۳۷ ساله بود. و در فیزیک، ۱۳۷ تعیین می‌کند یک ذرّه چقدر زنده می‌مانَد — و آیا گربهٔ شرودینگر زنده است یا مرده. عددِ آستانهٔ میانِ بودن و نبودن.",
+    ganchoEn:
+      "The same 137 that governs light measures human life: Ishmael, Levi and Amram each lived exactly 137 years, and Abraham was 137 when Sarah died. And in physics, 137 decides how long a particle lives —and whether Schrödinger's cat is alive or dead. The number of the threshold between being and non-being.",
+    serie: "ciencia",
+    color: "#34c5d6",
+    orden: 15.5,
+  },
 
   // ── SERIE "PARASHA" — Estudios completos de parashá con PaRDeS ───────────────
   // Cada entrada de parashá es el ÍNDICE de enseñanzas en /misterio/{slug}.
