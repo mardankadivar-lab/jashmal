@@ -17,6 +17,7 @@ const GROUPS: Group[] = [
     titleKey: "nav.groupStudy",
     items: [
       ["/estudio", "nav.study"],
+      ["/preguntar", "nav.ask"],
       ["/mis-estudios", "nav.myStudies"],
     ],
   },

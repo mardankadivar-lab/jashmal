@@ -30,7 +30,8 @@
     "language": "Idioma",
     "groupKnowYourself": "Conócete",
     "soulMap": "Mapa del Alma",
-    "soulMirror": "El Espejo del Alma"
+    "soulMirror": "El Espejo del Alma",
+    "ask": "Preguntar"
   },
   "hero": {
     "kicker": "Cabalá y filosofía judía",
@@ -362,5 +363,20 @@
     "footer": "Cada número es una puerta",
     "themeToLight": "Modo claro",
     "themeToDark": "Modo oscuro"
+  },
+  "qa": {
+    "title": "Pregunta al Jashmal",
+    "subtitle": "Escribe una pregunta libre sobre Cabalá, Torá, Talmud o filosofía judía. El Jashmal la analizará con el método PaRDeS: cuatro niveles de profundidad, fuentes exactas y una acción concreta para hoy.",
+    "meditation": "El que tiene una pregunta que arde — ya está a mitad del camino.",
+    "inputLabel": "Tu pregunta",
+    "placeholder": "¿Por qué el Zohar enseña que el alma desciende al cuerpo? ¿Qué significa la contracción (Tzimtzum) del Ein Sof? ¿Cómo se relacionan el Shabat y la creación?...",
+    "shortcutHint": "Ctrl+Enter para enviar",
+    "submitButton": "Consultar",
+    "generating": "El jashmal está escuchando tu pregunta...",
+    "rateLimited": "Has alcanzado el límite de consultas por hora. Vuelve más tarde.",
+    "errorStudy": "No se pudo generar la respuesta. Inténtalo de nuevo en un momento.",
+    "tryAgain": "Intentar de nuevo",
+    "newQuestion": "Nueva pregunta",
+    "navLabel": "Preguntar"
   }
 }

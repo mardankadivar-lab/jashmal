@@ -30,7 +30,8 @@
     "language": "Language",
     "groupKnowYourself": "Know Yourself",
     "soulMap": "Map of the Soul",
-    "soulMirror": "The Mirror of the Soul"
+    "soulMirror": "The Mirror of the Soul",
+    "ask": "Ask"
   },
   "hero": {
     "kicker": "Kabbalah and Jewish philosophy",
@@ -362,5 +363,20 @@
     "footer": "Each number is a door",
     "themeToLight": "Light mode",
     "themeToDark": "Dark mode"
+  },
+  "qa": {
+    "title": "Ask the Jashmal",
+    "subtitle": "Write a free question about Kabbalah, Torah, Talmud or Jewish philosophy. The Jashmal will analyze it using the PaRDeS method: four levels of depth, exact sources and a concrete action for today.",
+    "meditation": "One who carries a burning question — is already halfway there.",
+    "inputLabel": "Your question",
+    "placeholder": "Why does the Zohar teach that the soul descends into the body? What does the Tzimtzum of the Ein Sof mean? How do Shabbat and creation relate?...",
+    "shortcutHint": "Ctrl+Enter to submit",
+    "submitButton": "Ask",
+    "generating": "The jashmal is listening to your question...",
+    "rateLimited": "You have reached the hourly question limit. Come back later.",
+    "errorStudy": "Could not generate the answer. Try again in a moment.",
+    "tryAgain": "Try again",
+    "newQuestion": "New question",
+    "navLabel": "Ask"
   }
 }
