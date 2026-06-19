@@ -521,6 +521,19 @@ export const MISTERIOS: Misterio[] = [
     color: "#8b3a3a",
     orden: 16,
   },
+  {
+    slug: "likutei-moharan-i-1",
+    he: "אַשְׁרֵי תְמִימֵי דָרֶךְ",
+    titulo: "El jen que hace que tu oración sea escuchada",
+    tituloFa: "حنی که دعایت را می‌شنواند",
+    tituloEn: "The Grace That Makes Your Prayer Heard",
+    gancho: "La luna no tiene luz propia. Tú tampoco — todavía. Rebbe Najman revela el secreto del jen.",
+    ganchoFa: "ماه نور ذاتی ندارد. تو هم — هنوز. ربه نجمن راز חֵן را آشکار می‌کند.",
+    ganchoEn: "The moon has no light of its own. Neither do you — yet. Rebbe Nachman reveals the secret of chen.",
+    serie: "shabat",
+    color: "#e8945a",
+    orden: 17,
+  },
 ];
 
 export function getMisterio(slug: string): Misterio | undefined {
