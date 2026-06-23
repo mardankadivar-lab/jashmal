@@ -534,6 +534,22 @@ export const MISTERIOS: Misterio[] = [
     color: "#e8945a",
     orden: 17,
   },
+  // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
+  // La página /misterio/shabat es el índice; las enseñanzas viven en
+  // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".
+  {
+    slug: "shabat",
+    he: "שַׁבָּת",
+    titulo: "Shabbat — Enseñanzas de Likutei Moharan",
+    tituloFa: "شبات — آموزش‌های لیکوتی موهاران",
+    tituloEn: "Shabbat — Teachings of Likutei Moharan",
+    gancho: "Cada viernes, una enseñanza del Rebbe Najman destilada para la entrada del Shabbat.",
+    ganchoFa: "هر جمعه، یکی از آموزش‌های ربه نجمن برای ورودِ شبات.",
+    ganchoEn: "Every Friday, one teaching of Rebbe Nachman distilled for the entrance of Shabbat.",
+    serie: "shabat",
+    color: "#e8945a",
+    orden: 18,
+  },
 ];
 
 export function getMisterio(slug: string): Misterio | undefined {
