@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cinzel, EB_Garamond, Frank_Ruhl_Libre, Vazirmatn } from "next/font/google";
+import { Cinzel, Literata, Frank_Ruhl_Libre, Vazirmatn } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -16,11 +16,14 @@ const cinzel = Cinzel({
   display: "swap",
 });
 
-// Cuerpo de lectura: EB Garamond — Garamond clásico pero diseñado para leerse
-// a tamaño de texto (mucho más legible que Cormorant en cuerpo).
-const garamond = EB_Garamond({
+// Cuerpo de lectura: Literata — serif diseñada por Google para leer libros
+// (Google Play Books). Trazo sólido, letra abierta y mínima fatiga en textos
+// largos; reemplaza a EB Garamond, que en bloque largo resultaba fina y cansaba
+// la vista. (El nombre de la const se mantiene para no tocar otras referencias.)
+const garamond = Literata({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
   variable: "--font-body",
   display: "swap",
 });
