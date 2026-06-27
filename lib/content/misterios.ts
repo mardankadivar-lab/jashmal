@@ -534,6 +534,19 @@ export const MISTERIOS: Misterio[] = [
     color: "#e8945a",
     orden: 17,
   },
+  {
+    slug: "likutei-moharan-i-2",
+    he: "וּתְהִלָּתִי אֶחֱטָם לָךְ",
+    titulo: "El arma secreta del Mashíaj",
+    tituloFa: "سلاحِ پنهانِ ماشیَح",
+    tituloEn: "The Secret Weapon of Mashiach",
+    gancho: "No es la espada, es el aliento: por qué la oración es el arma más poderosa que existe.",
+    ganchoFa: "نه شمشیر، بلکه نَفَس — چرا دعا قدرتمندترین سلاحی است که وجود دارد.",
+    ganchoEn: "Not the sword, but the breath — why prayer is the most powerful weapon there is.",
+    serie: "shabat",
+    color: "#e8945a",
+    orden: 17.5,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".
