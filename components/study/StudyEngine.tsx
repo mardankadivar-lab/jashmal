@@ -19,6 +19,7 @@ import RefPanel from "./RefPanel";
 import LamedLoader from "@/components/LamedLoader";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, CATALOG, type CatBook, type CategoryId } from "@/lib/sources/categories";
+import { localizedRef } from "@/lib/sources/bookNames";
 import { getText, searchSuggestions, searchText, enrichWithTranslation, HL_OPEN, HL_CLOSE, type SefariaTextResult, type NameSuggestion, type TextSearchHit } from "@/lib/sources/sefaria";
 import { searchCategoryColor } from "@/lib/sources/searchCategories";
 import { requestStudy, StudyError } from "@/lib/study/studyClient";
@@ -729,7 +730,7 @@ export default function StudyEngine() {
                                   style={{ backgroundColor: color }}
                                 />
                               )}
-                              <span className="truncate text-sm text-parchment/90">{h.ref}</span>
+                              <span className="truncate text-sm text-parchment/90">{localizedRef(h.ref, locale)}</span>
                               {h.heRef && (
                                 <span dir="rtl" className="hebrew shrink-0 text-xs text-muted/60">
                                   {h.heRef}

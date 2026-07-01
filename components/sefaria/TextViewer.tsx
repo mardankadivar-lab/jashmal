@@ -1,8 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { SefariaTextResult } from "@/lib/sources/sefaria";
+import { localizedRef } from "@/lib/sources/bookNames";
 import type { WordAnchor, WordMenuAnchorEvt } from "./ClickableHebrew";
 import VerseText, { type SelectionInfo } from "@/components/study/VerseText";
 import VerseNoteEditor from "@/components/study/VerseNoteEditor";
@@ -50,6 +51,7 @@ export default function TextViewer({
 }: TextViewerProps) {
   const t = useTranslations("study");
   const tc = useTranslations("cuaderno");
+  const locale = useLocale();
 
   const faMode = faTranslations !== null || faTranslating;
   const refBase = result?.ref ?? "";
@@ -131,11 +133,14 @@ export default function TextViewer({
 
   return (
     <div className="mt-6">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h3 className="font-cinzel text-sm uppercase tracking-widest text-gold/80">
           {t("sourceText")}
         </h3>
-        <span className="hebrew text-sm text-muted">{result.heRef}</span>
+        <span className="flex flex-wrap items-baseline gap-2">
+          <span className="text-sm text-parchment/90">{localizedRef(result.ref, locale)}</span>
+          <span className="hebrew text-sm text-muted">{result.heRef}</span>
+        </span>
       </div>
 
       {/* Contador "Mis apuntes" de ESTE estudio — discreto, solo si hay algo. */}

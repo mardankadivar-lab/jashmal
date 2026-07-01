@@ -8,47 +8,47 @@ interface Name { es: string; fa: string; }
 
 export const BOOK_NAMES: Record<string, Name> = {
   // Torá
-  Genesis: { es: "Bereshit (Génesis)", fa: "پیدایش" },
-  Exodus: { es: "Shemot (Éxodo)", fa: "خروج" },
-  Leviticus: { es: "Vayikrá (Levítico)", fa: "لاویان" },
-  Numbers: { es: "Bamidbar (Números)", fa: "أعداد" },
-  Deuteronomy: { es: "Devarim (Deuteronomio)", fa: "تَثنیه" },
+  Genesis: { es: "Génesis (Bereshit)", fa: "پیدایش" },
+  Exodus: { es: "Éxodo (Shemot)", fa: "خروج" },
+  Leviticus: { es: "Levítico (Vayikrá)", fa: "لاویان" },
+  Numbers: { es: "Números (Bamidbar)", fa: "أعداد" },
+  Deuteronomy: { es: "Deuteronomio (Devarim)", fa: "تَثنیه" },
   // Neviim
-  Joshua: { es: "Yehoshúa (Josué)", fa: "یوشَع" },
-  Judges: { es: "Shoftim (Jueces)", fa: "داوران" },
+  Joshua: { es: "Josué (Yehoshúa)", fa: "یوشَع" },
+  Judges: { es: "Jueces (Shoftim)", fa: "داوران" },
   "I Samuel": { es: "Shmuel I", fa: "اول سَموئیل" },
   "II Samuel": { es: "Shmuel II", fa: "دوم سَموئیل" },
-  "I Kings": { es: "Melajim I (Reyes)", fa: "اول پادشاهان" },
-  "II Kings": { es: "Melajim II (Reyes)", fa: "دوم پادشاهان" },
-  Isaiah: { es: "Yeshayahu (Isaías)", fa: "اِشعیا" },
-  Jeremiah: { es: "Yirmeyahu (Jeremías)", fa: "اِرمیا" },
-  Ezekiel: { es: "Yejezkel (Ezequiel)", fa: "حِزقیال" },
-  Hosea: { es: "Hoshea (Oseas)", fa: "هوشَع" },
-  Joel: { es: "Yoel (Joel)", fa: "یوئیل" },
+  "I Kings": { es: "Reyes I (Melajim I)", fa: "اول پادشاهان" },
+  "II Kings": { es: "Reyes II (Melajim II)", fa: "دوم پادشاهان" },
+  Isaiah: { es: "Isaías (Yeshayahu)", fa: "اِشعیا" },
+  Jeremiah: { es: "Jeremías (Yirmeyahu)", fa: "اِرمیا" },
+  Ezekiel: { es: "Ezequiel (Yejezkel)", fa: "حِزقیال" },
+  Hosea: { es: "Oseas (Hoshea)", fa: "هوشَع" },
+  Joel: { es: "Joel (Yoel)", fa: "یوئیل" },
   Amos: { es: "Amós", fa: "عاموس" },
-  Obadiah: { es: "Ovadiá (Abdías)", fa: "عوبَدیا" },
-  Jonah: { es: "Yoná (Jonás)", fa: "یونس" },
-  Micah: { es: "Mijá (Miqueas)", fa: "میکاه" },
-  Nahum: { es: "Najum (Nahúm)", fa: "ناحوم" },
-  Habakkuk: { es: "Javakuk (Habacuc)", fa: "حَبقوق" },
-  Zephaniah: { es: "Tzefaniá (Sofonías)", fa: "صَفنیا" },
-  Haggai: { es: "Jagái (Hageo)", fa: "حَجّی" },
-  Zechariah: { es: "Zejariá (Zacarías)", fa: "زکریا" },
-  Malachi: { es: "Malají (Malaquías)", fa: "مَلاکی" },
+  Obadiah: { es: "Abdías (Ovadiá)", fa: "عوبَدیا" },
+  Jonah: { es: "Jonás (Yoná)", fa: "یونس" },
+  Micah: { es: "Miqueas (Mijá)", fa: "میکاه" },
+  Nahum: { es: "Nahúm (Najum)", fa: "ناحوم" },
+  Habakkuk: { es: "Habacuc (Javakuk)", fa: "حَبقوق" },
+  Zephaniah: { es: "Sofonías (Tzefaniá)", fa: "صَفنیا" },
+  Haggai: { es: "Hageo (Jagái)", fa: "حَجّی" },
+  Zechariah: { es: "Zacarías (Zejariá)", fa: "زکریا" },
+  Malachi: { es: "Malaquías (Malají)", fa: "مَلاکی" },
   // Ketuvim
-  Psalms: { es: "Tehilim (Salmos)", fa: "مَزامیر" },
-  Proverbs: { es: "Mishlei (Proverbios)", fa: "أمثال" },
-  Job: { es: "Iyov (Job)", fa: "ایوب" },
-  "Song of Songs": { es: "Shir HaShirim (Cantares)", fa: "غزل غزلها" },
+  Psalms: { es: "Salmos (Tehilim)", fa: "مَزامیر" },
+  Proverbs: { es: "Proverbios (Mishlei)", fa: "أمثال" },
+  Job: { es: "Job (Iyov)", fa: "ایوب" },
+  "Song of Songs": { es: "Cantares (Shir HaShirim)", fa: "غزل غزلها" },
   Ruth: { es: "Rut", fa: "روت" },
-  Lamentations: { es: "Eijá (Lamentaciones)", fa: "مَراثی اِرمیا" },
-  Ecclesiastes: { es: "Kohélet (Eclesiastés)", fa: "جامعه" },
+  Lamentations: { es: "Lamentaciones (Eijá)", fa: "مَراثی اِرمیا" },
+  Ecclesiastes: { es: "Eclesiastés (Kohélet)", fa: "جامعه" },
   Esther: { es: "Ester", fa: "إستر" },
   Daniel: { es: "Daniel", fa: "دانیال" },
-  Ezra: { es: "Ezrá (Esdras)", fa: "عِزرا" },
-  Nehemiah: { es: "Nejemiá (Nehemías)", fa: "نِحمیا" },
-  "I Chronicles": { es: "Divrei HaYamim I (Crónicas)", fa: "اول تَواریخ" },
-  "II Chronicles": { es: "Divrei HaYamim II (Crónicas)", fa: "دوم تَواریخ" },
+  Ezra: { es: "Esdras (Ezrá)", fa: "عِزرا" },
+  Nehemiah: { es: "Nehemías (Nejemiá)", fa: "نِحمیا" },
+  "I Chronicles": { es: "Crónicas I (Divrei HaYamim I)", fa: "اول تَواریخ" },
+  "II Chronicles": { es: "Crónicas II (Divrei HaYamim II)", fa: "دوم تَواریخ" },
   // Jasidut / Cabalá frecuentes (no bíblicos: nombre judío en grafía persa)
   Tanya: { es: "Tania", fa: "تانیا" },
   "Likutei Moharan": { es: "Likutéi Moharán", fa: "لیکوتی موهاران" },
@@ -65,6 +65,31 @@ export function localizedBookLabel(id: string, fallback: string, locale: string)
   const n = BOOK_NAMES[id];
   if (n) return locale === "fa" ? n.fa : n.es;
   return fallback; // título inglés de Sefaria
+}
+
+// Nombres de libro ordenados de más largo a más corto, para que "I Samuel"
+// no sea capturado por un match parcial equivocado antes de tiempo.
+const BOOK_IDS_SORTED = Object.keys(BOOK_NAMES).sort((a, b) => b.length - a.length);
+
+/**
+ * Toma un ref canónico de Sefaria (ej. "Numbers 25:10", "Numbers 25:10-26:4")
+ * y devuelve la referencia legible en el idioma de la interfaz, ej. para es:
+ * "Números (Bamidbar) 25:10". Solo traduce el NOMBRE del libro (prefijo);
+ * el resto del ref (capítulo:versículo, folio, etc.) queda intacto.
+ * Fallback honesto: si el libro no está en BOOK_NAMES, devuelve el ref tal cual
+ * (nunca inventa un nombre). locale "en" también devuelve el ref tal cual,
+ * porque el ref canónico de Sefaria YA está en inglés.
+ */
+export function localizedRef(ref: string, locale: string): string {
+  if (locale === "en") return ref;
+  for (const id of BOOK_IDS_SORTED) {
+    if (ref === id || ref.startsWith(`${id} `) || ref.startsWith(`${id},`)) {
+      const rest = ref.slice(id.length);
+      const label = locale === "fa" ? BOOK_NAMES[id].fa : BOOK_NAMES[id].es;
+      return `${label}${rest}`;
+    }
+  }
+  return ref; // fallback honesto: libro no catalogado, se muestra tal cual
 }
 
 // Nombres de las 6 categorías principales en FA

@@ -12,6 +12,7 @@ import {
   type CategoryCount,
 } from "@/lib/sources/sefaria";
 import { searchCategoryLabel, searchCategoryColor, sortCategoryCounts } from "@/lib/sources/searchCategories";
+import { localizedRef } from "@/lib/sources/bookNames";
 
 type NodeHit = { id: string; label: string; labelFa?: string; labelEn?: string };
 
@@ -222,7 +223,7 @@ export default function SearchResults({ initialQuery }: SearchResultsProps) {
                       href={`/estudio?ref=${encodeURIComponent(h.ref)}`}
                       className="font-cinzel text-sm text-gold hover:underline"
                     >
-                      {h.ref}
+                      {localizedRef(h.ref, locale)}
                     </Link>
                     {h.heRef && (
                       <span dir="rtl" className="hebrew text-xs text-muted/70">
