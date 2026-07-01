@@ -1,11 +1,14 @@
-// Cliente de traducción al persa del texto fuente.
-// Solo se usa en locale "fa": muestra hebreo original + persa (en vez del inglés
-// de Sefaria). Si falla, el llamador cae con gracia al inglés.
+// Cliente de traducción del texto fuente al idioma de la interfaz (es/fa).
+// Se usa en locale "es" o "fa": muestra hebreo original + traducción propia
+// (en vez del inglés de Sefaria, que el usuario no necesariamente entiende).
+// Si falla, el llamador cae con gracia al inglés.
 
 export interface TranslateClientRequest {
   ref: string;
   segments: string[];
   english: string[];
+  /** idioma destino: "es" o "fa". Default "fa" (compatibilidad histórica). */
+  locale?: "es" | "fa";
 }
 
 /**

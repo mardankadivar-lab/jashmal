@@ -96,7 +96,7 @@ export default function SearchResults({ initialQuery }: SearchResultsProps) {
         setCategoryCounts(res.categoryCounts);
         setTotal(res.total);
         setTotalIsCapped(res.totalIsCapped);
-        const enriched = await enrichWithTranslation(res.hits);
+        const enriched = await enrichWithTranslation(res.hits, 220, locale);
         if (!cancelled) setHits(enriched);
       })
       .finally(() => {
@@ -200,11 +200,13 @@ export default function SearchResults({ initialQuery }: SearchResultsProps) {
           <ul className="space-y-5">
             {hits.map((h, i) => {
               const color = h.category ? searchCategoryColor(h.category) : null;
-              // Snippet principal: la traducción si ya la tenemos o si el
-              // highlight de Sefaria ya venía en idioma de traducción; el
-              // hebreo se muestra siempre como apoyo debajo (si existe y es
-              // distinto del principal).
-              const mainSnippet = h.snippetEn ?? (h.snippetLang !== "he" ? h.snippet : "");
+              // Snippet principal: SIEMPRE `snippetEn`, que enrichWithTranslation
+              // ya garantiza en el idioma de la interfaz (es/en/fa) — nunca el
+              // snippet crudo de Sefaria, que puede venir en cualquier idioma
+              // (portugués, alemán...). Si la traducción no llegó (falló o aún
+              // está en camino), no se muestra nada mejor que un idioma que el
+              // usuario no entiende. El hebreo se muestra siempre como apoyo.
+              const mainSnippet = h.snippetEn ?? "";
               const heSnippet = h.snippetLang === "he" ? h.snippet : undefined;
               return (
                 <li key={`${h.ref}-${i}`} className="border-b border-gold/10 pb-4">

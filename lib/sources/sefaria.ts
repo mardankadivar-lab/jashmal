@@ -252,36 +252,104 @@ export async function searchText(
 }
 
 /**
- * Completa la traducción (`snippetEn`) de los hits que llegaron en hebreo
- * puro (Elasticsearch solo indexa highlight en UN idioma por hit — ver
- * TextSearchHit.snippetLang). Pide el texto completo por ref a
- * `/api/texts/{ref}` (que sí trae la traducción en `text`) y recorta un
- * fragmento corto para usar como snippet. Si un texto no tiene traducción en
- * Sefaria, esa entrada queda simplemente sin `snippetEn` (no rompe nada).
- * Nunca lanza; los hits que ya venían en traducción (snippetLang !== "he")
- * o que fallan al pedir el texto se devuelven sin tocar.
+ * Completa `snippetEn` con un fragmento en el idioma de la INTERFAZ activa
+ * (es/en/fa), sin importar en qué idioma haya llegado el snippet original de
+ * Sefaria. Esto es necesario porque Elasticsearch solo indexa highlight en UN
+ * idioma por hit (ver TextSearchHit.snippetLang), y ese idioma puede ser
+ * CUALQUIERA que un voluntario haya subido — portugués, alemán, francés,
+ * etc. — no solo hebreo o inglés. Pedir `lang=en` al texto completo ayuda
+ * pero NO garantiza inglés real para todos los pasajes, así que el paso
+ * final SIEMPRE es traducir con Claude al idioma pedido (incluso si
+ * `locale` ya es "en": el candidato podría no ser inglés de verdad).
+ *
+ * Paso 1 — candidato: si `snippetLang === "he"`, pide el texto completo por
+ * ref con `&lang=en` (más confiable que el default) y recorta un fragmento
+ * corto; si no, usa el snippet original tal cual (en su idioma real,
+ * cualquiera que sea) como candidato.
+ * Paso 2 — traducción forzada: TODOS los candidatos se traducen en UNA sola
+ * llamada batch a `/api/translate` (`mode: "snippet"`) al `locale` pedido.
+ * Una sola llamada para toda la página evita agotar el rate limit con 20
+ * resultados. Si el batch falla por completo, NO se muestra el candidato sin
+ * traducir (evita mostrar un idioma que el usuario no entiende): esa entrada
+ * simplemente queda sin `snippetEn` (el hebreo, si existe, sigue mostrándose
+ * aparte).
+ *
+ * Si no se pasa `locale`, se asume "en" (comportamiento seguro por defecto).
+ * Nunca lanza.
  */
 export async function enrichWithTranslation(
   hits: TextSearchHit[],
-  maxChars = 220
+  maxChars = 220,
+  locale?: string
 ): Promise<TextSearchHit[]> {
-  return Promise.all(
+  const targetLocale = locale === "es" || locale === "fa" ? locale : "en";
+
+  // Paso 1: candidato por hit (no es todavía la traducción final).
+  const withCandidate = await Promise.all(
     hits.map(async (h) => {
-      if (h.snippetLang !== "he" || !h.ref) return h;
-      try {
-        const res = await fetch(`${BASE}/texts/${encodeURIComponent(h.ref)}?context=0`);
-        if (!res.ok) return h;
-        const data: SefariaText = await res.json();
-        const translation = toSegments(data.text).join(" ").trim();
-        if (!translation) return h;
-        const snippetEn =
-          translation.length > maxChars ? `${translation.slice(0, maxChars)}…` : translation;
-        return { ...h, snippetEn };
-      } catch {
-        return h;
+      if (!h.ref) return { hit: h, candidate: undefined as string | undefined };
+      if (h.snippetLang === "he") {
+        try {
+          const res = await fetch(
+            `${BASE}/texts/${encodeURIComponent(h.ref)}?context=0&lang=en`
+          );
+          if (!res.ok) return { hit: h, candidate: undefined };
+          const data: SefariaText = await res.json();
+          const translation = toSegments(data.text).join(" ").trim();
+          if (!translation) return { hit: h, candidate: undefined };
+          const cut =
+            translation.length > maxChars ? `${translation.slice(0, maxChars)}…` : translation;
+          return { hit: h, candidate: cut };
+        } catch {
+          return { hit: h, candidate: undefined };
+        }
       }
+      // Ya viene en traducción (idioma real desconocido: puede ser
+      // portugués, alemán, inglés...). Se traduce igual en el paso 2.
+      return { hit: h, candidate: h.snippet || undefined };
     })
   );
+
+  // Paso 2: traducción forzada al idioma de interfaz, en una sola llamada.
+  const idxToTranslate: number[] = [];
+  const toTranslate: string[] = [];
+  withCandidate.forEach(({ candidate }, i) => {
+    if (candidate) {
+      idxToTranslate.push(i);
+      toTranslate.push(candidate);
+    }
+  });
+
+  const out = withCandidate.map(({ hit }) => hit);
+  if (toTranslate.length === 0) return out;
+
+  try {
+    const res = await fetch("/api/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        // Sin `ref`: cada búsqueda trae una mezcla distinta de snippets, así
+        // que no hay una clave de caché natural por-ref aquí (el backend
+        // simplemente no cachea este batch, lo que está bien: son pocas
+        // llamadas por búsqueda, no por estudio).
+        segments: toTranslate,
+        locale: targetLocale,
+        mode: "snippet",
+      }),
+    });
+    if (!res.ok) return out; // sin traducción confirmada → no se muestra nada (mejor que idioma equivocado)
+    const data = (await res.json()) as { translations?: string[] };
+    if (!Array.isArray(data.translations) || data.translations.length !== toTranslate.length) {
+      return out;
+    }
+    idxToTranslate.forEach((origIdx, j) => {
+      const tr = data.translations![j];
+      if (tr) out[origIdx] = { ...out[origIdx], snippetEn: tr };
+    });
+    return out;
+  } catch {
+    return out; // fallo de red → tampoco se muestra un idioma sin confirmar
+  }
 }
 
 // ── Página de resultados completa (/buscar) ──────────────────────────────────

@@ -267,30 +267,63 @@ Responde ÚNICAMENTE con un objeto JSON válido, sin texto antes ni después, co
 {"related":[{"label":"...","labelLoc":"...","cat":"...","level":3,"relation":"..."}]}`;
 }
 
-export function buildTranslatePrompt(): string {
+// {locale}: "es" o "fa". Traduce desde HEBREO/ARAMEO (uso: pasaje completo
+// del estudio, con `english` como referencia de sentido alineada 1:1).
+export function buildTranslatePrompt(locale: string = "fa"): string {
+  const targetLang = locale === "es" ? "ESPAÑOL" : "PERSA (فارسی)";
   // Reutiliza las reglas de persa del estudio (خَشمَل, nombres de libros, NUNCA árabe).
-  const rtl = RTL_NOTE.fa;
-  return `Eres un traductor experto de textos sagrados judíos (Torá, Talmud, Midrash,
-Cabalá, Jasidut) del HEBREO/ARAMEO al PERSA (فارسی).
+  const rtl = locale === "fa" ? RTL_NOTE.fa : "";
+  const langRules =
+    locale === "fa"
+      ? `${rtl}\n- Persa natural y fluido, NUNCA árabe (aunque compartan alfabeto).\n- No añadas transliteraciones ni notas; SOLO la traducción persa del versículo.`
+      : `\n- Español natural y fluido, con el registro solemne propio de un texto sagrado traducido (como una buena Biblia/Tanaj en español).\n- No añadas transliteraciones ni notas; SOLO la traducción española del versículo.`;
 
-TU TAREA: traducir cada segmento del texto fuente al persa, de forma FIEL y
+  return `Eres un traductor experto de textos sagrados judíos (Torá, Talmud, Midrash,
+Cabalá, Jasidut) del HEBREO/ARAMEO al ${targetLang}.
+
+TU TAREA: traducir cada segmento del texto fuente al ${locale === "es" ? "español" : "persa"}, de forma FIEL y
 respetuosa. Es texto sagrado y clásico: traduce el SIGNIFICADO LITERAL del hebreo
 con fidelidad — NO interpretes, NO comentes, NO expandas, NO resumas. Una traducción
-limpia y precisa, como la de una buena Biblia/Tanaj en persa.
+limpia y precisa, como la de una buena Biblia/Tanaj en ${locale === "es" ? "español" : "persa"}.
 
 APÓYATE en la traducción inglesa que se te da junto a cada segmento solo como
 referencia de sentido, pero traduce desde el HEBREO. Si el inglés y el hebreo
 difieren, manda el hebreo.
 
-REGLAS DE IDIOMA:${rtl}
-- Persa natural y fluido, NUNCA árabe (aunque compartan alfabeto).
-- No añadas transliteraciones ni notas; SOLO la traducción persa del versículo.
+REGLAS DE IDIOMA:${langRules}
 
 FORMATO DE SALIDA — OBLIGATORIO:
 Devuelve EXCLUSIVAMENTE un array JSON de strings, una entrada por cada segmento de
 entrada, EN EL MISMO ORDEN y con EXACTAMENTE el mismo número de elementos. Sin texto
 antes ni después, sin markdown, sin claves: solo el array JSON. Ejemplo de forma:
-["ترجمهٔ آیهٔ اول", "ترجمهٔ آیهٔ دوم"]`;
+${locale === "es" ? '["traducción del versículo primero", "traducción del versículo segundo"]' : '["ترجمهٔ آیهٔ اول", "ترجمهٔ آیهٔ دوم"]'}`;
+}
+
+// {locale}: "es", "en" o "fa". A diferencia de buildTranslatePrompt, este NO
+// asume que el origen es hebreo: los snippets de búsqueda de Sefaria pueden
+// venir en CUALQUIER idioma que un voluntario haya subido (portugués,
+// alemán, francés...) porque Elasticsearch solo indexa highlight en un
+// idioma por hit. Aquí solo importa el idioma FINAL: sea cual sea el origen,
+// el resultado debe quedar en target. Sin referencia inglesa alineada (no
+// aplica a este caso de uso).
+export function buildSnippetTranslatePrompt(locale: string): string {
+  const target =
+    locale === "es" ? "ESPAÑOL" : locale === "en" ? "INGLÉS (English)" : "PERSA (فارسی)";
+  const rtl = locale === "fa" ? RTL_NOTE.fa : "";
+  return `Eres un traductor experto de textos sagrados judíos (Torá, Talmud, Midrash,
+Cabalá, Jasidut, liturgia). Cada segmento que recibas es un fragmento breve de un
+resultado de búsqueda, en CUALQUIER idioma (puede ser inglés, portugués, alemán,
+francés, hebreo, u otro — no asumas cuál).
+
+TU TAREA: traduce cada segmento al ${target}, sin importar en qué idioma esté escrito.
+Si un segmento YA está en ${target}, devuélvelo tal cual (no lo alteres). Traduce con
+fidelidad el SIGNIFICADO LITERAL — NO interpretes, NO comentes, NO expandas, NO
+resumas: es un fragmento corto de texto sagrado o de su traducción clásica.
+${rtl}
+FORMATO DE SALIDA — OBLIGATORIO:
+Devuelve EXCLUSIVAMENTE un array JSON de strings, una entrada por cada segmento de
+entrada, EN EL MISMO ORDEN y con EXACTAMENTE el mismo número de elementos. Sin texto
+antes ni después, sin markdown, sin claves: solo el array JSON.`;
 }
 
 const LANG_NAME: Record<string, string> = {

@@ -367,7 +367,7 @@ export default function StudyEngine() {
         if (!cancelled) { setTextHits(hits); setShowSug(true); }
         // Completa traducción de los hits que llegaron en hebreo puro, sin
         // bloquear la primera pintura del desplegable.
-        enrichWithTranslation(hits).then((enriched) => {
+        enrichWithTranslation(hits, 220, locale).then((enriched) => {
           if (!cancelled) setTextHits(enriched);
         });
       } catch { /* noop */ }
@@ -709,7 +709,10 @@ export default function StudyEngine() {
                     </li>
                     {textHits.map((h, i) => {
                       const color = h.category ? searchCategoryColor(h.category) : null;
-                      const mainSnippet = h.snippetEn ?? (h.snippetLang !== "he" ? h.snippet : "");
+                      // SIEMPRE `snippetEn` (garantizado en el idioma de la
+                      // interfaz por enrichWithTranslation) — nunca el snippet
+                      // crudo, que puede venir en cualquier idioma de Sefaria.
+                      const mainSnippet = h.snippetEn ?? "";
                       const heSnippet = h.snippetLang === "he" ? h.snippet : undefined;
                       return (
                         <li key={`tx-${i}`}>
