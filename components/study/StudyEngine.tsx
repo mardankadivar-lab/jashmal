@@ -18,7 +18,7 @@ import WordMenu, { type WordMenuAnchor } from "./WordMenu";
 import RefPanel from "./RefPanel";
 import LamedLoader from "@/components/LamedLoader";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
-import { bookRef, type CatBook, type CategoryId } from "@/lib/sources/categories";
+import { bookRef, CATALOG, type CatBook, type CategoryId } from "@/lib/sources/categories";
 import { getText, searchSuggestions, searchText, HL_OPEN, HL_CLOSE, type SefariaTextResult, type NameSuggestion, type TextSearchHit } from "@/lib/sources/sefaria";
 import { requestStudy, StudyError } from "@/lib/study/studyClient";
 import { scanKabbalah, type KabMatch } from "@/lib/nodes/kabbalisticScanner";
@@ -55,6 +55,10 @@ export default function StudyEngine() {
   // Búsqueda DENTRO de los textos (full-text de Sefaria): pasajes con resaltado.
   const [textHits, setTextHits] = useState<TextSearchHit[]>([]);
   const [textSearching, setTextSearching] = useState(false);
+  // Filtros de la búsqueda "en los textos": categorías top-level elegidas
+  // (vacío = todas) y modo frase exacta (vs. tolerar variantes/flexiones).
+  const [textCategories, setTextCategories] = useState<CategoryId[]>([]);
+  const [exactPhrase, setExactPhrase] = useState(false);
   // Caché de los nodos de la Mente Cósmica (se baja una sola vez, al teclear).
   const brainNodesRef = useRef<NodeHit[] | null>(null);
   const brainLoadingRef = useRef(false);
@@ -341,14 +345,23 @@ export default function StudyEngine() {
       } catch { /* noop */ }
       // Sefaria full-text: pasajes DENTRO de los libros (hebreo o traducción).
       try {
-        const hits = await searchText(q, 8);
+        const hits = await searchText(q, 8, textCategories, exactPhrase);
         if (!cancelled) { setTextHits(hits); setShowSug(true); }
       } catch { /* noop */ }
       finally { if (!cancelled) setTextSearching(false); }
     }, 220);
     return () => { cancelled = true; clearTimeout(timer); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search]);
+  }, [search, textCategories, exactPhrase]);
+
+  // Alterna una categoría en el filtro de "en los textos" (toggle: clic de
+  // nuevo la quita). No dispara la búsqueda directamente: el useEffect de
+  // arriba la relanza porque textCategories es una de sus dependencias.
+  function toggleTextCategory(id: CategoryId) {
+    setTextCategories((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+    );
+  }
 
   // ¿Hay algún resultado de cualquier fuente? (para mostrar el dropdown)
   const hasAnyHit =
@@ -617,13 +630,48 @@ export default function StudyEngine() {
                 )}
 
                 {/* Grupo 4 · En los textos (búsqueda full-text de Sefaria) */}
-                {(textHits.length > 0 || textSearching) && (
+                {(textHits.length > 0 || textSearching || textCategories.length > 0) && (
                   <ul className="border-t border-gold/10">
                     <li className="flex items-center gap-2 px-3 pb-1 pt-2 font-cinzel text-[9px] uppercase tracking-widest text-gold/40">
                       {t("groupInTexts")}
                       {textSearching && (
                         <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-gold/40" />
                       )}
+                    </li>
+                    {/* Filtros: chips de categoría + interruptor de frase exacta.
+                        onMouseDown con preventDefault para no perder el foco del
+                        input (igual que el resto de botones del dropdown). */}
+                    <li className="flex flex-wrap items-center gap-1.5 px-3 pb-2">
+                      {CATALOG.map((g) => {
+                        const active = textCategories.includes(g.id);
+                        return (
+                          <button
+                            key={g.id}
+                            type="button"
+                            onMouseDown={(e) => { e.preventDefault(); toggleTextCategory(g.id); }}
+                            aria-pressed={active}
+                            className={`rounded-full border px-2 py-0.5 text-[11px] transition-colors ${
+                              active
+                                ? "border-gold/70 bg-gold/15 text-gold"
+                                : "border-gold/20 text-muted/80 hover:border-gold/40 hover:text-gold/90"
+                            }`}
+                          >
+                            {locale === "fa" ? g.fa : g.es}
+                          </button>
+                        );
+                      })}
+                      <button
+                        type="button"
+                        onMouseDown={(e) => { e.preventDefault(); setExactPhrase((v) => !v); }}
+                        aria-pressed={exactPhrase}
+                        className={`ms-auto rounded-full border px-2 py-0.5 text-[11px] transition-colors ${
+                          exactPhrase
+                            ? "border-gold/70 bg-gold/15 text-gold"
+                            : "border-gold/20 text-muted/80 hover:border-gold/40 hover:text-gold/90"
+                        }`}
+                      >
+                        {t("exactPhrase")}
+                      </button>
                     </li>
                     {textHits.map((h, i) => (
                       <li key={`tx-${i}`}>

@@ -16,11 +16,20 @@
 //  `renderStudyText(texto)` devuelve un arreglo de nodos React listo para
 //  insertar dentro de un <p>. Es seguro: NO interpreta HTML, solo reemplaza la
 //  sintaxis {{…}} por <Link> / <span> dorados.
+//
+//  Panel lateral (SOLO para los 18 misterios que comparten la plantilla
+//  EstudioMisterio/EstudioData, ver lib/content/misteriosPanel.ts): si se
+//  pasa `onOpenPanel` a `renderStudyText` y el slug de destino de un
+//  {{study:…}} está registrado en MISTERIOS_PANEL, el enlace dorado abre el
+//  panel (onOpenPanel(slug)) en vez de navegar con <Link>. Para cualquier
+//  otro slug — los ~29 misterios a mano y todo {{letter:…}} — el
+//  comportamiento no cambia: <Link> de página completa, como siempre.
 // ─────────────────────────────────────────────────────────────────────────
 import { Fragment, type ReactNode } from "react";
 import { Link } from "@/i18n/navigation";
 import { getLetter } from "@/lib/letters";
 import { getMisterio } from "@/lib/content/misterios";
+import { tienePanelMisterio } from "@/lib/content/misteriosPanel";
 
 // {{tipo:slug|texto}}  — capturamos tipo, slug y texto visible.
 const TOKEN = /\{\{(study|letter):([^|}]+)\|([^}]+)\}\}/g;
@@ -28,13 +37,19 @@ const TOKEN = /\{\{(study|letter):([^|}]+)\|([^}]+)\}\}/g;
 const goldLink =
   "font-semibold text-gold underline decoration-gold/30 underline-offset-2 transition-colors hover:text-gold hover:decoration-gold/70";
 const goldSpan = "font-semibold text-gold/90";
+const goldButton =
+  "font-semibold text-gold underline decoration-gold/30 underline-offset-2 transition-colors hover:text-gold hover:decoration-gold/70";
 
 /**
  * Convierte el texto con sintaxis {{study:…}} / {{letter:…}} en nodos React.
  * Los segmentos de texto plano se devuelven tal cual; los tokens se vuelven
  * enlaces dorados (o spans dorados cuando el destino no existe todavía).
+ *
+ * @param onOpenPanel  callback opcional; si el slug de un {{study:…}} tiene
+ *   panel lateral disponible, se pinta como <button> que llama a
+ *   onOpenPanel(slug) en vez de <Link>. Solo lo usa EstudioMisterio.tsx.
  */
-export function renderStudyText(text: string): ReactNode[] {
+export function renderStudyText(text: string, onOpenPanel?: (slug: string) => void): ReactNode[] {
   const out: ReactNode[] = [];
   let last = 0;
   let key = 0;
@@ -51,6 +66,22 @@ export function renderStudyText(text: string): ReactNode[] {
     const slug = rawSlug.trim();
 
     if (tipo === "study") {
+      // study: si tiene panel lateral (18 misterios con plantilla común) y nos
+      // dieron el callback, abrir panel; si no, comportamiento de siempre.
+      if (onOpenPanel && tienePanelMisterio(slug)) {
+        out.push(
+          <button
+            key={`p${key++}`}
+            type="button"
+            onClick={() => onOpenPanel(slug)}
+            className={goldButton}
+          >
+            {label}
+          </button>,
+        );
+        last = m.index + full.length;
+        continue;
+      }
       // study: enlazamos solo si el misterio está registrado; si no, span dorado.
       const exists = !!getMisterio(slug);
       out.push(

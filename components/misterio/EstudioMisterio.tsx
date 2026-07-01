@@ -57,12 +57,20 @@ function SectionHead({ he, title }: { he: string; title: string }) {
 //  Acepta texto plano y/o elementos (p. ej. un <span> de etiqueta «Rashi:»).
 //  Los trozos de texto se pasan por el parser de hyperlinks; los elementos
 //  React se dejan intactos.
-function P({ children, className = "" }: { children: ReactNode; className?: string }) {
+function P({
+  children,
+  className = "",
+  onOpenPanel,
+}: {
+  children: ReactNode;
+  className?: string;
+  onOpenPanel?: (slug: string) => void;
+}) {
   return (
     <p className={`text-sm leading-relaxed text-parchment/80 ${className}`}>
       {Children.toArray(children).map((child, i) =>
         typeof child === "string"
-          ? <Fragment key={i}>{renderStudyText(child)}</Fragment>
+          ? <Fragment key={i}>{renderStudyText(child, onOpenPanel)}</Fragment>
           : child,
       )}
     </p>
@@ -224,7 +232,22 @@ export interface EstudioData {
 //  COMPONENTE
 // ─────────────────────────────────────────────────────────────────────────────
 
-export default function EstudioMisterio({ data }: { data: EstudioData }) {
+export default function EstudioMisterio({
+  data,
+  onOpenPanel,
+  embedded = false,
+}: {
+  data: EstudioData;
+  // Ver lib/content/studyLinks.tsx: si se pasa, los {{study:…}} hacia otro de
+  // los 18 misterios con plantilla común abren un panel en vez de navegar.
+  // Solo lo usa components/misterio/MisterioPanel.tsx.
+  onOpenPanel?: (slug: string) => void;
+  // true cuando este componente se monta DENTRO del panel lateral (no como
+  // página completa): oculta el nav sticky y el CTA de cierre, que no tienen
+  // sentido en un panel. Lo usa MisterioPanel.tsx; las 18 páginas normales no
+  // pasan esta prop y se ven exactamente igual que antes.
+  embedded?: boolean;
+}) {
   const locale = useLocale();
   const router = useRouter();
   const fa = locale === "fa";
@@ -242,25 +265,27 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
     : "/estudio";
 
   return (
-    <div className={`${dark ? "always-dark" : ""} min-h-screen`} style={{ background: bg }} dir={fa ? "rtl" : "ltr"}>
+    <div className={`${dark ? "always-dark" : ""} min-h-screen`} style={{ background: embedded ? "transparent" : bg }} dir={fa ? "rtl" : "ltr"}>
 
-      {/* NAV — vuelve a la puerta de la serie (Estudio 0) */}
-      <nav className="sticky top-0 z-40 border-b border-gold/10 px-5 py-3 backdrop-blur-md" style={{ background: navBg }}>
-        <div className="mx-auto flex max-w-2xl items-center justify-between">
-          <Link href="/misterio/enigma-mashiaj" className="font-cinzel text-sm text-gold/70 hover:text-gold">
-            {fa ? "→ معمای ماشیح" : "← El Enigma del Mashíaj"}
-          </Link>
-          <div className="flex items-center gap-3">
-            <MisterioLangToggle />
-            <button onClick={() => router.push("/estudio")}
-              className="rounded-full border border-gold/30 px-4 py-1.5 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/10">
-              {fa ? "شروع مطالعه" : "Comenzar estudio →"}
-            </button>
+      {/* NAV — vuelve a la puerta de la serie (Estudio 0). Oculto dentro del panel. */}
+      {!embedded && (
+        <nav className="sticky top-0 z-40 border-b border-gold/10 px-5 py-3 backdrop-blur-md" style={{ background: navBg }}>
+          <div className="mx-auto flex max-w-2xl items-center justify-between">
+            <Link href="/misterio/enigma-mashiaj" className="font-cinzel text-sm text-gold/70 hover:text-gold">
+              {fa ? "→ معمای ماشیح" : "← El Enigma del Mashíaj"}
+            </Link>
+            <div className="flex items-center gap-3">
+              <MisterioLangToggle />
+              <button onClick={() => router.push("/estudio")}
+                className="rounded-full border border-gold/30 px-4 py-1.5 font-cinzel text-xs uppercase tracking-widest text-gold transition-all hover:border-gold hover:bg-gold/10">
+                {fa ? "شروع مطالعه" : "Comenzar estudio →"}
+              </button>
+            </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      )}
 
-      <main className="mx-auto max-w-2xl px-5 pb-24 pt-16">
+      <main className={embedded ? "mx-auto max-w-2xl px-0 pb-8 pt-2" : "mx-auto max-w-2xl px-5 pb-24 pt-16"}>
 
         {/* ── HERO ──────────────────────────────────────────────────────────── */}
         <div className="mb-14 text-center">
@@ -357,7 +382,7 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
           {data.targum.citas.map((c, i) => (
             <div key={i}>
               {c.label && (
-                <P className="mb-3 mt-8 font-cinzel text-gold/70">{c.label}</P>
+                <P className="mb-3 mt-8 font-cinzel text-gold/70" onOpenPanel={onOpenPanel}>{c.label}</P>
               )}
               <PullQuote he={c.he} es={c.es} source={c.source} />
             </div>
@@ -365,7 +390,7 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
 
           <div className="space-y-5">
             {data.targum.parrafos.map((t, i) => (
-              <P key={i}>{t}</P>
+              <P key={i} onOpenPanel={onOpenPanel}>{t}</P>
             ))}
           </div>
         </Section>
@@ -378,7 +403,7 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
 
           <div className="space-y-5">
             {data.mefarshim.parrafos.map((p, i) => (
-              <P key={i}>
+              <P key={i} onOpenPanel={onOpenPanel}>
                 {p.etiqueta ? <span className="font-cinzel text-gold/80">{p.etiqueta}</span> : null}
                 {p.etiqueta ? " " : null}
                 {p.texto}
@@ -388,7 +413,7 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
 
           {data.mefarshim.glosa && (
             <Glosa>
-              <p>{renderStudyText(data.mefarshim.glosa)}</p>
+              <p>{renderStudyText(data.mefarshim.glosa, onOpenPanel)}</p>
             </Glosa>
           )}
         </Section>
@@ -401,12 +426,12 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
             </div>
 
             {data.habchana.intro && (
-              <P className="mb-6 text-xs italic text-parchment/55">{data.habchana.intro}</P>
+              <P className="mb-6 text-xs italic text-parchment/55" onOpenPanel={onOpenPanel}>{data.habchana.intro}</P>
             )}
 
             <div className="space-y-5">
               {data.habchana.parrafos.map((t, i) => (
-                <P key={i}>{t}</P>
+                <P key={i} onOpenPanel={onOpenPanel}>{t}</P>
               ))}
             </div>
 
@@ -422,7 +447,7 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
                       {data.habchana.listaNo.map((li, i) => (
                         <li key={i} className="text-sm leading-relaxed text-parchment/75">
                           <span className="me-2 text-red-400/60">✕</span>
-                          {renderStudyText(li)}
+                          {renderStudyText(li, onOpenPanel)}
                         </li>
                       ))}
                     </ul>
@@ -438,7 +463,7 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
                       {data.habchana.listaSi.map((li, i) => (
                         <li key={i} className="text-sm leading-relaxed text-parchment/80">
                           <span className="me-2 text-gold/70">✓</span>
-                          {renderStudyText(li)}
+                          {renderStudyText(li, onOpenPanel)}
                         </li>
                       ))}
                     </ul>
@@ -450,7 +475,7 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
             {data.habchana.cierre?.length ? (
               <div className="space-y-5">
                 {data.habchana.cierre.map((t, i) => (
-                  <P key={i}>{t}</P>
+                  <P key={i} onOpenPanel={onOpenPanel}>{t}</P>
                 ))}
               </div>
             ) : null}
@@ -466,9 +491,9 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
           <div className="space-y-5">
             {data.pardes.subbloques.map((sb, i) => (
               <Fragment key={i}>
-                <P className={`${i === 0 ? "" : "mt-6 "}font-cinzel text-gold/80`}>{sb.head}</P>
+                <P className={`${i === 0 ? "" : "mt-6 "}font-cinzel text-gold/80`} onOpenPanel={onOpenPanel}>{sb.head}</P>
                 {sb.parrafos.map((t, j) => (
-                  <P key={j}>{t}</P>
+                  <P key={j} onOpenPanel={onOpenPanel}>{t}</P>
                 ))}
               </Fragment>
             ))}
@@ -504,7 +529,7 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
               <div className="space-y-4">
                 {data.pardes.ventana.parrafos.map((t, i) => (
                   <p key={i} className="text-sm leading-relaxed text-parchment/80">
-                    {renderStudyText(t)}
+                    {renderStudyText(t, onOpenPanel)}
                   </p>
                 ))}
               </div>
@@ -517,13 +542,13 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
           <div className="mt-16">
             <SectionHead he="הִתְבּוֹנְנוּת" title="Hitbonenut · contemplación" />
           </div>
-          <P className="mb-6 text-xs italic text-parchment/55">
+          <P className="mb-6 text-xs italic text-parchment/55" onOpenPanel={onOpenPanel}>
             {data.hitbonenut.intro}
           </P>
 
           <div className="space-y-5">
             {data.hitbonenut.parrafos.map((p, i) => (
-              <P key={i}>
+              <P key={i} onOpenPanel={onOpenPanel}>
                 {p.etiqueta ? <span className="font-cinzel text-gold/80">{p.etiqueta}</span> : null}
                 {p.etiqueta ? " " : null}
                 {p.texto}
@@ -537,12 +562,12 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
           <div className="mt-16">
             <SectionHead he="מַעֲשֶׂה" title="Maasé · acción" />
           </div>
-          <P className="mb-6 text-xs italic text-parchment/55">
+          <P className="mb-6 text-xs italic text-parchment/55" onOpenPanel={onOpenPanel}>
             {data.maase.intro}
           </P>
 
           <div className="rounded-2xl border border-gold/25 bg-gold/[0.05] p-6">
-            <P>
+            <P onOpenPanel={onOpenPanel}>
               {data.maase.etiqueta ? <span className="font-cinzel text-gold/80">{data.maase.etiqueta}</span> : null}
               {data.maase.etiqueta ? " " : null}
               {data.maase.texto}
@@ -559,7 +584,7 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
           <ul className="space-y-4">
             {data.jatima.items.map((it, i) => (
               <li key={i}>
-                <P>
+                <P onOpenPanel={onOpenPanel}>
                   {it.etiqueta ? <span className="font-cinzel text-gold/80">{it.etiqueta}</span> : null}
                   {it.etiqueta ? " " : null}
                   {it.texto}
@@ -587,41 +612,45 @@ export default function EstudioMisterio({ data }: { data: EstudioData }) {
                   key={i}
                   className="rounded-2xl border border-gold/20 bg-white/[0.02] px-5 py-4 text-sm leading-relaxed text-parchment/80 transition-colors hover:border-gold/40 hover:bg-gold/[0.04]"
                 >
-                  {renderStudyText(chip)}
+                  {renderStudyText(chip, onOpenPanel)}
                 </div>
               ))}
             </div>
           </div>
         </Section>
 
-        {/* ── CTA — estudiar en el motor ─────────────────────────────────────── */}
-        <Section delay={100}>
-          <div className="mt-16 rounded-2xl border border-gold/20 bg-gradient-to-b from-gold/[0.06] to-transparent p-8 text-center">
-            <h3 className="mb-3 font-cinzel text-base font-bold text-parchment/90">
-              {fa ? "این بخشی از یک سری است" : "Esto es parte de una serie"}
-            </h3>
-            <p className="mb-6 text-sm leading-relaxed text-muted/70">
-              {fa
-                ? "جاشمال یک موتورِ مطالعهٔ تعاملی است. هر متن مقدس را برگزینید و Claude — با روشِ پردِس — آن را برای شما تحلیل می‌کند."
-                : "Jashmal es un motor de estudio interactivo. Elige cualquier texto sagrado y Claude — con el método PaRDeS — lo analiza en profundidad."}
-            </p>
-            <button
-              onClick={() => router.push(ctaHref)}
-              className="rounded-full border-2 border-gold bg-gold/10 px-8 py-3.5 font-cinzel text-sm font-bold uppercase tracking-widest text-gold transition-all hover:bg-gold/20"
-              style={{ boxShadow: "0 0 20px rgba(201,164,62,0.25)" }}
-            >
-              {fa ? "مطالعهٔ عمیق در جاشمال ←" : "Estudiar en Jashmal →"}
-            </button>
-          </div>
-        </Section>
+        {/* ── CTA — estudiar en el motor. Oculto dentro del panel. ────────────── */}
+        {!embedded && (
+          <Section delay={100}>
+            <div className="mt-16 rounded-2xl border border-gold/20 bg-gradient-to-b from-gold/[0.06] to-transparent p-8 text-center">
+              <h3 className="mb-3 font-cinzel text-base font-bold text-parchment/90">
+                {fa ? "این بخشی از یک سری است" : "Esto es parte de una serie"}
+              </h3>
+              <p className="mb-6 text-sm leading-relaxed text-muted/70">
+                {fa
+                  ? "جاشمال یک موتورِ مطالعهٔ تعاملی است. هر متن مقدس را برگزینید و Claude — با روشِ پردِس — آن را برای شما تحلیل می‌کند."
+                  : "Jashmal es un motor de estudio interactivo. Elige cualquier texto sagrado y Claude — con el método PaRDeS — lo analiza en profundidad."}
+              </p>
+              <button
+                onClick={() => router.push(ctaHref)}
+                className="rounded-full border-2 border-gold bg-gold/10 px-8 py-3.5 font-cinzel text-sm font-bold uppercase tracking-widest text-gold transition-all hover:bg-gold/20"
+                style={{ boxShadow: "0 0 20px rgba(201,164,62,0.25)" }}
+              >
+                {fa ? "مطالعهٔ عمیق در جاشمال ←" : "Estudiar en Jashmal →"}
+              </button>
+            </div>
+          </Section>
+        )}
 
-        {/* ── FOOTER ─────────────────────────────────────────────────────────── */}
-        <div className="mt-16 border-t border-gold/10 pt-8 text-center">
-          <p className="hebrew text-2xl text-gold/60" style={{ filter: `drop-shadow(0 0 8px ${C}55)` }}>חַשְׁמַל</p>
-          <p className="mt-1 font-cinzel text-xs uppercase tracking-widest text-muted/40">
-            {fa ? "کابالا و فلسفهٔ یهودی" : "Cabalá & Filosofía Judía"}
-          </p>
-        </div>
+        {/* ── FOOTER — oculto dentro del panel. ───────────────────────────────── */}
+        {!embedded && (
+          <div className="mt-16 border-t border-gold/10 pt-8 text-center">
+            <p className="hebrew text-2xl text-gold/60" style={{ filter: `drop-shadow(0 0 8px ${C}55)` }}>חַשְׁמַל</p>
+            <p className="mt-1 font-cinzel text-xs uppercase tracking-widest text-muted/40">
+              {fa ? "کابالا و فلسفهٔ یهودی" : "Cabalá & Filosofía Judía"}
+            </p>
+          </div>
+        )}
 
       </main>
     </div>

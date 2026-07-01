@@ -157,11 +157,23 @@ function snippetFromHighlight(highlight: string): string {
  * Busca una palabra o frase DENTRO de los textos (no solo títulos/temas).
  * Sirve en hebreo o en traducción. Devuelve hasta `limit` pasajes con su
  * referencia y un fragmento resaltado. Nunca lanza: ante error devuelve [].
+ *
+ * @param categories  ids de categoría top-level del catálogo (ej. "Tanakh",
+ *   "Talmud", "Kabbalah") para acotar la búsqueda. Sefaria filtra por el path
+ *   de categoría vía `filters` + `aggregation_field: "path"`. Vacío = sin filtro.
+ * @param exact  si true, exige coincidencia EXACTA de la frase (campo "exact"
+ *   de Sefaria) en vez de tolerar variantes/flexiones (naive_lemmatizer).
  */
-export async function searchText(q: string, limit = 8): Promise<TextSearchHit[]> {
+export async function searchText(
+  q: string,
+  limit = 8,
+  categories: string[] = [],
+  exact = false
+): Promise<TextSearchHit[]> {
   const query = q.trim();
   if (!query) return [];
   try {
+    const field = exact ? "exact" : "naive_lemmatizer";
     // OJO: NO mandamos "Content-Type: application/json". Ese header convierte la
     // petición en "no simple" y dispara un preflight CORS (OPTIONS) que el
     // endpoint de Sefaria rechaza desde el navegador → "Failed to fetch". Sin el
@@ -172,8 +184,14 @@ export async function searchText(q: string, limit = 8): Promise<TextSearchHit[]>
         query,
         type: "text",
         size: Math.max(1, Math.min(limit, 20)),
-        field: "naive_lemmatizer", // tolera flexiones (raíces hebreas)
+        field, // "naive_lemmatizer" tolera flexiones; "exact" exige la frase literal
+        ...(field === "exact" ? { exact_query: query } : {}),
         source_proj: true,          // pide ref/heRef limpios en _source
+        ...(categories.length > 0 && {
+          // Sefaria filtra por path de categoría (ej. "Tanakh", "Talmud").
+          filters: categories,
+          aggregation_field: "path",
+        }),
       }),
     });
     if (!res.ok) return [];
