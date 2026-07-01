@@ -94,11 +94,23 @@ export async function getName(q: string): Promise<SefariaNameResult> {
   };
 }
 
+/** Resultado de sugerencias: la lista + si la QUERY ESCRITA (no una sugerencia
+ * cualquiera) es en sí misma una referencia válida según Sefaria (`is_ref`
+ * top-level de /api/name). Úsalo para decidir si conviene auto-navegar a un
+ * texto en vez de mandar a la búsqueda completa. */
+export interface SearchSuggestionsResult {
+  suggestions: NameSuggestion[];
+  /** true si Sefaria interpreta la query completa como una referencia real
+   * (ej. "Genesis 1:1"), no solo un libro que contiene esa palabra. */
+  isRefQuery: boolean;
+}
+
 /** Sugerencias enriquecidas: distingue textos (ref) de temas/personas/lugares. */
-export async function searchSuggestions(q: string): Promise<NameSuggestion[]> {
-  if (!q.trim()) return [];
+export async function searchSuggestions(q: string): Promise<SearchSuggestionsResult> {
+  const empty: SearchSuggestionsResult = { suggestions: [], isRefQuery: false };
+  if (!q.trim()) return empty;
   const res = await fetch(`${BASE}/name/${encodeURIComponent(q)}`);
-  if (!res.ok) return [];
+  if (!res.ok) return empty;
   const data = await res.json();
   const objs: Array<{ title?: string; key?: string; type?: string }> =
     Array.isArray(data.completion_objects) ? data.completion_objects : [];
@@ -116,7 +128,7 @@ export async function searchSuggestions(q: string): Promise<NameSuggestion[]> {
     });
     if (out.length >= 8) break;
   }
-  return out;
+  return { suggestions: out, isRefQuery: Boolean(data.is_ref) };
 }
 
 // ── Búsqueda DENTRO de los textos (full-text) ────────────────────────────────
@@ -130,8 +142,21 @@ export interface TextSearchHit {
   ref: string;
   /** referencia en hebreo (para mostrar en RTL). */
   heRef?: string;
-  /** fragmento del texto con el término resaltado entre «marcas». */
+  /** fragmento del texto con el término resaltado entre «marcas». Puede venir
+   * en hebreo O en la traducción, según el idioma de la VERSIÓN que Elasticsearch
+   * indexó para este hit (ver `lang` más abajo) — Sefaria no devuelve ambos
+   * highlights en el mismo hit. */
   snippet: string;
+  /** "he" si `snippet` es hebreo, "en" (o el idioma que sea) si ya es traducción.
+   * Úsalo para saber si hace falta enriquecer con `enrichWithTranslation`. */
+  snippetLang?: string;
+  /** traducción del pasaje (si se pudo obtener). Se completa de forma
+   * asíncrona vía `enrichWithTranslation`, NUNCA viene poblado en el hit
+   * crudo de searchText/searchTextFull. */
+  snippetEn?: string;
+  /** categoría top-level de Sefaria (primer tramo de `_source.path`, ej.
+   * "Kabbalah", "Talmud") para pintar el acento de color por disciplina. */
+  category?: string;
 }
 
 // El resaltado de Sefaria llega como <b>…</b> dentro del HTML del fragmento.
@@ -201,7 +226,7 @@ export async function searchText(
     const seen = new Set<string>();
     for (const h of hits) {
       const hit = h as {
-        _source?: { ref?: string; heRef?: string };
+        _source?: { ref?: string; heRef?: string; lang?: string; path?: string };
         highlight?: { naive_lemmatizer?: string[]; exact?: string[] };
       };
       const ref = hit._source?.ref;
@@ -210,13 +235,53 @@ export async function searchText(
       const frags =
         hit.highlight?.naive_lemmatizer ?? hit.highlight?.exact ?? [];
       const snippet = frags.length > 0 ? snippetFromHighlight(frags[0]) : "";
-      out.push({ ref, heRef: hit._source?.heRef, snippet });
+      const category = hit._source?.path?.split("/")[0];
+      out.push({
+        ref,
+        heRef: hit._source?.heRef,
+        snippet,
+        snippetLang: hit._source?.lang,
+        category,
+      });
       if (out.length >= limit) break;
     }
     return out;
   } catch {
     return [];
   }
+}
+
+/**
+ * Completa la traducción (`snippetEn`) de los hits que llegaron en hebreo
+ * puro (Elasticsearch solo indexa highlight en UN idioma por hit — ver
+ * TextSearchHit.snippetLang). Pide el texto completo por ref a
+ * `/api/texts/{ref}` (que sí trae la traducción en `text`) y recorta un
+ * fragmento corto para usar como snippet. Si un texto no tiene traducción en
+ * Sefaria, esa entrada queda simplemente sin `snippetEn` (no rompe nada).
+ * Nunca lanza; los hits que ya venían en traducción (snippetLang !== "he")
+ * o que fallan al pedir el texto se devuelven sin tocar.
+ */
+export async function enrichWithTranslation(
+  hits: TextSearchHit[],
+  maxChars = 220
+): Promise<TextSearchHit[]> {
+  return Promise.all(
+    hits.map(async (h) => {
+      if (h.snippetLang !== "he" || !h.ref) return h;
+      try {
+        const res = await fetch(`${BASE}/texts/${encodeURIComponent(h.ref)}?context=0`);
+        if (!res.ok) return h;
+        const data: SefariaText = await res.json();
+        const translation = toSegments(data.text).join(" ").trim();
+        if (!translation) return h;
+        const snippetEn =
+          translation.length > maxChars ? `${translation.slice(0, maxChars)}…` : translation;
+        return { ...h, snippetEn };
+      } catch {
+        return h;
+      }
+    })
+  );
 }
 
 // ── Página de resultados completa (/buscar) ──────────────────────────────────
@@ -292,7 +357,7 @@ export async function searchTextFull(
     const seen = new Set<string>();
     for (const h of rawHits) {
       const hit = h as {
-        _source?: { ref?: string; heRef?: string };
+        _source?: { ref?: string; heRef?: string; lang?: string; path?: string };
         highlight?: { naive_lemmatizer?: string[]; exact?: string[] };
       };
       const ref = hit._source?.ref;
@@ -300,7 +365,14 @@ export async function searchTextFull(
       seen.add(ref);
       const frags = hit.highlight?.naive_lemmatizer ?? hit.highlight?.exact ?? [];
       const snippet = frags.length > 0 ? snippetFromHighlight(frags[0]) : "";
-      out.push({ ref, heRef: hit._source?.heRef, snippet });
+      const category = hit._source?.path?.split("/")[0];
+      out.push({
+        ref,
+        heRef: hit._source?.heRef,
+        snippet,
+        snippetLang: hit._source?.lang,
+        category,
+      });
       if (out.length >= limit) break;
     }
     // Agregamos los buckets de path por su PRIMER tramo (categoría top-level).

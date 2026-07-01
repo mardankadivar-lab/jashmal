@@ -5,12 +5,13 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import {
   searchTextFull,
+  enrichWithTranslation,
   HL_OPEN,
   HL_CLOSE,
   type TextSearchHit,
   type CategoryCount,
 } from "@/lib/sources/sefaria";
-import { searchCategoryLabel, sortCategoryCounts } from "@/lib/sources/searchCategories";
+import { searchCategoryLabel, searchCategoryColor, sortCategoryCounts } from "@/lib/sources/searchCategories";
 
 type NodeHit = { id: string; label: string; labelFa?: string; labelEn?: string };
 
@@ -86,12 +87,17 @@ export default function SearchResults({ initialQuery }: SearchResultsProps) {
       window.history.replaceState(null, "", url.toString());
     }
     searchTextFull(q, 20, selectedCategories, exactPhrase)
-      .then((res) => {
+      .then(async (res) => {
         if (cancelled) return;
+        // Mostramos los hits de inmediato (hebreo/lo que haya) y, en paralelo,
+        // completamos la traducción de los que llegaron en hebreo puro — así
+        // el usuario ve resultados sin esperar N llamadas extra a Sefaria.
         setHits(res.hits);
         setCategoryCounts(res.categoryCounts);
         setTotal(res.total);
         setTotalIsCapped(res.totalIsCapped);
+        const enriched = await enrichWithTranslation(res.hits);
+        if (!cancelled) setHits(enriched);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -192,27 +198,62 @@ export default function SearchResults({ initialQuery }: SearchResultsProps) {
             <p className="text-sm text-muted">{t("noResults")}</p>
           )}
           <ul className="space-y-5">
-            {hits.map((h, i) => (
-              <li key={`${h.ref}-${i}`} className="border-b border-gold/10 pb-4">
-                <Link
-                  href={`/estudio?ref=${encodeURIComponent(h.ref)}`}
-                  className="font-cinzel text-sm text-gold hover:underline"
-                >
-                  {h.heRef ? (
-                    <span className="hebrew" dir="rtl">
-                      {h.heRef}
-                    </span>
-                  ) : (
-                    h.ref
+            {hits.map((h, i) => {
+              const color = h.category ? searchCategoryColor(h.category) : null;
+              // Snippet principal: la traducción si ya la tenemos o si el
+              // highlight de Sefaria ya venía en idioma de traducción; el
+              // hebreo se muestra siempre como apoyo debajo (si existe y es
+              // distinto del principal).
+              const mainSnippet = h.snippetEn ?? (h.snippetLang !== "he" ? h.snippet : "");
+              const heSnippet = h.snippetLang === "he" ? h.snippet : undefined;
+              return (
+                <li key={`${h.ref}-${i}`} className="border-b border-gold/10 pb-4">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {color && (
+                      <span
+                        aria-hidden
+                        className="inline-block h-2 w-2 shrink-0 rounded-full"
+                        style={{ backgroundColor: color }}
+                      />
+                    )}
+                    <Link
+                      href={`/estudio?ref=${encodeURIComponent(h.ref)}`}
+                      className="font-cinzel text-sm text-gold hover:underline"
+                    >
+                      {h.ref}
+                    </Link>
+                    {h.heRef && (
+                      <span dir="rtl" className="hebrew text-xs text-muted/70">
+                        {h.heRef}
+                      </span>
+                    )}
+                    {h.category && (
+                      <span
+                        className="shrink-0 rounded-full px-2 py-0.5 text-[10px] font-cinzel uppercase tracking-wide sm:ms-auto"
+                        style={{
+                          color: color ?? undefined,
+                          borderColor: color ?? undefined,
+                          border: "1px solid",
+                          backgroundColor: color ? `${color}1a` : undefined,
+                        }}
+                      >
+                        {searchCategoryLabel(h.category, locale)}
+                      </span>
+                    )}
+                  </div>
+                  {mainSnippet && (
+                    <p className="mt-1.5 text-sm leading-relaxed text-parchment/90">
+                      {renderSnippet(mainSnippet)}
+                    </p>
                   )}
-                </Link>
-                {h.snippet && (
-                  <p dir="rtl" className="hebrew mt-1 text-sm leading-relaxed text-parchment/85">
-                    {renderSnippet(h.snippet)}
-                  </p>
-                )}
-              </li>
-            ))}
+                  {heSnippet && (
+                    <p dir="rtl" className="hebrew mt-1 text-sm leading-relaxed text-parchment/70">
+                      {renderSnippet(heSnippet)}
+                    </p>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
 
@@ -233,6 +274,11 @@ export default function SearchResults({ initialQuery }: SearchResultsProps) {
                         checked={checked}
                         onChange={() => toggleCategory(c.category)}
                         className="h-3.5 w-3.5 accent-[#c9a43e]"
+                      />
+                      <span
+                        aria-hidden
+                        className="inline-block h-2 w-2 shrink-0 rounded-full"
+                        style={{ backgroundColor: searchCategoryColor(c.category) }}
                       />
                       {searchCategoryLabel(c.category, locale)}
                     </span>

@@ -56,3 +56,37 @@ export function sortCategoryCounts<T extends { category: string }>(items: T[]): 
     return a.category.localeCompare(b.category);
   });
 }
+
+// ── Colores por categoría (acento visual, tipo sefaria.org) ─────────────────
+// Sefaria distingue cada disciplina con un color reconocible en su sitio
+// (panel de "Texts" y bordes de tarjetas). No pudimos confirmar sus valores
+// hexadecimales EXACTOS desde este entorno (sin acceso a inspeccionar su CSS
+// compilado ni a su repo en este momento), así que esta es una PALETA PROPIA
+// de Jashmal: coherente, distintiva por categoría, y que no rompe la estética
+// general (fondo oscuro + dorado) — se usa solo como acento (punto, borde,
+// pastilla pequeña), nunca como fondo dominante.
+export const CATEGORY_COLORS: Record<string, string> = {
+  Tanakh: "#5b8dd6",              // azul — texto fundacional
+  Mishnah: "#6fae7a",             // verde — primera codificación oral
+  Talmud: "#c97b4a",              // terracota — el gran debate
+  Midrash: "#b06fc9",             // violeta — narrativa/exégesis
+  Halakhah: "#4a9c9c",            // teal — ley práctica
+  Kabbalah: "#c9a43e",            // dorado — Cabalá (el acento de marca)
+  Liturgy: "#8a8fd6",             // lavanda — oración
+  "Jewish Thought": "#d68f5b",    // ámbar — filosofía
+  Tosefta: "#7aa66f",             // verde oliva — cercano a Mishná
+  Chasidut: "#d65b8d",            // magenta — Jasidut
+  Musar: "#5bb0a3",               // verde agua — ética
+  Responsa: "#9c8a4a",            // caqui — jurisprudencia
+  "Second Temple": "#a67a5b",     // marrón claro — literatura histórica
+  Reference: "#8a8f99",           // gris — obras de consulta
+  Targum: "#6f9fc9",              // azul claro — traducción antigua, cerca de Tanaj
+  "Tanakh Commentary": "#7aa0d6", // azul pálido — comentario de Tanaj
+  "Mishnah Commentary": "#8fc09a",// verde pálido — comentario de Mishná
+  "Talmud Commentary": "#d69a70", // terracota pálido — comentario de Talmud
+};
+
+/** Color de acento de una categoría; gris neutro si no está mapeada. */
+export function searchCategoryColor(id: string): string {
+  return CATEGORY_COLORS[id] ?? "#8a8f99";
+}

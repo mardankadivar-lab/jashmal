@@ -19,7 +19,8 @@ import RefPanel from "./RefPanel";
 import LamedLoader from "@/components/LamedLoader";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, CATALOG, type CatBook, type CategoryId } from "@/lib/sources/categories";
-import { getText, searchSuggestions, searchText, HL_OPEN, HL_CLOSE, type SefariaTextResult, type NameSuggestion, type TextSearchHit } from "@/lib/sources/sefaria";
+import { getText, searchSuggestions, searchText, enrichWithTranslation, HL_OPEN, HL_CLOSE, type SefariaTextResult, type NameSuggestion, type TextSearchHit } from "@/lib/sources/sefaria";
+import { searchCategoryColor } from "@/lib/sources/searchCategories";
 import { requestStudy, StudyError } from "@/lib/study/studyClient";
 import { scanKabbalah, type KabMatch } from "@/lib/nodes/kabbalisticScanner";
 import { requestTranslation } from "@/lib/i18n/translateClient";
@@ -48,6 +49,9 @@ export default function StudyEngine() {
   const [search, setSearch] = useState("");
   // Autocompletado: sugerencias de Sefaria (refs, libros, temas, personas, lugares).
   const [suggestions, setSuggestions] = useState<NameSuggestion[]>([]);
+  // true si Sefaria interpreta la QUERY COMPLETA como una referencia real
+  // (ej. "Genesis 1:1"), no solo un libro cuyo título contiene la palabra.
+  const [isRefQuery, setIsRefQuery] = useState(false);
   const [showSug, setShowSug] = useState(false);
   // Búsqueda por concepto: historial del usuario + nodos de la Mente Cósmica.
   const [historyHits, setHistoryHits] = useState<LocalStudy[]>([]);
@@ -258,18 +262,19 @@ export default function StudyEngine() {
     e.preventDefault();
     const q = search.trim();
     if (!q) return;
-    // Si Sefaria reconoce la query como una referencia directa (libro,
-    // capítulo, versículo), respetamos el comportamiento de siempre: cargarla
-    // en el visor. Si es una sugerencia de tema/persona/lugar, abrir su
-    // estudio de concepto. Solo cuando NO hay una sugerencia clara (o el
-    // usuario busca dentro de los textos, con frase exacta o filtros de
-    // categoría activos) mandamos a la página de resultados completa /buscar,
-    // que es donde puede explorar decenas de pasajes con el panel de
-    // categorías — el desplegable de aquí solo alcanza a mostrar 8.
+    // Solo auto-navegamos directo a un texto cuando Sefaria confirma que la
+    // QUERY ESCRITA EN SÍ es una referencia real (is_ref, ej. "Genesis 1:1"),
+    // no solo porque la primera sugerencia resultó ser de tipo "ref" por
+    // casualidad de que algún libro tenga esa palabra en el título (ej.
+    // "abraham" → "Abraham Cohen Footnotes to..."). Si es una sugerencia de
+    // tema/persona/lugar, abrir su estudio de concepto. En cualquier otro
+    // caso mandamos a la página de resultados completa /buscar, que es donde
+    // se puede explorar decenas de pasajes con el panel de categorías — el
+    // desplegable de aquí solo alcanza a mostrar 8.
     const firstRefSuggestion = suggestions.find((s) => s.kind === "ref");
-    if (firstRefSuggestion) {
+    if (isRefQuery && firstRefSuggestion) {
       pickSuggestion(firstRefSuggestion);
-    } else if (suggestions.length > 0 && textHits.length === 0) {
+    } else if (suggestions.length > 0 && suggestions[0].kind === "topic" && textHits.length === 0) {
       pickSuggestion(suggestions[0]);
     } else {
       setShowSug(false);
@@ -322,6 +327,7 @@ export default function StudyEngine() {
     const q = search.trim();
     if (q.length < 2) {
       setSuggestions([]);
+      setIsRefQuery(false);
       setHistoryHits([]);
       setNodeHits([]);
       setTextHits([]);
@@ -338,8 +344,8 @@ export default function StudyEngine() {
     const timer = setTimeout(async () => {
       // Sefaria (textos y temas)
       try {
-        const sug = await searchSuggestions(q);
-        if (!cancelled) { setSuggestions(sug); setShowSug(true); }
+        const { suggestions: sug, isRefQuery: isRef } = await searchSuggestions(q);
+        if (!cancelled) { setSuggestions(sug); setIsRefQuery(isRef); setShowSug(true); }
       } catch { /* noop */ }
       // Nodos de la Mente Cósmica
       try {
@@ -359,6 +365,11 @@ export default function StudyEngine() {
       try {
         const hits = await searchText(q, 8, textCategories, exactPhrase);
         if (!cancelled) { setTextHits(hits); setShowSug(true); }
+        // Completa traducción de los hits que llegaron en hebreo puro, sin
+        // bloquear la primera pintura del desplegable.
+        enrichWithTranslation(hits).then((enriched) => {
+          if (!cancelled) setTextHits(enriched);
+        });
       } catch { /* noop */ }
       finally { if (!cancelled) setTextSearching(false); }
     }, 220);
@@ -384,6 +395,7 @@ export default function StudyEngine() {
   function clearSearch() {
     setSearch("");
     setSuggestions([]);
+    setIsRefQuery(false);
     setHistoryHits([]);
     setNodeHits([]);
     setTextHits([]);
@@ -407,6 +419,7 @@ export default function StudyEngine() {
   function pickSuggestion(s: NameSuggestion) {
     setSearch("");
     setSuggestions([]);
+    setIsRefQuery(false);
     setShowSug(false);
     if (s.kind === "ref") {
       loadRef(s.title, true);
@@ -656,18 +669,27 @@ export default function StudyEngine() {
                     <li className="flex flex-wrap items-center gap-1.5 px-3 pb-2">
                       {CATALOG.map((g) => {
                         const active = textCategories.includes(g.id);
+                        const color = searchCategoryColor(g.id);
                         return (
                           <button
                             key={g.id}
                             type="button"
                             onMouseDown={(e) => { e.preventDefault(); toggleTextCategory(g.id); }}
                             aria-pressed={active}
-                            className={`rounded-full border px-2 py-0.5 text-[11px] transition-colors ${
+                            style={
                               active
-                                ? "border-gold/70 bg-gold/15 text-gold"
-                                : "border-gold/20 text-muted/80 hover:border-gold/40 hover:text-gold/90"
+                                ? { borderColor: color, backgroundColor: `${color}26`, color }
+                                : { borderColor: `${color}55` }
+                            }
+                            className={`rounded-full border px-2 py-0.5 text-[11px] transition-colors ${
+                              active ? "" : "text-muted/80 hover:text-gold/90"
                             }`}
                           >
+                            <span
+                              aria-hidden
+                              className="me-1 inline-block h-1.5 w-1.5 rounded-full"
+                              style={{ backgroundColor: color }}
+                            />
                             {locale === "fa" ? g.fa : g.es}
                           </button>
                         );
@@ -685,32 +707,52 @@ export default function StudyEngine() {
                         {t("exactPhrase")}
                       </button>
                     </li>
-                    {textHits.map((h, i) => (
-                      <li key={`tx-${i}`}>
-                        <button
-                          type="button"
-                          onMouseDown={(e) => { e.preventDefault(); pickTextHit(h); }}
-                          className="block w-full px-3 py-2 text-start transition-colors hover:bg-gold/10"
-                        >
-                          <span className="flex items-center justify-between gap-2">
-                            <span className="truncate text-sm text-parchment/90">
-                              {h.heRef ? <span className="hebrew" dir="rtl">{h.heRef}</span> : h.ref}
+                    {textHits.map((h, i) => {
+                      const color = h.category ? searchCategoryColor(h.category) : null;
+                      const mainSnippet = h.snippetEn ?? (h.snippetLang !== "he" ? h.snippet : "");
+                      const heSnippet = h.snippetLang === "he" ? h.snippet : undefined;
+                      return (
+                        <li key={`tx-${i}`}>
+                          <button
+                            type="button"
+                            onMouseDown={(e) => { e.preventDefault(); pickTextHit(h); }}
+                            className="block w-full px-3 py-2 text-start transition-colors hover:bg-gold/10"
+                          >
+                            <span className="flex items-center gap-2">
+                              {color && (
+                                <span
+                                  aria-hidden
+                                  className="inline-block h-1.5 w-1.5 shrink-0 rounded-full"
+                                  style={{ backgroundColor: color }}
+                                />
+                              )}
+                              <span className="truncate text-sm text-parchment/90">{h.ref}</span>
+                              {h.heRef && (
+                                <span dir="rtl" className="hebrew shrink-0 text-xs text-muted/60">
+                                  {h.heRef}
+                                </span>
+                              )}
+                              <span className="ms-auto shrink-0 font-cinzel text-[9px] uppercase tracking-wider text-gold/45">
+                                {t("sugInText")}
+                              </span>
                             </span>
-                            <span className="shrink-0 font-cinzel text-[9px] uppercase tracking-wider text-gold/45">
-                              {t("sugInText")}
-                            </span>
-                          </span>
-                          {h.snippet && (
-                            <span
-                              dir="rtl"
-                              className="hebrew mt-0.5 block truncate text-start text-xs leading-relaxed text-muted/80"
-                            >
-                              {renderSnippet(h.snippet)}
-                            </span>
-                          )}
-                        </button>
-                      </li>
-                    ))}
+                            {mainSnippet && (
+                              <span className="mt-0.5 block truncate text-start text-xs leading-relaxed text-muted/85">
+                                {renderSnippet(mainSnippet)}
+                              </span>
+                            )}
+                            {heSnippet && (
+                              <span
+                                dir="rtl"
+                                className="hebrew mt-0.5 block truncate text-start text-xs leading-relaxed text-muted/70"
+                              >
+                                {renderSnippet(heSnippet)}
+                              </span>
+                            )}
+                          </button>
+                        </li>
+                      );
+                    })}
                     {textHits.length > 0 && (
                       <li className="border-t border-gold/10">
                         <button
