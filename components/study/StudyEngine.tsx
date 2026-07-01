@@ -258,11 +258,23 @@ export default function StudyEngine() {
     e.preventDefault();
     const q = search.trim();
     if (!q) return;
-    // Si hay sugerencias, usar la primera; si no, intentar como ref directa.
-    if (suggestions.length > 0) {
+    // Si Sefaria reconoce la query como una referencia directa (libro,
+    // capítulo, versículo), respetamos el comportamiento de siempre: cargarla
+    // en el visor. Si es una sugerencia de tema/persona/lugar, abrir su
+    // estudio de concepto. Solo cuando NO hay una sugerencia clara (o el
+    // usuario busca dentro de los textos, con frase exacta o filtros de
+    // categoría activos) mandamos a la página de resultados completa /buscar,
+    // que es donde puede explorar decenas de pasajes con el panel de
+    // categorías — el desplegable de aquí solo alcanza a mostrar 8.
+    const firstRefSuggestion = suggestions.find((s) => s.kind === "ref");
+    if (firstRefSuggestion) {
+      pickSuggestion(firstRefSuggestion);
+    } else if (suggestions.length > 0 && textHits.length === 0) {
       pickSuggestion(suggestions[0]);
     } else {
-      loadRef(q, true);
+      setShowSug(false);
+      router.push(`/buscar?q=${encodeURIComponent(q)}`);
+      return;
     }
     setShowSug(false);
   }
@@ -699,6 +711,22 @@ export default function StudyEngine() {
                         </button>
                       </li>
                     ))}
+                    {textHits.length > 0 && (
+                      <li className="border-t border-gold/10">
+                        <button
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            const q = search.trim();
+                            setShowSug(false);
+                            router.push(`/buscar?q=${encodeURIComponent(q)}`);
+                          }}
+                          className="flex w-full items-center gap-1.5 px-3 py-2 text-start text-xs text-gold/80 transition-colors hover:bg-gold/10 hover:text-gold"
+                        >
+                          {t("seeAllResults")} →
+                        </button>
+                      </li>
+                    )}
                   </ul>
                 )}
 

@@ -90,7 +90,17 @@
     "groupInTexts": "En los textos",
     "sugInText": "Pasaje",
     "exactPhrase": "Frase exacta",
-    "studyThisConcept": "Estudiar el concepto: “{q}”"
+    "studyThisConcept": "Estudiar el concepto: “{q}”",
+    "seeAllResults": "Ver todos los resultados"
+  },
+  "search": {
+    "title": "Buscar en los textos",
+    "subtitle": "Resultados de la búsqueda en toda la biblioteca de Sefaria: Torá, Talmud, Midrash, Cabalá, Jasidut y más. Marca varias categorías a la vez para acotar.",
+    "searching": "Buscando...",
+    "resultsFor": "{n} resultados para “{q}”",
+    "noResults": "No se encontraron pasajes para esta búsqueda. Prueba con otra palabra o quita algún filtro.",
+    "categoriesPanel": "Categorías",
+    "conceptCard": "Concepto relacionado"
   },
   "myStudies": {
     "title": "Mis Estudios",

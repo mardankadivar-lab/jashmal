@@ -219,6 +219,107 @@ export async function searchText(
   }
 }
 
+// ── Página de resultados completa (/buscar) ──────────────────────────────────
+// A diferencia de searchText() (pensada para el desplegable rápido del
+// buscador), esta función trae TAMBIÉN el conteo real de resultados por
+// categoría top-level, para poder mostrar un panel de checkboxes tipo
+// "Kabbalah (702)" como en sefaria.org/search.
+//
+// Sefaria expone esto vía Elasticsearch aggregations: se pide `aggs: ["path"]`
+// (no "aggregation_field", que es el nombre viejo/inactivo) y el backend
+// devuelve `aggregations.path.buckets`, una lista de TODOS los subcaminos de
+// categoría con su doc_count exacto — no una muestra. Cada bucket.key es un
+// path completo tipo "Tanakh/Torah/Genesis"; agregamos por su PRIMER tramo
+// (la categoría top-level: Tanakh, Talmud, Kabbalah...) para obtener el
+// conteo que se muestra en el checkbox. `sum_other_doc_count: 0` en la
+// respuesta confirma que la agregación es completa (no recortada), así que
+// estos conteos son reales, no aproximados — a diferencia de `hits.total`,
+// que Elasticsearch topa en 10000 aunque haya más resultados.
+export interface CategoryCount {
+  /** id de categoría top-level, ej. "Kabbalah", "Tanakh Commentary". */
+  category: string;
+  count: number;
+}
+
+export interface FullTextSearchResult {
+  hits: TextSearchHit[];
+  /** conteo real por categoría top-level, de mayor a menor. */
+  categoryCounts: CategoryCount[];
+  /** total de resultados (puede venir topado en 10000 por Elasticsearch). */
+  total: number;
+  /** true si `total` está topado (hay más resultados de los que Elasticsearch reporta). */
+  totalIsCapped: boolean;
+}
+
+/**
+ * Búsqueda completa para la página de resultados /buscar: pasajes + conteo
+ * real por categoría (para el panel de checkboxes) + total. Igual que
+ * searchText(), nunca lanza: ante error devuelve resultado vacío.
+ *
+ * @param categories  ids de categoría TOP-LEVEL para filtrar los HITS
+ *   mostrados (checkboxes marcados). El panel de conteos siempre refleja
+ *   TODAS las categorías (sin este filtro), para que el usuario pueda ver
+ *   cuántos resultados tiene cada una y decidir qué marcar.
+ */
+export async function searchTextFull(
+  q: string,
+  limit = 20,
+  categories: string[] = [],
+  exact = false
+): Promise<FullTextSearchResult> {
+  const empty: FullTextSearchResult = { hits: [], categoryCounts: [], total: 0, totalIsCapped: false };
+  const query = q.trim();
+  if (!query) return empty;
+  try {
+    const field = exact ? "exact" : "naive_lemmatizer";
+    const res = await fetch(`${BASE}/search-wrapper`, {
+      method: "POST",
+      body: JSON.stringify({
+        query,
+        type: "text",
+        size: Math.max(1, Math.min(limit, 50)),
+        field,
+        ...(field === "exact" ? { exact_query: query } : {}),
+        source_proj: true,
+        aggs: ["path"], // pide la agregación por path de categoría
+        ...(categories.length > 0 && { filters: categories, aggregation_field: "path" }),
+      }),
+    });
+    if (!res.ok) return empty;
+    const data = await res.json();
+    const rawHits: unknown[] = data?.hits?.hits ?? [];
+    const out: TextSearchHit[] = [];
+    const seen = new Set<string>();
+    for (const h of rawHits) {
+      const hit = h as {
+        _source?: { ref?: string; heRef?: string };
+        highlight?: { naive_lemmatizer?: string[]; exact?: string[] };
+      };
+      const ref = hit._source?.ref;
+      if (!ref || seen.has(ref)) continue;
+      seen.add(ref);
+      const frags = hit.highlight?.naive_lemmatizer ?? hit.highlight?.exact ?? [];
+      const snippet = frags.length > 0 ? snippetFromHighlight(frags[0]) : "";
+      out.push({ ref, heRef: hit._source?.heRef, snippet });
+      if (out.length >= limit) break;
+    }
+    // Agregamos los buckets de path por su PRIMER tramo (categoría top-level).
+    const buckets: Array<{ key: string; doc_count: number }> = data?.aggregations?.path?.buckets ?? [];
+    const byTop = new Map<string, number>();
+    for (const b of buckets) {
+      const top = b.key.split("/")[0];
+      byTop.set(top, (byTop.get(top) ?? 0) + b.doc_count);
+    }
+    const categoryCounts: CategoryCount[] = [...byTop.entries()]
+      .map(([category, count]) => ({ category, count }))
+      .sort((a, b) => b.count - a.count);
+    const total: number = data?.hits?.total ?? 0;
+    return { hits: out, categoryCounts, total, totalIsCapped: total >= 10000 };
+  } catch {
+    return empty;
+  }
+}
+
 /** Construye la ref de un capítulo o daf de Talmud. */
 export function buildRef(
   bookId: string,

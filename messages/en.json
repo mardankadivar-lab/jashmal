@@ -90,7 +90,17 @@
     "groupInTexts": "In the texts",
     "sugInText": "Passage",
     "exactPhrase": "Exact phrase",
-    "studyThisConcept": "Study the concept: “{q}”"
+    "studyThisConcept": "Study the concept: “{q}”",
+    "seeAllResults": "See all results"
+  },
+  "search": {
+    "title": "Search the texts",
+    "subtitle": "Results from a search across the whole Sefaria library: Torah, Talmud, Midrash, Kabbalah, Chasidut and more. Check several categories at once to narrow it down.",
+    "searching": "Searching...",
+    "resultsFor": "{n} results for “{q}”",
+    "noResults": "No passages found for this search. Try another word or remove a filter.",
+    "categoriesPanel": "Categories",
+    "conceptCard": "Related concept"
   },
   "myStudies": {
     "title": "My Studies",
