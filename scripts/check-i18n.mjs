@@ -111,9 +111,12 @@ for (const f of fuentes) {
   const fp = findInLib(f.basename);
   if (!fp) continue;
   const txt = readFileSync(fp, "utf8");
-  const nBase = (txt.match(new RegExp(`\\b${f.base}:`, "g")) || []).length;
-  const nFa = (txt.match(new RegExp(`\\b${f.fa}:`, "g")) || []).length;
-  const nEn = (txt.match(new RegExp(`\\b${f.en}:`, "g")) || []).length;
+  // `campo?:` (declaración de tipo opcional) cuenta igual que `campo:`; si no,
+  // las líneas de interface inflan la base y reportan huecos fantasma (p.ej.
+  // "263/266" en brainData cuando TODOS los nodos reales están traducidos).
+  const nBase = (txt.match(new RegExp(`\\b${f.base}\\??:`, "g")) || []).length;
+  const nFa = (txt.match(new RegExp(`\\b${f.fa}\\??:`, "g")) || []).length;
+  const nEn = (txt.match(new RegExp(`\\b${f.en}\\??:`, "g")) || []).length;
   if (nBase === 0) continue; // la fuente no usa este patrón de campos
   console.log(`   ${f.nombre}  (${nBase} entradas)`);
   console.log(`      FA  ${bar(nFa, nBase)}`);
