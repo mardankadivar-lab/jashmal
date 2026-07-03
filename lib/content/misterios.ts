@@ -651,6 +651,19 @@ export const MISTERIOS: Misterio[] = [
     color: "#e8945a",
     orden: 17.5,
   },
+  {
+    slug: "likutei-moharan-i-3",
+    he: "קוֹל הַנְּגִינָה",
+    titulo: "La voz del canto: por qué una melodía te salva o te enreda",
+    tituloFa: "آوازِ نغمه: چرا یک ملودی نجاتت می‌دهد یا به دام می‌اندازد",
+    tituloEn: "The Voice of Song: Why a Melody Can Save You or Ensnare You",
+    gancho: "No hay música inocente: cada melodía que oyes mama de una fuente — y te ata a ella.",
+    ganchoFa: "هیچ موسیقیِ بی‌گناهی نیست: هر نغمه‌ای که می‌شنوی از سرچشمه‌ای شیر می‌خورد — و تو را به آن می‌بندد.",
+    ganchoEn: "No song is innocent: every melody you hear nurses from a source — and binds you to it.",
+    serie: "shabat",
+    color: "#e8945a",
+    orden: 18,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".
