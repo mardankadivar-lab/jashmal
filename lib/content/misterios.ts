@@ -590,6 +590,23 @@ export const MISTERIOS: Misterio[] = [
     color: "#34c5d6",
     orden: 15.5,
   },
+  {
+    slug: "casamentero",
+    numero: "137",
+    he: "מוֹצֵא אִשָּׁה",
+    titulo: "137 — El Casamentero Divino",
+    tituloFa: "۱۳۷ — واسطهٔ آسمانی",
+    tituloEn: "137 — The Divine Matchmaker",
+    gancho:
+      "En física, 137 es la constante que acopla la luz con la materia: enlaza el fotón sin masa con el electrón, la energía con la sustancia. En hebreo, «el que halla» (מוֹצֵא) esposa vale 137 —igual que «Cabalá»— y los sabios enseñan que cada pareja se decide en el Cielo. El número del matrimonio cósmico: donde la energía se vuelve materia y dos almas se reencuentran.",
+    ganchoFa:
+      "در فیزیک، ۱۳۷ ثابتی است که نور را به ماده می‌پیوندد: فوتونِ بی‌جرم را به الکترون جفت می‌کند، انرژی را به مادّه. در عبری، «آن‌که می‌یابد» (מוֹצֵא) همسری برابرِ ۱۳۷ است — درست مانندِ «کابالا» — و حکیمان می‌آموزند که هر جفت در آسمان تعیین می‌شود. عددِ ازدواجِ کیهانی: جایی که انرژی مادّه می‌شود و دو جان بازیکدیگر را می‌یابند.",
+    ganchoEn:
+      "In physics, 137 is the constant that couples light to matter: it binds the massless photon to the electron, energy to substance. In Hebrew, “the one who finds” (מוֹצֵא) a wife equals 137 — just like “Kabbalah” — and the sages teach that every match is made in Heaven. The number of the cosmic marriage: where energy becomes matter and two souls find each other again.",
+    serie: "ciencia",
+    color: "#c77dd0",
+    orden: 15.7,
+  },
 
   // ── SERIE "PARASHA" — Estudios completos de parashá con PaRDeS ───────────────
   // Cada entrada de parashá es el ÍNDICE de enseñanzas en /misterio/{slug}.
