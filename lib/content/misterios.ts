@@ -624,6 +624,23 @@ export const MISTERIOS: Misterio[] = [
     color: "#4fb0c6",
     orden: 15.8,
   },
+  {
+    slug: "simetria-cpt",
+    numero: "137",
+    he: "עוֹלָם · שָׁנָה · נֶפֶשׁ",
+    titulo: "Simetría CPT — cuando el tiempo corre hacia atrás",
+    tituloFa: "تقارنِ CPT — آنگاه که زمان به عقب می‌رود",
+    tituloEn: "CPT Symmetry — When Time Runs Backwards",
+    gancho:
+      "La física halló una ley que el universo jamás rompe: invierte a la vez la carga, el espacio y el tiempo (CPT) y todo queda idéntico. La Cabalá ya lo había escrito —mundo, año y alma son las tres dimensiones de la creación (Séfer Yetzirá)— y en las letras de sus tres meses esconde el número 137. Y la teshuvá resulta ser la simetría del tiempo: volver atrás y reescribir el pasado.",
+    ganchoFa:
+      "فیزیک قانونی یافت که جهان هرگز آن را نمی‌شکند: بار، فضا و زمان را همزمان وارونه کن (CPT) و همه‌چیز یکسان می‌مانَد. کابالا از پیش نوشته بود —جهان، سال و جان سه بُعدِ آفرینش‌اند (سِفِر یِتسیرا)— و در حروفِ سه ماهِ خود عددِ ۱۳۷ را پنهان کرده است. و تشووا همان تقارنِ زمان است: بازگشت به گذشته و بازنویسیِ آن.",
+    ganchoEn:
+      "Physics found a law the universe never breaks: reverse charge, space and time all at once (CPT) and everything stays identical. Kabbalah had already written it —world, year and soul are the three dimensions of creation (Sefer Yetzirah)— and in the letters of its three months it hides the number 137. And teshuvah turns out to be the symmetry of time: going back to rewrite the past.",
+    serie: "ciencia",
+    color: "#5ad1a0",
+    orden: 15.9,
+  },
 
   // ── SERIE "PARASHA" — Estudios completos de parashá con PaRDeS ───────────────
   // Cada entrada de parashá es el ÍNDICE de enseñanzas en /misterio/{slug}.
