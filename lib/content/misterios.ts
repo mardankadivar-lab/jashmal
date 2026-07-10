@@ -607,6 +607,23 @@ export const MISTERIOS: Misterio[] = [
     color: "#c77dd0",
     orden: 15.7,
   },
+  {
+    slug: "complementariedad",
+    numero: "2",
+    he: "בֵּית",
+    titulo: "Complementariedad — la luz que no se deja ver entera",
+    tituloFa: "مکملیت — نوری که یکجا دیده نمی‌شود",
+    tituloEn: "Complementarity — The Light You Cannot See Whole",
+    gancho:
+      "La física descubrió que la luz es onda y partícula a la vez, pero jamás en la misma mirada; y que es imposible conocerlo todo de una sola vez (Heisenberg). La Cabalá lo dijo antes: la Torá no empieza en el Uno (א = 1) sino en el Dos (ב = 2), y su primera letra está sellada por tres lados. El principio de incertidumbre, escrito en la primera letra de la creación.",
+    ganchoFa:
+      "فیزیک دریافت که نور هم موج است و هم ذرّه، اما هرگز در یک نگاه؛ و ناممکن است همه‌چیز را یکجا دانست (هایزنبرگ). کابالا پیش‌تر گفته بود: تورات نه از یک (א = ۱) بلکه از دو (ב = ۲) آغاز می‌شود، و نخستین حرفش از سه سو بسته است. اصلِ عدمِ قطعیت، نوشته بر نخستین حرفِ آفرینش.",
+    ganchoEn:
+      "Physics discovered that light is both wave and particle, yet never in the same glance; and that it is impossible to know everything at once (Heisenberg). Kabbalah said it first: the Torah does not begin with the One (א = 1) but with the Two (ב = 2), and its first letter is sealed on three sides. The uncertainty principle, written into the first letter of creation.",
+    serie: "ciencia",
+    color: "#4fb0c6",
+    orden: 15.8,
+  },
 
   // ── SERIE "PARASHA" — Estudios completos de parashá con PaRDeS ───────────────
   // Cada entrada de parashá es el ÍNDICE de enseñanzas en /misterio/{slug}.
