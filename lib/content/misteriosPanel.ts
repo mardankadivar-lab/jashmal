@@ -33,6 +33,7 @@ import { data as shaarHagilgulim } from "@/app/[locale]/misterio/shaar-hagilguli
 import { data as simienteMesianica } from "@/app/[locale]/misterio/simiente-mesianica/data";
 import { data as tercerTemplo } from "@/app/[locale]/misterio/tercer-templo/data";
 import { data as tikuneiZohar } from "@/app/[locale]/misterio/tikunei-zohar/data";
+import { data as vaiejalMoshe } from "@/app/[locale]/misterio/vaiejal-moshe/data";
 import { data as zoharRedencion } from "@/app/[locale]/misterio/zohar-redencion/data";
 
 export const MISTERIOS_PANEL: Record<string, EstudioData> = {
@@ -51,6 +52,7 @@ export const MISTERIOS_PANEL: Record<string, EstudioData> = {
   "simiente-mesianica": simienteMesianica,
   "tercer-templo": tercerTemplo,
   "tikunei-zohar": tikuneiZohar,
+  "vaiejal-moshe": vaiejalMoshe,
   "zohar-redencion": zoharRedencion,
 };
 

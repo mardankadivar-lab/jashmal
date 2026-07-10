@@ -643,6 +643,17 @@ export const MISTERIOS: Misterio[] = [
     orden: 16,
   },
   {
+    slug: "vaiejal-moshe",
+    he: "וַיְחַל מֹשֶׁה",
+    titulo: "El juramento que Dios necesitaba que alguien anulara",
+    tituloFa: "El juramento que Dios necesitaba que alguien anulara",
+    gancho: "Dios jura destruir a Israel. Una palabra rara en el texto —vaiéjal— dice que Moisés hizo algo mucho más audaz que rogar: anuló el juramento de Dios. Y el Talmud dice que Dios se lo permitió a propósito.",
+    ganchoFa: "Dios jura destruir a Israel. Una palabra rara en el texto —vaiéjal— dice que Moisés hizo algo mucho más audaz que rogar: anuló el juramento de Dios. Y el Talmud dice que Dios se lo permitió a propósito.",
+    serie: "parasha",
+    color: "#8b6a3a",
+    orden: 16.5,
+  },
+  {
     slug: "likutei-moharan-i-1",
     he: "אַשְׁרֵי תְמִימֵי דָרֶךְ",
     titulo: "El jen que hace que tu oración sea escuchada",
