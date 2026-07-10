@@ -1322,9 +1322,10 @@ export const GEMATRIAS: Gematria[] = [
     color: "#e0a850",
   },
   {
-    num: 81, he: "כִּסֵּא · אָנֹכִי", titulo: "El trono y el «Yo»", tituloFa: "تخت و «من»",
+    num: 81, he: "כִּסֵּא · אָנֹכִי", titulo: "El trono y el «Yo»", tituloFa: "تخت و «من»", tituloEn: "The Throne and the “I”",
     sig: "Kisé («trono») = Anojí («Yo») = 81 = 9² — el «Yo» divino de Anojí (la primera palabra de los Diez Mandamientos) y el Trono de la gloria comparten valor.",
     sigFa: "کیسِه («تخت») = آنوخی («من») = ۸۱ = ۹² — «منِ» الهیِ آنوخی (نخستین واژهٔ ده فرمان) و تختِ جلال هم‌ارزش‌اند.",
+    sigEn: "Kisei (“throne”) = Anochi (“I”) = 81 = 9² — the divine “I” of Anochi (the first word of the Ten Commandments) and the Throne of glory share the same value.",
     asociaciones: [
       "כִּסֵּא (Kisé, «trono») = 81",
       "אָנֹכִי (Anojí, «Yo») = 81 — la primera palabra de los Diez Mandamientos (Éx 20:2)",
@@ -1337,12 +1338,19 @@ export const GEMATRIAS: Gematria[] = [
       "۸۱ = ۹² — مربعِ نُه",
       "«آنوخی»ِ خدا بر تخت می‌نشیند: منِ والا که در سینا آشکار شد",
     ],
+    asociacionesEn: [
+      "כִּסֵּא (Kisei, “throne”) = 81",
+      "אָנֹכִי (Anochi, “I”) = 81 — the first word of the Ten Commandments (Ex 20:2)",
+      "81 = 9² — the square of nine",
+      "God’s “Anochi” rests upon the Throne: the supreme Self revealed at Sinai",
+    ],
     color: "#f0d878",
   },
   {
-    num: 160, he: "עֵץ · צֶלֶם · כֶּסֶף", titulo: "El árbol, la imagen y la plata", tituloFa: "درخت، صورت و نقره",
+    num: 160, he: "עֵץ · צֶלֶם · כֶּסֶף", titulo: "El árbol, la imagen y la plata", tituloFa: "درخت، صورت و نقره", tituloEn: "The Tree, the Image and the Silver",
     sig: "Etz («árbol») = Tzélem («imagen») = Késef («plata/anhelo») = 160 — el árbol de la vida, la imagen divina del hombre y la plata del deseo comparten valor.",
     sigFa: "عِتز («درخت») = تزِلِم («صورت») = کِسِف («نقره/اشتیاق») = ۱۶۰ — درختِ زندگی، صورتِ الهیِ انسان و نقرهٔ اشتیاق هم‌ارزش‌اند.",
+    sigEn: "Etz (“tree”) = Tzelem (“image”) = Kesef (“silver/longing”) = 160 — the tree of life, the divine image of man, and the silver of desire share the same value.",
     asociaciones: [
       "עֵץ (Etz, «árbol») = 160",
       "צֶלֶם (Tzélem, «imagen») = 160 — el hombre creado «a imagen de Dios» (Gn 1:27)",
@@ -1355,12 +1363,19 @@ export const GEMATRIAS: Gematria[] = [
       "כֶּסֶף (کِسِف، «نقره/اشتیاق») = ۱۶۰",
       "«انسان درختِ صحراست» (تثنیه ۲۰:۱۹): انسان-درختی که به صورتِ (تزِلِم) خدا ساخته شده",
     ],
+    asociacionesEn: [
+      "עֵץ (Etz, “tree”) = 160",
+      "צֶלֶם (Tzelem, “image”) = 160 — man created “in the image of God” (Gen 1:27)",
+      "כֶּסֶף (Kesef, “silver/longing”) = 160",
+      "“Man is the tree of the field” (Deut 20:19): the human-tree made in the image (tzelem)",
+    ],
     color: "#5a9a6a",
   },
   {
-    num: 346, he: "רָצוֹן · שְׁמוֹ · מָקוֹר", titulo: "La voluntad, Su Nombre y la fuente", tituloFa: "اراده، نامِ او و سرچشمه",
+    num: 346, he: "רָצוֹן · שְׁמוֹ · מָקוֹר", titulo: "La voluntad, Su Nombre y la fuente", tituloFa: "اراده، نامِ او و سرچشمه", tituloEn: "The Will, His Name and the Source",
     sig: "Ratzón («voluntad») = Shmó («Su Nombre») = Makor («fuente») = 346 — la voluntad divina, Su Nombre y la fuente del ser comparten valor: querer, nombrar y manar son uno.",
     sigFa: "راتزون («اراده») = شِمو («نامِ او») = ماکور («سرچشمه») = ۳۴۶ — ارادهٔ الهی، نامِ او و سرچشمهٔ هستی هم‌ارزش‌اند: خواستن، نامیدن و جوشیدن یکی‌اند.",
+    sigEn: "Ratzon (“will”) = Shmo (“His Name”) = Makor (“source”) = 346 — the divine will, His Name, and the source of being share the same value: to will, to name, and to well forth are one.",
     asociaciones: [
       "רָצוֹן (Ratzón, «voluntad, deseo») = 346",
       "שְׁמוֹ (Shmó, «Su Nombre») = 346",
@@ -1373,12 +1388,19 @@ export const GEMATRIAS: Gematria[] = [
       "מָקוֹר (ماکور، «سرچشمه») = ۳۴۶",
       "ارادهٔ (راتزون) کِتِر همان سرچشمه‌ای (ماکور) است که آفرینش از آن جاری می‌شود",
     ],
+    asociacionesEn: [
+      "רָצוֹן (Ratzon, “will, desire”) = 346",
+      "שְׁמוֹ (Shmo, “His Name”) = 346",
+      "מָקוֹר (Makor, “source, wellspring”) = 346",
+      "The will (ratzon) of Keter is the source (makor) from which creation flows",
+    ],
     color: "#b89a4e",
   },
   {
-    num: 496, he: "מַלְכוּת · לִוְיָתָן", titulo: "Maljut y el número perfecto", tituloFa: "مَلخوت و عددِ کامل",
+    num: 496, he: "מַלְכוּת · לִוְיָתָן", titulo: "Maljut y el número perfecto", tituloFa: "مَلخوت و عددِ کامل", tituloEn: "Malchut and the Perfect Number",
     sig: "Maljut («reino») = Livyatán (Leviatán) = 496 — y 496 es un «número perfecto», igual a la suma de sus divisores: el reino es la perfección donde todo se recoge.",
     sigFa: "مَلخوت («ملکوت») = لِویاتان = ۴۹۶ — و ۴۹۶ عددی «کامل» است، برابرِ مجموعِ مقسوم‌علیه‌هایش: ملکوت، کمالی است که همه‌چیز در آن گرد می‌آید.",
+    sigEn: "Malchut (“kingdom”) = Livyatan (Leviathan) = 496 — and 496 is a “perfect number,” equal to the sum of its divisors: the kingdom is the perfection in which everything is gathered.",
     asociaciones: [
       "מַלְכוּת (Maljut, «reino», la séfira final) = 496",
       "לִוְיָתָן (Livyatán, el Leviatán) = 496",
@@ -1391,12 +1413,19 @@ export const GEMATRIAS: Gematria[] = [
       "۴۹۶ عددِ کامل است: ۱+۲+۴+۸+۱۶+۳۱+۶۲+۱۲۴+۲۴۸ = ۴۹۶",
       "مَلخوت همهٔ سِفیراها را می‌پذیرد و یگانه می‌کند، چنان‌که عددِ کامل اجزایش را دربر دارد (گینزبورگ)",
     ],
+    asociacionesEn: [
+      "מַלְכוּת (Malchut, “kingdom,” the final sefirah) = 496",
+      "לִוְיָתָן (Livyatan, the Leviathan) = 496",
+      "496 is a perfect number: 1+2+4+8+16+31+62+124+248 = 496",
+      "Malchut gathers and unifies all the sefirot, as the perfect number contains its parts (Ginsburgh)",
+    ],
     color: "#6688cc",
   },
   {
-    num: 515, he: "תְּפִלָּה · וָאֶתְחַנַּן", titulo: "La oración y las 515 súplicas", tituloFa: "دعا و پانصدوپانزده استغاثه",
+    num: 515, he: "תְּפִלָּה · וָאֶתְחַנַּן", titulo: "La oración y las 515 súplicas", tituloFa: "دعا و پانصدوپانزده استغاثه", tituloEn: "Prayer and the 515 Supplications",
     sig: "Tefilá («oración») = Vaetjanán = 515 — Moshé suplicó 515 veces para entrar a la Tierra (Midrash), y ese es el valor de «Vaetjanán» (Dt 3:23) y de «tefilá».",
     sigFa: "تِفیلا («دعا») = واِتخانان = ۵۱۵ — موسی ۵۱۵ بار برای ورود به سرزمین استغاثه کرد (میدراش)، و این ارزشِ «واِتخانان» (تثنیه ۳:۲۳) و «تِفیلا» است.",
+    sigEn: "Tefillah (“prayer”) = Va’etchanan = 515 — Moshe pleaded 515 times to enter the Land (Midrash), and that is the value of “Va’etchanan” (Deut 3:23) and of “tefillah.”",
     asociaciones: [
       "תְּפִלָּה (Tefilá, «oración») = 515",
       "וָאֶתְחַנַּן (Vaetjanán, «y supliqué», Dt 3:23) = 515",
@@ -1408,6 +1437,12 @@ export const GEMATRIAS: Gematria[] = [
       "וָאֶתְחַנַּן (واِتخانان، «و استغاثه کردم»، تثنیه ۳:۲۳) = ۵۱۵",
       "موسی ۵۱۵ بار برای ورود به سرزمینِ اسرائیل دعا کرد (دِواریم رَبا ۱۱:۱۰)",
       "دعای پیگیر: ۵۱۵ استغاثه فشرده در یک واژه",
+    ],
+    asociacionesEn: [
+      "תְּפִלָּה (Tefillah, “prayer”) = 515",
+      "וָאֶתְחַנַּן (Va’etchanan, “and I pleaded,” Deut 3:23) = 515",
+      "Moshe prayed 515 times to enter the Land of Israel (Devarim Rabbah 11:10)",
+      "Persistent prayer: 515 entreaties condensed into a single word",
     ],
     color: "#8866cc",
   },
