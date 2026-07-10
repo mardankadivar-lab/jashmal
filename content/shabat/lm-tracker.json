@@ -1,7 +1,7 @@
 {
   "parte": "I",
-  "numero": 4,
-  "ultima_fecha": "2026-07-03",
+  "numero": 5,
+  "ultima_fecha": "2026-07-10",
   "historial": [
     {
       "parte": "I",
@@ -26,6 +26,14 @@
       "tema": "La voz del canto (niggun): la melodía edifica el reino interior; su fuente (profética o klipá) decide; el remedio es el estudio nocturno de la Torá oral",
       "slug": "likutei-moharan-i-3",
       "archivo": "LM-I3-2026-07-03.md"
+    },
+    {
+      "parte": "I",
+      "numero": 4,
+      "fecha": "2026-07-10",
+      "tema": "Saber que todo lo que sucede es para bien —anticipo del Mundo Venidero— mediante la confesión hablada (vidui devarim) ante el sabio, que unifica Havayá (misericordia) y Elokim (juicio); אֶחָד=אַהֲבָה=13",
+      "slug": "likutei-moharan-i-4",
+      "archivo": "LM-I4-2026-07-10.md"
     }
   ]
 }

@@ -709,6 +709,19 @@ export const MISTERIOS: Misterio[] = [
     color: "#e8945a",
     orden: 18,
   },
+  {
+    slug: "likutei-moharan-i-4",
+    he: "אָנֹכִי ה' אֱלֹהֶיךָ",
+    titulo: "Todo lo que te sucede es para tu bien",
+    tituloFa: "هر آنچه بر تو می‌گذرد، به سودِ توست",
+    tituloEn: "Everything That Happens to You Is for Your Good",
+    gancho: "Saber que todo lo que te pasa es para tu bien: un anticipo del Paraíso.",
+    ganchoFa: "بدانی هر چه پیش می‌آید به سودِ توست — چشیدنِ طعمِ عالَمِ آینده.",
+    ganchoEn: "To know that all that befalls you is for your good — a foretaste of the World to Come.",
+    serie: "shabat",
+    color: "#e8945a",
+    orden: 18.5,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".
