@@ -256,7 +256,7 @@ export default function EspejoDelAlma() {
                   onClick={() => elegir(op.rasgos)}
                   className="flex w-full items-center gap-3 rounded-xl border border-gold/20 bg-ink/40 px-4 py-3.5 text-start transition-all hover:border-gold/60 hover:bg-gold/[0.07]"
                 >
-                  <span className="hebrew text-base text-gold/50">{["א", "ב", "ג", "ד"][i]}</span>
+                  <span className="hebrew text-base text-gold/50">{["א", "ב", "ג", "ד", "ה", "ו"][i]}</span>
                   <span
                     className="text-sm leading-relaxed text-parchment/90"
                     dir={opT.shownIn === "fa" ? "rtl" : "ltr"}

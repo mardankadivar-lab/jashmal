@@ -118,6 +118,28 @@ R8 — El guardián de secretos / alma profunda en lo alto, descuidada en lo peq
   Avodá: bajar la grandeza a lo cotidiano (בְּכָל דְּרָכֶיךָ דָעֵהוּ). Espejo: ¿Fiel en lo grande
   pero descuidado en lo diario?
 
+## RASGOS AÑADIDOS DESPUÉS (minería diaria del Raza de-Razin, verificados uno a uno)
+Extensiones posteriores a los 8 originales, agregadas por la rutina diaria del Sofer con su ref
+REAL de Sefaria (Vocalized Zohar, Israel 2013), sin inventar folios.
+
+R9 — La mirada recta / honestidad transparente. **Zohar, Yitro 7:85** (ojos que "se asientan
+  enteros, sin hundirse" → sin astucia). Midá: אֱמֶת. (Ojos.)
+
+R10 — La bondad que no daña, pero piensa primero en lo suyo. **Zohar, Yitro 7:88** ("רַחֲמָנָא
+  אִיהוּ, וְאִיהוּ חָשִׁיב תָּדִיר לְתוֹעַלְתֵּיה, וְלָא חָשִׁיב לְנִזְקָא דְּאַחֲרָנִין כְּלוּם"). Midá: חֶסֶד
+  activo. (Ojos.)
+
+R11 — El que es mejor por dentro de lo que aparenta (alma de misericordia). **Zohar, Yitro 6:80**
+  (sección de la FRENTE) — "בָּכֵי בְּשַׁעֲתָא דְּאַרְגִּיז, דָּא אִיהוּ טָב יַתִּיר מִכַּמָּה דְּאִתְחָזֵי…
+  אַרְמִי בָּתַר כִּתְפוֹי כָּל מִלִּין דְּעָלְמָא… וּרְחִימוּתָא אִיהוּ סִטְרָא דִּילֵיהּ" (llora cuando se
+  enoja: es mejor de lo que aparenta; echa tras sus hombros todos los asuntos del mundo, y su
+  lado es el del amor/misericordia, no el del juicio). El Zohar señala que su devoción va y viene
+  ("לְזִמְנִין אִתְדְּבָק רְעוּתֵיהּ בְּקֻדְשָׁא בְּרִיךְ הוּא וּלְזִמְנִין לָא"). Midá: הַתְמָדָה (constancia).
+  Espejo: ¿Mi bondad depende del ánimo del momento? ¿Escondo mi ternura tras una coraza más dura
+  de lo que soy? Es el inverso luminoso de R6 (que aparenta ser mejor de lo que es). Integrado en
+  el cuestionario como 5ª opción de Q1 ("por dentro me ablando, se me aguan los ojos…"), peso 2.
+  (Frente / conducta.)
+
 ## RASGOS FÍSICOS AUTO-DESCRITOS (sin foto)
 La persona se describe a sí misma en palabras; cada opción mapea al texto verificado. NUNCA se
 pide ni se analiza una imagen. Estas auto-descripciones son material de meditación, no diagnóstico.

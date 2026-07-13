@@ -294,7 +294,7 @@ export const ESPEJO_NOTA_ARIZAL = {
 };
 
 export interface RasgoTema {
-  id: "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8" | "R9" | "R10";
+  id: "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8" | "R9" | "R10" | "R11";
   /** título corto del rasgo-tema */
   titulo: string;
   /** fuente exacta verificada, texto legible (ej. "Zohar, Yitró 6:77") */
@@ -443,6 +443,27 @@ export const RASGOS: RasgoTema[] = [
     opuesto: "La bondad que se extiende: una compasión que no se conforma con no dañar, sino que busca el bien del otro como busca el propio.",
     color: "#6cae9a",
   },
+  {
+    // Sección de la FRENTE (מִצְחָא). Ref real verificada en Sefaria por el Sofer
+    // (2026-07-13): Zohar, Yitro 6:80 — el párrafo de las «arrugas al hablar / llora
+    // cuando se enoja». Cita aramea VERBATIM de Sefaria (Vocalized Zohar, Israel 2013):
+    //   "…בָּכֵי בְּשַׁעֲתָא דְּאַרְגִּיז. דָּא אִיהוּ טָב יַתִּיר מִכַּמָּה דְּאִתְחָזֵי. אַרְמִי בָּתַר כִּתְפוֹי כָּל
+    //    מִלִּין דְּעָלְמָא… וּרְחִימוּתָא אִיהוּ סִטְרָא דִּילֵיהּ" (llora cuando se enoja: este es mejor de
+    //   lo que aparenta; echa tras sus hombros todos los asuntos del mundo… y su lado es el
+    //   del amor/misericordia). El Zohar añade que su devoción va y viene ("לְזִמְנִין אִתְדְּבָק
+    //   רְעוּתֵיהּ בְּקֻדְשָׁא בְּרִיךְ הוּא וּלְזִמְנִין לָא") → de ahí la midá de constancia. Rasgo
+    //   POSITIVO y distinto: es el inverso luminoso de R6 (que aparenta ser mejor de lo que es).
+    id: "R11",
+    titulo: "El que es mejor por dentro de lo que aparenta (alma de misericordia)",
+    fuente: "Zohar, Yitró 6:80",
+    fuenteRef: "Zohar, Yitro 6:80",
+    citaHe:
+      "בָּכֵי בְּשַׁעֲתָא דְּאַרְגִּיז, דָּא אִיהוּ טָב יַתִּיר מִכַּמָּה דְּאִתְחָזֵי… אַרְמִי בָּתַר כִּתְפוֹי כָּל מִלִּין דְּעָלְמָא… וּרְחִימוּתָא אִיהוּ סִטְרָא דִּילֵיהּ",
+    mida: "הַתְמָדָה (constancia): que la devoción y la bondad dejen de ir y venir y se vuelvan firmes.",
+    espejo: "¿Mi cercanía a Dios y mi bondad dependen del ánimo del momento? ¿Escondo mi ternura tras una coraza más dura de lo que en verdad soy?",
+    opuesto: "El corazón constante: una misericordia que ya no se esconde ni va y viene, sino devoción firme del lado del amor, no del juicio.",
+    color: "#d98aa6",
+  },
 ];
 
 // Rabbeinu Bachya sobre Shemot 18:21 — VERBATIM (cierre obligatorio del Espejo).
@@ -499,6 +520,8 @@ export const PREGUNTAS: Pregunta[] = [
       { texto: "callar y guardarlo", rasgos: ["R8"], textoFa: "ساکت می‌مانم و در دلم نگه می‌دارم" },
       { texto: "ceder para evitar conflicto", rasgos: ["R4"], textoFa: "برای پرهیز از کشمکش کوتاه می‌آیم" },
       { texto: "observar antes de actuar", rasgos: ["R2"], textoFa: "پیش از کنش، نظاره می‌کنم" },
+      // R11 (Zohar Yitro 6:80): "בָּכֵי בְּשַׁעֲתָא דְּאַרְגִּיז" — llora/se ablanda al enojarse.
+      { texto: "por dentro me ablando, se me aguan los ojos (aunque por fuera parezca duro)", rasgos: ["R11"], textoFa: "از درون نرم می‌شوم و اشکم درمی‌آید (هرچند از بیرون سخت به‌نظر بیایم)" },
     ],
   },
   {
