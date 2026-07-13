@@ -641,6 +641,23 @@ export const MISTERIOS: Misterio[] = [
     color: "#5ad1a0",
     orden: 15.9,
   },
+  {
+    slug: "musica-de-la-creacion",
+    numero: "137/60",
+    he: "שִׁיר חָדָשׁ",
+    titulo: "La música de la creación",
+    tituloFa: "موسیقیِ آفرینش",
+    tituloEn: "The Music of Creation",
+    gancho:
+      "Pulsa una sola cuerda y no suena un tono, sino muchos a la vez: mitades, tercios, cuartos, quintos —una escalera oculta de armónicos. Suma los cinco primeros y da exactamente 137/60: Cabalá (137) sobre halajá (60). Y la física lo reencontró: en la teoría de cuerdas, todo el universo está hecho de cuerdas que vibran. El cosmos es música.",
+    ganchoFa:
+      "یک تار را بنواز و یک نوا نمی‌شنوی، بلکه بسیاری با هم: نیم‌ها، ثلث‌ها، ربع‌ها، خمس‌ها — نردبانی پنهان از هماهنگ‌ها. پنج تای نخست را جمع کن، دقیقاً ۱۳۷/۶۰ می‌شود: کابالا (۱۳۷) بر هلاخا (۶۰). و فیزیک همان را بازیافت: در نظریهٔ ریسمان، تمامِ جهان از ریسمان‌هایی ساخته شده که می‌لرزند. کیهان، موسیقی است.",
+    ganchoEn:
+      "Pluck a single string and you don't hear one tone but many at once: halves, thirds, quarters, fifths —a hidden ladder of overtones. Add the first five and you get exactly 137/60: Kabbalah (137) over halachah (60). And physics rediscovered it: in string theory, the whole universe is made of vibrating strings. The cosmos is music.",
+    serie: "ciencia",
+    color: "#e8b84a",
+    orden: 15.95,
+  },
 
   // ── SERIE "PARASHA" — Estudios completos de parashá con PaRDeS ───────────────
   // Cada entrada de parashá es el ÍNDICE de enseñanzas en /misterio/{slug}.
