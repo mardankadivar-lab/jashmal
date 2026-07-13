@@ -1447,14 +1447,21 @@ export const GEMATRIAS: Gematria[] = [
     color: "#8866cc",
   },
   {
-    num: 37, he: "הֶבֶל · יְחִידָה", titulo: "Hével y la Yejidá", tituloFa: "هِوِل و یِخیدا",
+    num: 37, he: "הֶבֶל · יְחִידָה", titulo: "Hével y la Yejidá", tituloFa: "هِوِل و یِخیدا", tituloEn: "Hevel and the Yechidah",
     sig: "Hével (Abel, «vapor, aliento») = Yejidá = 37 — el hálito más tenue esconde el nivel más alto del alma.",
     sigFa: "هِوِل (هابیل، «بخار، دم») = یِخیدا = ۳۷ — نازک‌ترین دم، والاترین مرتبهٔ روح را در خود دارد.",
+    sigEn: "Hevel (Abel, “vapor, breath”) = Yechidah = 37 — the faintest breath conceals the highest level of the soul.",
     asociaciones: [
       "הֶבֶל (Hével, «vapor, aliento» — Abel) = 37",
       "יְחִידָה (Yejidá, el nivel más alto del alma) = 37",
       "111 = 3 × 37 (el Álef deletreado, אלף, = 111)",
       "Ginsburgh: Hével corresponde a la Yejidá, la chispa singular del alma",
+    ],
+    asociacionesEn: [
+      "הֶבֶל (Hevel, “vapor, breath” — Abel) = 37",
+      "יְחִידָה (Yechidah, the highest level of the soul) = 37",
+      "111 = 3 × 37 (Alef spelled out, אלף, = 111)",
+      "Ginsburgh: Hevel corresponds to the Yechidah, the singular spark of the soul",
     ],
     asociacionesFa: [
       "هِوِل («بخار، دم» — هابیل) = ۳۷",
@@ -1465,14 +1472,21 @@ export const GEMATRIAS: Gematria[] = [
     color: "#b89a4e",
   },
   {
-    num: 227, he: "זָכָר · בְּרָכָה", titulo: "El varón y la bendición", tituloFa: "نرینه و برکت",
+    num: 227, he: "זָכָר · בְּרָכָה", titulo: "El varón y la bendición", tituloFa: "نرینه و برکت", tituloEn: "The Male and the Blessing",
     sig: "Zajar («varón/recordar») = Berajá («bendición») = 227 — lo masculino es lo que da y hace fluir la bendición.",
     sigFa: "زاخار («نرینه/به‌یادآوردن») = بِراخا («برکت») = ۲۲۷ — نرینه همان بخشنده و جاری‌کنندهٔ برکت است.",
+    sigEn: "Zachar (“male/to remember”) = Berachah (“blessing”) = 227 — the masculine is what gives and makes blessing flow.",
     asociaciones: [
       "זָכָר (Zajar, «varón») = 227",
       "בְּרָכָה (Berajá, «bendición») = 227",
       "זֵכֶר (Zéjer, «memoria, recuerdo») = 227 — misma raíz que «varón»",
       "El masculino (el que da) canaliza la berajá hacia el mundo",
+    ],
+    asociacionesEn: [
+      "זָכָר (Zachar, “male”) = 227",
+      "בְּרָכָה (Berachah, “blessing”) = 227",
+      "זֵכֶר (Zecher, “memory, remembrance”) = 227 — same root as “male”",
+      "The masculine (the giver) channels the berachah into the world",
     ],
     asociacionesFa: [
       "زاخار («نرینه») = ۲۲۷",
@@ -1483,14 +1497,21 @@ export const GEMATRIAS: Gematria[] = [
     color: "#d4a838",
   },
   {
-    num: 310, he: "יֵשׁ · שַׁי", titulo: "Los 310 mundos", tituloFa: "سیصدوده جهان",
+    num: 310, he: "יֵשׁ · שַׁי", titulo: "Los 310 mundos", tituloFa: "سیصدوده جهان", tituloEn: "The 310 Worlds",
     sig: "Yesh («ser, existencia») = Shai («regalo») = 310 — los 310 mundos que Dios entrega a cada justo (Uktzín 3:12).",
     sigFa: "یِش («هستی») = شَی («هدیه») = ۳۱۰ — سیصدوده جهانی که خدا به هر صدّیق می‌بخشد (عوقتسین ۳:۱۲).",
+    sigEn: "Yesh (“being, existence”) = Shai (“gift”) = 310 — the 310 worlds God grants to every righteous one (Uktzin 3:12).",
     asociaciones: [
       "יֵשׁ (Yesh, «hay, ser») = 310",
       "שַׁי (Shai, «regalo, don») = 310",
       "«El Santo dará a cada justo 310 mundos» (Mishná Uktzín 3:12)",
       "El «yesh» (ser) es el don (shai) heredado del Ein Sof",
+    ],
+    asociacionesEn: [
+      "יֵשׁ (Yesh, “there is, being”) = 310",
+      "שַׁי (Shai, “gift, present”) = 310",
+      "“The Holy One will give each righteous one 310 worlds” (Mishnah Uktzin 3:12)",
+      "The “yesh” (being) is the gift (shai) inherited from the Ein Sof",
     ],
     asociacionesFa: [
       "یِش («هستی») = ۳۱۰",
@@ -1501,14 +1522,21 @@ export const GEMATRIAS: Gematria[] = [
     color: "#6a9ac0",
   },
   {
-    num: 400, he: "ת · אַרְבַּע מֵאוֹת", titulo: "La Tav y las 400", tituloFa: "تاو و چهارصد",
+    num: 400, he: "ת · אַרְבַּע מֵאוֹת", titulo: "La Tav y las 400", tituloFa: "تاو و چهارصد", tituloEn: "The Tav and the 400",
     sig: "Tav = 400 — la última letra del alefbet; el número que sella la Torá y marca el exilio y su medida.",
     sigFa: "تاو = ۴۰۰ — واپسین حرفِ الفبا؛ عددی که تورات را مُهر می‌کند و پیمانهٔ تبعید را نشان می‌دهد.",
+    sigEn: "Tav = 400 — the last letter of the alphabet; the number that seals the Torah and marks the exile and its measure.",
     asociaciones: [
       "ת (Tav, la última letra) = 400",
       "400 años de exilio anunciados a Abraham (Gn 15:13) — conteo",
       "400 siclos de plata por la cueva de Majpelá (Gn 23:16) — conteo",
       "400 hombres venían con Esav (Gn 32:7; 33:1) — conteo",
+    ],
+    asociacionesEn: [
+      "ת (Tav, the last letter) = 400",
+      "400 years of exile foretold to Abraham (Gen 15:13) — count",
+      "400 shekels of silver for the Cave of Machpelah (Gen 23:16) — count",
+      "400 men came with Esau (Gen 32:7; 33:1) — count",
     ],
     asociacionesFa: [
       "تاو (واپسین حرف) = ۴۰۰",
@@ -1519,14 +1547,21 @@ export const GEMATRIAS: Gematria[] = [
     color: "#a06a8e",
   },
   {
-    num: 424, he: "מָשִׁיחַ בֶּן דָּוִד", titulo: "Mashíaj ben David", tituloFa: "ماشیَح بن داوود",
+    num: 424, he: "מָשִׁיחַ בֶּן דָּוִד", titulo: "Mashíaj ben David", tituloFa: "ماشیَح بن داوود", tituloEn: "Mashiach ben David",
     sig: "Mashíaj ben David = 424 — el título completo del Redentor: Mashíaj(358) + Ben(52) + David(14).",
     sigFa: "ماشیَح بن داوود = ۴۲۴ — عنوانِ کاملِ رهاننده: ماشیَح(۳۵۸) + بِن(۵۲) + داوود(۱۴).",
+    sigEn: "Mashiach ben David = 424 — the full title of the Redeemer: Mashiach(358) + Ben(52) + David(14).",
     asociaciones: [
       "מָשִׁיחַ בֶּן דָּוִד = 424",
       "358 (Mashíaj) + 52 (Ben) + 14 (David) = 424",
       "דָּוִד (David) = 14 = יָד (yad, «mano»); la casa real de David",
       "El Redentor final desciende del linaje de David (Sanedrín 98a)",
+    ],
+    asociacionesEn: [
+      "מָשִׁיחַ בֶּן דָּוִד = 424",
+      "358 (Mashiach) + 52 (Ben) + 14 (David) = 424",
+      "דָּוִד (David) = 14 = יָד (yad, “hand”); the royal house of David",
+      "The final Redeemer descends from the lineage of David (Sanhedrin 98a)",
     ],
     asociacionesFa: [
       "ماشیَح بن داوود = ۴۲۴",
