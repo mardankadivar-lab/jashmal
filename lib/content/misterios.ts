@@ -658,6 +658,23 @@ export const MISTERIOS: Misterio[] = [
     color: "#e8b84a",
     orden: 15.95,
   },
+  {
+    slug: "observador",
+    numero: "48+89",
+    he: "מֹחַ · גּוּף",
+    titulo: "El observador — la conciencia que enciende la realidad",
+    tituloFa: "ناظر — آگاهی‌ای که واقعیت را روشن می‌کند",
+    tituloEn: "The Observer — The Consciousness That Lights Up Reality",
+    gancho:
+      "La física cuántica descubrió algo perturbador: una partícula existe en todos sus estados a la vez —hasta que alguien la observa. El observador consciente fija la realidad. La Cabalá lo dijo antes: nada existe sin conciencia. Y en hebreo, mente (מֹחַ, 48) + cuerpo (גּוּף, 89) = 137 = Cabalá: el mismo número que gobierna la luz une la mente con la materia.",
+    ganchoFa:
+      "فیزیکِ کوانتومی چیزی نگران‌کننده یافت: یک ذرّه هم‌زمان در همهٔ حالاتش هست — تا آنکه کسی آن را ببیند. ناظرِ آگاه واقعیت را قطعی می‌کند. کابالا پیش‌تر گفته بود: هیچ‌چیز بی‌آگاهی وجود ندارد. و در عبری، ذهن (מֹחַ، ۴۸) + تن (גּוּף، ۸۹) = ۱۳۷ = کابالا: همان عددی که بر نور حکم می‌راند، ذهن را به مادّه می‌پیوندد.",
+    ganchoEn:
+      "Quantum physics found something unsettling: a particle exists in all its states at once —until someone observes it. The conscious observer fixes reality. Kabbalah said it first: nothing exists without consciousness. And in Hebrew, mind (מֹחַ, 48) + body (גּוּף, 89) = 137 = Kabbalah: the same number that governs light unites mind with matter.",
+    serie: "ciencia",
+    color: "#8a7bf0",
+    orden: 15.85,
+  },
 
   // ── SERIE "PARASHA" — Estudios completos de parashá con PaRDeS ───────────────
   // Cada entrada de parashá es el ÍNDICE de enseñanzas en /misterio/{slug}.
