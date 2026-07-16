@@ -37,11 +37,11 @@
   "podcast": {
     "title": "Podcast",
     "subtitle": "Conversations on the great works of Kabbalah. Listen right here, or on Spotify.",
-    "seasonEpisode": "S{season} · E{episode}",
     "play": "Play",
     "pause": "Pause",
     "spotify": "Listen on Spotify",
-    "enNotice": "Episodes are currently available in Spanish and Farsi."
+    "enNotice": "Episodes are currently available in Spanish and Farsi.",
+    "episodeLabel": "Episode {episode}"
   },
   "hero": {
     "kicker": "Kabbalah and Jewish philosophy",

@@ -67,9 +67,10 @@ export default function PodcastPage() {
             className="relative overflow-hidden rounded-2xl border border-gold/25 p-6 transition-colors hover:border-gold/40"
             style={{ background: "rgb(var(--c-surface) / 0.94)" }}
           >
-            {/* Rótulo de temporada/episodio */}
+            {/* Rótulo del episodio. Sin temporada: la obra ya encabeza el
+                grupo, y la temporada solo existe para Spotify. */}
             <p className="font-cinzel text-[11px] uppercase tracking-widest text-gold/70">
-              {t("seasonEpisode", { season: ep.season, episode: ep.episode })}
+              {t("episodeLabel", { episode: ep.episode })}
             </p>
 
             {/* Título (+ subtítulo latino en los episodios farsi) */}

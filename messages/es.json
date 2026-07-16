@@ -37,11 +37,11 @@
   "podcast": {
     "title": "Podcast",
     "subtitle": "Conversaciones sobre las grandes obras de la Cabalá. Escúchalas aquí mismo, o en Spotify.",
-    "seasonEpisode": "T{season} · E{episode}",
     "play": "Reproducir",
     "pause": "Pausar",
     "spotify": "Escuchar en Spotify",
-    "enNotice": "Episodes are currently available in Spanish and Farsi."
+    "enNotice": "Episodes are currently available in Spanish and Farsi.",
+    "episodeLabel": "Episodio {episode}"
   },
   "hero": {
     "kicker": "Cabalá y filosofía judía",

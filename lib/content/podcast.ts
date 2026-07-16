@@ -40,6 +40,10 @@ export type PodcastEpisode = {
   locale: PodcastLocale;
   /** Obra a la que pertenece → `slug` de PODCAST_SERIES. */
   serie: string;
+  /**
+   * Solo para paridad con Spotify, que no entiende de obras: una temporada por
+   * obra (Shamati = 1, Tanya = 2). En el sitio no se muestra — ahí manda `serie`.
+   */
   season: number;
   episode: number;
   title: string;
@@ -72,6 +76,20 @@ export const PODCAST_SERIES: PodcastSeries[] = [
     blurb: {
       es: "«Escuché». Las enseñanzas que Rav Yehuda Ashlag, Baal HaSulam, transmitió de viva voz.",
       fa: "«شنیدم». آموزه‌هایی که راو یهودا اشلگ، بعل هسولام، سینه‌به‌سینه منتقل کرد.",
+    },
+  },
+  {
+    slug: "tanya",
+    // El libro se conoce por su primera palabra: תַּנְיָא, "se enseñó"
+    // (Tanya, Likutei Amarim I:1, que abre citando Nidá 30b).
+    he: "תַּנְיָא",
+    title: {
+      es: "Tanya — Rabí Shneur Zalman de Liadi",
+      fa: "تانیا — راو شنئور زلمن از لیادی",
+    },
+    blurb: {
+      es: "«Se enseñó». El libro que abre con esa palabra —y de ella toma su nombre— es la obra fundacional del jasidismo de Jabad.",
+      fa: "«چنین آموخته‌اند». کتابی که با همین واژه آغاز می‌شود و نامش را از آن گرفته است: اثر بنیادین حسیدیسم چابد.",
     },
   },
 ];
@@ -129,6 +147,20 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
       "¿Por qué cuesta tanto soltar el ego? Conversamos sobre la cuarta enseñanza de Shamati («Escuché»), del cabalista Rav Yehuda Ashlag, Baal HaSulam: la pesadez que sentimos al anularnos ante el Creador tiene una sola causa — no sentir Su presencia. Cuando el alma percibe la existencia del Creador, se anula sola, con gozo, «como una vela ante una antorcha». Conversación generada con IA a partir del texto original.",
     durationSec: 1218,
     audioSrc: "/audio/podcast/es-shamati-04.mp3",
+    spotifyShowUrl: SPOTIFY_SHOW_ES,
+  },
+  {
+    slug: "es-tanya-01",
+    locale: "es",
+    serie: "tanya",
+    // Cada obra es una temporada en Spotify, que no entiende de colecciones.
+    season: 2,
+    episode: 1,
+    title: "La guerra entre tus dos almas — Tanya, capítulo 1",
+    description:
+      "Antes de nacer te toman juramento: «sé justo y no seas malvado». Así abre el Tanya, citando el Talmud (Nidá 30b) — y de esa primera palabra, תַּנְיָא («se enseñó»), toma el libro su nombre. El primer capítulo plantea la pregunta que lo sostiene todo: si te hacen jurar ser justo, ¿por qué cuesta tanto? Porque en ti no vive un alma, sino dos, y su tensión es la trama de tu vida. Conversación generada con IA a partir del texto original.",
+    durationSec: 828,
+    audioSrc: "/audio/podcast/es-tanya-01.mp3",
     spotifyShowUrl: SPOTIFY_SHOW_ES,
   },
 
