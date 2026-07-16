@@ -105,6 +105,19 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     audioSrc: "/audio/podcast/fa-shamati-02.mp3",
     spotifyShowUrl: SPOTIFY_SHOW_FA,
   },
+  {
+    slug: "fa-shamati-03",
+    locale: "fa",
+    season: 1,
+    episode: 3,
+    title: "واقعیت تنها بازتاب ظرف ادراک ماست",
+    subtitle: "Shamati · Baal HaSulam",
+    description:
+      "گفت‌وگویی دربارهٔ سومین آموزهٔ شمعتی، اثر بعل هسولام: دستیابی روحانی. آنچه را درنیافته‌ایم، به نام نمی‌شناسیم — از ذات الهی سخن نمی‌گوییم؛ تنها نوری را می‌شناسیم که به ما می‌رسد و شکلی که در ظرف ادراک ما می‌گیرد. این گفت‌وگو با هوش مصنوعی از متن اصلی ساخته شده است.",
+    durationSec: 935,
+    audioSrc: "/audio/podcast/fa-shamati-03.mp3",
+    spotifyShowUrl: SPOTIFY_SHOW_FA,
+  },
 ];
 
 /** Episodios del idioma pedido, ordenados por temporada y número. */
