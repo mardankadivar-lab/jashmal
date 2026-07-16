@@ -5,10 +5,20 @@
 //  Cada parte es un <path> SEPARADO con `data-part`, para iluminarse sola en la
 //  sección FORMA. La letra NUNCA se transforma: solo cambia su iluminación.
 //
-//  Reutilizable: el motor pide el glifo por `slug`. Hoy: Álef (Yud·Vav·Yud).
+//  Reutilizable: el motor pide el glifo por `slug`. Hoy: Álef, Vav, Zayin.
+//
+//  Los `data-part` de cada trazo deben coincidir con los `svgPathId` que
+//  declara la letra en lib/letters/<slug>.ts, o la parte no se ilumina.
 // ─────────────────────────────────────────────────────────────────────────
 
 const GOLD = "#c9a43e";
+
+const STROKE = {
+  fill: "none",
+  stroke: GOLD,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+};
 
 type GlyphProps = {
   slug: string;
@@ -32,12 +42,6 @@ function partStyle(id: string, activePart: string | null | undefined): React.CSS
 
 /** Álef: tres trazos gruesos con remates redondos — Yud superior, Vav, Yud inferior. */
 function AlefPaths({ activePart }: { activePart?: string | null }) {
-  const common = {
-    fill: "none",
-    stroke: GOLD,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
-  };
   return (
     <>
       {/* Vav diagonal — el puente */}
@@ -47,7 +51,7 @@ function AlefPaths({ activePart }: { activePart?: string | null }) {
         d="M272 64 L108 296"
         strokeWidth={32}
         style={partStyle("vav", activePart)}
-        {...common}
+        {...STROKE}
       />
       {/* Yud superior — la bandera de arriba-derecha */}
       <path
@@ -56,7 +60,7 @@ function AlefPaths({ activePart }: { activePart?: string | null }) {
         d="M204 140 L298 90"
         strokeWidth={30}
         style={partStyle("yud-top", activePart)}
-        {...common}
+        {...STROKE}
       />
       {/* Yud inferior — el pie de abajo-izquierda */}
       <path
@@ -65,22 +69,94 @@ function AlefPaths({ activePart }: { activePart?: string | null }) {
         d="M168 214 L74 262"
         strokeWidth={30}
         style={partStyle("yud-bottom", activePart)}
-        {...common}
+        {...STROKE}
       />
     </>
   );
 }
 
+/**
+ * Vav: un solo descenso con su cabecita arriba. La cabeza se extiende hacia UN
+ * lado y el cuerpo baja desde su extremo — de ahí que la Vav sea puro descenso.
+ */
+function VavPaths({ activePart }: { activePart?: string | null }) {
+  return (
+    <>
+      {/* Cabeza (la corona) — el remate tipo Yud del que nace la letra */}
+      <path
+        id="vav-head"
+        data-part="vav-head"
+        d="M144 100 L216 100"
+        strokeWidth={32}
+        style={partStyle("vav-head", activePart)}
+        {...STROKE}
+      />
+      {/* Cuerpo (el descenso) — el canal recto */}
+      <path
+        id="vav-body"
+        data-part="vav-body"
+        d="M204 100 L204 284"
+        strokeWidth={32}
+        style={partStyle("vav-body", activePart)}
+        {...STROKE}
+      />
+    </>
+  );
+}
+
+/**
+ * Zayin: la misma Vav, pero su cabeza se extiende hacia AMBOS lados y el cuerpo
+ * baja desde el centro. Por eso la cabeza deja de ser remate y parece corona
+ * (Ginsburgh) — y el conjunto, una espada. Esa diferencia ES la enseñanza.
+ */
+function ZayinPaths({ activePart }: { activePart?: string | null }) {
+  return (
+    <>
+      {/* La corona — se abre a los dos lados */}
+      <path
+        id="zayin-crown"
+        data-part="zayin-crown"
+        d="M120 100 L240 100"
+        strokeWidth={32}
+        style={partStyle("zayin-crown", activePart)}
+        {...STROKE}
+      />
+      {/* La hoja — desciende desde el centro de la corona */}
+      <path
+        id="zayin-blade"
+        data-part="zayin-blade"
+        d="M180 100 L180 284"
+        strokeWidth={32}
+        style={partStyle("zayin-blade", activePart)}
+        {...STROKE}
+      />
+    </>
+  );
+}
+
+const GLYPHS: Record<
+  string,
+  { label: string; Paths: (p: { activePart?: string | null }) => React.ReactElement }
+> = {
+  alef: { label: "Álef", Paths: AlefPaths },
+  vav: { label: "Vav", Paths: VavPaths },
+  zayin: { label: "Zayin", Paths: ZayinPaths },
+};
+
 export default function LetterGlyph({ slug, activePart }: GlyphProps) {
+  const glyph = GLYPHS[slug];
+  if (!glyph) return null;
+  const { label, Paths } = glyph;
+
   return (
     <svg
       viewBox="0 0 360 360"
       role="img"
-      aria-label="Álef"
+      aria-label={label}
       className="h-full w-full select-none"
       style={{ overflow: "visible" }}
     >
-      {slug === "alef" ? <AlefPaths activePart={activePart} /> : null}
+      <Paths activePart={activePart} />
     </svg>
   );
 }
