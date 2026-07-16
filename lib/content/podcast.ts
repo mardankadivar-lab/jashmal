@@ -77,6 +77,18 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     audioSrc: "/audio/podcast/es-shamati-03.mp3",
     spotifyShowUrl: SPOTIFY_SHOW_ES,
   },
+  {
+    slug: "es-shamati-04",
+    locale: "es",
+    season: 1,
+    episode: 4,
+    title: "Por qué nos pesa dejar el ego — Shamati, Baal HaSulam",
+    description:
+      "¿Por qué cuesta tanto soltar el ego? Conversamos sobre la cuarta enseñanza de Shamati («Escuché»), del cabalista Rav Yehuda Ashlag, Baal HaSulam: la pesadez que sentimos al anularnos ante el Creador tiene una sola causa — no sentir Su presencia. Cuando el alma percibe la existencia del Creador, se anula sola, con gozo, «como una vela ante una antorcha». Conversación generada con IA a partir del texto original.",
+    durationSec: 1218,
+    audioSrc: "/audio/podcast/es-shamati-04.mp3",
+    spotifyShowUrl: SPOTIFY_SHOW_ES,
+  },
 
   // ── Farsi — "Jashmal | خشمل" ────────────────────────────────────────────
   {
