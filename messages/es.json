@@ -36,7 +36,7 @@
   },
   "podcast": {
     "title": "Podcast",
-    "subtitle": "Conversaciones sobre las enseñanzas de Shamati, del Baal HaSulam. Escúchalas aquí mismo, o en Spotify.",
+    "subtitle": "Conversaciones sobre las grandes obras de la Cabalá. Escúchalas aquí mismo, o en Spotify.",
     "seasonEpisode": "T{season} · E{episode}",
     "play": "Reproducir",
     "pause": "Pausar",

@@ -12,16 +12,34 @@
  *  El locale del episodio decide en qué versión del sitio se muestra:
  *  /es/podcast → episodios "es" · /fa/podcast → episodios "fa".
  *  /en/podcast muestra los "es" con un aviso en inglés.
+ *
+ *  Los episodios se agrupan por OBRA (`serie`), no por tema: un episodio
+ *  pertenece a un solo libro, mientras que un tema lo cruzaría en varios.
+ *  Para sumar una obra nueva: una entrada en PODCAST_SERIES + `serie` en sus
+ *  episodios. La agrupación de la página se acomoda sola.
  * ─────────────────────────────────────────────────────────────────────────
  */
 
 export type PodcastLocale = "es" | "fa";
+
+/** Una obra estudiada en el podcast (Shamati, Likutei Moharan, …). */
+export type PodcastSeries = {
+  slug: string;
+  /** Nombre hebreo de la obra — encabeza su grupo. */
+  he: string;
+  /** Rótulo en cada idioma. Español primero: la audiencia no lee hebreo. */
+  title: Record<PodcastLocale, string>;
+  /** Una línea que sitúa la obra para quien nunca la ha oído nombrar. */
+  blurb: Record<PodcastLocale, string>;
+};
 
 export type PodcastEpisode = {
   /** Identificador estable (también nombre del archivo mp3). */
   slug: string;
   /** Idioma del episodio: decide en qué versión del sitio aparece. */
   locale: PodcastLocale;
+  /** Obra a la que pertenece → `slug` de PODCAST_SERIES. */
+  serie: string;
   season: number;
   episode: number;
   title: string;
@@ -38,11 +56,32 @@ export type PodcastEpisode = {
 const SPOTIFY_SHOW_ES = "https://open.spotify.com/show/033QcCauKm3tHaRO6QsmqJ";
 const SPOTIFY_SHOW_FA = "https://open.spotify.com/show/6hXNwt8vOdFpWB0iPuu1J9";
 
+/**
+ * Las obras, en el orden en que se muestran.
+ * Nota de producción: en el sitio agrupamos por obra; en Spotify, que solo
+ * entiende temporadas, cada obra es una temporada (Shamati = T1).
+ */
+export const PODCAST_SERIES: PodcastSeries[] = [
+  {
+    slug: "shamati",
+    he: "שָׁמַעְתִּי",
+    title: {
+      es: "Shamati — Baal HaSulam",
+      fa: "شمعتی — بعل هسولام",
+    },
+    blurb: {
+      es: "«Escuché». Las enseñanzas que Rav Yehuda Ashlag, Baal HaSulam, transmitió de viva voz.",
+      fa: "«شنیدم». آموزه‌هایی که راو یهودا اشلگ، بعل هسولام، سینه‌به‌سینه منتقل کرد.",
+    },
+  },
+];
+
 export const PODCAST_EPISODES: PodcastEpisode[] = [
   // ── Español — "Jashmal en Español" ──────────────────────────────────────
   {
     slug: "es-shamati-01",
     locale: "es",
+    serie: "shamati",
     season: 1,
     episode: 1,
     title: "Solo existe una fuerza detrás de todo — Shamati, Baal HaSulam",
@@ -55,6 +94,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
   {
     slug: "es-shamati-02",
     locale: "es",
+    serie: "shamati",
     season: 1,
     episode: 2,
     title:
@@ -68,6 +108,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
   {
     slug: "es-shamati-03",
     locale: "es",
+    serie: "shamati",
     season: 1,
     episode: 3,
     title: "La mecánica interna del logro espiritual — Shamati, Baal HaSulam",
@@ -80,6 +121,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
   {
     slug: "es-shamati-04",
     locale: "es",
+    serie: "shamati",
     season: 1,
     episode: 4,
     title: "Por qué nos pesa dejar el ego — Shamati, Baal HaSulam",
@@ -94,6 +136,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
   {
     slug: "fa-shamati-01",
     locale: "fa",
+    serie: "shamati",
     season: 1,
     episode: 1,
     title: "هیچ قدرتی در جهان جز او نیست",
@@ -107,6 +150,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
   {
     slug: "fa-shamati-02",
     locale: "fa",
+    serie: "shamati",
     season: 1,
     episode: 2,
     title: "خداوند در تبعید و راز رنج های ما",
@@ -120,6 +164,7 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
   {
     slug: "fa-shamati-03",
     locale: "fa",
+    serie: "shamati",
     season: 1,
     episode: 3,
     title: "واقعیت تنها بازتاب ظرف ادراک ماست",
@@ -132,11 +177,39 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
   },
 ];
 
+/** Idioma de contenido para una ruta. /en aún no tiene episodios propios. */
+function contentLocale(locale: string): PodcastLocale {
+  return locale === "fa" ? "fa" : "es";
+}
+
 /** Episodios del idioma pedido, ordenados por temporada y número. */
 export function episodesForLocale(locale: string): PodcastEpisode[] {
-  // /en/podcast todavía no tiene episodios propios: muestra los de español.
-  const target: PodcastLocale = locale === "fa" ? "fa" : "es";
+  const target = contentLocale(locale);
   return PODCAST_EPISODES.filter((e) => e.locale === target).sort(
     (a, b) => a.season - b.season || a.episode - b.episode,
   );
+}
+
+export type PodcastSeriesWithEpisodes = {
+  slug: string;
+  he: string;
+  title: string;
+  blurb: string;
+  episodes: PodcastEpisode[];
+};
+
+/**
+ * Las obras con sus episodios en el idioma pedido, listas para renderizar.
+ * Una obra sin episodios en ese idioma no se devuelve (no se anuncia vacía).
+ */
+export function seriesForLocale(locale: string): PodcastSeriesWithEpisodes[] {
+  const target = contentLocale(locale);
+  const episodes = episodesForLocale(locale);
+  return PODCAST_SERIES.map((s) => ({
+    slug: s.slug,
+    he: s.he,
+    title: s.title[target],
+    blurb: s.blurb[target],
+    episodes: episodes.filter((e) => e.serie === s.slug),
+  })).filter((s) => s.episodes.length > 0);
 }

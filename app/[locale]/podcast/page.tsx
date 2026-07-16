@@ -2,11 +2,12 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import SiteHeader from "@/components/SiteHeader";
-import { episodesForLocale } from "@/lib/content/podcast";
+import { seriesForLocale } from "@/lib/content/podcast";
 import PodcastPlayer from "@/components/podcast/PodcastPlayer";
 
 /**
- * /podcast — episodios del podcast con reproductor NATIVO (auto-hospedado).
+ * /podcast — episodios del podcast con reproductor NATIVO (auto-hospedado),
+ * agrupados por OBRA (Shamati, y las que vengan).
  * Decisión de arquitectura: Spotify no funciona en Irán y la audiencia farsi
  * es clave, así que el player del sitio es el principal y Spotify el botón
  * secundario. /es → episodios en español · /fa → en farsi (RTL) ·
@@ -17,20 +18,14 @@ export default function PodcastPage() {
   const fa = locale === "fa";
   const t = useTranslations("podcast");
 
-  const episodes = episodesForLocale(locale);
+  const series = seriesForLocale(locale);
 
   return (
     <>
     <SiteHeader />
     <main className="mx-auto max-w-3xl px-5 pb-24 pt-12" dir={fa ? "rtl" : "ltr"}>
-      {/* Encabezado */}
-      <div className="mb-12 text-center">
-        <p
-          className="hebrew mb-2 text-3xl text-gold/80"
-          style={{ filter: "drop-shadow(0 0 10px rgba(201,164,62,0.4))" }}
-        >
-          שָׁמַעְתִּי
-        </p>
+      {/* Encabezado — de la sección, no de una obra: el hebreo vive en cada obra */}
+      <div className="mb-14 text-center">
         <h1 className="font-cinzel text-2xl font-bold tracking-wide text-parchment sm:text-3xl">
           {t("title")}
         </h1>
@@ -44,9 +39,29 @@ export default function PodcastPage() {
         )}
       </div>
 
-      {/* Episodios */}
-      <div className="flex flex-col gap-6">
-        {episodes.map((ep) => (
+      {/* Una sección por obra */}
+      <div className="flex flex-col gap-16">
+        {series.map((serie) => (
+          <section key={serie.slug}>
+            {/* Encabezado de la obra: hebreo grande, español debajo */}
+            <div className="mb-7 text-center">
+              <p
+                className="hebrew mb-2 text-3xl text-gold/80"
+                style={{ filter: "drop-shadow(0 0 10px rgba(201,164,62,0.4))" }}
+              >
+                {serie.he}
+              </p>
+              <h2 className="font-cinzel text-lg font-bold tracking-wide text-parchment sm:text-xl">
+                {serie.title}
+              </h2>
+              <p className="mx-auto mt-2 max-w-md text-xs leading-relaxed text-muted">
+                {serie.blurb}
+              </p>
+              <div className="mx-auto mt-5 h-px w-16 bg-gold/25" />
+            </div>
+
+            <div className="flex flex-col gap-6">
+        {serie.episodes.map((ep) => (
           <article
             key={ep.slug}
             className="relative overflow-hidden rounded-2xl border border-gold/25 p-6 transition-colors hover:border-gold/40"
@@ -99,6 +114,9 @@ export default function PodcastPage() {
               </a>
             </div>
           </article>
+        ))}
+            </div>
+          </section>
         ))}
       </div>
     </main>
