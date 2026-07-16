@@ -30,7 +30,7 @@ import os, sys, json, subprocess, tempfile
 
 # ── Portadas de marca (assets) ───────────────────────────────────────────
 VIDEOS_DIR  = os.path.expanduser("~/Desktop/jashmal-videos")
-ENDCARD_ES  = os.path.join(VIDEOS_DIR, "jashmal_endcard_ES_clean.png")   # ES, sin botón
+ENDCARD_ES  = os.path.join(VIDEOS_DIR, "jashmal_endcard_portal_ES.png")   # ES PORTAL oficial (lamed+JASHMAL.ORG) 2026-06-23
 ENDCARD_EN  = os.path.expanduser("~/Desktop/jashmal_endcard_big.png")     # EN (1290×2406)
 
 # ── Parámetros del beat (estándar) ───────────────────────────────────────
