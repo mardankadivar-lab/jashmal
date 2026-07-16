@@ -31,7 +31,17 @@
     "groupKnowYourself": "Conócete",
     "soulMap": "Mapa del Alma",
     "soulMirror": "El Espejo del Alma",
-    "ask": "Preguntar"
+    "ask": "Preguntar",
+    "podcast": "Podcast"
+  },
+  "podcast": {
+    "title": "Podcast",
+    "subtitle": "Conversaciones sobre las enseñanzas de Shamati, del Baal HaSulam. Escúchalas aquí mismo, o en Spotify.",
+    "seasonEpisode": "T{season} · E{episode}",
+    "play": "Reproducir",
+    "pause": "Pausar",
+    "spotify": "Escuchar en Spotify",
+    "enNotice": "Episodes are currently available in Spanish and Farsi."
   },
   "hero": {
     "kicker": "Cabalá y filosofía judía",

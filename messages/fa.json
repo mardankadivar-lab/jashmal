@@ -31,7 +31,17 @@
     "groupKnowYourself": "خود را بشناس",
     "soulMap": "نقشهٔ روح",
     "soulMirror": "آینهٔ روح",
-    "ask": "پرسیدن"
+    "ask": "پرسیدن",
+    "podcast": "پادکست"
+  },
+  "podcast": {
+    "title": "پادکست",
+    "subtitle": "گفت‌وگوهایی دربارهٔ آموزه‌های شمعتی، اثر بعل هسولام. همین‌جا گوش کنید، یا در اسپاتیفای.",
+    "seasonEpisode": "فصل {season, number} · قسمت {episode, number}",
+    "play": "پخش",
+    "pause": "توقف",
+    "spotify": "شنیدن در اسپاتیفای",
+    "enNotice": "Episodes are currently available in Spanish and Farsi."
   },
   "hero": {
     "kicker": "کابالا و فلسفهٔ یهودی",

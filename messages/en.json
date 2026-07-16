@@ -31,7 +31,17 @@
     "groupKnowYourself": "Know Yourself",
     "soulMap": "Map of the Soul",
     "soulMirror": "The Mirror of the Soul",
-    "ask": "Ask"
+    "ask": "Ask",
+    "podcast": "Podcast"
+  },
+  "podcast": {
+    "title": "Podcast",
+    "subtitle": "Conversations on the teachings of Shamati, by Baal HaSulam. Listen right here, or on Spotify.",
+    "seasonEpisode": "S{season} · E{episode}",
+    "play": "Play",
+    "pause": "Pause",
+    "spotify": "Listen on Spotify",
+    "enNotice": "Episodes are currently available in Spanish and Farsi."
   },
   "hero": {
     "kicker": "Kabbalah and Jewish philosophy",

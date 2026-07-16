@@ -27,6 +27,7 @@ const GROUPS: Group[] = [
       ["/letras", "nav.letters"],
       ["/gematrias", "nav.gematria"],
       ["/misterios", "nav.mysteries"],
+      ["/podcast", "nav.podcast"],
       ["/atlas", "nav.atlas"],
       ["/mente-cosmica", "nav.brain"],
     ],
