@@ -6,6 +6,7 @@ import { LESSONS8 } from "@/lib/academia/modulo8";
 import { LESSONS9 } from "@/lib/academia/modulo9";
 import { LESSONS10 } from "@/lib/academia/modulo10";
 import { LESSONS11 } from "@/lib/academia/modulo11";
+import { LETTERS } from "@/lib/letters";
 
 // Re-exported from each modulo so the sitemap can stay DRY
 // modulo2–7 lesson slugs (hardcoded to avoid importing full module files)
@@ -59,6 +60,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   items.push(...entry("/misterios", { priority: 0.9, changeFrequency: "weekly" }));
   items.push(...entry("/letras", { priority: 0.8 }));
   items.push(...entry("/gematrias", { priority: 0.8, changeFrequency: "weekly" }));
+  items.push(...entry("/podcast", { priority: 0.8, changeFrequency: "weekly" }));
   items.push(...entry("/viaje", { priority: 0.8 }));
   items.push(...entry("/que-es-cabala", { priority: 0.8 }));
   items.push(...entry("/acerca", { priority: 0.6 }));
@@ -122,8 +124,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     items.push(...entry(`/misterio/${m.slug}`, { priority: 0.8, changeFrequency: "yearly" }));
   }
 
-  // ── Letras ──────────────────────────────────────────────────────────────
-  items.push(...entry("/letra/alef", { priority: 0.75 }));
+  // ── Letras (experiencia inmersiva; una entrada por letra registrada) ────
+  for (const slug of Object.keys(LETTERS)) {
+    items.push(...entry(`/letra/${slug}`, { priority: 0.75 }));
+  }
 
   // ── El Viaje de la Creación — estaciones ───────────────────────────────
   for (const e of ESTACIONES_DATA) {

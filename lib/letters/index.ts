@@ -2,9 +2,11 @@
 // nueva: crear lib/letters/<slug>.ts y registrarla aquí. Nada más.
 import type { LetterData } from "./types";
 import { alef } from "./alef";
+import { vav } from "./vav";
 
 export const LETTERS: Record<string, LetterData> = {
   alef,
+  vav, // enseñanza verificada por el Sofer (Ginsburgh 3×3) — 2026-07-14
   // bet, guimel, … (se agregan a medida que el Sofer verifica su contenido)
 };
 
