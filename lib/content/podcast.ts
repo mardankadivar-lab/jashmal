@@ -65,6 +65,18 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     audioSrc: "/audio/podcast/es-shamati-02.mp3",
     spotifyShowUrl: SPOTIFY_SHOW_ES,
   },
+  {
+    slug: "es-shamati-03",
+    locale: "es",
+    season: 1,
+    episode: 3,
+    title: "La mecánica interna del logro espiritual — Shamati, Baal HaSulam",
+    description:
+      "¿Puedes describir un sabor que nunca has probado? Conversamos sobre la tercera enseñanza de Shamati («Escuché»), del cabalista Rav Yehuda Ashlag, Baal HaSulam: «lo que no alcanzamos, no lo conocemos por nombre». De la Esencia divina no hablamos jamás; solo conocemos la luz que llega a nosotros y la forma en que la recibimos. Espiritualidad no es especular: es alcanzar, vivir, saborear. Conversación generada con IA a partir del texto original.",
+    durationSec: 1500,
+    audioSrc: "/audio/podcast/es-shamati-03.mp3",
+    spotifyShowUrl: SPOTIFY_SHOW_ES,
+  },
 
   // ── Farsi — "Jashmal | خشمل" ────────────────────────────────────────────
   {
