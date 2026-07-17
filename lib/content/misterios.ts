@@ -773,6 +773,19 @@ export const MISTERIOS: Misterio[] = [
     color: "#e8945a",
     orden: 18.5,
   },
+  {
+    slug: "likutei-moharan-i-5",
+    he: "בַּחֲצֹצְרוֹת וְקוֹל שׁוֹפָר",
+    titulo: "La voz que se vuelve trueno y quiebra el decreto",
+    tituloFa: "صدایی که رعد می‌شود و حکم را درهم می‌شکند",
+    tituloEn: "The Voice That Becomes Thunder and Breaks the Decree",
+    gancho: "Tu plegaria, dicha con fuerza pura, se vuelve trueno que endereza el corazón.",
+    ganchoFa: "دعایی که با نیرویی پاک گفته شود، رعدی می‌شود که قلب را راست می‌کند.",
+    ganchoEn: "Prayer spoken with pure force becomes thunder that straightens the heart.",
+    serie: "shabat",
+    color: "#e8945a",
+    orden: 19,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".

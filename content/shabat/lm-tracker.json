@@ -1,7 +1,7 @@
 {
   "parte": "I",
-  "numero": 5,
-  "ultima_fecha": "2026-07-10",
+  "numero": 6,
+  "ultima_fecha": "2026-07-17",
   "historial": [
     {
       "parte": "I",
@@ -34,6 +34,14 @@
       "tema": "Saber que todo lo que sucede es para bien —anticipo del Mundo Venidero— mediante la confesión hablada (vidui devarim) ante el sabio, que unifica Havayá (misericordia) y Elokim (juicio); אֶחָד=אַהֲבָה=13",
       "slug": "likutei-moharan-i-4",
       "archivo": "LM-I4-2026-07-10.md"
+    },
+    {
+      "parte": "I",
+      "numero": 5,
+      "fecha": "2026-07-17",
+      "tema": "La voz de la plegaria que se vuelve trueno (raam), endereza la torcedura del corazon y quiebra el decreto; servir por el gozo de la mitzva (no por la paga) como diagnostico y llave; guevura dentro de jesed",
+      "slug": "likutei-moharan-i-5",
+      "archivo": "LM-I5-2026-07-17.md"
     }
   ]
 }
