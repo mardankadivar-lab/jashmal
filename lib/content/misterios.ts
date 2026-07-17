@@ -675,6 +675,23 @@ export const MISTERIOS: Misterio[] = [
     color: "#8a7bf0",
     orden: 15.85,
   },
+  {
+    slug: "411",
+    numero: "411",
+    he: "תֹהוּ = יֵשׁ מֵאַיִן",
+    titulo: "411 — El cero y el uno de la creación",
+    tituloFa: "۴۱۱ — صفر و یکِ آفرینش",
+    tituloEn: "411 — The Zero and the One of Creation",
+    gancho:
+      "Toda la realidad se reduce a dos estados: 0 y 1, apagado y encendido, la nada y el ser. Cuando Leibniz inventó el sistema binario lo llamó «imagen de la creación»: el 1 es el ser, el 0 es la nada. La Cabalá lo dijo antes: crear es yesh me'ayin —sacar algo (1) de la nada (0)—. Y el vacío primordial de la Torá, tohu (Génesis 1:2), vale 411 = 3 × 137: el número de la luz, tres veces, escrito en el cero y el uno de la creación.",
+    ganchoFa:
+      "تمامِ واقعیت به دو حالت فرومی‌کاهد: ۰ و ۱، خاموش و روشن، نیستی و هستی. لایبنیتس چون نظامِ دوتایی را ابداع کرد، آن را «تصویرِ آفرینش» نامید: ۱ هستی است، ۰ نیستی. کابالا پیش‌تر گفته بود: آفریدن یعنی یِش مِآیین — برآوردنِ چیزی (۱) از هیچ (۰). و تُهوی نخستین، تهیِ آغازینِ تورات (پیدایش ۱:۲)، برابرِ ۴۱۱ = ۳ × ۱۳۷ است: عددِ نور، سه بار، نوشته در صفر و یکِ آفرینش.",
+    ganchoEn:
+      "All of reality reduces to two states: 0 and 1, off and on, nothing and being. When Leibniz invented the binary system he called it an “image of creation”: 1 is being, 0 is nothing. Kabbalah said it first: to create is yesh me'ayin —drawing something (1) out of nothing (0). And the primordial void of the Torah, tohu (Genesis 1:2), equals 411 = 3 × 137: the number of light, three times, written into the zero and the one of creation.",
+    serie: "ciencia",
+    color: "#3fd0b0",
+    orden: 15.97,
+  },
 
   // ── SERIE "PARASHA" — Estudios completos de parashá con PaRDeS ───────────────
   // Cada entrada de parashá es el ÍNDICE de enseñanzas en /misterio/{slug}.
