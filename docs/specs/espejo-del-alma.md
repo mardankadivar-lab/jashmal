@@ -140,6 +140,18 @@ R11 — El que es mejor por dentro de lo que aparenta (alma de misericordia). **
   el cuestionario como 5ª opción de Q1 ("por dentro me ablando, se me aguan los ojos…"), peso 2.
   (Frente / conducta.)
 
+R12 — La confianza a medias / el que no sabe guardar un secreto. **Zohar, Yitro 7:89** (sección
+  de los OJOS, párrafo de los «ojos donde no asoma tono negro») — "מְהֵימָנָא אִיהוּ בְּמָה
+  דְּאִשְׁתְּמוֹדְעא, וּבַמֶּה דְּלָא אִשְׁתְּמוֹדְעָא לָאו מְהֵימָנָא אִיהוּ… מָארֵיהּ דְּרָזִין אִיהוּ… עַד
+  דְּיִשְׁמַע לְהַהוּא רָזָא בְּאֲתָר אַחֲרָא. כֵּיוָן דִּשְׁמַע לֵיהּ גַּלֵּי כֹּלָּא. וְלָאו עִמֵּיהּ רָזָא כְּלָל,
+  דְּכָל מִלּוֹי לָאו אִינּוּן בִּשְׁלִימוּ" (fiel en lo que ya se conoce, no en lo que nadie verifica;
+  guarda el secreto solo hasta oírlo en otra parte, y entonces lo revela todo — no queda secreto
+  con él, porque sus palabras no son «completas»). Ref REAL confirmada por llamada directa a la API
+  de Sefaria (api/v3/texts, ref="Zohar, Yitro 7:89"). Midá: נֶאֱמָנוּת (fidelidad). Espejo: ¿Guardo
+  de verdad un secreto, o lo suelto en cuanto lo oigo de otro lado? Distinto de R5 (lashón hará) y
+  de R8 (secretos grandes, tibio en lo pequeño). Integrado como 6ª opción de Q4 ("soltar lo que me
+  confían una vez que ya lo sé por otro lado"), peso 2. (Ojos / conducta.)
+
 ## RASGOS FÍSICOS AUTO-DESCRITOS (sin foto)
 La persona se describe a sí misma en palabras; cada opción mapea al texto verificado. NUNCA se
 pide ni se analiza una imagen. Estas auto-descripciones son material de meditación, no diagnóstico.

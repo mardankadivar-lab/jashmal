@@ -294,7 +294,7 @@ export const ESPEJO_NOTA_ARIZAL = {
 };
 
 export interface RasgoTema {
-  id: "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8" | "R9" | "R10" | "R11";
+  id: "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8" | "R9" | "R10" | "R11" | "R12";
   /** título corto del rasgo-tema */
   titulo: string;
   /** fuente exacta verificada, texto legible (ej. "Zohar, Yitró 6:77") */
@@ -464,6 +464,30 @@ export const RASGOS: RasgoTema[] = [
     opuesto: "El corazón constante: una misericordia que ya no se esconde ni va y viene, sino devoción firme del lado del amor, no del juicio.",
     color: "#d98aa6",
   },
+  {
+    // Sección de los OJOS (עַיְינִין). Ref real verificada en Sefaria por el Sofer
+    // (2026-07-21): Zohar, Yitro 7:89 — el párrafo de los «ojos donde no asoma
+    // tono negro». Cita aramea VERBATIM de Sefaria (Vocalized Zohar, Israel 2013),
+    // confirmada por llamada directa a la API (api/v3/texts, ref="Zohar, Yitro 7:89"):
+    //   "…מְהֵימָנָא אִיהוּ בְּמָה דְּאִשְׁתְּמוֹדְעא. וּבַמֶּה דְּלָא אִשְׁתְּמוֹדְעָא לָאו מְהֵימָנָא אִיהוּ.
+    //    מָארֵיהּ דְּרָזִין אִיהוּ… עַד דְּיִשְׁמַע לְהַהוּא רָזָא בְּאֲתָר אַחֲרָא. כֵּיוָן דִּשְׁמַע לֵיהּ גַּלֵּי
+    //    כֹּלָּא. וְלָאו עִמֵּיהּ רָזָא כְּלָל, דְּכָל מִלּוֹי לָאו אִינּוּן בִּשְׁלִימוּ" (fiel en lo que ya se
+    //   conoce, no en lo que nadie verifica; guarda un secreto solo hasta oírlo en
+    //   otra parte, y entonces lo revela todo — no queda secreto con él, porque sus
+    //   palabras no son «completas / enteras»). Rasgo NUEVO y distinto: no es R5
+    //   (lashón hará / palabra hiriente) ni R8 (secretos grandes, tibio en lo
+    //   pequeño), sino la NE'EMANUT — la fidelidad a medias y el no saber callar.
+    id: "R12",
+    titulo: "La confianza a medias / el que no sabe guardar un secreto",
+    fuente: "Zohar, Yitró 7:89",
+    fuenteRef: "Zohar, Yitro 7:89",
+    citaHe:
+      "מְהֵימָנָא אִיהוּ בְּמָה דְּאִשְׁתְּמוֹדְעא, וּבַמֶּה דְּלָא אִשְׁתְּמוֹדְעָא לָאו מְהֵימָנָא אִיהוּ… מָארֵיהּ דְּרָזִין אִיהוּ בְּמִלָּה דְּאִיהוּ רָזָא, עַד דְּיִשְׁמַע לְהַהוּא רָזָא בְּאֲתָר אַחֲרָא; כֵּיוָן דִּשְׁמַע לֵיהּ גַּלֵּי כֹּלָּא, וְלָאו עִמֵּיהּ רָזָא כְּלָל",
+    mida: "נֶאֱמָנוּת (fidelidad): guardar lo que me confían y ser veraz también en lo que nadie comprueba.",
+    espejo: "¿Guardo de verdad un secreto, o lo suelto en cuanto lo oigo de otro lado? ¿Soy tan fiel en lo que nadie verifica como en lo que sí?",
+    opuesto: "La confianza entera: una fidelidad que guarda lo confiado hasta el final y es igual de veraz en lo oculto — palabra completa, no a medias.",
+    color: "#b5763e",
+  },
 ];
 
 // Rabbeinu Bachya sobre Shemot 18:21 — VERBATIM (cierre obligatorio del Espejo).
@@ -560,6 +584,9 @@ export const PREGUNTAS: Pregunta[] = [
       { texto: "diluirme en lo que quieren", rasgos: ["R4"], textoFa: "در خواسته‌هایشان حل شوم" },
       { texto: "ser tibio en lo pequeño", rasgos: ["R8"], textoFa: "در چیزهای کوچک سهل‌انگار باشم" },
       { texto: "ser amable, pero pensando primero en lo mío", rasgos: ["R10"], textoFa: "مهربان باشم، اما نخست به سودِ خودم بیندیشم" },
+      // R12 (Zohar Yitro 7:89): "עַד דְּיִשְׁמַע לְהַהוּא רָזָא בְּאֲתָר אַחֲרָא… גַּלֵּי כֹּלָּא" —
+      // guarda la confianza solo hasta oírla en otro lado, y entonces la suelta.
+      { texto: "soltar lo que me confían una vez que ya lo sé por otro lado", rasgos: ["R12"], textoFa: "رازی را که به من سپرده‌اند، همین‌که از جایی دیگر بشنومش، فاش می‌کنم" },
     ],
   },
   {
