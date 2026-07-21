@@ -146,6 +146,13 @@ export interface Hero {
   // fecha del Shabat en que se leyó esta parashá (solo parashiot)
   // formato: "Shabat · 5 Tammuz 5786 · 20 jun 2026"
   fecha?: string;
+  // Enlace "volver" del nav (OPCIONAL). Por defecto apunta a la puerta de la
+  // serie del Mashíaj (/misterio/enigma-mashiaj), que es de donde nació esta
+  // plantilla. Los estudios de OTRAS series (p. ej. gematría) pueden apuntar a
+  // /misterios con su propio rótulo. Si se omite, el comportamiento no cambia.
+  backHref?: string;
+  backLabel?: string;    // es
+  backLabelFa?: string;  // fa
 }
 
 // Bloque de párrafo del cuerpo: puede llevar una etiqueta dorada (ej. "Rashi.").
@@ -271,8 +278,8 @@ export default function EstudioMisterio({
       {!embedded && (
         <nav className="sticky top-0 z-40 border-b border-gold/10 px-5 py-3 backdrop-blur-md" style={{ background: navBg }}>
           <div className="mx-auto flex max-w-2xl items-center justify-between">
-            <Link href="/misterio/enigma-mashiaj" className="font-cinzel text-sm text-gold/70 hover:text-gold">
-              {fa ? "→ معمای ماشیح" : "← El Enigma del Mashíaj"}
+            <Link href={h.backHref ?? "/misterio/enigma-mashiaj"} className="font-cinzel text-sm text-gold/70 hover:text-gold">
+              {fa ? (h.backLabelFa ?? "→ معمای ماشیح") : (h.backLabel ?? "← El Enigma del Mashíaj")}
             </Link>
             <div className="flex items-center gap-3">
               <MisterioLangToggle />
