@@ -102,7 +102,7 @@ export default function PodcastPage() {
             {/* Spotify — opción secundaria */}
             <div className="mt-4">
               <a
-                href={ep.spotifyShowUrl}
+                href={ep.spotifyEpisodeUrl ?? ep.spotifyShowUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-lg border border-gold/25 px-3.5 py-2 font-cinzel text-xs uppercase tracking-widest text-gold/80 transition-colors hover:border-gold/50 hover:bg-gold/10 hover:text-gold"

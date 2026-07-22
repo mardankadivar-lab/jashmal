@@ -55,6 +55,11 @@ export type PodcastEpisode = {
   audioSrc: string;
   /** Show completo en Spotify (no el episodio suelto). */
   spotifyShowUrl: string;
+  /**
+   * Episodio suelto en Spotify (forma canónica, sin `?si=`). Cuando existe, el
+   * botón "Escuchar en Spotify" lleva directo a este episodio; si no, cae al show.
+   */
+  spotifyEpisodeUrl?: string;
 };
 
 const SPOTIFY_SHOW_ES = "https://open.spotify.com/show/033QcCauKm3tHaRO6QsmqJ";
@@ -150,6 +155,20 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     spotifyShowUrl: SPOTIFY_SHOW_ES,
   },
   {
+    slug: "es-shamati-05",
+    locale: "es",
+    serie: "shamati",
+    season: 1,
+    episode: 5,
+    title: "La paradoja del esfuerzo humano — Shamati, Baal HaSulam",
+    description:
+      "Conversación sobre la quinta enseñanza de Shamati («Escuché»), del cabalista Rav Yehuda Ashlag, Baal HaSulam. Conversación generada con IA a partir del texto original.",
+    durationSec: 1086,
+    audioSrc: "/audio/podcast/es-shamati-05.mp3",
+    spotifyShowUrl: SPOTIFY_SHOW_ES,
+    spotifyEpisodeUrl: "https://open.spotify.com/episode/36HRJ7N0QoteFeNTWNKFKB",
+  },
+  {
     slug: "es-tanya-01",
     locale: "es",
     serie: "tanya",
@@ -162,6 +181,20 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     durationSec: 828,
     audioSrc: "/audio/podcast/es-tanya-01.mp3",
     spotifyShowUrl: SPOTIFY_SHOW_ES,
+  },
+  {
+    slug: "es-tanya-02",
+    locale: "es",
+    serie: "tanya",
+    season: 2,
+    episode: 2,
+    title: "La anatomía espiritual de tus dos almas — Tanya, capítulo 2",
+    description:
+      "El segundo capítulo del Tanya, de Rabí Shneur Zalman de Liadi. Conversación generada con IA a partir del texto original.",
+    durationSec: 1173,
+    audioSrc: "/audio/podcast/es-tanya-02.mp3",
+    spotifyShowUrl: SPOTIFY_SHOW_ES,
+    spotifyEpisodeUrl: "https://open.spotify.com/episode/3AJHKcKELCK9v19YCrym2L",
   },
 
   // ── Farsi — "Jashmal | خشمل" ────────────────────────────────────────────
