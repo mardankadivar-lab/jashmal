@@ -68,7 +68,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   items.push(...entry("/arbol", { priority: 0.7 }));
   items.push(...entry("/mapa-del-alma", { priority: 0.7 }));
   items.push(...entry("/espejo-del-alma", { priority: 0.7 }));
-  items.push(...entry("/alef", { priority: 0.7 }));
 
   // Rutas con pathnames localizados
   for (const locale of LOCALES) {

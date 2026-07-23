@@ -67,6 +67,14 @@ const nextConfig: NextConfig = {
       { source: "/es/cerebro", destination: "/es/mente-cosmica", permanent: true },
       { source: "/fa/cerebro", destination: "/fa/cosmic-mind", permanent: true },
       { source: "/en/cerebro", destination: "/en/cosmic-mind", permanent: true },
+
+      // "/alef" era un scrollytelling experimental previo al motor de letras.
+      // La página se eliminó (2026-07-23); todo enlace viejo cae en la
+      // experiencia inmersiva canónica de Álef (/letra/alef).
+      { source: "/alef", destination: "/letra/alef", permanent: true },
+      { source: "/es/alef", destination: "/es/letra/alef", permanent: true },
+      { source: "/fa/alef", destination: "/fa/letra/alef", permanent: true },
+      { source: "/en/alef", destination: "/en/letra/alef", permanent: true },
     ];
   },
 };
