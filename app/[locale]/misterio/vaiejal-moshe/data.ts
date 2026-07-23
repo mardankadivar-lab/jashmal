@@ -20,11 +20,11 @@ export const data: EstudioData = {
     serielabelFa: "",
     he: "וַיְחַל מֹשֶׁה",
     titulo: "El juramento que Dios necesitaba que alguien anulara",
-    tituloFa: "El juramento que Dios necesitaba que alguien anulara",
+    tituloFa: "سوگندی که خدا نیاز داشت کسی باطلش کند",
     ganchoEs:
       "Dios jura destruir a Israel. Una palabra rara en el texto —vaiéjal— dice que Moisés hizo algo mucho más audaz que rogar: anuló el juramento de Dios. Y el Talmud dice que Dios se lo permitió a propósito.",
     ganchoFa:
-      "Dios jura destruir a Israel. Una palabra rara en el texto —vaiéjal— dice que Moisés hizo algo mucho más audaz que rogar: anuló el juramento de Dios. Y el Talmud dice que Dios se lo permitió a propósito.",
+      "خدا سوگند می‌خورد اسرائیل را نابود کند. واژه‌ای کمیاب در متن — وَیِّخَل — می‌گوید موسی کاری بسی جسورانه‌تر از التماس کرد: سوگندِ خدا را باطل کرد. و تلمود می‌گوید خدا عمداً چنین اجازه‌ای به او داد.",
   },
   targum: {
     citas: [
