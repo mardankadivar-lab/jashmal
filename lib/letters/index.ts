@@ -11,6 +11,12 @@ import { zayin } from "./zayin";
 import { jet } from "./jet";
 import { tet } from "./tet";
 import { yod } from "./yod";
+import { kaf } from "./kaf";
+import { lamed } from "./lamed";
+import { mem } from "./mem";
+import { nun } from "./nun";
+import { samej } from "./samej";
+import { ayin } from "./ayin";
 
 // Orden alfabético hebreo. Cada letra entra SOLO con contenido verificado por
 // el Sofer (editor-erudito); registrarla aquí la PUBLICA en /letra/<slug>.
@@ -25,7 +31,13 @@ export const LETTERS: Record<string, LetterData> = {
   jet, // verificada — 2026-07-23
   tet, // verificada — 2026-07-23
   yod, // verificada — 2026-07-23
-  // kaf, lamed, … (se agregan a medida que el Sofer verifica su contenido)
+  kaf, // verificada — 2026-07-23
+  lamed, // verificada — 2026-07-23
+  mem, // verificada — 2026-07-23
+  nun, // verificada — 2026-07-23
+  samej, // verificada — 2026-07-23
+  ayin, // verificada — 2026-07-23
+  // pe, tzadi, … (se agregan a medida que el Sofer verifica su contenido)
 };
 
 export function getLetter(slug: string): LetterData | undefined {
