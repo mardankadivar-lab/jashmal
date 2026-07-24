@@ -17,6 +17,12 @@ import { mem } from "./mem";
 import { nun } from "./nun";
 import { samej } from "./samej";
 import { ayin } from "./ayin";
+import { pe } from "./pe";
+import { tzadi } from "./tzadi";
+import { kof } from "./kof";
+import { resh } from "./resh";
+import { shin } from "./shin";
+import { tav } from "./tav";
 
 // Orden alfabético hebreo. Cada letra entra SOLO con contenido verificado por
 // el Sofer (editor-erudito); registrarla aquí la PUBLICA en /letra/<slug>.
@@ -37,7 +43,13 @@ export const LETTERS: Record<string, LetterData> = {
   nun, // verificada — 2026-07-23
   samej, // verificada — 2026-07-23
   ayin, // verificada — 2026-07-23
-  // pe, tzadi, … (se agregan a medida que el Sofer verifica su contenido)
+  pe, // verificada — 2026-07-23
+  tzadi, // verificada — 2026-07-23
+  kof, // verificada — 2026-07-23
+  resh, // verificada — 2026-07-23
+  shin, // verificada — 2026-07-23
+  tav, // verificada — 2026-07-23
+  // ¡22/22! El alef-bet completo, cada letra verificada por el editor-erudito.
 };
 
 export function getLetter(slug: string): LetterData | undefined {
