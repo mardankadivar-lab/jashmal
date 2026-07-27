@@ -802,6 +802,19 @@ export const MISTERIOS: Misterio[] = [
     color: "#e8945a",
     orden: 19,
   },
+  {
+    slug: "likutei-moharan-i-6",
+    he: "דּוֹם לַה׳",
+    titulo: "La corona del que calla",
+    tituloFa: "تاجِ آن‌که خاموش می‌مانَد",
+    tituloEn: "The Crown of the One Who Keeps Silent",
+    gancho: "Te insultan. No respondes. En ese silencio nace una letra que te corona.",
+    ganchoFa: "به تو توهین می‌کنند و پاسخ نمی‌دهی؛ در آن سکوت حرفی زاده می‌شود که تاجِ توست.",
+    ganchoEn: "They insult you. You don't answer. In that silence a letter is born that crowns you.",
+    serie: "shabat",
+    color: "#e8945a",
+    orden: 19.5,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".

@@ -1,7 +1,7 @@
 {
   "parte": "I",
-  "numero": 6,
-  "ultima_fecha": "2026-07-17",
+  "numero": 7,
+  "ultima_fecha": "2026-07-26",
   "historial": [
     {
       "parte": "I",
@@ -42,6 +42,14 @@
       "tema": "La voz de la plegaria que se vuelve trueno (raam), endereza la torcedura del corazon y quiebra el decreto; servir por el gozo de la mitzva (no por la paga) como diagnostico y llave; guevura dentro de jesed",
       "slug": "likutei-moharan-i-5",
       "archivo": "LM-I5-2026-07-17.md"
+    },
+    {
+      "parte": "I",
+      "numero": 6,
+      "fecha": "2026-07-26",
+      "tema": "El honor verdadero se recibe callando: la teshuva empieza cuando te insultan y no respondes (dam -> dom); la kaf de kavod es Keter/Ehye; alef + dom = adam; teshuva sobre la teshuva; y el silencio solo funciona montado sobre kaf zejut",
+      "slug": "likutei-moharan-i-6",
+      "archivo": "LM-I6-2026-07-26.md"
     }
   ]
 }
