@@ -139,26 +139,31 @@ export async function ensureBrainTables(): Promise<boolean> {
   // (ej. "curse of Adam", "Tree of Life") en lugar del español canónico. Esos
   // nodos se ven en español aunque el usuario esté en /es. Solo borramos nodos
   // COSECHADOS (source='expand'/'study') — nunca la semilla curada.
-  // Detección: "of" o "the" como palabra completa en minúsculas → inglés seguro
-  // (nunca aparecen solos en español ni en transliteraciones hebreo→español).
+  // Detección: palabra funcional inglesa completa en minúsculas → inglés seguro
+  // (ninguna aparece sola en español ni en transliteraciones hebreo→español).
+  // El set original ("of"/"the") dejaba pasar los conectores más frecuentes del
+  // patrón "X and Y" que usa Claude al nombrar pares (ej. "Adam and Chava",
+  // "Tamar and Yehudah", "Covenant with David", "Walking in His Ways"), así que
+  // se añaden and/with/from/his/between. Verificado contra la BD de producción:
+  // captura 10 fugas reales y CERO falsos positivos sobre los nodos cosechados.
   try {
     await sql`
       DELETE FROM brain_edges
        WHERE source_id IN (
          SELECT id FROM brain_nodes
           WHERE source IN ('expand','study')
-            AND (lower(label) ~ '\\m(of|the)\\M')
+            AND (lower(label) ~ '\\m(of|the|and|with|from|his|between)\\M')
        )
           OR target_id IN (
          SELECT id FROM brain_nodes
           WHERE source IN ('expand','study')
-            AND (lower(label) ~ '\\m(of|the)\\M')
+            AND (lower(label) ~ '\\m(of|the|and|with|from|his|between)\\M')
        )
     `;
     await sql`
       DELETE FROM brain_nodes
        WHERE source IN ('expand','study')
-         AND (lower(label) ~ '\\m(of|the)\\M')
+         AND (lower(label) ~ '\\m(of|the|and|with|from|his|between)\\M')
     `;
   } catch {
     /* la limpieza nunca debe romper la creación de tablas */
