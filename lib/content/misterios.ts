@@ -706,6 +706,23 @@ export const MISTERIOS: Misterio[] = [
     color: "#3fd0b0",
     orden: 15.97,
   },
+  {
+    slug: "salmo-15",
+    numero: "11",
+    he: "מִי יָגוּר בְּאָהֳלֶךָ",
+    titulo: "Las once puertas del Salmo 15",
+    tituloFa: "یازده دروازهٔ مزمور ۱۵",
+    tituloEn: "The Eleven Gates of Psalm 15",
+    gancho:
+      "El rey David preguntó: «¿Quién podrá habitar en Tu tienda?» y respondió con once condiciones. Ahora cuenta las letras: la pregunta tiene 37, las once condiciones exactamente 137 —el número de la Cabalá y de la luz— y el sello final 17. Y esos tres números son las edades de Abraham, Itzjak y Yaakov en sus pruebas más duras. Un salmo que se mide letra por letra.",
+    ganchoFa:
+      "داوودِ پادشاه پرسید: «چه کسی می‌تواند در خیمهٔ تو ساکن شود؟» و با یازده شرط پاسخ داد. حال حروف را بشمار: پرسش ۳۷ حرف دارد، یازده شرط دقیقاً ۱۳۷ — عددِ کابالا و عددِ نور — و مُهرِ پایانی ۱۷. و این سه عدد، سنِ ابراهیم، اسحاق و یعقوب در سخت‌ترین آزمون‌هایشان است. مزموری که حرف‌به‌حرف اندازه‌گیری می‌شود.",
+    ganchoEn:
+      "King David asked: “Who may dwell in Your tent?” and answered with eleven conditions. Now count the letters: the question has 37, the eleven conditions exactly 137 —the number of Kabbalah and of light— and the closing seal 17. And those three numbers are the ages of Abraham, Isaac and Jacob at their hardest trials. A psalm measured letter by letter.",
+    serie: "ciencia",
+    color: "#d96f8f",
+    orden: 15.98,
+  },
 
   // ── SERIE "PARASHA" — Estudios completos de parashá con PaRDeS ───────────────
   // Cada entrada de parashá es el ÍNDICE de enseñanzas en /misterio/{slug}.
