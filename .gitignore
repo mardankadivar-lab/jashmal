@@ -35,5 +35,7 @@ next-env.d.ts
 __pycache__/
 *.pyc
 
-# script temporal de respaldo BD (rutina) — no versionar
+# scripts temporales de las rutinas (leen .env.local) — NUNCA versionar
 _backup_tmp.mjs
+.backup-tmp.mjs
+.*-tmp.mjs
