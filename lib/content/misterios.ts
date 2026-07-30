@@ -723,6 +723,23 @@ export const MISTERIOS: Misterio[] = [
     color: "#d96f8f",
     orden: 15.98,
   },
+  {
+    slug: "numero-femenino",
+    numero: "137",
+    he: "אַיֵּה · הִיא",
+    titulo: "137 — el número femenino",
+    tituloFa: "۱۳۷ — عددِ مؤنث",
+    tituloEn: "137 — The Feminine Number",
+    gancho:
+      "La primera frase de la Torá esconde una pregunta. Las letras א, ה e י aparecen allí por primera vez en el orden א-י-ה: «¿dónde?». Y esas mismas tres letras, escritas con su nombre completo, suman 137. Cuando Dios crea la luz vuelven a aparecer juntas —al revés— y se leen הִיא: «Ella». En física, 137 es la constante que acopla la luz con la materia: lo que da y lo que recibe. Y recibir, en hebreo, se llama Cabalá.",
+    ganchoFa:
+      "نخستین جملهٔ تورات پرسشی را پنهان کرده است. حروفِ א، ה و י نخستین بار در آنجا به ترتیبِ א-י-ה پدیدار می‌شوند: «کجا؟». و همین سه حرف، چون با نامِ کاملشان نوشته شوند، ۱۳۷ می‌شوند. آنگاه که خدا نور را می‌آفریند، باز کنارِ هم می‌آیند — وارونه — و הִיא خوانده می‌شوند: «او (زن)». در فیزیک، ۱۳۷ همان ثابتی است که نور را به مادّه می‌پیوندد: آنچه می‌بخشد و آنچه می‌پذیرد. و پذیرفتن، در عبری، کابالا نام دارد.",
+    ganchoEn:
+      "The Torah's first sentence hides a question. The letters א, ה and י first appear there in the order א-י-ה: “where?” And those same three letters, written out by their full names, add up to 137. When God creates light they appear together again —reversed— and read הִיא: “She.” In physics, 137 is the constant that couples light to matter: the giver and the receiver. And to receive, in Hebrew, is called Kabbalah.",
+    serie: "ciencia",
+    color: "#cf6fa8",
+    orden: 15.99,
+  },
 
   // ── SERIE "PARASHA" — Estudios completos de parashá con PaRDeS ───────────────
   // Cada entrada de parashá es el ÍNDICE de enseñanzas en /misterio/{slug}.
@@ -831,6 +848,19 @@ export const MISTERIOS: Misterio[] = [
     serie: "shabat",
     color: "#e8945a",
     orden: 19.5,
+  },
+  {
+    slug: "eikev-talon",
+    he: "עֵקֶב",
+    titulo: "El talón: lo que pisamos sin mirar",
+    tituloFa: "پاشنه: آنچه بی‌آنکه بنگریم لگد می‌کنیم",
+    tituloEn: "The Heel: What We Trample Without Looking",
+    gancho: "El Ramban: la cabeza es el comienzo, el talón es el final. Rashi: las mitzvot livianas son las que pisamos con el talón. Justo donde muerde la serpiente.",
+    ganchoFa: "رامبان: سر آغاز است و پاشنه پایان. راشی: میتزوت‌های سبک همان‌هایند که با پاشنه لگد می‌کنیم. دقیقاً همان‌جا که مار می‌گزد.",
+    ganchoEn: "Ramban: the head is the beginning, the heel is the end. Rashi: the light mitzvot are the ones we trample with our heels. Exactly where the serpent bites.",
+    serie: "parasha",
+    color: "#8b6a3a",
+    orden: 16.7,
   },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
