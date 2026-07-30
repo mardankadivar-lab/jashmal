@@ -1573,8 +1573,10 @@ export const GEMATRIAS: Gematria[] = [
   },
   {
     num: 288, he: "רפ\"ח", titulo: "Las 288 chispas", tituloFa: "دویست‌وهشتادوهشت جرقه",
+    tituloEn: "The 288 Sparks",
     sig: "Rapaj (רפ\"ח) = 288 — las chispas de luz que cayeron al romperse las vasijas; recogerlas es el trabajo del mundo.",
     sigFa: "رَپَح (רפ״ח) = ۲۸۸ — جرقه‌های نوری که در شکستنِ ظرف‌ها فرو ریختند؛ گردآوریِ آن‌ها کارِ این جهان است.",
+    sigEn: "Rapach (רפ\"ח) = 288 — the sparks of light that fell when the vessels shattered; gathering them is the work of this world.",
     asociaciones: [
       "רפ\"ח (Rapaj) = 288 — las chispas de la Shevirat HaKelim (Arizal)",
       "שָׁ\"ךְ (320) − לָ\"ב (32) = 288: de las 320 chispas caídas, 288 son rescatables",
@@ -1587,12 +1589,20 @@ export const GEMATRIAS: Gematria[] = [
       "מְרַחֶפֶת («می‌جنبید»، پیدایش ۱:۲) = ۷۲۸ = רפ״ח (۲۸۸) + מֵת (۴۴۰) — خوانشِ آری",
       "۲۸۸ = ۴ × ۷۲ — چهار بارِ نامِ عَب",
     ],
+    asociacionesEn: [
+      "רפ\"ח (Rapach) = 288 — the sparks of the Shevirat HaKelim (Arizal)",
+      "שָׁ\"ךְ (320) − לָ\"ב (32) = 288: of the 320 fallen sparks, 288 can be redeemed",
+      "מְרַחֶפֶת (“hovered,” Gen 1:2) = 728 = רפ\"ח (288) + מֵת (440) — the Arizal’s reading: the spirit hovered over the dead sparks",
+      "288 = 4 × 72 — four times the Name of AB",
+    ],
     color: "#e0a850",
   },
   {
     num: 210, he: "רְדוּ", titulo: "El descenso a Egipto", tituloFa: "فرود به مصر",
+    tituloEn: "The Descent into Egypt",
     sig: "Redu («desciendan», Gn 42:2) = 210 — los años exactos que Israel pasó en Egipto.",
     sigFa: "رְדוּ («فرود آیید»، پیدایش ۴۲:۲) = ۲۱۰ — شمارِ دقیقِ سال‌های اسرائیل در مصر.",
+    sigEn: "Redu (“go down,” Gen 42:2) = 210 — the exact number of years Israel spent in Egypt.",
     asociaciones: [
       "רְדוּ (Redu, «desciendan») = 210 (Gn 42:2)",
       "Israel estuvo 210 años en Egipto, no los 400 decretados (Gn 15:13)",
@@ -1605,12 +1615,20 @@ export const GEMATRIAS: Gematria[] = [
       "קֵץ («پایان») = ۱۹۰؛ ۴۰۰ − ۱۹۰ = ۲۱۰ — پایان جلو افتاد",
       "بَعَل هَتوریم این اشاره را در «رְדוּ شامّا» می‌خواند",
     ],
+    asociacionesEn: [
+      "רְדוּ (Redu, “go down”) = 210 (Gen 42:2)",
+      "Israel stayed 210 years in Egypt, not the 400 that were decreed (Gen 15:13)",
+      "קֵץ (Ketz, “the end”) = 190; 400 − 190 = 210 — the end was brought forward",
+      "The Baal HaTurim reads the remez in “redu shamah” (“go down there”)",
+    ],
     color: "#9a3a3a",
   },
   {
     num: 340, he: "שֵׁם · סֵפֶר", titulo: "El Nombre y el Libro", tituloFa: "نام و کتاب",
+    tituloEn: "The Name and the Book",
     sig: "Shem («nombre») = Sefer («libro») = 340 — el libro y el Nombre son lo mismo: toda la Torá es Nombres de Dios.",
     sigFa: "شِم («نام») = سِفِر («کتاب») = ۳۴۰ — کتاب و نام یکی‌اند: تمامِ تورات نام‌های خداوند است.",
+    sigEn: "Shem (“name”) = Sefer (“book”) = 340 — the book and the Name are one and the same: the whole Torah is Names of God.",
     asociaciones: [
       "שֵׁם (Shem, «nombre») = 340",
       "סֵפֶר (Sefer, «libro») = 340",
@@ -1623,12 +1641,20 @@ export const GEMATRIAS: Gematria[] = [
       "سِفِر یِتزیرا ۱:۱: جهان با سِفِر، سְפָר و سیپّور (کتاب، شمار و روایت) آفریده شد — یک ریشهٔ ס-פ-ר",
       "رَمبَن (دیباچهٔ تورات): تمامِ تورات نام‌های قدّوسِ متبارک است",
     ],
+    asociacionesEn: [
+      "שֵׁם (Shem, “name”) = 340",
+      "סֵפֶר (Sefer, “book”) = 340",
+      "Sefer Yetzirah 1:1: the world was created with sefer, sfar and sippur (book, number and telling) — a single root ס-פ-ר",
+      "Ramban (intro. to the Torah): the whole Torah is Names of the Holy One, blessed be He",
+    ],
     color: "#c9a43e",
   },
   {
     num: 77, he: "מַזָּל · עֹז", titulo: "La fortuna y la fuerza", tituloFa: "بخت و توان",
+    tituloEn: "Fortune and Strength",
     sig: "Mazal («fortuna, influjo») = Oz («fuerza») = 77 — lo que gotea desde arriba se vuelve fuerza en quien lo recibe.",
     sigFa: "مَزّال («بخت، ریزشِ فیض») = عُز («توان») = ۷۷ — آنچه از بالا می‌چکد، در گیرنده توان می‌شود.",
+    sigEn: "Mazal (“fortune, influx”) = Oz (“strength”) = 77 — what drips down from above becomes strength in the one who receives it.",
     asociaciones: [
       "מַזָּל (Mazal, «fortuna») = 77",
       "עֹז (Oz, «fuerza») = 77",
@@ -1641,12 +1667,20 @@ export const GEMATRIAS: Gematria[] = [
       "مَزّال از ریشهٔ נזל («چکیدن»): فیضی که از بالا فرو می‌ریزد",
       "«اِین مَزال لِیسرائل» — اسرائیل زیرِ حکمِ بخت نیست (شَبات ۱۵۶a)",
     ],
+    asociacionesEn: [
+      "מַזָּל (Mazal, “fortune”) = 77",
+      "עֹז (Oz, “strength”) = 77",
+      "Mazal comes from the root נזל (“to drip”): the influx that descends from above",
+      "“Ein mazal leYisrael” — Israel is not under the mazal (Shabbat 156a)",
+    ],
     color: "#7a8ad0",
   },
   {
     num: 612, he: "בְּרִית", titulo: "El pacto", tituloFa: "پیمان",
+    tituloEn: "The Covenant",
     sig: "Brit («pacto») = 612 — una menos que 613: el pacto mismo es la mitzvá que completa todas las mitzvot.",
     sigFa: "بِریت («پیمان») = ۶۱۲ — یکی کمتر از ۶۱۳: خودِ پیمان همان حکمی است که همهٔ احکام را کامل می‌کند.",
+    sigEn: "Brit (“covenant”) = 612 — one less than 613: the covenant itself is the mitzvah that completes all the mitzvot.",
     asociaciones: [
       "בְּרִית (Brit, «pacto») = 612",
       "612 + la mitzvá del pacto = 613, todas las mitzvot",
@@ -1658,6 +1692,12 @@ export const GEMATRIAS: Gematria[] = [
       "۶۱۲ + میتزوایِ پیمان = ۶۱۳، همهٔ احکام",
       "«بزرگ است میلا، که هم‌سنگِ همهٔ احکام است» (نِدَریم ۳۲a)",
       "מִילָה = פֶּה = ۸۵ — پیمانِ تن و پیمانِ زبان (گینزبورگ)",
+    ],
+    asociacionesEn: [
+      "בְּרִית (Brit, “covenant”) = 612",
+      "612 + the mitzvah of the covenant = 613, all the mitzvot",
+      "“Great is milah, for it is equal to all the precepts” (Nedarim 32a)",
+      "מִילָה (Milah) = פֶּה (Peh, “mouth”) = 85 — the covenant of the flesh and the covenant of the tongue (Ginsburgh)",
     ],
     color: "#5a9a6a",
   },
