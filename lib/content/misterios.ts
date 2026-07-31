@@ -740,6 +740,23 @@ export const MISTERIOS: Misterio[] = [
     color: "#cf6fa8",
     orden: 15.99,
   },
+  {
+    slug: "numero-pi",
+    numero: "π",
+    he: "יוֹם · שָׁנָה",
+    titulo: "π — el número escondido entre el día y el año",
+    tituloFa: "π — عددی پنهان میانِ روز و سال",
+    tituloEn: "π — The Number Hidden Between the Day and the Year",
+    gancho:
+      "«Año» (שָׁנָה) vale 355. «Un día» escrito en su plenitud vale 113. Divide uno entre el otro: 355/113 = 3,141592… — el número π, exacto hasta el sexto decimal. Es la mejor fracción de π con números menores que mil, y a Occidente le tomó hasta el siglo XVI encontrarla. En la Torá, el año es el círculo que gira y el día es la línea que no cambia. π es la razón entre los dos: entre el tiempo que pasa y el tiempo que permanece.",
+    ganchoFa:
+      "«سال» (שָׁנָה) برابرِ ۳۵۵ است. «یک روز»، چون در پُری‌اش نوشته شود، برابرِ ۱۱۳. یکی را بر دیگری تقسیم کن: ۳۵۵/۱۱۳ = ۳٫۱۴۱۵۹۲… — همان عددِ π، درست تا ششمین رقمِ اعشار. این بهترین کسرِ π با عددهای کمتر از هزار است، و غرب تا سدهٔ شانزدهم آن را نیافت. در تورات، سال دایره‌ای است که می‌گردد و روز خطی که دگرگون نمی‌شود. π نسبتِ میانِ این دو است: میانِ زمانی که می‌گذرد و زمانی که می‌مانَد.",
+    ganchoEn:
+      "“Year” (שָׁנָה) equals 355. “One day,” written out in full, equals 113. Divide one by the other: 355/113 = 3.141592… — the number π, exact to six decimal places. It is the best fraction for π using numbers under a thousand, and the West did not find it until the 16th century. In the Torah the year is the circle that turns and the day is the line that does not change. π is the ratio between the two: between the time that passes and the time that remains.",
+    serie: "ciencia",
+    color: "#f0913f",
+    orden: 16,
+  },
 
   // ── SERIE "PARASHA" — Estudios completos de parashá con PaRDeS ───────────────
   // Cada entrada de parashá es el ÍNDICE de enseñanzas en /misterio/{slug}.
