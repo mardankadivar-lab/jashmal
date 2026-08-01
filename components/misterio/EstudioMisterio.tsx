@@ -183,6 +183,19 @@ export interface VentanaCiencia {
   parrafos: string[];    // cuerpo (entiende {{study:…}})
 }
 
+// "Lectura propia" — un JIDUSH de Jashmal (OPCIONAL). NO es fuente, NO es cita
+// y NO es comentario clásico: es una lectura del autor, marcada como tal. Por
+// eso NO se pinta como una séptima sección de estudio (no lleva SectionHead
+// hebreo): el cuerpo de estudio queda sellado en la חֲתִימָה. Se pinta como
+// una nota de autor, después del sello y antes del umbral הֶמְשֵׁךְ, con
+// estética propia (violácea, borde punteado) para que el lector nunca la
+// confunda con una fuente.
+export interface Jidush {
+  titulo: string;        // ej. "Lectura propia — un jidush de Jashmal"
+  rotulo: string;        // aviso de integridad: "no es una cita ni una fuente"
+  parrafos: string[];    // cuerpo (entiende {{study:…}})
+}
+
 export interface EstudioData {
   slug: string;
   hero: Hero;
@@ -229,6 +242,8 @@ export interface EstudioData {
   jatima: {
     items: Parrafo[];      // idea/insight/aplicación, etiqueta + texto
   };
+  // Nota de autor (opcional): lectura propia / jidush, fuera del cuerpo sellado
+  jidush?: Jidush;
   // Umbral הֶמְשֵׁךְ — chips clicables {{study:…}}
   hemshej: string[];
   // CTA — versículo para "Estudiar en Jashmal" (ref de Sefaria URL-encoded)
@@ -600,6 +615,33 @@ export default function EstudioMisterio({
             ))}
           </ul>
         </Section>
+
+        {/* ── NOTA DE AUTOR — "lectura propia" / jidush (opcional) ─────────────
+            NO es una séptima sección: el estudio quedó sellado en la חֲתִימָה.
+            Es una nota del autor, con estética distinta (violácea, punteada) y
+            rótulo explícito, para que jamás se lea como fuente o cita. */}
+        {data.jidush && (
+          <Section>
+            <aside
+              className="mt-16 rounded-2xl border-2 border-dashed border-violet-300/35 bg-violet-300/[0.05] p-6"
+              style={{ boxShadow: "0 0 24px rgba(170,140,220,0.08) inset" }}
+            >
+              <p className="mb-1 font-cinzel text-sm font-bold uppercase tracking-widest text-violet-200/90">
+                {data.jidush.titulo}
+              </p>
+              <p className="mb-4 text-xs italic leading-relaxed text-violet-100/60">
+                {data.jidush.rotulo}
+              </p>
+              <div className="space-y-4">
+                {data.jidush.parrafos.map((t, i) => (
+                  <p key={i} className="text-sm leading-relaxed text-parchment/80">
+                    {renderStudyText(t, onOpenPanel)}
+                  </p>
+                ))}
+              </div>
+            </aside>
+          </Section>
+        )}
 
         {/* ── UMBRAL DE NAVEGACIÓN — הֶמְשֵׁךְ (Sigue el hilo) ────────────────── */}
         <Section delay={80}>

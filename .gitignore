@@ -39,3 +39,6 @@ __pycache__/
 _backup_tmp.mjs
 .backup-tmp.mjs
 .*-tmp.mjs
+
+# Borradores de trabajo de los departamentos (no van al repo)
+scratchpad/

@@ -22,6 +22,7 @@ import { data as arcaNoOcupaLugar } from "@/app/[locale]/misterio/arca-no-ocupa-
 import { data as ajaritHayamim } from "@/app/[locale]/misterio/ajarit-hayamim/data";
 import { data as danielApocaliptica } from "@/app/[locale]/misterio/daniel-apocaliptica/data";
 import { data as despertarDeLoAlto } from "@/app/[locale]/misterio/despertar-de-lo-alto/data";
+import { data as eikevTalon } from "@/app/[locale]/misterio/eikev-talon/data";
 import { data as elAri } from "@/app/[locale]/misterio/el-ari/data";
 import { data as enigmaMashiaj } from "@/app/[locale]/misterio/enigma-mashiaj/data";
 import { data as exilioRedencion } from "@/app/[locale]/misterio/exilio-redencion/data";
@@ -42,6 +43,7 @@ export const MISTERIOS_PANEL: Record<string, EstudioData> = {
   "ajarit-hayamim": ajaritHayamim,
   "daniel-apocaliptica": danielApocaliptica,
   "despertar-de-lo-alto": despertarDeLoAlto,
+  "eikev-talon": eikevTalon,
   "el-ari": elAri,
   "enigma-mashiaj": enigmaMashiaj,
   "exilio-redencion": exilioRedencion,
