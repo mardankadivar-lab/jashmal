@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { routing, type Locale } from "@/i18n/routing";
 import { localizedMetadata } from "@/lib/i18n/seo";
 import GlobalTutor from "@/components/GlobalTutor";
+import BuscadorGlobal from "@/components/BuscadorGlobal";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import "../globals.css";
 
@@ -104,6 +105,10 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           {children}
           <GlobalTutor />
+          {/* Lupa global: se monta aquí (no en SiteHeader) porque las páginas
+              de misterio y letra no llevan cabecera y son justo las que el
+              visitante nuevo necesita encontrar. */}
+          <BuscadorGlobal />
         </NextIntlClientProvider>
         <Analytics />
         <ServiceWorkerRegister />

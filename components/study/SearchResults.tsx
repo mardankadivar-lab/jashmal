@@ -13,6 +13,26 @@ import {
 } from "@/lib/sources/sefaria";
 import { searchCategoryLabel, searchCategoryColor, sortCategoryCounts } from "@/lib/sources/searchCategories";
 import { localizedRef } from "@/lib/sources/bookNames";
+import {
+  searchDocs,
+  docTitle,
+  docDesc,
+  docHasLocale,
+  type SearchDoc,
+  type SearchKind,
+  type SearchResult as JashmalHit,
+} from "@/lib/search/match";
+
+// Rótulo de cada tipo de ficha (mismas claves que usa el panel de la lupa).
+const KIND_KEY: Record<SearchKind, string> = {
+  misterio: "kindMisterio",
+  letra: "kindLetra",
+  gematria: "kindGematria",
+  leccion: "kindLeccion",
+  estacion: "kindEstacion",
+  podcast: "kindPodcast",
+  pagina: "kindPagina",
+};
 
 type NodeHit = { id: string; label: string; labelFa?: string; labelEn?: string };
 
@@ -28,6 +48,7 @@ export default function SearchResults({ initialQuery }: SearchResultsProps) {
   const locale = useLocale();
   const t = useTranslations("search");
   const ts = useTranslations("study");
+  const tb = useTranslations("buscador");
 
   const [query, setQuery] = useState(initialQuery);
   const [input, setInput] = useState(initialQuery);
@@ -40,8 +61,25 @@ export default function SearchResults({ initialQuery }: SearchResultsProps) {
   const [totalIsCapped, setTotalIsCapped] = useState(false);
   const [loading, setLoading] = useState(false);
   const [conceptNode, setConceptNode] = useState<NodeHit | null>(null);
+  // Resultados del CONTENIDO PROPIO de Jashmal (misterios, letras, gematrías…).
+  // Van arriba de los de Sefaria: si tenemos un estudio sobre lo que buscas,
+  // eso es lo primero que debes ver.
+  const [jashmalHits, setJashmalHits] = useState<JashmalHit[]>([]);
 
   const brainNodesRef = useRef<NodeHit[] | null>(null);
+  const searchIndexRef = useRef<SearchDoc[] | null>(null);
+
+  async function ensureSearchIndex(): Promise<SearchDoc[]> {
+    if (searchIndexRef.current) return searchIndexRef.current;
+    try {
+      const res = await fetch("/search-index.json");
+      const docs: SearchDoc[] = res.ok ? await res.json() : [];
+      searchIndexRef.current = docs;
+      return docs;
+    } catch {
+      return [];
+    }
+  }
 
   async function ensureBrainNodes(): Promise<NodeHit[]> {
     if (brainNodesRef.current) return brainNodesRef.current;
@@ -77,6 +115,7 @@ export default function SearchResults({ initialQuery }: SearchResultsProps) {
       setCategoryCounts([]);
       setTotal(0);
       setConceptNode(null);
+      setJashmalHits([]);
       return;
     }
     let cancelled = false;
@@ -103,6 +142,12 @@ export default function SearchResults({ initialQuery }: SearchResultsProps) {
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
+    // Contenido propio de Jashmal: se resuelve en el cliente contra el índice
+    // estático, sin esperar a Sefaria.
+    ensureSearchIndex().then((docs) => {
+      if (cancelled) return;
+      setJashmalHits(searchDocs(docs, q, 8));
+    });
     // Tarjeta de concepto: ¿el término coincide con un nodo de la Mente Cósmica?
     ensureBrainNodes().then((nodes) => {
       if (cancelled) return;
@@ -190,6 +235,53 @@ export default function SearchResults({ initialQuery }: SearchResultsProps) {
             {ts("studyThisConcept", { q: nodeLabelLocal(conceptNode) })}
           </Link>
         </div>
+      )}
+
+      {/* ── Estudios de Jashmal ──────────────────────────────────────────
+          Nuestro propio contenido, ARRIBA de los pasajes de Sefaria. Si hay
+          un misterio o una letra sobre lo que buscas, esa es la respuesta
+          directa; los textos fuente vienen después, como profundización. */}
+      {jashmalHits.length > 0 && (
+        <section className="mt-6 rounded-xl border border-gold/20 bg-gold/[0.04] p-4">
+          <p className="mb-3 font-cinzel text-xs uppercase tracking-widest text-gold/70">
+            {t("inJashmal")}
+          </p>
+          <ul className="space-y-2.5">
+            {jashmalHits.map(({ doc }) => (
+              <li key={doc.id}>
+                <Link href={doc.href} className="group block">
+                  <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <span className="font-cinzel text-[9px] uppercase tracking-[0.18em] text-gold/60">
+                      {tb(KIND_KEY[doc.kind])}
+                    </span>
+                    {doc.he && (
+                      <span dir="rtl" className="hebrew text-xs text-muted/70">
+                        {doc.he}
+                      </span>
+                    )}
+                    {!docHasLocale(doc, locale) && (
+                      <span className="rounded-full border border-gold/25 px-1.5 py-px text-[9px] text-gold/60">
+                        {doc.langs.length === 1 && doc.langs[0] === "es"
+                          ? tb("onlySpanish")
+                          : tb("onlyIn", {
+                              langs: doc.langs.map((l) => l.toUpperCase()).join(" · "),
+                            })}
+                      </span>
+                    )}
+                  </span>
+                  <span className="mt-0.5 block text-[15px] leading-snug text-parchment group-hover:text-gold">
+                    {docTitle(doc, locale)}
+                  </span>
+                  {docDesc(doc, locale) && (
+                    <span className="mt-0.5 block text-xs leading-relaxed text-muted">
+                      {docDesc(doc, locale)}
+                    </span>
+                  )}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_260px]">

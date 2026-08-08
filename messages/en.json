@@ -32,7 +32,8 @@
     "soulMap": "Map of the Soul",
     "soulMirror": "The Mirror of the Soul",
     "ask": "Ask",
-    "podcast": "Podcast"
+    "podcast": "Podcast",
+    "searchTexts": "Search the texts"
   },
   "podcast": {
     "title": "Podcast",
@@ -110,7 +111,8 @@
     "resultsFor": "{n} results for “{q}”",
     "noResults": "No passages found for this search. Try another word or remove a filter.",
     "categoriesPanel": "Categories",
-    "conceptCard": "Related concept"
+    "conceptCard": "Related concept",
+    "inJashmal": "Jashmal studies"
   },
   "myStudies": {
     "title": "My Studies",
@@ -400,5 +402,26 @@
     "tryAgain": "Try again",
     "newQuestion": "New question",
     "navLabel": "Ask"
+  },
+  "buscador": {
+    "open": "Search Jashmal",
+    "close": "Close",
+    "title": "Search",
+    "placeholder": "Search a teaching… Korach, the letter vav, 137",
+    "hint": "Type what you are looking for: a figure, a Hebrew letter, a number, a parashah. I will take you to the study.",
+    "loading": "Opening the index…",
+    "noneTitle": "There is no Jashmal study about “{q}” yet.",
+    "noneHelp": "But you can search that word in the texts: Torah, Talmud, Midrash, Kabbalah and Chasidut.",
+    "searchTexts": "Search the texts",
+    "alsoTexts": "Search “{q}” in the Sefaria texts too →",
+    "onlySpanish": "Spanish only",
+    "onlyIn": "only in {langs}",
+    "kindMisterio": "Mystery",
+    "kindLetra": "Letter",
+    "kindGematria": "Gematria",
+    "kindLeccion": "Academy",
+    "kindEstacion": "Station",
+    "kindPodcast": "Podcast",
+    "kindPagina": "Section"
   }
 }

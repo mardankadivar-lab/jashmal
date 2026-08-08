@@ -72,6 +72,9 @@ export default function GematriasPage() {
           return (
             <button
               key={g.num}
+              // Ancla estable: el buscador global enlaza a /gematrias#g137 para
+              // llevar al número exacto dentro de la galería.
+              id={`g${g.num}`}
               onClick={() => setAbierto(open ? null : g.num)}
               className={
                 "group relative flex flex-col items-center overflow-hidden rounded-2xl border p-5 text-center transition-all " +

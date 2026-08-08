@@ -6,6 +6,7 @@ import { Link, LocalizedLink, useRouter } from "@/i18n/navigation";
 import LanguageSwitcher from "./LanguageSwitcher";
 import ThemeToggle from "./ThemeToggle";
 import ReadingControls from "./ReadingControls";
+import { OPEN_SEARCH_EVENT } from "@/lib/search/events";
 
 // Cada ítem: ruta + clave de traducción. Agrupados en secciones temáticas
 // para que el menú no sea una lista plana de 13 enlaces.
@@ -17,6 +18,10 @@ const GROUPS: Group[] = [
     titleKey: "nav.groupStudy",
     items: [
       ["/estudio", "nav.study"],
+      // /buscar existe y funciona desde hace tiempo (resultados de toda la
+      // biblioteca de Sefaria), pero solo se llegaba desde el motor de estudio:
+      // nadie la encontraba. Ahora está en el menú.
+      ["/buscar", "nav.searchTexts"],
       ["/preguntar", "nav.ask"],
       ["/mis-estudios", "nav.myStudies"],
     ],
@@ -172,8 +177,19 @@ export default function SiteHeader() {
           <span className="hebrew text-sm text-muted">{t("site.hebrew")}</span>
         </Link>
 
-        {/* Tema siempre visible + botón desplegable (web y móvil) */}
+        {/* Lupa + tema siempre visibles + botón desplegable (web y móvil) */}
         <div className="flex items-center gap-3">
+          {/* Abre el panel de búsqueda global, que se monta una sola vez en
+              app/[locale]/layout.tsx. Se comunican por evento para que la
+              cabecera no tenga que importar el panel entero. */}
+          <button
+            onClick={() => window.dispatchEvent(new Event(OPEN_SEARCH_EVENT))}
+            aria-label={t("buscador.open")}
+            title={t("buscador.open")}
+            className="flex h-9 w-9 items-center justify-center rounded-md border border-gold/25 text-lg text-gold transition-colors hover:bg-gold/10"
+          >
+            <span aria-hidden="true">⌕</span>
+          </button>
           <ThemeToggle />
           <button
             onClick={() => setOpen((o) => !o)}

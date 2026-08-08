@@ -32,7 +32,8 @@
     "soulMap": "Mapa del Alma",
     "soulMirror": "El Espejo del Alma",
     "ask": "Preguntar",
-    "podcast": "Podcast"
+    "podcast": "Podcast",
+    "searchTexts": "Buscar en los textos"
   },
   "podcast": {
     "title": "Podcast",
@@ -110,7 +111,8 @@
     "resultsFor": "{n} resultados para “{q}”",
     "noResults": "No se encontraron pasajes para esta búsqueda. Prueba con otra palabra o quita algún filtro.",
     "categoriesPanel": "Categorías",
-    "conceptCard": "Concepto relacionado"
+    "conceptCard": "Concepto relacionado",
+    "inJashmal": "Estudios de Jashmal"
   },
   "myStudies": {
     "title": "Mis Estudios",
@@ -400,5 +402,26 @@
     "tryAgain": "Intentar de nuevo",
     "newQuestion": "Nueva pregunta",
     "navLabel": "Preguntar"
+  },
+  "buscador": {
+    "open": "Buscar en Jashmal",
+    "close": "Cerrar",
+    "title": "Buscar",
+    "placeholder": "Busca una enseñanza… Koraj, la letra vav, 137",
+    "hint": "Escribe lo que buscas: un personaje, una letra hebrea, un número, una parashá. Te llevo al estudio.",
+    "loading": "Abriendo el índice…",
+    "noneTitle": "Todavía no hay ningún estudio de Jashmal sobre «{q}».",
+    "noneHelp": "Pero puedes buscar esa palabra en los textos: Torá, Talmud, Midrash, Cabalá y Jasidut.",
+    "searchTexts": "Buscar en los textos",
+    "alsoTexts": "Buscar «{q}» también en los textos de Sefaria →",
+    "onlySpanish": "solo en español",
+    "onlyIn": "solo en {langs}",
+    "kindMisterio": "Misterio",
+    "kindLetra": "Letra",
+    "kindGematria": "Gematría",
+    "kindLeccion": "Academia",
+    "kindEstacion": "Estación",
+    "kindPodcast": "Podcast",
+    "kindPagina": "Sección"
   }
 }
