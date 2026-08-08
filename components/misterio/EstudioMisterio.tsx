@@ -196,9 +196,43 @@ export interface Jidush {
   parrafos: string[];    // cuerpo (entiende {{study:…}})
 }
 
+// "Advertencia del Sofer" (OPCIONAL). Un aviso de integridad que ABRE el
+// estudio: dice de entrada lo que el estudio NO afirma, antes de que el lector
+// entre en materia. NO es una sección de estudio (no lleva SectionHead hebreo,
+// no cuenta entre las seis): se pinta como una banda de advertencia entre el
+// hero y la תַּרְגּוּם, con estética ámbar/roja para que se lea como lo que es.
+// Lo trae el contenido verificado; si el estudio no lo trae, no se pinta nada.
+export interface Aviso {
+  titulo: string;        // ej. "Advertencia del Sofer — lo que este estudio NO afirma"
+  rotulo?: string;       // línea de encuadre en itálica
+  parrafos: string[];    // cuerpo (entiende {{study:…}})
+}
+
+// Fila del "mapa del argumento": referencia · frase del texto · función.
+export interface MapaFila {
+  ref: string;       // "Devarim 12:8"
+  he: string;        // la frase hebrea señalada
+  es: string;        // su traducción breve
+  funcion: string;   // qué hace esa frase en el texto
+}
+
+// "Mapa del argumento" (OPCIONAL). Prólogo de orientación: enseña el esqueleto
+// del estudio antes de recorrerlo. Tampoco es una sección de estudio; va entre
+// el aviso y la תַּרְגּוּם.
+export interface Mapa {
+  titulo: string;
+  intro?: string[];
+  filas: MapaFila[];
+  cierre?: string[];
+}
+
 export interface EstudioData {
   slug: string;
   hero: Hero;
+  // Prólogo (opcional, NO son secciones de estudio): advertencia de integridad
+  // y mapa del argumento. Se pintan entre el hero y la תַּרְגּוּם.
+  aviso?: Aviso;
+  mapa?: Mapa;
   // 1. Targum
   targum: {
     citas: Cita[];
@@ -396,6 +430,84 @@ export default function EstudioMisterio({
             </p>
           )}
         </div>
+
+        {/* ── ADVERTENCIA DEL SOFER (opcional) ────────────────────────────────
+            Abre el estudio diciendo lo que NO afirma. No es una sección de
+            estudio: banda ámbar, sin encabezado hebreo. */}
+        {data.aviso && (
+          <Section>
+            <aside
+              className="mb-14 rounded-2xl border-2 border-amber-400/30 bg-amber-400/[0.05] p-6"
+              style={{ boxShadow: "0 0 24px rgba(220,170,90,0.08) inset" }}
+            >
+              <p className="mb-1 flex items-center gap-2 font-cinzel text-sm font-bold uppercase tracking-widest text-amber-200/90">
+                <span aria-hidden className="text-base">⚠︎</span>
+                {data.aviso.titulo}
+              </p>
+              {data.aviso.rotulo && (
+                <p className="mb-4 text-xs italic leading-relaxed text-amber-100/60">
+                  {data.aviso.rotulo}
+                </p>
+              )}
+              <div className="space-y-4">
+                {data.aviso.parrafos.map((t, i) => (
+                  <p key={i} className="text-sm leading-relaxed text-parchment/80">
+                    {renderStudyText(t, onOpenPanel)}
+                  </p>
+                ))}
+              </div>
+            </aside>
+          </Section>
+        )}
+
+        {/* ── MAPA DEL ARGUMENTO (opcional) ───────────────────────────────────
+            Prólogo de orientación. Las filas se apilan en móvil (sin <table>,
+            para que nunca desborde en horizontal). */}
+        {data.mapa && (
+          <Section>
+            <div className="mb-14">
+              <p className="mb-4 font-cinzel text-sm uppercase tracking-[0.25em] text-gold/70">
+                {data.mapa.titulo}
+              </p>
+
+              {data.mapa.intro?.length ? (
+                <div className="mb-6 space-y-5">
+                  {data.mapa.intro.map((t, i) => (
+                    <P key={i} onOpenPanel={onOpenPanel}>{t}</P>
+                  ))}
+                </div>
+              ) : null}
+
+              <ul className="space-y-3">
+                {data.mapa.filas.map((f, i) => (
+                  <li
+                    key={i}
+                    className="rounded-2xl border border-gold/15 bg-white/[0.02] p-4"
+                  >
+                    <p className="mb-2 font-cinzel text-[11px] uppercase tracking-widest text-gold/60">
+                      {f.ref}
+                    </p>
+                    <p className="hebrew mb-2 text-right text-base leading-relaxed text-gold/80" dir="rtl">
+                      {f.he}
+                    </p>
+                    <p className="mb-2 text-sm italic leading-relaxed text-parchment/75">
+                      {`"${f.es}"`}
+                    </p>
+                    <p className="text-xs leading-relaxed text-parchment/55">{f.funcion}</p>
+                  </li>
+                ))}
+              </ul>
+
+              {data.mapa.cierre?.length ? (
+                <div className="mt-6 space-y-5">
+                  {data.mapa.cierre.map((t, i) => (
+                    <P key={i} onOpenPanel={onOpenPanel}>{t}</P>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          </Section>
+        )}
 
         {/* ── 1. תַּרְגּוּם — Traducción ──────────────────────────────────────── */}
         <Section>

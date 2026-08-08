@@ -31,6 +31,7 @@ import { data as gogUmagog } from "@/app/[locale]/misterio/gog-umagog/data";
 import { data as jasidutRedencion } from "@/app/[locale]/misterio/jasidut-redencion/data";
 import { data as mashiajJazal } from "@/app/[locale]/misterio/mashiaj-jazal/data";
 import { data as olamHaba } from "@/app/[locale]/misterio/olam-haba/data";
+import { data as reehOjoDoble } from "@/app/[locale]/misterio/reeh-ojo-doble/data";
 import { data as shaarHagilgulim } from "@/app/[locale]/misterio/shaar-hagilgulim/data";
 import { data as simienteMesianica } from "@/app/[locale]/misterio/simiente-mesianica/data";
 import { data as tercerTemplo } from "@/app/[locale]/misterio/tercer-templo/data";
@@ -52,6 +53,7 @@ export const MISTERIOS_PANEL: Record<string, EstudioData> = {
   "jasidut-redencion": jasidutRedencion,
   "mashiaj-jazal": mashiajJazal,
   "olam-haba": olamHaba,
+  "reeh-ojo-doble": reehOjoDoble,
   "shaar-hagilgulim": shaarHagilgulim,
   "simiente-mesianica": simienteMesianica,
   "tercer-templo": tercerTemplo,

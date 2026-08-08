@@ -879,6 +879,22 @@ export const MISTERIOS: Misterio[] = [
     color: "#8b6a3a",
     orden: 16.7,
   },
+  {
+    // Re'eh sigue a Eikev en el orden de lectura de Devarim.
+    // tituloFa/ganchoFa replican el español a propósito: el estudio está solo
+    // en español y el Sofer aún no lo tradujo. NO se generó farsi automático.
+    slug: "reeh-ojo-doble",
+    he: "רְאֵה",
+    titulo: "El ojo que ve doble",
+    tituloFa: "El ojo que ve doble",
+    tituloEn: "The Eye That Sees Double",
+    gancho: "La parashá se llama «Mira». Prohíbe una manera de ver —«cada uno lo recto a sus propios ojos»— y la reemplaza por otra: «lo recto a los ojos de HaShem». Misma palabra; lo único que cambia es de quién son los ojos.",
+    ganchoFa: "La parashá se llama «Mira». Prohíbe una manera de ver —«cada uno lo recto a sus propios ojos»— y la reemplaza por otra: «lo recto a los ojos de HaShem». Misma palabra; lo único que cambia es de quién son los ojos.",
+    ganchoEn: "The parashah is called “Look.” It forbids one way of seeing —“each man what is right in his own eyes”— and replaces it with another: “what is right in the eyes of HaShem.” Same word; all that changes is whose eyes they are.",
+    serie: "parasha",
+    color: "#8b6a3a",
+    orden: 16.8,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".
