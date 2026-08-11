@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { anthropic, buildExpandPrompt, EXPAND_MODEL } from "@/lib/engine/anthropic";
 import { dbConfigured } from "@/lib/infra/db";
-import { addNode, addEdge, existingNodeIds, edgeKey, hasPersianArabic } from "@/lib/nodes/brainStore";
+import { addNode, addEdge, existingNodeIds, resolveExistingId, edgeKey, hasPersianArabic } from "@/lib/nodes/brainStore";
 import { clientIp } from "@/lib/infra/rateLimit";
 import type { BNode } from "@/lib/nodes/brainData";
 
@@ -91,7 +91,7 @@ export async function POST(req: Request) {
 
   if (dbConfigured()) {
     const existing = await existingNodeIds();
-    const canonical = (lab: string) => existing.get(lab.toLowerCase()) ?? titleCase(lab);
+    const canonical = (lab: string) => resolveExistingId(existing, lab) ?? titleCase(lab);
     // asegurar que el sujeto exista (pendiente si es nuevo). `label` (= selNode.label)
     // ya viene en español canónico; si por algún motivo trajera persa/árabe, caemos
     // al id para no contaminar el canónico.

@@ -1106,6 +1106,14 @@ export async function existingNodeIds(): Promise<Map<string, string>> {
       // por acento como "Tikun"/"Tikún" o "Maasé"/"Maase").
       const stripped = key.normalize("NFD").replace(/[̀-ͯ]/g, "");
       if (stripped && stripped !== key && !map.has(stripped)) map.set(stripped, id);
+      // Y la versión normalizada (sin puntuación), la MISMA noción de identidad
+      // que usa mergeAccentDuplicates(): así "Éguel ha-zahav" reconoce a
+      // "Éguel hazahav". Solo para etiquetas SIN dígitos — en una referencia
+      // ("Sanhedrín 9:8") quitar la puntuación la confundiría con otra ("98").
+      if (!/\d/.test(key)) {
+        const loose = normLabel(key);
+        if (loose && loose !== key && loose !== stripped && !map.has(loose)) map.set(loose, id);
+      }
     };
     for (const r of rows) {
       put(r.label, r.id);
@@ -1118,6 +1126,27 @@ export async function existingNodeIds(): Promise<Map<string, string>> {
     /* ignore */
   }
   return map;
+}
+
+// Busca el nodo canónico de una etiqueta dentro del mapa de existingNodeIds().
+// El mapa YA se indexa sin acentos, pero la búsqueda cruda (solo minúsculas) no
+// aprovechaba ese índice: "Rúaj hakodesh" no encontraba "Ruaj HaKodesh" y la
+// cosecha creaba un pendiente duplicado (y así se llenaba la cola de revisión).
+// Tres intentos, del más estricto al más laxo:
+//   1) minúsculas exactas
+//   2) sin acentos (conserva dígitos y puntuación: "1:1" nunca colisiona con "11")
+//   3) normLabel — misma noción de identidad que mergeAccentDuplicates(), pero
+//      SOLO para etiquetas sin dígitos, porque al quitar la puntuación una
+//      referencia como "Sanhedrín 9:8" colapsaría sobre "Sanhedrin 98".
+export function resolveExistingId(
+  map: Map<string, string>,
+  label: string,
+): string | undefined {
+  const key = (label ?? "").trim().toLowerCase();
+  if (!key) return undefined;
+  const stripped = key.normalize("NFD").replace(/[̀-ͯ]/g, "");
+  const loose = /\d/.test(key) ? undefined : normLabel(label);
+  return map.get(key) ?? map.get(stripped) ?? (loose ? map.get(loose) : undefined);
 }
 
 export type PendingNode = {

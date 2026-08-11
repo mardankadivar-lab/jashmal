@@ -7,7 +7,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 import { parseHyperlinks } from "@/lib/relations/hyperlinks";
-import { addNode, addEdge, existingNodeIds, hasPersianArabic } from "@/lib/nodes/brainStore";
+import { addNode, addEdge, existingNodeIds, resolveExistingId, hasPersianArabic } from "@/lib/nodes/brainStore";
 import { resolveHebrewLetter } from "@/lib/nodes/hebrewLetters";
 import { disciplineFromRef, commentatorNameToCat } from "@/lib/sources/discipline";
 import type { BNode } from "@/lib/nodes/brainData";
@@ -57,7 +57,7 @@ export async function harvestFromStudy(
   // resuelve un término en CUALQUIER idioma a su nodo español canónico, para no
   // duplicar (un estudio en farsi enlaza "تسیمتسوم" → reconoce el nodo "Tzimtzum").
   const existing = await existingNodeIds();
-  const canonical = (label: string): string => existing.get(label.toLowerCase()) ?? label;
+  const canonical = (label: string): string => resolveExistingId(existing, label) ?? label;
 
   // sujeto del estudio. El `label` canónico debe ser LATINO (español). Si el sujeto
   // viene en persa/árabe y NO resuelve a un nodo español existente, no cosechamos:
