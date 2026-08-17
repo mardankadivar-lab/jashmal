@@ -895,6 +895,25 @@ export const MISTERIOS: Misterio[] = [
     color: "#8b6a3a",
     orden: 16.8,
   },
+  {
+    // Ki Tetzé sigue a Re'eh y Shoftim en el orden de lectura de Devarim.
+    // tituloFa/ganchoFa replican el español a propósito: el estudio está solo
+    // en español y el Sofer aún no lo tradujo. NO se generó farsi automático.
+    slug: "buey-y-burro",
+    he: "נָחָשׁ",
+    titulo: "El buey y el burro dentro de la serpiente",
+    tituloFa: "El buey y el burro dentro de la serpiente",
+    tituloEn: "The Ox and the Donkey Inside the Serpent",
+    gancho:
+      "Dentro de la palabra hebrea para serpiente hay dos animales escondidos — y la Torá manda que nunca se junten: «no ararás con buey y burro juntos». El Megalé Amukot (al Vaetjanán, Ofán 71) revela dónde viven: clavados en las letras mismas de נחש.",
+    ganchoFa:
+      "Dentro de la palabra hebrea para serpiente hay dos animales escondidos — y la Torá manda que nunca se junten: «no ararás con buey y burro juntos». El Megalé Amukot (al Vaetjanán, Ofán 71) revela dónde viven: clavados en las letras mismas de נחש.",
+    ganchoEn:
+      "Inside the Hebrew word for serpent two animals are hidden — and the Torah commands that they never be joined: “you shall not plow with an ox and a donkey together.” The Megaleh Amukot (on Va'etchanan, Ofan 71) reveals where they live: fixed in the very letters of נחש.",
+    serie: "parasha",
+    color: "#8b6a3a",
+    orden: 16.9,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".
