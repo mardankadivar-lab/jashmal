@@ -1117,19 +1117,21 @@ function galaxyBasis(cat: string): { u: [number, number, number]; v: [number, nu
   return { u: [ux, uy, uz], v: [vx, vy, vz], n: [nx, ny, nz] };
 }
 // un punto en el disco espiral de una galaxia (rng determinista por nodo/polvo)
-function galaxyPoint(cat: string, rng: () => number, radPow = 0.62, radScale = 1, thickK = 0.12): [number, number, number] {
+// `spread` = factor de EXPANSIÓN por densidad (galaxias pobladas → disco mayor):
+// escala radio Y grosor a la vez, así la galaxia crece en volumen, no en tortilla.
+function galaxyPoint(cat: string, rng: () => number, radPow = 0.62, radScale = 1, thickK = 0.12, spread = 1): [number, number, number] {
   const c = galaxyCenter(cat);
   const { u, v, n } = galaxyBasis(cat);
   const arms = 2 + (hashStr(cat) % 2); // 2 o 3 brazos
   const radN = 0.10 + Math.pow(rng(), radPow) * 0.98;
-  const rad = GALAXY_DISK * radN * radScale;
+  const rad = GALAXY_DISK * radN * radScale * spread;
   const arm = Math.floor(rng() * arms);
   const theta = radN * GALAXY_TWIST * Math.PI + arm * ((Math.PI * 2) / arms) + (rng() - 0.5) * 0.7;
   const cs = Math.cos(theta), sn = Math.sin(theta);
   // VOLUMEN: bulbo 3D al centro + disco esponjoso (campana vertical, no plano).
   // El grosor crece hacia el núcleo (bulbo) y se afina en los brazos.
   const bulge = (1 - Math.min(radN, 1)) * (1 - Math.min(radN, 1));
-  const vmax = GALAXY_DISK * (thickK + 0.55 * bulge);
+  const vmax = GALAXY_DISK * (thickK + 0.55 * bulge) * spread;
   const thick = (rng() + rng() - 1) * vmax; // ~gaussiana: mucho al centro, poco al borde
   return [
     c[0] + (u[0] * cs + v[0] * sn) * rad + n[0] * thick,
@@ -1261,20 +1263,135 @@ function sampleInRegion(
   ];
 }
 
+// ─── Expansión por densidad: el disco crece con el nº de nodos ────────────
+// El disco base (GALAXY_DISK) quedó calibrado para galaxias de ~60 nodos.
+// El cerebro creció a miles: una galaxia poblada (Cabalá ~1000) necesita MÁS
+// espacio para que sus estrellas respiren. Escalamos por √(n/ref) → la
+// densidad superficial se mantiene constante al crecer. Con tope, para que
+// ninguna galaxia invada a la vecina; y piso 1, para que una galaxia chica
+// (Halajá, Ciencia) conserve su tamaño actual y no quede regada.
+const GALAXY_REF_DENSITY = 64; // nº de nodos con el que el disco base se ve bien
+const GALAXY_SPREAD_MAX = 2.0; // tope de expansión (los centros no se mueven)
+function galaxyKeyOf(cat: string): string {
+  const c = GALAXY_DIR[cat] ? cat : "tema";
+  return c === "torah" ? "tanakh" : c; // Torá vive en la galaxia de Tanaj
+}
+export function computeGalaxySpread(nodes: BNode[]): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const n of nodes) {
+    if (n.level === 0) continue;
+    const g = galaxyKeyOf(n.cat);
+    counts[g] = (counts[g] ?? 0) + 1;
+  }
+  const out: Record<string, number> = {};
+  for (const cat of Object.keys(GALAXY_DIR)) {
+    const c = counts[galaxyKeyOf(cat)] ?? 0;
+    out[cat] = Math.min(GALAXY_SPREAD_MAX, Math.max(1, Math.sqrt(c / GALAXY_REF_DENSITY)));
+  }
+  return out;
+}
+
+// ─── Relajación por colisión (determinista): separa estrellas pegadas ─────
+// Tras el muestreo aleatorio, dos nodos pueden caer casi encima. Unas pocas
+// iteraciones de separación de pares (con rejilla espacial → O(n·vecinos))
+// garantizan una distancia mínima entre estrellas de la misma galaxia, mayor
+// para los hubs (llevan etiquetas más grandes). Sin RNG: mismo input → mismo
+// layout, así el universo no "salta" entre visitas.
+const RELAX_MIN_SEP = [1.9, 1.7, 1.25, 0.9, 0.85] as const; // por nivel 0..4 (unidades mundo)
+const RELAX_ITERS = 18;
+function relaxGalaxy(
+  members: BNode[],
+  out: Record<string, [number, number, number]>,
+  center: [number, number, number],
+  maxRad: number,
+) {
+  const n = members.length;
+  if (n < 2) return;
+  const sepOf = (b: BNode) => RELAX_MIN_SEP[Math.min(Math.max(b.level, 0), 4)];
+  const cell = RELAX_MIN_SEP[0]; // la celda cubre la separación máxima posible
+  const keyOf = (p: [number, number, number]) =>
+    `${Math.floor(p[0] / cell)},${Math.floor(p[1] / cell)},${Math.floor(p[2] / cell)}`;
+  for (let it = 0; it < RELAX_ITERS; it++) {
+    // rejilla espacial de esta iteración
+    const grid = new Map<string, number[]>();
+    for (let i = 0; i < n; i++) {
+      const k = keyOf(out[members[i].id]);
+      const b = grid.get(k);
+      if (b) b.push(i); else grid.set(k, [i]);
+    }
+    let moved = false;
+    for (let i = 0; i < n; i++) {
+      const a = members[i];
+      const pa = out[a.id];
+      const cx = Math.floor(pa[0] / cell), cy = Math.floor(pa[1] / cell), cz = Math.floor(pa[2] / cell);
+      for (let gx = cx - 1; gx <= cx + 1; gx++)
+        for (let gy = cy - 1; gy <= cy + 1; gy++)
+          for (let gz = cz - 1; gz <= cz + 1; gz++) {
+            const bucket = grid.get(`${gx},${gy},${gz}`);
+            if (!bucket) continue;
+            for (const j of bucket) {
+              if (j <= i) continue; // cada par una sola vez
+              const b = members[j];
+              const pb = out[b.id];
+              const sep = (sepOf(a) + sepOf(b)) / 2;
+              let dx = pb[0] - pa[0], dy = pb[1] - pa[1], dz = pb[2] - pa[2];
+              const d = Math.hypot(dx, dy, dz);
+              if (d >= sep) continue;
+              if (d < 1e-4) {
+                // mismo punto exacto: dirección determinista desde el hash del par
+                const h = hashStr(a.id + "|" + b.id);
+                const az = ((h % 1024) / 1024) * Math.PI * 2;
+                const el = (((h >>> 10) % 1024) / 1024) * 2 - 1;
+                const s = Math.sqrt(1 - el * el);
+                dx = s * Math.cos(az); dy = el; dz = s * Math.sin(az);
+              } else {
+                dx /= d; dy /= d; dz /= d;
+              }
+              const push = (sep - d) * 0.5;
+              const aFixed = a.level === 0; // la Torá no se mueve de su corazón
+              const bFixed = b.level === 0;
+              const ka = aFixed ? 0 : bFixed ? 1 : 0.5;
+              const kb = bFixed ? 0 : aFixed ? 1 : 0.5;
+              pa[0] -= dx * push * 2 * ka; pa[1] -= dy * push * 2 * ka; pa[2] -= dz * push * 2 * ka;
+              pb[0] += dx * push * 2 * kb; pb[1] += dy * push * 2 * kb; pb[2] += dz * push * 2 * kb;
+              moved = true;
+            }
+          }
+      // correa suave: nadie se escapa del halo de su galaxia (ni invade la vecina)
+      const rx = pa[0] - center[0], ry = pa[1] - center[1], rz = pa[2] - center[2];
+      const r = Math.hypot(rx, ry, rz);
+      if (r > maxRad) {
+        const k = maxRad / r;
+        pa[0] = center[0] + rx * k; pa[1] = center[1] + ry * k; pa[2] = center[2] + rz * k;
+      }
+    }
+    if (!moved) break;
+  }
+}
+
 // ─── Layout de los nodos semánticos (determinista por id) ───────────────
 // Acepta CUALQUIER lista de nodos (estática o traída de la BD) → así el
 // cerebro puede crecer y los nodos nuevos se ubican automáticamente.
 export function layoutNodes(nodes: BNode[]): Record<string, [number, number, number]> {
   const out: Record<string, [number, number, number]> = {};
+  const spread = computeGalaxySpread(nodes);
+  const byGalaxy = new Map<string, BNode[]>();
   nodes.forEach((n, i) => {
+    const g = galaxyKeyOf(n.cat);
+    const grp = byGalaxy.get(g);
+    if (grp) grp.push(n); else byGalaxy.set(g, [n]);
     if (n.level === 0) { out[n.id] = galaxyCenter("tanakh"); return; } // Torá = núcleo de la galaxia Tanaj
     const cat = GALAXY_DIR[n.cat] ? n.cat : "tema";
     const seed = (hashStr(n.id) ^ ((i + 1) * 0x9e3779b1)) >>> 0;
     const rng = mulberry32(seed);
     // nivel: los hubs (nivel 1) cerca del núcleo de su galaxia; los conceptos hacia afuera
     const radScale = n.level <= 1 ? 0.30 : n.level === 2 ? 0.62 : n.level === 3 ? 0.85 : 1.0;
-    out[n.id] = galaxyPoint(cat, rng, 0.62, radScale, 0.34);
+    out[n.id] = galaxyPoint(cat, rng, 0.62, radScale, 0.34, spread[cat] ?? 1);
   });
+  // separación mínima dentro de cada galaxia (etiquetas y estrellas legibles)
+  for (const [g, members] of byGalaxy) {
+    relaxGalaxy(members, out, galaxyCenter(g), GALAXY_DISK * (spread[g] ?? 1) * 1.15);
+  }
   return out;
 }
 
@@ -1358,16 +1475,17 @@ export function shortestPath(edges: [string, string][], from: string, to: string
 // ─── Tejido ambiental: sinapsis decorativas que dan masa/forma al cerebro ──
 // Puntos tenues dentro de la unión de los lóbulos (ambos hemisferios).
 // Devuelve { positions: Float32Array(n*3), colors: Float32Array(n*3) }.
-export function ambientTissue(count: number, seed = 7): { positions: Float32Array; colors: Float32Array } {
+export function ambientTissue(count: number, seed = 7, spread?: Record<string, number>): { positions: Float32Array; colors: Float32Array } {
   const rng = mulberry32(seed >>> 0);
   const positions = new Float32Array(count * 3);
   const colors = new Float32Array(count * 3);
   const cats = GALAXY_CATS;
   // El polvo dibuja las galaxias mismas: cada punto cae en el disco espiral de
   // una galaxia y toma el color (atenuado) de su dominio → nebulosas vivas.
+  // `spread` (expansión por densidad) hace que los brazos acompañen al disco.
   for (let i = 0; i < count; i++) {
     const cat = cats[Math.floor(rng() * cats.length)];
-    const p = galaxyPoint(cat, rng, 0.55, 1.08, 0.40); // polvo: más volumen que los nodos
+    const p = galaxyPoint(cat, rng, 0.55, 1.08, 0.40, spread?.[cat] ?? 1); // polvo: más volumen que los nodos
     positions[i * 3] = p[0];
     positions[i * 3 + 1] = p[1];
     positions[i * 3 + 2] = p[2];

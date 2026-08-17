@@ -28,6 +28,7 @@ import {
   GALAXY_DISK,
   galaxyCenter,
   layoutNodes,
+  computeGalaxySpread,
   ambientTissue,
   potentialNodes,
   bfsDistances,
@@ -124,9 +125,9 @@ function curvesToSegments(curves: EdgeCurve[]): Float32Array {
 }
 
 // ── Tejido ambiental (sinapsis decorativas que forman la masa del cerebro) ─
-function AmbientTissue({ count = CFG.ambientCount, still = false }: { count?: number; still?: boolean }) {
+function AmbientTissue({ count = CFG.ambientCount, still = false, spread }: { count?: number; still?: boolean; spread?: Record<string, number> }) {
   const tex = useMemo(() => glowTexture(), []);
-  const { positions, colors } = useMemo(() => ambientTissue(count), [count]);
+  const { positions, colors } = useMemo(() => ambientTissue(count, 7, spread), [count, spread]);
   const geom = useMemo(() => {
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
@@ -236,15 +237,16 @@ function StarField({ count = STARFIELD.count }: { count?: number }) {
 }
 
 // ── Nebulosa + núcleo + nombre de cada galaxia (disciplina) ───────────────
-function Nebulae({ locale }: { locale: string }) {
+function Nebulae({ locale, spread }: { locale: string; spread?: Record<string, number> }) {
   const tex = useMemo(() => glowTexture(), []);
   return (
     <>
       {GALAXY_CATS.map((cat) => {
         const c = galaxyCenter(cat);
         const col = BRAIN_CATS[cat]?.c ?? "#9a9aae";
-        const neb = GALAXY_DISK * NEBULAE.haloScale;
-        const core = GALAXY_DISK * NEBULAE.coreScale;
+        const k = spread?.[cat] ?? 1; // el halo acompaña la expansión por densidad
+        const neb = GALAXY_DISK * k * NEBULAE.haloScale;
+        const core = GALAXY_DISK * k * NEBULAE.coreScale;
         return (
           <group key={cat} position={c}>
             <sprite scale={[neb, neb, 1]}>
@@ -966,6 +968,8 @@ function BrainScene({
   onTravelConsumed: () => void;
 }) {
   const positions = useMemo(() => layoutNodes(nodes), [nodes]);
+  // expansión por densidad: nebulosas y polvo acompañan el tamaño real de cada galaxia
+  const galaxySpread = useMemo(() => computeGalaxySpread(nodes), [nodes]);
   // estrellas de la galaxia Comunidad (jidushim) → sus aristas son interpretativas
   const commSet = useMemo(
     () => new Set(nodes.filter((n) => n.cat === "comunidad").map((n) => n.id)),
@@ -1085,6 +1089,26 @@ function BrainScene({
   // intensidad por nodo según capa: primaria > secundaria > terciaria > lejana
   // "Tanaj" en la leyenda enciende también el núcleo Torá (misma galaxia)
   const catHit = (c: string) => c === activeCat || (activeCat === "tanakh" && c === "torah");
+  // Presupuesto de etiquetas al encender un dominio: antes se rotulaba TODO
+  // nodo de nivel ≤3 — con una galaxia de ~1000 nodos eso era una mancha negra
+  // de texto encimado (y mil <div> matando el frame). Ahora el nivel máximo
+  // rotulado se adapta: se rotula el nivel más profundo que quepa en ~140
+  // etiquetas legibles (los demás nodos igual se ENCIENDEN, solo sin texto).
+  const CAT_LABEL_BUDGET = 140;
+  const catLabelMaxLevel = useMemo(() => {
+    if (!activeCat) return 3;
+    const perLevel = [0, 0, 0, 0]; // niveles 0..3
+    for (const n of nodes) {
+      const hit = n.cat === activeCat || (activeCat === "tanakh" && n.cat === "torah");
+      if (hit && n.level >= 0 && n.level <= 3) perLevel[n.level]++;
+    }
+    let acc = 0, max = 0;
+    for (let l = 0; l <= 3; l++) {
+      acc += perLevel[l];
+      if (acc <= CAT_LABEL_BUDGET) max = l;
+    }
+    return max;
+  }, [activeCat, nodes]);
   const intensityOf = (n: BNode): number => {
     // Vista del Sofer (?pending=1): los nodos PENDIENTES se muestran MUY tenues
     // (atenuados), para distinguirlos a simple vista de los ya aprobados.
@@ -1127,7 +1151,7 @@ function BrainScene({
     if (n.id === hovered) return true; // la estrella apuntada SIEMPRE muestra su nombre
     if (gilgulActive && gilgulReach) return n.id === gilgulRoot || gilgulReach.has(n.id); // rotula el linaje
     if (compareActive) return compareSet.has(n.id) || sharedSet.has(n.id);
-    if (catActive) return catHit(n.cat) && n.level <= 3; // rotula los nodos del dominio
+    if (catActive) return catHit(n.cat) && n.level <= catLabelMaxLevel; // rotula el dominio SIN encimar texto
     if (filterActive) return n.id === selected || (dist?.get(n.id) === 1 && n.cat === filterCat); // foco + destinos filtrados
     if (n.id === focusId) return true;
     if (dist) {
@@ -1185,14 +1209,14 @@ function BrainScene({
 
       {/* el universo: estrellas de fondo + nebulosas con nombre por galaxia */}
       <StarField count={Math.round(STARFIELD.count * particleScale)} />
-      <Nebulae locale={locale} />
+      <Nebulae locale={locale} spread={galaxySpread} />
 
       {/* La selección NUNCA se suelta al tocar el fondo, arrastrar, hacer zoom ni
           al fallar un clic cerca de un nodo. Solo se cierra con acciones explícitas:
           el botón × de la tarjeta, la tecla Escape, o al elegir OTRO nodo. */}
 
       <group ref={groupRef}>
-        <AmbientTissue count={Math.round(CFG.ambientCount * particleScale)} still={reducedMotion} />
+        <AmbientTissue count={Math.round(CFG.ambientCount * particleScale)} still={reducedMotion} spread={galaxySpread} />
         <PotentialNodes count={Math.round(CFG.potentialCount * particleScale)} still={reducedMotion} />
         <BaseFibers segments={baseSegments} dimmed={focusId !== null || compareActive || catActive || gilgulActive} />
         {/* en modo filtro, la malla jerárquica y el camino a la Torá se apagan para
