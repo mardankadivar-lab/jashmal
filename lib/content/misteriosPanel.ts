@@ -21,6 +21,7 @@ import type { EstudioData } from "@/components/misterio/EstudioMisterio";
 import { data as arcaNoOcupaLugar } from "@/app/[locale]/misterio/arca-no-ocupa-lugar/data";
 import { data as bueyYBurro } from "@/app/[locale]/misterio/buey-y-burro/data";
 import { data as ajaritHayamim } from "@/app/[locale]/misterio/ajarit-hayamim/data";
+import { data as cincoLucesMashiaj } from "@/app/[locale]/misterio/cinco-luces-mashiaj/data";
 import { data as danielApocaliptica } from "@/app/[locale]/misterio/daniel-apocaliptica/data";
 import { data as despertarDeLoAlto } from "@/app/[locale]/misterio/despertar-de-lo-alto/data";
 import { data as eikevTalon } from "@/app/[locale]/misterio/eikev-talon/data";
@@ -44,6 +45,7 @@ export const MISTERIOS_PANEL: Record<string, EstudioData> = {
   "arca-no-ocupa-lugar": arcaNoOcupaLugar,
   "buey-y-burro": bueyYBurro,
   "ajarit-hayamim": ajaritHayamim,
+  "cinco-luces-mashiaj": cincoLucesMashiaj,
   "daniel-apocaliptica": danielApocaliptica,
   "despertar-de-lo-alto": despertarDeLoAlto,
   "eikev-talon": eikevTalon,

@@ -374,6 +374,26 @@ export const MISTERIOS: Misterio[] = [
     orden: 0.04,
   },
   {
+    // Puerta de las luces dentro de la serie del Mashíaj. Verificado por el
+    // Sofer (scratchpad/estudio-cinco-luces.md). Los campos Fa replican el
+    // español a propósito hasta que llegue la traducción verificada.
+    slug: "cinco-luces-mashiaj",
+    numero: "207",
+    he: "אוֹר",
+    titulo: "Las Cinco Luces y su revelación en el Mashíaj",
+    tituloFa: "Las Cinco Luces y su revelación en el Mashíaj",
+    tituloEn: "The Five Lights and Their Revelation in Mashiach",
+    gancho:
+      "La luz del primer día no es la del sol — el sol recién aparece en el cuarto día. La palabra «luz» suena cinco veces en ese día, y la tradición la nombra de cinco maneras: directa, retornante, interior, circundante, guardada. Un midrash dice para quién quedó guardada. Or = Raz = Ein Sof = 207.",
+    ganchoFa:
+      "La luz del primer día no es la del sol — el sol recién aparece en el cuarto día. La palabra «luz» suena cinco veces en ese día, y la tradición la nombra de cinco maneras: directa, retornante, interior, circundante, guardada. Un midrash dice para quién quedó guardada. Or = Raz = Ein Sof = 207.",
+    ganchoEn:
+      "The light of the first day is not the sun's — the sun only appears on day four. The word “light” sounds five times on that day, and tradition names it in five ways: direct, returning, inner, surrounding, hidden. One midrash says for whom it was stored away. Or = Raz = Ein Sof = 207.",
+    serie: "mashiaj",
+    color: "#e8c96a",
+    orden: 0.045,
+  },
+  {
     slug: "simiente-mesianica",
     he: "הַזֶּרַע הַמְּשִׁיחִי",
     titulo: "La Simiente Mesiánica",
