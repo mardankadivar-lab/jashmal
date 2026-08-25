@@ -934,6 +934,25 @@ export const MISTERIOS: Misterio[] = [
     color: "#8b6a3a",
     orden: 16.9,
   },
+  {
+    // Ki Tavó sigue a Ki Tetzé en el orden de lectura de Devarim.
+    // tituloFa/ganchoFa replican el español a propósito: el estudio está solo
+    // en español y el Sofer aún no lo tradujo. NO se generó farsi automático.
+    slug: "bendicion-invertida",
+    he: "שִׂמְחָה",
+    titulo: "La bendición que se invierte",
+    tituloFa: "La bendición que se invierte",
+    tituloEn: "The Blessing That Inverts",
+    gancho:
+      "Las 98 maldiciones de la Tojajá no caen sobre quien dejó de servir: caen sobre quien siguió sirviendo — sin alegría. Y el versículo dice dónde nacen: «por la abundancia de todo» (Devarim 28:47). La misma abundancia, invertida por la vasija que la recibe.",
+    ganchoFa:
+      "Las 98 maldiciones de la Tojajá no caen sobre quien dejó de servir: caen sobre quien siguió sirviendo — sin alegría. Y el versículo dice dónde nacen: «por la abundancia de todo» (Devarim 28:47). La misma abundancia, invertida por la vasija que la recibe.",
+    ganchoEn:
+      "The 98 curses of the Tochachah do not fall on the one who stopped serving: they fall on the one who kept serving — without joy. And the verse says where they are born: “out of the abundance of everything” (Devarim 28:47). The same abundance, inverted by the vessel that receives it.",
+    serie: "parasha",
+    color: "#8b6a3a",
+    orden: 16.95,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".
