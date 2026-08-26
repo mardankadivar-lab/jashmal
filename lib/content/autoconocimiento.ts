@@ -294,7 +294,7 @@ export const ESPEJO_NOTA_ARIZAL = {
 };
 
 export interface RasgoTema {
-  id: "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8" | "R9" | "R10" | "R11" | "R12";
+  id: "R1" | "R2" | "R3" | "R4" | "R5" | "R6" | "R7" | "R8" | "R9" | "R10" | "R11" | "R12" | "R13";
   /** título corto del rasgo-tema */
   titulo: string;
   /** fuente exacta verificada, texto legible (ej. "Zohar, Yitró 6:77") */
@@ -488,6 +488,28 @@ export const RASGOS: RasgoTema[] = [
     opuesto: "La confianza entera: una fidelidad que guarda lo confiado hasta el final y es igual de veraz en lo oculto — palabra completa, no a medias.",
     color: "#b5763e",
   },
+  {
+    // Sección del ROSTRO (דִּיוּקְנִין דְּאַנְפִּין) — el último de los siete lugares del Raza de-Razin
+    // que aún no se había minado. Ref real verificada en Sefaria por el Sofer
+    // (2026-08-26) con llamada directa a la API (api/v3/texts, ref="Zohar, Yitro 8:102",
+    // versión "Vocalized Zohar, Israel 2013"). Cita aramea VERBATIM, extraída del
+    // propio texto de Sefaria: "en su enojo está en calma, enseguida se apacigua. Pero
+    // guarda rencor como la serpiente hasta el final… pero el cerebro que está dentro
+    // de la cáscara y el corazón se enderezan, y esto es firme para los justos".
+    // El propio Zohar da la salida (מִתְיַשְּׁרָא — el corazón se endereza) → de ahí el
+    // opuesto-luminoso. Rasgo NUEVO y distinto: no es R3 (la ira que estalla) sino su
+    // reverso — el que NO estalla, se apacigua rápido por fuera, y guarda la cuenta.
+    id: "R13",
+    titulo: "El que se apacigua rápido pero guarda el rencor",
+    fuente: "Zohar, Yitró 8:102",
+    fuenteRef: "Zohar, Yitro 8:102",
+    citaHe:
+      "בְּרוּגְזֵיהּ בְּנַיְיחָא, מִיָּד אִתְפָּיַּיס. אֲבָל נָטִיר דְּבָבוּ כְּנָחָשׁ לְסוֹפָא… אֲבָל מוֹחָא דִּבְגוֹ קְלִיפָה וְלִבָּא מִתְיַשְּׁרָא, וְיַצִּיבָא דָּא לְאִינוּן זַכָּאִין",
+    mida: "לֹֽא־תִקֹּ֤ם וְלֹֽא־תִטֹּר֙ (Vayikrá 19:18): perdonar de verdad, hasta el fondo — no llevar la cuenta por dentro.",
+    espejo: "Digo «ya está, no pasa nada» — ¿y por dentro sigo llevando la cuenta? ¿A quién no he perdonado de verdad?",
+    opuesto: "El corazón que se endereza: una paz que llega hasta el fondo — el corazón dentro de la cáscara se endereza y ya no queda cuenta guardada.",
+    color: "#7d8f4e",
+  },
 ];
 
 // Rabbeinu Bachya sobre Shemot 18:21 — VERBATIM (cierre obligatorio del Espejo).
@@ -546,6 +568,9 @@ export const PREGUNTAS: Pregunta[] = [
       { texto: "observar antes de actuar", rasgos: ["R2"], textoFa: "پیش از کنش، نظاره می‌کنم" },
       // R11 (Zohar Yitro 6:80): "בָּכֵי בְּשַׁעֲתָא דְּאַרְגִּיז" — llora/se ablanda al enojarse.
       { texto: "por dentro me ablando, se me aguan los ojos (aunque por fuera parezca duro)", rasgos: ["R11"], textoFa: "از درون نرم می‌شوم و اشکم درمی‌آید (هرچند از بیرون سخت به‌نظر بیایم)" },
+      // R13 (Zohar Yitro 8:102): "בְּרוּגְזֵיהּ בְּנַיְיחָא… אֲבָל נָטִיר דְּבָבוּ כְּנָחָשׁ לְסוֹפָא" — se apacigua enseguida,
+      // pero guarda el rencor. El reverso de R3: no estalla, pero lleva la cuenta.
+      { texto: "me calmo enseguida por fuera, pero por dentro no se me olvida", rasgos: ["R13"], textoFa: "از بیرون زود آرام می‌شوم، امّا در درون فراموش نمی‌کنم" },
     ],
   },
   {

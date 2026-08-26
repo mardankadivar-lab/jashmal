@@ -152,6 +152,21 @@ R12 — La confianza a medias / el que no sabe guardar un secreto. **Zohar, Yitr
   de R8 (secretos grandes, tibio en lo pequeño). Integrado como 6ª opción de Q4 ("soltar lo que me
   confían una vez que ya lo sé por otro lado"), peso 2. (Ojos / conducta.)
 
+R13 — El que se apacigua rápido pero guarda el rencor. **Zohar, Yitro 8:102** (sección del ROSTRO,
+  דִּיוּקְנִין דְּאַנְפִּין — el séptimo lugar del Raza de-Razin, hasta hoy sin minar) —
+  "בְּרוּגְזֵיהּ בְּנַיְיחָא, מִיָּד אִתְפָּיַּיס. אֲבָל נָטִיר דְּבָבוּ כְּנָחָשׁ לְסוֹפָא… אֲבָל מוֹחָא
+  דִּבְגוֹ קְלִיפָה וְלִבָּא מִתְיַשְּׁרָא, וְיַצִּיבָא דָּא לְאִינוּן זַכָּאִין" (en su enojo está en calma,
+  enseguida se apacigua; pero guarda rencor como la serpiente hasta el final… pero el cerebro que
+  está dentro de la cáscara y el corazón se enderezan, y esto es firme para los justos). Ref REAL
+  confirmada por llamada directa a la API de Sefaria (api/v3/texts, ref="Zohar, Yitro 8:102",
+  versión "Vocalized Zohar, Israel 2013"); la cita se extrajo VERBATIM del propio texto devuelto.
+  Midá: לֹֽא־תִקֹּ֤ם וְלֹֽא־תִטֹּר֙ (Vayikrá 19:18) — perdonar de verdad, hasta el fondo. Espejo: digo
+  «ya está, no pasa nada», ¿y por dentro sigo llevando la cuenta? Opuesto-luminoso: el corazón que
+  se endereza (וְלִבָּא מִתְיַשְּׁרָא), la salida que el propio Zohar nombra. Rasgo distinto de R3: R3
+  es la ira que estalla; R13 es su reverso — el que NO estalla, se apacigua rápido por fuera y
+  guarda la cuenta por dentro. Integrado como 6ª opción de Q1 ("me calmo enseguida por fuera, pero
+  por dentro no se me olvida"), peso 2. (Rostro / conducta.)
+
 ## RASGOS FÍSICOS AUTO-DESCRITOS (sin foto)
 La persona se describe a sí misma en palabras; cada opción mapea al texto verificado. NUNCA se
 pide ni se analiza una imagen. Estas auto-descripciones son material de meditación, no diagnóstico.
