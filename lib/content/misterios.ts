@@ -778,6 +778,24 @@ export const MISTERIOS: Misterio[] = [
     orden: 16,
   },
 
+  {
+    slug: "salmo-137",
+    numero: "13.700",
+    he: "עַל נַהֲרוֹת בָּבֶל",
+    titulo: "Junto a los ríos de Babilonia",
+    tituloFa: "بر کناره‌های رودهای بابل",
+    tituloEn: "By the Rivers of Babylon",
+    gancho:
+      "Es el salmo del destierro: «Junto a los ríos de Babilonia nos sentamos y lloramos». Tiene exactamente 84 palabras y se parte justo por la mitad —en la palabra «mi lengua»—. Suma las 42 primeras: 13.700, cien veces 137. Tiene exactamente 317 letras. Y su último versículo vale 1.820: las veces exactas que el Nombre de Dios aparece en toda la Torá.",
+    ganchoFa:
+      "این مزمورِ تبعید است: «بر کناره‌های رودهای بابل نشستیم و گریستیم». دقیقاً ۸۴ واژه دارد و درست از میانه دو نیم می‌شود — بر واژهٔ «زبانِ من». چهل‌و‌دو واژهٔ نخست را جمع کن: ۱۳٬۷۰۰، صد برابرِ ۱۳۷. دقیقاً ۳۱۷ حرف دارد. و آخرین آیه‌اش برابرِ ۱۸۲۰ است: دقیقاً همان‌قدر که نامِ خدا در سراسرِ تورات می‌آید.",
+    ganchoEn:
+      "It is the psalm of exile: “By the rivers of Babylon we sat down and wept.” It has exactly 84 words and splits precisely in half —on the word “my tongue.” Add the first 42: 13,700, one hundred times 137. It has exactly 317 letters. And its final verse equals 1,820: the exact number of times God's Name appears in the whole Torah.",
+    serie: "ciencia",
+    color: "#6fa8d6",
+    orden: 16.05,
+  },
+
   // ── SERIE "PARASHA" — Estudios completos de parashá con PaRDeS ───────────────
   // Cada entrada de parashá es el ÍNDICE de enseñanzas en /misterio/{slug}.
   // Las sub-enseñanzas viven en /misterio/{slug}/{enseñanza}/page.tsx.
