@@ -109,6 +109,16 @@ export interface MesHebreo {
   tendencia: string;
   /** pregunta de tikún */
   tikun: string;
+  // ---- FARSI (fa) — traducción del Sofer 2026-08-26. El HEBREO (he, signoHe,
+  //      letra, sentidoHe) NUNCA se traduce: se muestra igual en los 3 idiomas.
+  //      Solo se traduce la prosa que lo rodea. `undefined` = aún sin farsi →
+  //      tri() cae al español MARCADO (nunca mezcla silenciosa).
+  nombreFa?: string;
+  signoFa?: string;
+  letraNombreFa?: string;
+  sentidoFa?: string;
+  tendenciaFa?: string;
+  tikunFa?: string;
   /** color de acento para la tarjeta */
   color: string;
 }
@@ -122,6 +132,13 @@ export const MESES: MesHebreo[] = [
     sentidoHe: "שִׂיחָה", sentidoEs: "habla",
     tendencia: "iniciativa, fuego del comienzo, liderazgo impulsivo.",
     tikun: "¿cómo pongo mi empuje al servicio de algo más grande que mi ego, para que mi fuego encienda y no queme?",
+    nombreFa: "نیسان", signoFa: "حَمَل (بره)", letraNombreFa: "هِه",
+    sentidoFa:
+      "گفتار",
+    tendenciaFa:
+      "ابتکار، آتشِ آغاز، رهبریِ شتاب‌زده.",
+    tikunFa:
+      "چگونه نیرویِ پیش‌رانم را در خدمتِ چیزی بزرگ‌تر از خودم بگذارم، تا آتشم برافروزد و نسوزانَد؟",
     color: "#e0533a",
   },
   {
@@ -130,6 +147,13 @@ export const MESES: MesHebreo[] = [
     sentidoHe: "הִרְהוּר", sentidoEs: "pensamiento",
     tendencia: "firmeza, paciencia, apego a lo concreto; también terquedad.",
     tikun: "¿cómo transformo mi terquedad en constancia santa y mi apego material en canal para elevarlo?",
+    nombreFa: "ایار", signoFa: "ثور (گاو)", letraNombreFa: "واو",
+    sentidoFa:
+      "اندیشه",
+    tendenciaFa:
+      "استواری، شکیبایی، دلبستگی به امرِ ملموس؛ و نیز یک‌دندگی.",
+    tikunFa:
+      "چگونه یک‌دندگی‌ام را به پایداریِ قدسی و دلبستگیِ مادی‌ام را به مجرایی برای برکشیدنِ آن دگرگون کنم؟",
     color: "#3fae6b",
   },
   {
@@ -138,6 +162,13 @@ export const MESES: MesHebreo[] = [
     sentidoHe: "הִלּוּךְ", sentidoEs: "andar",
     tendencia: "dualidad, palabra, mente ágil que une opuestos; riesgo de dispersión.",
     tikun: "¿cómo unifico mis dos mitades para servir con un solo corazón?",
+    nombreFa: "سیوان", signoFa: "جوزا (دوپیکر)", letraNombreFa: "زاین",
+    sentidoFa:
+      "رفتن",
+    tendenciaFa:
+      "دوگانگی، کلام، ذهنِ چابکی که اضداد را به هم می‌پیوندد؛ با خطرِ پراکندگی.",
+    tikunFa:
+      "چگونه دو نیمه‌ام را یکی کنم تا با یک دل خدمت کنم؟",
     color: "#e0c84a",
   },
   {
@@ -147,6 +178,13 @@ export const MESES: MesHebreo[] = [
     tendencia:
       "sensibilidad, memoria, mundo interior, protección del hogar; vulnerable al repliegue (mes del quiebre de las tablas).",
     tikun: "¿cómo convierto mi sensibilidad en compasión activa y mi caparazón en refugio para otros?",
+    nombreFa: "تموز", signoFa: "سرطان (خرچنگ)", letraNombreFa: "خِت",
+    sentidoFa:
+      "بینایی",
+    tendenciaFa:
+      "حساسیت، حافظه، جهانِ درونی، پاسداری از خانه؛ آسیب‌پذیر در برابرِ فروبستن در خود (ماهِ شکستنِ لوح‌ها).",
+    tikunFa:
+      "چگونه حساسیتم را به شفقتی کنشگر و صدفم را به پناهگاهی برای دیگران بدل کنم؟",
     color: "#5fa3c9",
   },
   {
@@ -156,6 +194,13 @@ export const MESES: MesHebreo[] = [
     tendencia:
       "nobleza, calor, presencia que ilumina; riesgo de orgullo (la ט encierra el tov oculto incluso en el duelo de Av).",
     tikun: "¿cómo hallo el bien escondido dentro de mi dolor y pongo mi fuerza al servicio, no a la vanidad?",
+    nombreFa: "آو", signoFa: "اسد (شیر)", letraNombreFa: "طِت",
+    sentidoFa:
+      "شنوایی",
+    tendenciaFa:
+      "بزرگ‌منشی، گرما، حضوری که روشنایی می‌بخشد؛ با خطرِ غرور (حرفِ ט توو (tov، «نیکی») را حتی در سوگِ آو در خود پنهان دارد).",
+    tikunFa:
+      "چگونه نیکیِ پنهان در دردم را بیابم و نیرویم را در خدمت بگذارم، نه در خودپسندی؟",
     color: "#e08a2e",
   },
   {
@@ -165,6 +210,13 @@ export const MESES: MesHebreo[] = [
     tendencia:
       "precisión, pureza, autoexamen (mes del jeshbón hanéfesh); riesgo de autocrítica paralizante.",
     tikun: "¿cómo uso mi mirada exigente para refinarme con amor (teshuvá), no para condenarme?",
+    nombreFa: "الول", signoFa: "سنبله (دوشیزه)", letraNombreFa: "یُد",
+    sentidoFa:
+      "کردار",
+    tendenciaFa:
+      "دقّت، پاکی، خودکاوی (ماهِ خِشبون هَنِفِش، حسابرسیِ نفس)؛ با خطرِ خودسرزنشیِ فلج‌کننده.",
+    tikunFa:
+      "چگونه از نگاهِ سختگیرم برای پالودنِ خود با مهر (تِشووا) بهره ببرم، نه برای محکوم‌کردنِ خویش؟",
     color: "#8bb04a",
   },
   {
@@ -177,6 +229,13 @@ export const MESES: MesHebreo[] = [
     tendencia:
       "búsqueda de equilibrio y justicia, aspiración a lo alto (mes del juicio); riesgo de indecisión.",
     tikun: "¿cómo inclino mi balanza siempre hacia el mérito, elevándome como la ל hacia el aprendizaje?",
+    nombreFa: "تیشری", signoFa: "میزان (ترازو)", letraNombreFa: "لامِد",
+    sentidoFa:
+      "حرفِ ל «برجِ پرنده» است، آموختن (لیلمود)؛ (مجرای این ماه میانِ نسخه‌ها متفاوت است — با دقّتی کاذب چیزی را قطعی نمی‌گوییم).",
+    tendenciaFa:
+      "جست‌وجویِ تعادل و دادگری، اشتیاق به فرازها (ماهِ داوری)؛ با خطرِ دودلی.",
+    tikunFa:
+      "چگونه ترازویم را همیشه به سویِ کفهٔ شایستگی بگردانم و چون حرفِ ל به سویِ آموختن برکشیده شوم؟",
     color: "#c9a43e",
   },
   {
@@ -186,6 +245,13 @@ export const MESES: MesHebreo[] = [
     tendencia:
       "profundidad, intensidad, transformación desde lo oculto; riesgo de aguijón/resentimiento (la נ del caído que se levanta).",
     tikun: "¿cómo transformo mi intensidad en regeneración y mi aguijón en defensa de la verdad, no en veneno?",
+    nombreFa: "مَرحِشوان (حِشوان)", signoFa: "عقرب (کژدم)", letraNombreFa: "نون",
+    sentidoFa:
+      "بویایی",
+    tendenciaFa:
+      "ژرفا، شدّت، دگرگونی از دلِ نهان؛ با خطرِ نیش و کینه (نونِ افتاده‌ای که برمی‌خیزد).",
+    tikunFa:
+      "چگونه شدّتم را به نوزایی و نیشم را به دفاع از حقیقت بدل کنم، نه به زهر؟",
     color: "#9b59b6",
   },
   {
@@ -195,6 +261,13 @@ export const MESES: MesHebreo[] = [
     tendencia:
       "visión a distancia, optimismo, fe que apunta a la luz en la oscuridad (Janucá); la ס es círculo de apoyo (somej).",
     tikun: "¿hacia qué blanco apunto mi arco? ¿cómo enciendo luz creciente en mi oscuridad?",
+    nombreFa: "کیسلِو", signoFa: "قوس («کمان»)", letraNombreFa: "سامِخ",
+    sentidoFa:
+      "خواب",
+    tendenciaFa:
+      "دوربینی، خوش‌بینی، ایمانی که در تاریکی به سویِ نور نشانه می‌رود (حَنوکا)؛ حرفِ ס دایرهٔ تکیه‌گاه است (سومِخ، «نگاه‌دارنده»).",
+    tikunFa:
+      "کمانم را به سویِ کدام نشانه می‌گیرم؟ چگونه در تاریکی‌ام نوری فزاینده برمی‌افروزم؟",
     color: "#e0b84a",
   },
   {
@@ -204,6 +277,13 @@ export const MESES: MesHebreo[] = [
     tendencia:
       "ambición disciplinada, escalada paciente, seriedad; la ע es «el ojo» (cómo miro); riesgo de dureza/ira.",
     tikun: "¿cómo purifico mi ojo y convierto mi ira en celo sagrado, escalando con humildad?",
+    nombreFa: "طِوِت", signoFa: "جدی (بزغاله)", letraNombreFa: "عَین",
+    sentidoFa:
+      "خشم",
+    tendenciaFa:
+      "بلندپروازیِ منضبط، بالارفتنِ شکیبانه، جدّیت؛ حرفِ ע «چشم» است (اینکه چگونه می‌نگرم)؛ با خطرِ سختی و خشم.",
+    tikunFa:
+      "چگونه چشمم را بپالایم و خشمم را به غیرتی قدسی بدل کنم و با فروتنی بالا روم؟",
     color: "#6b7280",
   },
   {
@@ -213,6 +293,13 @@ export const MESES: MesHebreo[] = [
     tendencia:
       "visión humanitaria, generosidad que «vierte agua» para todos, originalidad (Tu BiShvat); la צ es el tzadik; riesgo de frialdad abstracta.",
     tikun: "¿cómo vierto mi cántaro sobre los cercanos, no solo sobre la humanidad en abstracto?",
+    nombreFa: "شِوات", signoFa: "دلو («کوزه»)", letraNombreFa: "صادی",
+    sentidoFa:
+      "چشایی / فروبردن",
+    tendenciaFa:
+      "نگاهِ انسان‌دوستانه، بخشندگی‌ای که برایِ همه «آب می‌ریزد»، نوآوری (تو بیشوات)؛ حرفِ צ همان صدّیق است؛ با خطرِ سردیِ انتزاعی.",
+    tikunFa:
+      "چگونه کوزه‌ام را بر نزدیکانم بریزم، نه تنها بر بشریتی انتزاعی؟",
     color: "#4aa3c9",
   },
   {
@@ -222,6 +309,13 @@ export const MESES: MesHebreo[] = [
     tendencia:
       "fluidez, empatía, alegría desbordante, «darse vuelta» (venahafoj hu de Purim); la ק desciende bajo la línea (santidad en lo bajo); riesgo de huir de lo real.",
     tikun: "¿cómo uso mi alegría para sacar a otros de la tristeza y mi fluidez para santificar lo bajo, no para escapar?",
+    nombreFa: "ادار", signoFa: "حوت (ماهی)", letraNombreFa: "قوف",
+    sentidoFa:
+      "خنده",
+    tendenciaFa:
+      "روانی، هم‌دلی، شادیِ سرریز، «واژگون‌شدن» (وِنَهَفوخ هو در پوریم)؛ حرفِ ק زیرِ خط فرود می‌آید (قداست در فرودست)؛ با خطرِ گریز از واقعیت.",
+    tikunFa:
+      "چگونه از شادی‌ام برای بیرون‌کشیدنِ دیگران از اندوه و از روانی‌ام برای تقدیسِ فرودست بهره ببرم، نه برای گریختن؟",
     color: "#5e8fd6",
   },
 ];

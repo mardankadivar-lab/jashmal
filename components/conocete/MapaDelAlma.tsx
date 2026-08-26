@@ -69,6 +69,13 @@ function L(locale: Locale, field: { es: string; fa: string | null; en: string | 
   return tri(locale, field.es, field.fa, field.en);
 }
 
+// Los campos del MES traen es + fa (el inglés lo llena el Sofer por fases). El
+// hebreo (he, signoHe, letra, sentidoHe) NO pasa por aquí: se muestra igual en
+// los tres idiomas.
+function M(locale: Locale, es: string, fa?: string) {
+  return tri(locale, es, fa ?? null, null);
+}
+
 export default function MapaDelAlma() {
   const locale = useLocale() as Locale;
   const fa = locale === "fa";
@@ -133,6 +140,11 @@ export default function MapaDelAlma() {
   const disclaimer = tri(locale, MAPA_DISCLAIMER.es, MAPA_DISCLAIMER.fa, MAPA_DISCLAIMER.en);
   const gemTexto = tri(locale, MAPA_GEMATRIA_TEXTO.es, MAPA_GEMATRIA_TEXTO.fa, MAPA_GEMATRIA_TEXTO.en);
   const madreNota = tri(locale, MAPA_MADRE_NOTA.es, MAPA_MADRE_NOTA.fa, MAPA_MADRE_NOTA.en);
+  // Interpretación del mes (tendencia + tikún) en el idioma activo. Se calcula
+  // aquí, con `mes` posiblemente nulo, para que el badge de "falta traducción"
+  // se pinte una sola vez y no seis (uno por campo).
+  const tendencia = M(locale, mes?.tendencia ?? "", mes?.tendenciaFa);
+  const tikun = M(locale, mes?.tikun ?? "", mes?.tikunFa);
 
   return (
     <main className="mx-auto max-w-3xl px-5 pb-28 pt-10" dir={fa ? "rtl" : "ltr"}>
@@ -345,7 +357,9 @@ export default function MapaDelAlma() {
                   style={{ background: sel ? `${m.color}1f` : "rgba(14,12,22,0.5)" }}
                 >
                   <span className="hebrew text-lg leading-none text-parchment">{m.he}</span>
-                  <span className="mt-1 text-[10px] uppercase tracking-wide text-muted">{m.nombre}</span>
+                  <span className="mt-1 text-[10px] uppercase tracking-wide text-muted">
+                    {M(locale, m.nombre, m.nombreFa).value}
+                  </span>
                 </button>
               );
             })}
@@ -426,7 +440,7 @@ export default function MapaDelAlma() {
               {mes.he}
             </p>
             <p className="relative mt-1 font-cinzel text-sm uppercase tracking-[0.3em]" style={{ color: acento }}>
-              {mes.nombre}
+              {M(locale, mes.nombre, mes.nombreFa).value}
             </p>
           </div>
 
@@ -441,16 +455,20 @@ export default function MapaDelAlma() {
             <dl className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <DatoDuro label={L(locale, UI.signo).value}>
                 <span className="hebrew text-xl text-parchment">{mes.signoHe}</span>
-                <span className="mt-0.5 block text-xs text-muted">{mes.signoEs}</span>
+                <span className="mt-0.5 block text-xs text-muted">
+                  {M(locale, mes.signoEs, mes.signoFa).value}
+                </span>
               </DatoDuro>
               <DatoDuro label={L(locale, UI.letra).value}>
                 <span className="hebrew text-3xl" style={{ color: acento }}>{mes.letra}</span>
-                <span className="mt-0.5 block text-xs text-muted">{mes.letraNombre}</span>
+                <span className="mt-0.5 block text-xs text-muted">
+                  {M(locale, mes.letraNombre, mes.letraNombreFa).value}
+                </span>
               </DatoDuro>
               <DatoDuro label={L(locale, UI.sentido).value}>
                 {mes.sentidoHe !== "—" && <span className="hebrew text-xl text-parchment">{mes.sentidoHe}</span>}
                 <span className={"block text-xs text-muted" + (mes.sentidoHe !== "—" ? " mt-0.5" : "")}>
-                  {mes.sentidoEs}
+                  {M(locale, mes.sentidoEs, mes.sentidoFa).value}
                 </span>
               </DatoDuro>
             </dl>
@@ -467,15 +485,29 @@ export default function MapaDelAlma() {
             <div className="space-y-4">
               <div>
                 <p className="text-[10px] uppercase tracking-widest text-muted/60">{L(locale, UI.tendencia).value}</p>
-                <p className="mt-1 text-sm italic leading-relaxed text-parchment/85">{mes.tendencia}</p>
+                <p
+                  className="mt-1 text-sm italic leading-relaxed text-parchment/85"
+                  dir={tendencia.shownIn === "fa" ? "rtl" : "ltr"}
+                >
+                  {tendencia.value}
+                </p>
               </div>
               <div>
                 <p className="text-[10px] uppercase tracking-widest text-muted/60">{L(locale, UI.tikun).value}</p>
-                <p className="mt-1 text-sm italic leading-relaxed" style={{ color: acento }}>
-                  {mes.tikun}
+                <p
+                  className="mt-1 text-sm italic leading-relaxed"
+                  style={{ color: acento }}
+                  dir={tikun.shownIn === "fa" ? "rtl" : "ltr"}
+                >
+                  {tikun.value}
                 </p>
               </div>
             </div>
+            {(tendencia.missing || tikun.missing) && (
+              <div className="mt-3">
+                <TranslationBadge available={tendencia.available} />
+              </div>
+            )}
             {/* Nota sobre la tribu OMITIDA */}
             <p className="mt-4 border-t border-gold/10 pt-3 text-[11px] leading-relaxed text-muted/60">
               {L(locale, UI.tribuNota).value}
