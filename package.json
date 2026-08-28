@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "misterios:check": "node scripts/check-misterios.mjs",
+    "misterios:meta": "node scripts/gen-misterio-metadata.mjs",
     "search:check": "node scripts/check-search.mjs",
     "i18n:check": "node scripts/check-i18n.mjs",
     "export:obsidian": "node scripts/export-obsidian.mts"

@@ -27,6 +27,18 @@ import { data as danielApocaliptica } from "@/app/[locale]/misterio/daniel-apoca
 import { data as despertarDeLoAlto } from "@/app/[locale]/misterio/despertar-de-lo-alto/data";
 import { data as eikevTalon } from "@/app/[locale]/misterio/eikev-talon/data";
 import { data as elAri } from "@/app/[locale]/misterio/el-ari/data";
+import { data as elul } from "@/app/[locale]/misterio/elul/data";
+import { data as roshHashana } from "@/app/[locale]/misterio/rosh-hashana/data";
+import { data as yomKipur } from "@/app/[locale]/misterio/yom-kipur/data";
+import { data as sucot } from "@/app/[locale]/misterio/sucot/data";
+import { data as shminiAtzeret } from "@/app/[locale]/misterio/shmini-atzeret/data";
+import { data as januca } from "@/app/[locale]/misterio/januca/data";
+import { data as tuBishvat } from "@/app/[locale]/misterio/tu-bishvat/data";
+import { data as purim } from "@/app/[locale]/misterio/purim/data";
+import { data as pesaj } from "@/app/[locale]/misterio/pesaj/data";
+import { data as lagBaomer } from "@/app/[locale]/misterio/lag-baomer/data";
+import { data as shavuot } from "@/app/[locale]/misterio/shavuot/data";
+import { data as tishaBeav } from "@/app/[locale]/misterio/tisha-beav/data";
 import { data as enigmaMashiaj } from "@/app/[locale]/misterio/enigma-mashiaj/data";
 import { data as exilioRedencion } from "@/app/[locale]/misterio/exilio-redencion/data";
 import { data as finalidadCreacion } from "@/app/[locale]/misterio/finalidad-creacion/data";
@@ -52,6 +64,18 @@ export const MISTERIOS_PANEL: Record<string, EstudioData> = {
   "despertar-de-lo-alto": despertarDeLoAlto,
   "eikev-talon": eikevTalon,
   "el-ari": elAri,
+  elul,
+  "rosh-hashana": roshHashana,
+  "yom-kipur": yomKipur,
+  sucot,
+  "shmini-atzeret": shminiAtzeret,
+  januca,
+  "tu-bishvat": tuBishvat,
+  purim,
+  pesaj,
+  "lag-baomer": lagBaomer,
+  shavuot,
+  "tisha-beav": tishaBeav,
   "enigma-mashiaj": enigmaMashiaj,
   "exilio-redencion": exilioRedencion,
   "finalidad-creacion": finalidadCreacion,

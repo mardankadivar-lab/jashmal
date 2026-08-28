@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLocale } from "next-intl";
+import { ENSENANZAS } from "./ensenanzas";
 
 // ════════════════════════════════════════════════════════════════════════════
 //  ÍNDICE — פָּרָשַׁת קֹרַח · Parashat Korach
@@ -9,30 +10,7 @@ import { useLocale } from "next-intl";
 //  Cada sub-ruta es un estudio completo con método PaRDeS.
 // ════════════════════════════════════════════════════════════════════════════
 
-const ENSENANZAS = [
-  {
-    slug: "ego-espiritual",
-    he: "הָאֲנִי הָרוּחָנִי",
-    titulo: "El ego espiritual",
-    tituloEn: "The Spiritual Ego",
-    gancho: "Korach tenía razón en el diagnóstico. Se equivocó en la prescripción.",
-    ganchoEn: "Korach was right about the diagnosis. He was wrong about the prescription.",
-    numero: "308",
-    rom: "קֹרַח · Gematría",
-    fuente: "Bamidbar 16:1–18:32",
-  },
-  {
-    slug: "luz-sin-vasija",
-    he: "הַנֵּר שֶׁנִּשְׁבַּר",
-    titulo: "La Luz sin Vasija",
-    tituloEn: "The Light Without a Vessel",
-    gancho: "Tenía la llama. No tenía la mecha. Por eso ardió.",
-    ganchoEn: "He had the flame. He had no wick. That is why he burned.",
-    numero: "250",
-    rom: "נֵר · Ner",
-    fuente: "Bamidbar 16:2 · Shmuel I 12:3",
-  },
-];
+// La lista vive en ./ensenanzas.ts (la comparten el índice y la metadata SEO).
 
 export default function Page() {
   const locale = useLocale();

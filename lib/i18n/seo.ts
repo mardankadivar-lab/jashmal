@@ -26,11 +26,23 @@ export async function localizedMetadata(
   const description = opts.description ?? t("hero.description");
   const ogTitle = opts.title ?? fullTitle;
 
+  // Imagen de compartir por defecto de TODO el sitio (WhatsApp, Instagram,
+  // Twitter…). La dibuja /api/og con la estética de la marca; los estudios de
+  // misterio la sobrescriben con su propio título.
+  const imagen = `/api/og?t=${encodeURIComponent(`${siteName} — ${t("hero.tagline")}`)}&l=${locale}`;
+
   return {
     // Página: título plano (hereda la plantilla del raíz). Raíz: default + plantilla.
     title: opts.title ? opts.title : { default: fullTitle, template: `%s · ${siteName}` },
     description,
-    openGraph: { title: ogTitle, description, siteName, locale, type: "website" },
-    twitter: { card: "summary_large_image", title: ogTitle, description },
+    openGraph: {
+      title: ogTitle,
+      description,
+      siteName,
+      locale,
+      type: "website",
+      images: [{ url: imagen, width: 1200, height: 630, alt: siteName }],
+    },
+    twitter: { card: "summary_large_image", title: ogTitle, description, images: [imagen] },
   };
 }

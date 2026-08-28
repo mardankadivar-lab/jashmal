@@ -987,6 +987,199 @@ export const MISTERIOS: Misterio[] = [
     color: "#e8945a",
     orden: 18,
   },
+  // ── Serie "TIEMPOS SAGRADOS" (moadim) — el calendario del alma ──────────────
+  {
+    slug: "elul",
+    he: "אֲנִי לְדוֹדִי וְדוֹדִי לִי",
+    titulo: "Elul — Yo soy de mi Amado",
+    tituloFa: "الول — من از آنِ محبوبم",
+    tituloEn: "Elul — I Am My Beloved's",
+    gancho:
+      "El nombre del mes está escondido en un verso de amor: אֱלוּל son las iniciales de «Yo soy de mi Amado y mi Amado es mío». El mismo Cantar lo dice también al revés — y el orden decide quién da el primer paso.",
+    ganchoFa:
+      "نامِ این ماه در آیه‌ای عاشقانه پنهان است: אלול سرحرفِ «من از آنِ محبوبم و محبوبم از آنِ من» است. همان غزل، وارونه‌اش را هم می‌گوید — و ترتیب تعیین می‌کند چه کسی گامِ نخست را برمی‌دارد.",
+    ganchoEn:
+      "The name of the month is hidden inside a love verse: אֱלוּל is the acronym of “I am my beloved's and my beloved is mine.” The same Song also says it in reverse — and the order decides who takes the first step.",
+    serie: "moadim",
+    color: "#c9a43e",
+    orden: 19,
+  },
+  {
+    slug: "rosh-hashana",
+    he: "הַיּוֹם הֲרַת עוֹלָם",
+    titulo: "Rosh Hashaná — el juicio vestido de blanco",
+    tituloFa: "روش هشانا — داوری در جامهٔ سپید",
+    tituloEn: "Rosh Hashanah — The Judgment Dressed in White",
+    gancho:
+      "Todo acusado que sabe que hoy lo juzgan se viste de negro. Este pueblo hace lo contrario: se viste de blanco y come manjares. No es inconsciencia — es confianza.",
+    ganchoFa:
+      "هر متهمی که بداند امروز محاکمه می‌شود سیاه می‌پوشد. این قوم عکسِ آن می‌کند: سپید می‌پوشد و خوراکِ چرب می‌خورد. این بی‌خبری نیست — اعتماد است.",
+    ganchoEn:
+      "Anyone who knows they are being judged today dresses in black. This people does the opposite: it dresses in white and eats rich food. That is not obliviousness — it is trust.",
+    serie: "moadim",
+    color: "#e8c063",
+    orden: 19.1,
+  },
+  {
+    slug: "yom-kipur",
+    he: "כִּי בַיּוֹם הַזֶּה יְכַפֵּר",
+    titulo: "Yom Kipur — el día que ya perdona",
+    tituloFa: "یوم کیپور — روزی که از پیش می‌بخشد",
+    tituloEn: "Yom Kippur — The Day That Already Forgives",
+    gancho:
+      "El versículo no dice «por su ayuno se expiará»: dice «en ESTE DÍA». El ayuno no es el precio, es la consecuencia. Y hay algo que el día no cubre: lo que le debes a otra persona.",
+    ganchoFa:
+      "آیه نمی‌گوید «به سببِ روزهٔ شما»، می‌گوید «در این روز». روزه بها نیست، نتیجه است. و چیزی هست که این روز نمی‌پوشانَد: آنچه به دیگری بدهکاری.",
+    ganchoEn:
+      "The verse does not say “by your fast you shall be atoned”: it says “on THIS DAY.” The fast is not the price, it is the consequence. And there is one thing the day does not cover: what you owe another person.",
+    serie: "moadim",
+    color: "#dcdcdc",
+    orden: 19.2,
+  },
+  {
+    slug: "sucot",
+    he: "בַּסֻּכֹּת תֵּשְׁבוּ",
+    titulo: "Sucot — el techo que deja ver las estrellas",
+    tituloFa: "سوکوت — سقفی که ستارگان از آن پیداست",
+    tituloEn: "Sukkot — The Roof That Lets You See the Stars",
+    gancho:
+      "Cuatro días después del día más solemne del año, la Torá manda salir de casa y vivir en una choza con el techo agujereado. El Arizal lo dice sin rodeos: esa luz que rodea es el abrazo.",
+    ganchoFa:
+      "چهار روز پس از سنگین‌ترین روزِ سال، تورات فرمان می‌دهد از خانه بیرون بیا و در کلبه‌ای با سقفِ سوراخ زندگی کن. آری‌زال بی‌پرده می‌گوید: آن نورِ گرداگرد، همان آغوش است.",
+    ganchoEn:
+      "Four days after the most solemn day of the year, the Torah commands you to leave your house and live in a hut with holes in the roof. The Arizal says it plainly: that surrounding light is the embrace.",
+    serie: "moadim",
+    color: "#8fbf7a",
+    orden: 19.3,
+  },
+  {
+    slug: "shmini-atzeret",
+    he: "קָשָׁה עָלַי פְּרֵדַתְכֶם",
+    titulo: "Shminí Atzéret — quédate un día más",
+    tituloFa: "شمینی عصرت — یک روز دیگر بمان",
+    tituloEn: "Shemini Atzeret — Stay One More Day",
+    gancho:
+      "Siete días con setenta toros por las setenta naciones. Después, un octavo día con un solo toro y ninguna mitzvá propia: solo quedarse. «Me es difícil despedirme de ustedes».",
+    ganchoFa:
+      "هفت روز با هفتاد گاو برای هفتاد ملت. سپس روزی هشتم با یک گاو و بی‌هیچ فرمانِ ویژه: تنها ماندن. «جداییِ شما بر من دشوار است».",
+    ganchoEn:
+      "Seven days with seventy bulls for the seventy nations. Then an eighth day with a single bull and no commandment of its own: just staying. “Your parting is hard for Me.”",
+    serie: "moadim",
+    color: "#c98fd0",
+    orden: 19.4,
+  },
+  {
+    slug: "januca",
+    he: "נֵס פַּךְ הַשֶּׁמֶן",
+    titulo: "Janucá — el milagro del primer día",
+    tituloFa: "حنوکا — معجزهٔ روزِ نخست",
+    tituloEn: "Chanukah — The Miracle of the First Day",
+    gancho:
+      "Había aceite para un día y ardió ocho. Entonces el milagro duró siete, no ocho: el primer día ardió por razones naturales. ¿Por qué la fiesta dura ocho?",
+    ganchoFa:
+      "روغن یک روز بود و هشت روز سوخت. پس معجزه هفت روز بود، نه هشت: روزِ نخست به دلایلِ طبیعی سوخت. پس چرا عید هشت روز است؟",
+    ganchoEn:
+      "There was oil for one day and it burned for eight. So the miracle lasted seven, not eight: on the first day it burned for perfectly natural reasons. Why then is the festival eight days long?",
+    serie: "moadim",
+    color: "#e8b03a",
+    orden: 19.5,
+  },
+  {
+    slug: "tu-bishvat",
+    he: "רֹאשׁ הַשָּׁנָה לָאִילָן",
+    titulo: "Tu BiShvat — la savia que sube antes de que se vea nada",
+    tituloFa: "تو بیشواط — شیره‌ای که پیش از دیده‌شدن بالا می‌آید",
+    tituloEn: "Tu BiShvat — The Sap That Rises Before Anything Shows",
+    gancho:
+      "La fiesta más humilde del calendario: no es bíblica, no tiene liturgia y empezó siendo un tecnicismo tributario. En pleno invierno, cuando el árbol parece muerto, algo ya empezó por dentro.",
+    ganchoFa:
+      "فروتن‌ترین عیدِ گاه‌شمار: نه کتابی است، نه دعایی ویژه دارد، و آغازش یک نکتهٔ مالیاتی بود. در دلِ زمستان، آنگاه که درخت مرده می‌نماید، چیزی از درون آغاز شده است.",
+    ganchoEn:
+      "The humblest festival in the calendar: not biblical, no liturgy of its own, and it began as a tax technicality. In deep winter, when the tree looks dead, something has already begun inside.",
+    serie: "moadim",
+    color: "#7fb069",
+    orden: 19.6,
+  },
+  {
+    slug: "purim",
+    he: "וְאָנֹכִי הַסְתֵּר אַסְתִּיר",
+    titulo: "Purim — el Nombre que no aparece",
+    tituloFa: "پوریم — نامی که هرگز نمی‌آید",
+    tituloEn: "Purim — The Name That Never Appears",
+    gancho:
+      "Diez capítulos, ciento sesenta y siete versículos, y ni una sola vez el Nombre de Dios. Es el único libro del Tanaj donde eso ocurre — y no es un descuido: es la tesis del libro.",
+    ganchoFa:
+      "ده باب، صد و شصت و هفت آیه، و حتی یک بار نامِ خدا نیامده. تنها کتابِ تنخ که چنین است — و این غفلت نیست: همان پیامِ کتاب است.",
+    ganchoEn:
+      "Ten chapters, one hundred sixty-seven verses, and not once the Name of God. It is the only book in the Tanakh where that happens — and it is no oversight: it is the book's thesis.",
+    serie: "moadim",
+    color: "#c76b98",
+    orden: 19.7,
+  },
+  {
+    slug: "pesaj",
+    he: "דּוֹדִי לִי וַאֲנִי לוֹ",
+    titulo: "Pésaj — Mi Amado es mío",
+    tituloFa: "پسح — محبوبم از آنِ من است",
+    tituloEn: "Passover — My Beloved Is Mine",
+    gancho:
+      "Elul lleva el nombre del verso en que YO empiezo. Pésaj es su espejo exacto: se sale de noche, a las prisas, con la masa sin fermentar — porque no había mérito que esperar. Aquí empieza Él.",
+    ganchoFa:
+      "الول نامِ آیه‌ای را دارد که در آن مَن آغاز می‌کنم. پسح آینهٔ دقیقِ آن است: شبانه، شتابان، با خمیری که ور نیامد — چون شایستگی‌ای در کار نبود. اینجا او آغاز می‌کند.",
+    ganchoEn:
+      "Elul is named for the verse in which I take the first step. Passover is its exact mirror: they leave by night, in haste, with dough that never rose — because there was no merit to wait for. Here He begins.",
+    serie: "moadim",
+    color: "#d4783a",
+    orden: 19.8,
+  },
+  {
+    slug: "lag-baomer",
+    he: "הִילּוּלָא דְּרִבִּי שִׁמְעוֹן",
+    titulo: "Lag BaOmer — la boda del día treinta y tres",
+    tituloFa: "لگ بعومر — عروسیِ روزِ سی‌وسوم",
+    tituloEn: "Lag BaOmer — The Wedding of the Thirty-Third Day",
+    gancho:
+      "En medio de siete semanas de duelo hay un día de hogueras y cantos. Y la razón es una muerte: el día en que murió Rabí Shimón bar Yojai se llama «boda», no funeral.",
+    ganchoFa:
+      "در میانِ هفت هفته سوگ، روزی هست پر از آتش و آواز. و سببش یک مرگ است: روزِ درگذشتِ ربی شیمعون بار یوحای را «عروسی» می‌خوانند، نه سوگ.",
+    ganchoEn:
+      "In the middle of seven weeks of mourning there is one day of bonfires and singing. And the reason is a death: the day Rabbi Shimon bar Yochai died is called a “wedding,” not a funeral.",
+    serie: "moadim",
+    color: "#e07a5f",
+    orden: 19.9,
+  },
+  {
+    slug: "shavuot",
+    he: "וּסְפַרְתֶּם לָכֶם",
+    titulo: "Shavuot — la fiesta sin fecha",
+    tituloFa: "شاووعوت — عیدی بی‌تاریخ",
+    tituloEn: "Shavuot — The Festival With No Date",
+    gancho:
+      "Busca en la Torá el día de Shavuot y no lo encontrarás. A Pésaj, a Yom Kipur y a Sucot les pone fecha. A esta no: dice que la cuentes. Hay que contarla para que exista.",
+    ganchoFa:
+      "در تورات به دنبالِ تاریخِ شاووعوت بگرد، نمی‌یابی. برای پسح، یوم کیپور و سوکوت تاریخ می‌گذارد. برای این یکی نه: می‌گوید بشمار. باید شمرده شود تا باشد.",
+    ganchoEn:
+      "Look in the Torah for the date of Shavuot and you will not find it. Passover, Yom Kippur and Sukkot all get a date. This one does not: it says count. You have to count it for it to exist.",
+    serie: "moadim",
+    color: "#e3c567",
+    orden: 19.95,
+  },
+  {
+    slug: "tisha-beav",
+    he: "אֵיכָה יָשְׁבָה בָדָד",
+    titulo: "Tishá BeAv — la ruina y la semilla",
+    tituloFa: "تیشعا بِآو — ویرانی و بذر",
+    tituloEn: "Tisha B'Av — The Ruin and the Seed",
+    gancho:
+      "El día más triste del calendario, y no hay manera honesta de suavizarlo. Y sin embargo la tradición pone en esa misma fecha el nacimiento del Mashíaj: no después de la destrucción — el día de la destrucción.",
+    ganchoFa:
+      "اندوهبارترین روزِ گاه‌شمار، و راهی صادقانه برای سبک‌کردنش نیست. با این حال سنت، تولدِ ماشیح را در همان تاریخ می‌نهد: نه پس از ویرانی — در روزِ ویرانی.",
+    ganchoEn:
+      "The saddest day in the calendar, and there is no honest way to soften it. And yet tradition places the birth of the Mashiach on that very date: not after the destruction — on the day of the destruction.",
+    serie: "moadim",
+    color: "#8a8f98",
+    orden: 19.96,
+  },
 ];
 
 export function getMisterio(slug: string): Misterio | undefined {
