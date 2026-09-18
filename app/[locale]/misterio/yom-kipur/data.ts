@@ -14,7 +14,15 @@ import type { EstudioData } from "@/components/misterio/EstudioMisterio";
 //  TANAJ
 //   · Vaikrá 16:8 · 16:21-22 · 16:29-31 — texto puntuado cotejado.
 //   · Yeshayahu 58:5-7 y 57:15 — la haftará del día.
-//   · Yirmiyahu 17:13 — "מִקְוֵה יִשְׂרָאֵל ה'".
+//   · Yirmiyahu 17:13 — "מִקְוֵה יִשְׂרָאֵל ה'". DOS LECTURAS, ambas pshat: la
+//     raíz es קוה, "esperar" (de ahí "Esperanza de Israel", como traducen las
+//     versiones y como pide el contexto del versículo), y Rabí Akivá la oye
+//     además como מִקְוֶה, la pileta de inmersión. No corrige a Yirmiyahu: oye
+//     las dos. Así se dice en la חֲתִימָה, rotulado.
+//   · Yejezkel 36:25 — "וְזָרַקְתִּי עֲלֵיכֶם מַיִם טְהוֹרִים וּטְהַרְתֶּם", la
+//     primera de las dos pruebas de Rabí Akivá. Cotejado (2026-09-16).
+//   · Mishlei 16:33 — "בַּחֵיק יוּטַל אֶת הַגּוֹרָל וּמֵיהוָה כָּל מִשְׁפָּטוֹ",
+//     la glosa del sorteo. Cotejado (2026-09-16).
 //   · Yeshayahu 1:18 — "אִם יִהְיוּ חֲטָאֵיכֶם כַּשָּׁנִים כַּשֶּׁלֶג יַלְבִּינוּ".
 //
 //  MISHNÁ Y TALMUD
@@ -24,7 +32,10 @@ import type { EstudioData } from "@/components/misterio/EstudioMisterio";
 //   · Mishná Yomá 8:1 — la lista de las prohibiciones del día. Cotejado.
 //   · Mishná Yomá 8:8-9 (= Yomá 85b) — "עֲבֵרוֹת שֶׁבֵּין אָדָם לַחֲבֵרוֹ אֵין
 //     יוֹם הַכִּפּוּרִים מְכַפֵּר עַד שֶׁיְּרַצֶּה אֶת חֲבֵרוֹ" y Rabí Akivá:
-//     "מִקְוֵה יִשְׂרָאֵל ה'". Cotejado palabra por palabra.
+//     "מִקְוֵה יִשְׂרָאֵל ה'". Cotejado palabra por palabra. La mishná se cita
+//     COMPLETA (2026-09-16), con sus dos pruebas —Yejezkel 36:25 y la analogía
+//     de la mikvé— y es la que SELLA la חֲתִימָה: es la última línea del
+//     tratado, no comentario nuevo.
 //   · Yomá 20a — Ramí bar Jamá: "הַשָּׂטָן בְּגִמַטְרִיָּא תְּלָת מְאָה
 //     וְשִׁיתִּין וְאַרְבְּעָה הָוֵי". Cotejado.
 //   · Yomá 39b — los cuarenta años antes de la destrucción (la suerte, el hilo
@@ -215,9 +226,15 @@ export const data: EstudioData = {
         source: "Vaikrá 16:8",
       },
       {
+        label: "Quién decide el sorteo — Mishlei (Proverbios) 16:33",
+        he: "בַּ֭חֵיק יוּטַ֣ל אֶת־הַגּוֹרָ֑ל וּ֝מֵיְהֹוָ֗ה כׇּל־מִשְׁפָּטֽוֹ׃",
+        es: "En el regazo se echa la suerte, y de YHVH es todo su juicio.",
+        source: "Mishlei 16:33",
+      },
+      {
         label: "El corte — Mishná Yomá 8:9",
-        he: "עֲבֵרוֹת שֶׁבֵּין אָדָם לַמָּקוֹם, יוֹם הַכִּפּוּרִים מְכַפֵּר. עֲבֵרוֹת שֶׁבֵּין אָדָם לַחֲבֵרוֹ, אֵין יוֹם הַכִּפּוּרִים מְכַפֵּר, עַד שֶׁיְּרַצֶּה אֶת חֲבֵרוֹ… אָמַר רַבִּי עֲקִיבָא: אַשְׁרֵיכֶם יִשְׂרָאֵל, לִפְנֵי מִי אַתֶּם מִטַּהֲרִין, וּמִי מְטַהֵר אֶתְכֶם? אֲבִיכֶם שֶׁבַּשָּׁמַיִם… מִקְוֵה יִשְׂרָאֵל ה'.",
-        es: "Las transgresiones entre el hombre y el Omnipresente, Yom Kipur las expía. Las transgresiones entre el hombre y su prójimo, Yom Kipur NO las expía hasta que apacigüe a su prójimo… Dijo Rabí Akivá: felices ustedes, Israel; ¿delante de quién se purifican y quién los purifica? Su Padre que está en los cielos… «La mikvé de Israel es YHVH» (Yirmiyahu 17:13).",
+        he: "עֲבֵרוֹת שֶׁבֵּין אָדָם לַמָּקוֹם, יוֹם הַכִּפּוּרִים מְכַפֵּר. עֲבֵרוֹת שֶׁבֵּין אָדָם לַחֲבֵרוֹ, אֵין יוֹם הַכִּפּוּרִים מְכַפֵּר, עַד שֶׁיְּרַצֶּה אֶת חֲבֵרוֹ… אָמַר רַבִּי עֲקִיבָא, אַשְׁרֵיכֶם יִשְׂרָאֵל, לִפְנֵי מִי אַתֶּם מִטַּהֲרִין, וּמִי מְטַהֵר אֶתְכֶם, אֲבִיכֶם שֶׁבַּשָּׁמַיִם, שֶׁנֶּאֱמַר (יחזקאל לו), וְזָרַקְתִּי עֲלֵיכֶם מַיִם טְהוֹרִים וּטְהַרְתֶּם. וְאוֹמֵר (ירמיה יז), מִקְוֵה יִשְׂרָאֵל יְיָ, מַה מִּקְוֶה מְטַהֵר אֶת הַטְּמֵאִים, אַף הַקָּדוֹשׁ בָּרוּךְ הוּא מְטַהֵר אֶת יִשְׂרָאֵל.",
+        es: "Las transgresiones entre el hombre y el Omnipresente, Yom Kipur las expía. Las transgresiones entre el hombre y su prójimo, Yom Kipur NO las expía hasta que apacigüe a su prójimo… Dijo Rabí Akivá: felices ustedes, Israel; ¿delante de quién se purifican y quién los purifica? Su Padre que está en los cielos, como está dicho (Yejezkel 36): «y derramaré sobre ustedes aguas puras y quedarán puros». Y dice (Yirmiyahu 17): «mikvé de Israel es YHVH» — así como la mikvé purifica a los impuros, así el Santo, bendito sea, purifica a Israel.",
         source: "Mishná Yomá 8:9 (= Talmud, Yomá 85b)",
       },
       {
@@ -231,7 +248,7 @@ export const data: EstudioData = {
       `Empieza por leer el versículo-ancla despacio, porque casi todo el estudio está ahí y casi nadie lo oye. «כִּי בַיּוֹם הַזֶּה יְכַפֵּר עֲלֵיכֶם» — «porque EN ESTE DÍA se expiará sobre ustedes». Fíjate en lo que la frase no dice. No dice «por su ayuno se expiará sobre ustedes». No dice «por sus oraciones», ni «por su arrepentimiento», ni «por el sacrificio del Kohén Gadol». Dice: en este día. El día es el instrumento. El día es lo que hace el trabajo. Y el verbo que sigue no es jurídico sino de baño: לְטַהֵר, «para purificarlos», la palabra que la Torá usa para el agua y la ceniza, no para el tribunal. Vas a un juicio a ser absuelto; vas a una mikvé a quedar limpio. Yom Kipur, según su propio versículo, es lo segundo.`,
       `Segundo detalle, y es más incómodo. En toda la Torá no existe la orden «ayunen en Yom Kipur». Lo que está escrito es «תְּעַנּוּ אֶת נַפְשֹׁתֵיכֶם» — «afligirán sus ALMAS» (Vaikrá 16:29 y 16:31). Quien tradujo eso a conducta concreta fue la Mishná: «Yom Kipur está prohibido en comida, en bebida, en lavarse, en ungirse, en calzar sandalia y en la relación conyugal» (Yomá 8:1). Son seis prohibiciones que la tradición cuenta como cinco aflicciones, porque comida y bebida van juntas. Y son, todas, cosas del cuerpo. La orden apunta al alma; las prácticas tocan el cuerpo. Entre las dos hay un espacio, y todo este estudio vive en ese espacio.`,
       `Ahora la fecha, porque el calendario aquí no es decorado. Yom Kipur cae el 10 de Tishrei, y ese día es exactamente el día cuarenta de la cuenta que empezó en {{study:elul|Rosh Jodesh Elul}}. La aritmética cierra sin trampa: Rosh Jodesh Elul son dos días (el 30 de Av y el 1 de Elul), Av siempre tiene 30 días y Elul siempre 29 — de modo que contando desde el primero de esos dos días son 1 + 29 + 10 = 40 días exactos hasta el 10 de Tishrei. ¿Qué pasó el día cuarenta? Lo dice Ben Beterá en Pirkei deRabí Eliezer 46: «cuarenta días hizo Moshé en el monte… y después de los cuarenta días tomó la Torá y bajó a los diez del mes, EN YOM KIPUR». Bajó con las segundas tablas. Es decir: la fiesta del perdón es el aniversario de una reconciliación que ocurrió DESPUÉS de un desastre. Las primeras tablas fueron un regalo intacto y se rompieron. Las segundas se dieron a un pueblo que ya había fallado — y son las que duraron.`,
-      `El capítulo 16 de Vaikrá describe el servicio de ese día en el Templo, y hay un detalle que conviene no pasar por alto. El Kohén Gadol toma dos machos cabríos y echa sobre ellos suertes: «una suerte para YHVH y una suerte para Azazel». Uno será ofrenda; el otro cargará sobre sí «todas las iniquidades de los hijos de Israel» y será enviado al desierto (16:21-22). Y la Mishná agrega la precisión que lo vuelve vertiginoso: los dos machos cabríos deben ser «iguales en aspecto, en altura, en precio, y comprados a la vez» (Yomá 6:1). Idénticos. Nada en el animal decide su destino. Lo decide la suerte que le cae encima.`,
+      `El capítulo 16 de Vaikrá describe el servicio de ese día en el Templo, y hay un detalle que conviene no pasar por alto. El Kohén Gadol toma dos machos cabríos y echa sobre ellos suertes: «una suerte para YHVH y una suerte para Azazel». Uno será ofrenda; el otro cargará sobre sí «todas las iniquidades de los hijos de Israel» y será enviado al desierto (16:21-22). Y la Mishná agrega la precisión que lo vuelve vertiginoso: los dos machos cabríos deben ser «iguales en aspecto, en altura, en precio, y comprados a la vez» (Yomá 6:1). Idénticos. Nada en el animal decide su destino. Lo decide la suerte que le cae encima. Y sobre esa suerte el libro de Mishlei pone la única glosa que hace falta: «בַּחֵיק יוּטַל אֶת הַגּוֹרָל וּמֵיהוָה כָּל מִשְׁפָּטוֹ» — «en el regazo se echa la suerte, y de YHVH es todo su juicio» (16:33). La urna es lo que se ve; el juicio es lo que no.`,
       `Y entonces llega el corte. La última mishná del tratado Yomá —la que se lee todos los años y que nunca deja de doler— pone un límite exacto a todo lo anterior: «Las transgresiones entre el hombre y el Omnipresente, Yom Kipur las expía. Las transgresiones entre el hombre y su prójimo, Yom Kipur NO las expía, hasta que apacigüe a su prójimo» (Yomá 8:9). Léelo otra vez. El día que expía «de todos sus pecados» tiene una excepción, y la excepción es la parte de la vida donde uno más ensucia: la gente. Lo que le debes a una persona no lo cubre el calendario. Ninguna cantidad de ayuno, ninguna oración, ninguna Neilá con las puertas cerrándose te libra de una llamada telefónica que no quieres hacer.`,
       `Y por si quedaba duda, la haftará del día es un ataque frontal al ayuno mismo. Yeshayahu, que se lee en la mañana de Yom Kipur, dice a un pueblo que ayuna: «¿Es ESTE el ayuno que Yo escojo, un día en que el hombre aflija su alma, doblar como junco la cabeza y tender saco y ceniza? ¿A eso le llamas ayuno, día de favor para YHVH?». Y contesta él mismo: «Este es el ayuno que Yo escojo: soltar las ataduras de la injusticia, desatar las coyundas del yugo, dejar libres a los oprimidos… partir tu pan con el hambriento, meter en casa a los pobres sin techo» (58:5-7). El día más solemne del año lee, en voz alta y frente a todos, un texto que dice que el ayuno solo no vale nada. Eso no es una contradicción de la liturgia: es su tesis.`,
     ],
@@ -375,6 +392,10 @@ Cuatro: si te dicen que no, no insistas más de tres veces (Rabí Yosé bar Jani
         etiqueta: "Aplicación práctica:",
         texto: `Lo único que el día NO perdona es lo que le debes a una persona: «עֲבֵרוֹת שֶׁבֵּין אָדָם לַחֲבֵרוֹ אֵין יוֹם הַכִּפּוּרִים מְכַפֵּר עַד שֶׁיְּרַצֶּה אֶת חֲבֵרוֹ» (Mishná Yomá 8:9). Escribe hoy UN nombre, la frase exacta que vas a decir, y una fecha antes del atardecer del 20 de septiembre. Y perdona antes de que te lo pidan, porque esa es la única palanca que tú controlas: «a todo el que deja pasar, le dejan pasar todo» (Ravá, Yomá 87b).`,
       },
+      {
+        etiqueta: "El sello:",
+        texto: `Y la última línea del tratado Yomá, que es también el mejor final que este día tiene: «אָמַר רַבִּי עֲקִיבָא, אַשְׁרֵיכֶם יִשְׂרָאֵל, לִפְנֵי מִי אַתֶּם מִטַּהֲרִין, וּמִי מְטַהֵר אֶתְכֶם, אֲבִיכֶם שֶׁבַּשָּׁמַיִם… מַה מִּקְוֶה מְטַהֵר אֶת הַטְּמֵאִים, אַף הַקָּדוֹשׁ בָּרוּךְ הוּא מְטַהֵר אֶת יִשְׂרָאֵל» (Mishná Yomá 8:9, la última del tratado). Léelo despacio. No dice quién los purifica POR ustedes: dice delante de QUIÉN, y QUIÉN. Y el versículo que trae de prueba tiene dos filos, y los dos son verdad: מִקְוֵה יִשְׂרָאֵל puede leerse «la ESPERANZA de Israel» —esa es la raíz קוה y ese es el sentido en Yirmiyahu 17:13— y puede leerse «la MIKVÉ de Israel», que es como lo oye Rabí Akivá. Purificarse, entonces, es sumergirse en la Esperanza misma. A una mikvé se entra solo. Nadie puede meterse por ti, nadie te la cobra, nadie se para entre tú y el agua — y el agua, dice la última mishná del tratado, es tu Padre.`,
+      },
     ],
   },
 
@@ -389,6 +410,7 @@ Cuatro: si te dicen que no, no insistas más de tres veces (Rabí Yosé bar Jani
   },
 
   hemshej: [
+    "{{study:kol-nidrei|Y antes de que entre el día hay un tribunal de tres, en arameo y con luz de día: qué desata exactamente Kol Nidrei, qué NO desata nunca, y por qué la Torá nunca dice «ayunar» sino «afligirán sus almas» — cinco veces.}}",
     "{{study:elul|Yom Kipur es el día cuarenta de una cuenta que empezó treinta y nueve días antes. ¿Qué se hace en esos treinta y nueve? El mes escondido en un verso de amor.}}",
     "{{study:despertar-de-lo-alto|Si el día perdona por su propia esencia y nadie tuvo que ganárselo, esto es un caso puro de luz que baja sin ser pedida. La otra mitad del asunto.}}",
     "{{letter:he|Volver es «תָּשׁוּב ה'», devolver la hei. ¿Por qué esa letra, y por qué el Zóhar la llama la Madre a la que se regresa?}}",

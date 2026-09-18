@@ -971,6 +971,28 @@ export const MISTERIOS: Misterio[] = [
     color: "#8b6a3a",
     orden: 16.95,
   },
+  {
+    // Haazinú cierra la cadena de lectura de Devarim (Eikev → Re'é → Ki Tetzé →
+    // Ki Tavó → Haazinú). Se lee el Shabat 19 sep 2026 = Shabat Shuvá, víspera
+    // de Yom Kipur; ese ángulo vive en el hero del estudio y en su umbral, que
+    // enlaza con /misterio/kol-nidrei y /misterio/yom-kipur.
+    // tituloFa/ganchoFa replican el español a propósito: el estudio está solo
+    // en español y el Sofer aún no lo tradujo. NO se generó farsi automático.
+    slug: "hester-panim",
+    he: "הַסְתֵּר אַסְתִּיר",
+    titulo: "El ocultamiento del rostro",
+    tituloFa: "El ocultamiento del rostro",
+    tituloEn: "The Hiding of the Face",
+    gancho:
+      "Si rezaste y no sentiste respuesta, la Torá tiene una palabra técnica para eso. Y el versículo no termina ahí: termina en «veré cuál será su fin» — que Ibn Ezra traduce «HASTA que vea». El canto donde está escrito se copia, por ley, con un hueco en el medio de cada renglón.",
+    ganchoFa:
+      "Si rezaste y no sentiste respuesta, la Torá tiene una palabra técnica para eso. Y el versículo no termina ahí: termina en «veré cuál será su fin» — que Ibn Ezra traduce «HASTA que vea». El canto donde está escrito se copia, por ley, con un hueco en el medio de cada renglón.",
+    ganchoEn:
+      "If you have prayed and felt no answer, the Torah has a technical word for that. And the verse does not end there: it ends with “I will see what their end will be” — which Ibn Ezra reads as “UNTIL I see.” The song in which it is written is copied, by law, with a gap in the middle of every line.",
+    serie: "parasha",
+    color: "#8b6a3a",
+    orden: 16.97,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".
@@ -1035,6 +1057,22 @@ export const MISTERIOS: Misterio[] = [
     serie: "moadim",
     color: "#dcdcdc",
     orden: 19.2,
+  },
+  {
+    slug: "kol-nidrei",
+    he: "כָּל נִדְרֵי",
+    titulo: "Kol Nidrei — las palabras que se desatan",
+    tituloFa: "کُل نیدره‌ی — کلماتی که گشوده می‌شوند",
+    tituloEn: "Kol Nidrei — The Words That Are Untied",
+    gancho:
+      "El día más solemne del año no empieza rezando: empieza con un tribunal. Desata las promesas que te hiciste a ti mismo — y deja intacto, exactamente donde estaba, todo lo que le debes a otra persona.",
+    ganchoFa:
+      "سنگین‌ترین روزِ سال با دعا آغاز نمی‌شود: با یک دادگاه آغاز می‌شود. نذرهایی را که با خودت بسته‌ای می‌گشاید — و آنچه را به دیگری بدهکاری، دست‌نخورده و دقیقاً همان‌جا که بود، باقی می‌گذارد.",
+    ganchoEn:
+      "The most solemn day of the year does not open with a prayer: it opens with a court. It unties the promises you made to yourself — and leaves untouched, exactly where it was, everything you owe another person.",
+    serie: "moadim",
+    color: "#b8c7dc",
+    orden: 19.25,
   },
   {
     slug: "sucot",
