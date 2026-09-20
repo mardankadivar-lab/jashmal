@@ -37,6 +37,7 @@ import { data as shminiAtzeret } from "@/app/[locale]/misterio/shmini-atzeret/da
 import { data as januca } from "@/app/[locale]/misterio/januca/data";
 import { data as tuBishvat } from "@/app/[locale]/misterio/tu-bishvat/data";
 import { data as purim } from "@/app/[locale]/misterio/purim/data";
+import { data as goralAgagDavid } from "@/app/[locale]/misterio/goral-agag-david/data";
 import { data as pesaj } from "@/app/[locale]/misterio/pesaj/data";
 import { data as lagBaomer } from "@/app/[locale]/misterio/lag-baomer/data";
 import { data as shavuot } from "@/app/[locale]/misterio/shavuot/data";
@@ -76,6 +77,7 @@ export const MISTERIOS_PANEL: Record<string, EstudioData> = {
   januca,
   "tu-bishvat": tuBishvat,
   purim,
+  "goral-agag-david": goralAgagDavid,
   pesaj,
   "lag-baomer": lagBaomer,
   shavuot,

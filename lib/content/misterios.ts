@@ -1155,6 +1155,33 @@ export const MISTERIOS: Misterio[] = [
     orden: 19.7,
   },
   {
+    // Estudio del goral. Va junto a Purim porque su materia es la suerte de
+    // Hamán (Ester 3:7 · 9:24), pero su eje cruza el calendario entero: el mes
+    // que rechazó la suerte es Tishrei, por el mérito del Kipur (Ester Rabá
+    // 7:11). De ahí que su umbral enlace a la vez con /misterio/purim y con
+    // /misterio/yom-kipur.
+    // NACE DE UN JIDUSH PROPIO DE MARDAN KADIVAR (la lectura del dado: el
+    // complemento a 7 de אגג). El rotulado va VISIBLE en la página — aviso de
+    // apertura, párrafo de רֶמֶז y nota de autor tras la חֲתִימָה — y NO en
+    // letra chica. Expediente del Sofer: ~/jashmal-produccion/goral-agag-david/
+    // FUENTES-VERIFICADAS.md (2026-09-19).
+    // NO entra por Vaikrá 16 ni por los machos cabríos (línea roja acatada).
+    slug: "goral-agag-david",
+    he: "הַגּוֹרָל",
+    titulo: "El goral — Agag y David",
+    tituloFa: "گورال — اَگاگ و داوود",
+    tituloEn: "The Goral — Agag and David",
+    gancho:
+      "El exterminio de un pueblo entero no se decidió en una reunión: se sorteó. Y el que echó esa suerte venía de la casa del único rey de Amalek al que un rey de Israel perdonó la vida. El Talmud lo dice sin rodeos: porque Shaúl no mató a Agag, de él nació Hamán.",
+    ganchoFa:
+      "نابودیِ یک قوم در جلسه‌ای تصمیم گرفته نشد: قرعه‌کشی شد. و آن که قرعه را انداخت، از خاندانِ تنها پادشاهِ عمالیق بود که پادشاهی از اسرائیل جانش را بخشید. تلمود بی‌پرده می‌گوید: چون شائول اَگاگ را نکشت، هامان از او زاده شد.",
+    ganchoEn:
+      "The extermination of an entire people was not decided in a meeting: it was drawn by lot. And the man who cast that lot came from the house of the one king of Amalek whom a king of Israel spared. The Talmud says it plainly: because Saul did not kill Agag, Haman was born from him.",
+    serie: "moadim",
+    color: "#b07840",
+    orden: 19.75,
+  },
+  {
     slug: "pesaj",
     he: "דּוֹדִי לִי וַאֲנִי לוֹ",
     titulo: "Pésaj — Mi Amado es mío",
