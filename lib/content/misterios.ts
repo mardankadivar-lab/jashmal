@@ -249,6 +249,21 @@ export const MISTERIOS: Misterio[] = [
     orden: 8.9,
   },
   {
+    // Puerta de entrada al Sefer Yetzirá (destino del reel «Mira tus diez dedos»).
+    // Farsi pendiente (regla de Mardan) e inglés pendiente: …Fa vacío y sin …En,
+    // para que tri() muestre el español MARCADO con TranslationBadge.
+    slug: "sefer-yetzira",
+    he: "סֵפֶר יְצִירָה",
+    titulo: "Sefer Yetzirá: el libro que cuenta tus diez dedos",
+    tituloFa: "",
+    gancho:
+      "Diez, y no nueve. Diez, y no once. El libro más antiguo que conservamos de la mística hebrea dice que el mundo se formó por treinta y dos caminos, diez sefirot y veintidós letras, y empieza a contarlos en tus manos.",
+    ganchoFa: "",
+    serie: "gematria",
+    color: "#d9b45a",
+    orden: 6.9,
+  },
+  {
     slug: "enoch",
     numero: "84",
     he: "חֲנוֹךְ",

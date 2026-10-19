@@ -19,6 +19,7 @@
 import type { EstudioData } from "@/components/misterio/EstudioMisterio";
 
 import { data as arcaNoOcupaLugar } from "@/app/[locale]/misterio/arca-no-ocupa-lugar/data";
+import { data as seferYetzira } from "@/app/[locale]/misterio/sefer-yetzira/data";
 import { data as bendicionInvertida } from "@/app/[locale]/misterio/bendicion-invertida/data";
 import { data as bueyYBurro } from "@/app/[locale]/misterio/buey-y-burro/data";
 import { data as ajaritHayamim } from "@/app/[locale]/misterio/ajarit-hayamim/data";
@@ -59,6 +60,7 @@ import { data as zoharRedencion } from "@/app/[locale]/misterio/zohar-redencion/
 
 export const MISTERIOS_PANEL: Record<string, EstudioData> = {
   "arca-no-ocupa-lugar": arcaNoOcupaLugar,
+  "sefer-yetzira": seferYetzira,
   "bendicion-invertida": bendicionInvertida,
   "buey-y-burro": bueyYBurro,
   "ajarit-hayamim": ajaritHayamim,

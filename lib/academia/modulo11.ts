@@ -55,7 +55,7 @@ export const LESSONS11: Lesson[] = [
     estudio: [
       {
         t: "p",
-        text: `**El umbral de la Cabalá.** Llegaste a semana 50. En las últimas tres semanas estudiaste los Nombres divinos (J3): por qué YHVH y Elohim revelan atributos distintos, por qué la Shemá es la declaración metafísica más densa del judaísmo, y por qué el Alenu cierra cada día con una visión del futuro. Ahora entras al texto que inicia formalmente la tradición cabalística: el **סֵפֶר יְצִירָה** (*Sefer Yetzirah* — "Libro de la Formación/Creación"). Es el texto cabalístico más antiguo conocido y, según la mayoría de los académicos, fue redactado entre el siglo II y el VI de la era común ⚠️. La tradición lo atribuye a Abraham ⚠️. Es breve — seis capítulos, menos de 2.000 palabras en su versión corta. Y sin embargo, ha generado más comentarios que casi cualquier otro texto en la historia del judaísmo.`,
+        text: `**El umbral de la Cabalá.** Llegaste a semana 50. En las últimas tres semanas estudiaste los Nombres divinos (J3): por qué YHVH y Elohim revelan atributos distintos, por qué la Shemá es la declaración metafísica más densa del judaísmo, y por qué el Alenu cierra cada día con una visión del futuro. Ahora entras al libro que la tradición cabalística posterior leyó como su raíz: el **סֵפֶר יְצִירָה** (*Sefer Yetzirah* — "Libro de la Formación/Creación"). Es el libro más antiguo que conservamos de la mística hebrea, de fecha disputada: la mayoría de los académicos lo sitúa entre el siglo III y el VI de la era común ✅. La tradición lo atribuye a Abraham, a quien su última mishná muestra practicando la obra, no escribiéndola (SY 6:4 corta / 6:7 Gra ✅). Es breve — seis capítulos, menos de 2.000 palabras en su versión corta. Y sin embargo, lo han comentado desde Saadia Gaón (siglo X) hasta el Gaón de Vilna ✅.`,
       },
       {
         t: "p",
@@ -65,20 +65,20 @@ export const LESSONS11: Lesson[] = [
         t: "verse",
         he: "בִּשְׁלֹשִׁים וּשְׁתַּיִם נְתִיבוֹת פְּלִיאוֹת חָכְמָה חָקַק יָהּ",
         es: "Con treinta y dos senderos maravillosos de sabiduría grabó Yah.",
-        ref: "Sefer Yetzirah 1:1 ✅",
+        ref: "Sefer Yetzirah 1:1 (versión corta y del Gra, idénticas) ✅",
         sefaria: "Sefer Yetzirah 1:1",
       },
       {
         t: "p",
-        text: `**Los 32 senderos: 10 + 22.** ¿Qué son estos 32 senderos? El Sefer Yetzirah los define en el mismo capítulo 1 ✅: **diez sefirot** (*sefirot belimá* — los diez números primordiales de la Creación) y **veintidós letras del alefato** (las letras del hebreo como canales de la Creación). En TALMID (T1·M2) estudiaste las 22 letras. Ahora ves que son la mitad del sistema. Las letras son los canales; las sefirot son las vasijas. Juntos, los 32 senderos son el tejido de toda la realidad creada.`,
+        text: `**Los 32 senderos: 10 + 22.** ¿Qué son estos 32 senderos? El Sefer Yetzirah los desglosa en la mishná siguiente (SY 1:2 ✅): **diez sefirot** (*sefirot belimá* — literalmente «cuentas», de la raíz ספר, contar) y **veintidós letras del alefato** (las «letras de fundamento»: 3 madres, 7 dobles, 12 simples). En TALMID (T1·M2) estudiaste las 22 letras. Ahora ves que son la mitad del sistema. Aquí las sefirot aún no tienen nombre: el libro las cuenta y dice él mismo cuáles son — aliento, aire, agua, fuego y seis direcciones (SY 1:14 ✅). Juntos, los 32 senderos son el tejido de toda la realidad creada.`,
       },
       {
         t: "p",
-        text: `**El número del corazón.** La gematría de *lev* (לֵב, corazón): lamed(30)+bet(2) = **32** 🔢. El Sefer Yetzirah abre con el número del corazón. La Sabiduría que creó el mundo no es una fuerza abstracta y fría — tiene corazón. Esta es la primera resonancia del Sefer Yetzirah con el vocabulario del Mussar que estudiaste en J1.`,
+        text: `**El número del corazón.** La gematría de *lev* (לֵב, corazón): lamed(30)+bet(2) = **32** 🔢. El Sefer Yetzirah abre con el número del corazón (asociación que hace explícita, siglos después, el Sefer HaBahir §63 ✅). La Sabiduría que creó el mundo no es una fuerza abstracta y fría — tiene corazón. Esta es la primera resonancia del Sefer Yetzirah con el vocabulario del Mussar que estudiaste en J1.`,
       },
       {
         t: "p",
-        text: `**El verbo *jaqaq* — grabar, tallar.** El Sefer Yetzirah dice que Dios *"grabó"* (*jaqaq*, חָקַק ✅) los 32 senderos. No "habló", no "creó" en el sentido de Génesis 1 — sino "grabó" como un lapidario graba en piedra. Las letras del hebreo, en la visión del Sefer Yetzirah, están *talladas* en la realidad — son anteriores al sonido y a la materia. Esta imagen conecta con lo que Ibn Ezra y el Ramban dijeron sobre el texto bíblico: el texto no es posterior a la realidad; es lo que la constituye.`,
+        text: `**El verbo *jaqaq* — grabar, tallar.** El Sefer Yetzirah dice que Dios *"grabó"* (*jaqaq*, חָקַק ✅) con los 32 senderos. No solo "habló" ni "creó", como en Génesis 1 — sino "grabó", como un lapidario graba en piedra. Las letras del hebreo, en la visión del Sefer Yetzirah, están *talladas* en la realidad — «grabadas en la voz, talladas en el aliento, fijadas en la boca» (SY 2:3 ✅). Esta imagen conecta con lo que enseñan el Midrash (Dios «miraba en la Torá y creaba el mundo», Bereshit Rabá 1:1 ✅) y el Ramban (la Torá precedió a la creación, prólogo a Bereshit ✅): el texto no es posterior a la realidad; es lo que la constituye.`,
       },
       {
         t: "verse",
@@ -89,7 +89,7 @@ export const LESSONS11: Lesson[] = [
       },
     ],
     contemplacion: [
-      "El Sefer Yetzirah tiene menos de 2.000 palabras. La Biblia tiene más de 300.000. Los sabios que lo escribieron o lo recibieron eligieron la brevedad máxima — como si cada palabra del texto fuera una de esas letras del alefato: pequeña en tamaño, infinita en contenido.",
+      "El Sefer Yetzirah tiene menos de 2.000 palabras. El Tanaj tiene más de 300.000. Los sabios que lo escribieron o lo recibieron eligieron la brevedad máxima — como si cada palabra del texto fuera una de esas letras del alefato: pequeña en tamaño, infinita en contenido.",
       "¿Qué te llama más la atención del primer versículo — los 32 senderos, el verbo 'grabar', o el nombre 'Yah'? No hay respuesta incorrecta. El Sefer Yetzirah está diseñado para ser leído despacio.",
     ],
     accion: {
@@ -99,17 +99,18 @@ export const LESSONS11: Lesson[] = [
       cta: { label: "Abrir Sefer Yetzirah cap. 1 en Sefaria →", ref: "Sefer Yetzirah 1:1" },
     },
     sello:
-      "Sefer Yetzirah (סֵפֶר יְצִירָה) — texto cabalístico más antiguo conocido; s. II–VI EC ⚠️; atribuido a Abraham ⚠️. SY 1:1 ✅: 32 senderos de sabiduría = 10 sefirot + 22 letras. Gematría *lev* (לֵב) = 32 🔢. El verbo *jaqaq* (grabar/tallar) ✅: Dios grabar la realidad con los senderos de la sabiduría. Base: Proverbios 3:19 ✅.",
+      "Sefer Yetzirah (סֵפֶר יְצִירָה) — el libro más antiguo que conservamos de la mística hebrea; fecha disputada, s. III–VI EC según la mayoría ✅; la tradición lo atribuye a Abraham, a partir de su última mishná (SY 6:4 corta / 6:7 Gra) ✅. SY 1:1–1:2 ✅: 32 senderos de sabiduría = 10 sefirot + 22 letras. Gematría *lev* (לֵב) = 32 🔢 (asociación del Bahir §63, no del SY). El verbo *jaqaq* (grabar/tallar) ✅: Dios graba la realidad con los senderos de la sabiduría. Base: Proverbios 3:19 ✅.",
     hilos: [
-      { kind: "study", ref: "las-diez-sefirot", label: "En la próxima lección se introduce el mapa de las diez sefirot — las vasijas de la Creación." },
-      { kind: "letter", ref: "alef", label: "La álef — silencio y corona — ya la conoces desde T1. ¿Cómo resuena con Keter, la primera sefirot?" },
+      { kind: "study", ref: "las-diez-sefirot", label: "En la próxima lección se introduce el mapa de las diez sefirot tal como lo trazó la Cabalá posterior." },
+      { kind: "letter", ref: "alef", label: "La álef — silencio y corona — ya la conoces desde T1. ¿Cómo resuena con Keter, la primera sefirá en la Cabalá posterior?" },
     ],
     fuentes: [
-      "Sefer Yetzirah 1:1 ✅ (los 32 senderos; el verbo jaqaq — grabar)",
-      "Sefer Yetzirah 1:2 ✅ (las diez sefirot belimá y las 22 letras)",
+      "Sefer Yetzirah 1:1 ✅ (igual en la versión corta y en la del Gra; los 32 senderos; el verbo jaqaq — grabar)",
+      "Sefer Yetzirah 1:2 ✅ (ambas versiones; las diez sefirot belimá y las 22 letras)",
       "Proverbios 3:19 ✅ (YHVH con sabiduría fundó la tierra)",
-      "Gematría lev = 32 🔢",
-      "Autoría y fecha del SY: ⚠️ (entre s. II y VI EC según académicos; tradición: Abraham)",
+      "Gematría lev = 32 🔢 — la asociación con los 32 senderos es del Sefer HaBahir §63 ✅, no del SY",
+      "Fecha del SY: disputada, s. III–VI EC según la mayoría ✅. Autoría: desconocida ⚠️ (tradición: Abraham, por SY 6:4 corta / 6:7 Gra ✅)",
+      "SY 1:14 y 2:3 ✅ · Bereshit Rabá 1:1 ✅ · Ramban, prólogo a Bereshit ✅",
     ],
     tarea: {
       semana: 50,
