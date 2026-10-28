@@ -86,6 +86,18 @@ export const MISTERIOS: Misterio[] = [
     orden: 3.7,
   },
   {
+    slug: "criaturas-que-nunca-vieron-el-sol",
+    he: "בַּל חָזוּ שָׁמֶשׁ",
+    titulo: "Las criaturas que nunca vieron el sol",
+    tituloFa: "",
+    gancho:
+      "El midrash abre la destrucción de Sodoma con un versículo de criaturas que no alcanzan a ver el sol: el caracol que se deshace al avanzar, el topo sin ojos, el feto arrojado de noche. Y en la misma frase deja a Lot ya a salvo, del lado del sol. Lot no es luz pura ni cáscara pura: es la mezcla. Y de su mezcla, por la cueva más oscura del libro, sale el Rey Mashíaj.",
+    ganchoFa: "",
+    serie: "dos-filos",
+    color: "#b9873f",
+    orden: 3.75,
+  },
+  {
     slug: "yehuda",
     he: "צָדְקָה מִמֶּנִּי",
     titulo: "Yehudá — El rey que se declaró culpable",
