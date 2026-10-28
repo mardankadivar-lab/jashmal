@@ -1054,6 +1054,22 @@ export const MISTERIOS: Misterio[] = [
     orden: 19,
   },
   {
+    slug: "rincon-del-campo",
+    he: "לֹא תְכַלֶּה פְּאַת שָׂדְךָ",
+    titulo: "El rincón del campo — la ley que interrumpe las fiestas",
+    tituloFa: "گوشهٔ کشتزار — قانونی که جشن‌ها را قطع می‌کند",
+    tituloEn: "The Corner of the Field — The Law That Interrupts the Feasts",
+    gancho:
+      "La Torá enumera las fiestas del año en orden. Y de golpe, entre Shavuot y Rosh Hashaná, se detiene para hablar de un hombre con hambre. Rashi vio el corte hace novecientos años y preguntó por él; Kli Yakar le respondió que su respuesta no cierra.",
+    ganchoFa:
+      "تورات جشن‌های سال را به ترتیب برمی‌شمارد. و ناگهان، میان شاووعوت و روش هشانا، می‌ایستد تا از مردی گرسنه سخن بگوید. راشی نهصد سال پیش این گسست را دید و از آن پرسید؛ کلی یقار پاسخ داد که پاسخِ او کافی نیست.",
+    ganchoEn:
+      "The Torah lists the feasts of the year in order. Then, between Shavuot and Rosh Hashanah, it stops to speak of a hungry man. Rashi saw the break nine hundred years ago and asked about it; the Kli Yakar replied that his answer does not hold.",
+    serie: "moadim",
+    color: "#d9b26a",
+    orden: 19.05,
+  },
+  {
     slug: "rosh-hashana",
     he: "הַיּוֹם הֲרַת עוֹלָם",
     titulo: "Rosh Hashaná — el juicio vestido de blanco",

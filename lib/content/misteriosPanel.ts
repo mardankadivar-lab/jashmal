@@ -30,6 +30,7 @@ import { data as eikevTalon } from "@/app/[locale]/misterio/eikev-talon/data";
 import { data as elAri } from "@/app/[locale]/misterio/el-ari/data";
 import { data as elul } from "@/app/[locale]/misterio/elul/data";
 import { data as hesterPanim } from "@/app/[locale]/misterio/hester-panim/data";
+import { data as rinconDelCampo } from "@/app/[locale]/misterio/rincon-del-campo/data";
 import { data as criaturasQueNuncaVieronElSol } from "@/app/[locale]/misterio/criaturas-que-nunca-vieron-el-sol/data";
 import { data as roshHashana } from "@/app/[locale]/misterio/rosh-hashana/data";
 import { data as yomKipur } from "@/app/[locale]/misterio/yom-kipur/data";
@@ -72,6 +73,7 @@ export const MISTERIOS_PANEL: Record<string, EstudioData> = {
   "el-ari": elAri,
   elul,
   "hester-panim": hesterPanim,
+  "rincon-del-campo": rinconDelCampo,
   "criaturas-que-nunca-vieron-el-sol": criaturasQueNuncaVieronElSol,
   "rosh-hashana": roshHashana,
   "yom-kipur": yomKipur,
