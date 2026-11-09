@@ -1020,6 +1020,27 @@ export const MISTERIOS: Misterio[] = [
     color: "#8b6a3a",
     orden: 16.97,
   },
+  {
+    // Toldot sigue a Haazinú en el orden de publicación de la serie (y abre
+    // Bereshit en el ciclo de lectura). Se lee el Shabat 14 nov 2026 = 4 Kislev
+    // 5787, y Génesis 25:19 es el PRIMER versículo de la parashá: el estudio
+    // entero cuelga de la primera frase que se lee ese sábado.
+    // Contenido escrito y verificado por el Sofer (2026-11-08).
+    slug: "rostro-isaac",
+    he: "קְלַסְתֵּר פָּנִים",
+    titulo: "El rostro que la burla no pudo borrar",
+    tituloFa: "چهره‌ای که ریشخند نتوانست پاکش کند",
+    tituloEn: "The Face That Mockery Could Not Erase",
+    gancho:
+      "Isaac, el cincel de la oposición y la redundancia de Génesis 25:19. El primer versículo de Toldot dice lo mismo dos veces, y la Torá no gasta palabras. La tradición explica ese tartamudeo con un rostro — y de ese milagro hay tres versiones que no dicen lo mismo.",
+    ganchoFa:
+      "اسحاق، قلمِ مخالفت و تکرارِ پیدایش ۲۵:۱۹. نخستین آیهٔ تولدوت یک چیز را دو بار می‌گوید، و تورات واژه هدر نمی‌دهد. سنّت این لکنت را با یک چهره توضیح می‌دهد — و از آن معجزه سه روایت هست که یک چیز نمی‌گویند.",
+    ganchoEn:
+      "Isaac, the chisel of opposition, and the redundancy of Genesis 25:19. The opening verse of Toldot says the same thing twice, and the Torah wastes no words. Tradition explains that stammer with a face — and of that miracle there are three versions that do not agree.",
+    serie: "parasha",
+    color: "#8b6a3a",
+    orden: 16.98,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".
