@@ -1041,6 +1041,26 @@ export const MISTERIOS: Misterio[] = [
     color: "#8b6a3a",
     orden: 16.98,
   },
+  {
+    // Segundo estudio del mismo Shabat (14 nov 2026, parashat Toldot): este NO
+    // es la parashá como narración, es la PALABRA תּוֹלְדֹת. Por eso el slug es
+    // "toldot-palabra" y no "toldot" a secas.
+    // tituloFa/ganchoFa van VACÍOS a propósito —igual que sefer-yetzira—: el
+    // estudio está solo en español y el Sofer aún no lo tradujo, así que tri()
+    // muestra el español marcado como traducción pendiente. NO se generó farsi
+    // automático. Inglés: omitido por la misma razón.
+    slug: "toldot-palabra",
+    numero: "840",
+    he: "תּוֹלְדֹת",
+    titulo: "La vav que se perdió",
+    tituloFa: "",
+    gancho:
+      "Una palabra aparece 39 veces en el Tanaj. En dos de ellas está escrita completa. En una está escrita vacía. En las otras treinta y seis le falta una letra. La tradición no trató eso como un detalle de escribas. Lo trató como una herida.",
+    ganchoFa: "",
+    serie: "parasha",
+    color: "#8b6a3a",
+    orden: 16.99,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".
