@@ -100,6 +100,7 @@ export interface LexiconEntry {
   lexicon: string; // "BDB Augmented Strong", "Klein Dictionary", etc.
   headword: string;
   strongNumber?: string;
+  transliteration?: string; // pronunciación DEL LEMA de esta entrada
   definition: string; // texto limpio (sin HTML)
 }
 
@@ -185,12 +186,16 @@ export async function getClassicLexicon(word: string): Promise<ClassicLexicon> {
     const entries: LexiconEntry[] = [];
     const seen = new Set<string>();
 
-    // Recoger la mejor transliteración de todas las entradas.
+    // Transliteración de la CABECERA: solo vale la de una entrada cuyo lema
+    // coincida (en consonantes) con la palabra consultada. Si el diccionario
+    // lematiza a otra forma, su pronunciación es la del lema y se muestra
+    // junto al lema, no bajo la palabra que el lector pulsó: una sola forma
+    // por cabecera.
     let bestTranslit = "";
     for (const e of raw) {
-      // Priorizar la del BDB Augmented Strong (la más completa).
       const t = e.transliteration || e.pronunciation || "";
-      if (t && (!bestTranslit || e.parent_lexicon === "BDB Augmented Strong")) {
+      const sameForm = stripNiqud(e.headword ?? "") === consonants;
+      if (t && sameForm && (!bestTranslit || e.parent_lexicon === "BDB Augmented Strong")) {
         bestTranslit = t;
       }
 
@@ -204,6 +209,7 @@ export async function getClassicLexicon(word: string): Promise<ClassicLexicon> {
         lexicon,
         headword: e.headword ?? word,
         strongNumber: e.strong_number,
+        transliteration: sameForm ? undefined : t || undefined,
         definition: def,
       });
     }

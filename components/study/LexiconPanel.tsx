@@ -4,6 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { useLocale, useTranslations } from "next-intl";
 import Inline from "./InteractiveText";
 import { requestLexicon, type LexiconResponse } from "@/lib/sources/lexiconClient";
+import { stripNiqud } from "@/lib/sources/lexicon";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 
 interface LexiconPanelProps {
@@ -221,6 +222,19 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
                       <p className="text-[10px] uppercase tracking-wide text-gold/60">
                         {dictLabel(e.lexicon)}
                         {e.strongNumber ? ` · Strong ${e.strongNumber}` : ""}
+                        {/* El diccionario a veces define el LEMA (la forma de
+                            entrada), no la palabra pulsada. Se dice cuál es,
+                            sin número propio: el valor de arriba es el de la
+                            palabra consultada, no el del lema. */}
+                        {e.headword &&
+                          stripNiqud(e.headword) !== data.classic.consonants && (
+                            <span className="text-muted/70 normal-case">
+                              {" · "}
+                              {t("lemma")}{" "}
+                              <span className="hebrew text-parchment/80">{e.headword}</span>
+                              {e.transliteration ? ` (${e.transliteration})` : ""}
+                            </span>
+                          )}
                       </p>
                       <p className="mt-0.5 text-sm leading-relaxed text-parchment/90">
                         {e.definition}
