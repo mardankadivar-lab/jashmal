@@ -1,0 +1,2 @@
+Shamati 34, segundo tramo (traducción Bnei Baruch; Tevet de 5703, diciembre de 1942 - enero de 1943) · Makot 23b-24a · Habacuc 2:4 con Rashi, Radak y Targum Yonatán · Éxodo 16:19-20 · Yomá 74b · Salmos 16:8 con la glosa del Remá (Shulján Aruj, Óraj Jaim 1:1) · Sidur: Uvá LeTsión; Amidá, bendiciones Shemá Kolénu y Modim · Eclesiastés 5:8 con Ibn Ezra y Metzudat David · Kohélet Rabá 5:8 · Vaikrá Rabá 22:1
+Los folios los pone el estudio, no Baal HaSulam: el artículo no cita sus fuentes.

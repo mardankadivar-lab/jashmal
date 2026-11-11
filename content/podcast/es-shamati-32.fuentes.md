@@ -1,0 +1,2 @@
+Shamati 32 (traducción Bnei Baruch; «4 de Terumá», miércoles 10 de febrero de 1943 = 5 de Adar I 5703, semana de la parashá Terumá) · Ester 3:8 · Ester 9:24 · Proverbios 16:33 con Rashi y Metzudat David · Zóhar, Lej Lejá (Rabí Elazar sobre el despertar de arriba y de abajo) · Meguilá 13b con Rashi · Ester Rabá 3:10 · Shabat 88b-89a · Job 27:13-17 con Metzudat David y Ramban · Pesajim 49b
+Los folios los pone el estudio, no Baal HaSulam: el artículo no cita fuentes.

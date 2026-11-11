@@ -1,0 +1,2 @@
+Shamati 33, tramo final (traducción Bnei Baruch) · Génesis 33:9 y 33:11 con Rashi · Levítico 24:6 · Éxodo 32:4 · Zóhar, Introducción · Sukká 5b · Salmos 116:6 · Éxodo 25:2 (con Rashi), 25:18-19 y 25:22 · Números 7:89 · Lamentaciones 5:17 · Deuteronomio 28:47 · Ezequiel 8:14 con Rashi · Jeremías 18:4-6 · Kidushín 30b · Sukká 52b
+Los folios los pone el estudio, no Baal HaSulam: el artículo no cita la mayoría de sus fuentes.

@@ -1,0 +1,4 @@
+Shamati 30 y 31 (traducción Bnei Baruch; el 30, después de Shabat Vaikrá, 13 de Adar II 5703 = 20 de marzo de 1943) · Rambam, Hiljot Deot 2:2 y Hiljot Yesodei HaTorá 2:2 · Vayikrá Rabá 34:3 · Levítico 1:9, 1:13, 1:17 y 2:1-2 con Rashi · Mishná Menajot 13:11 · Menajot 104b · Pirkei Avot 3:9-10 · Midrash Shmuel sobre Avot 3:10 · Ester 10:3 · Meguilá 16b · Berajot 17b · Julín 86a · Kéter Shem Tov 1:3 · Séfer Baal Shem Tov, Ekev 65
+Los folios los pone el estudio, no Baal HaSulam: los artículos no citan fuentes.
+
+Sobre el texto leído: en el artículo 31 la traducción de Bnei Baruch trae una frase incompleta, con un paréntesis que se cierra sin abrirse («y "agrada", que los justos) que extienden…»). Se leyó sin añadir ninguna palabra; solo se omitió ese paréntesis. Tras «Lo escuché» del 31 se añadió «el apunte no lleva fecha», que no es de la traducción. Ninguna otra palabra de la traducción se cambió.

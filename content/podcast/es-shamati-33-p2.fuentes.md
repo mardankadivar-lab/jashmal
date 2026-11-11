@@ -1,0 +1,2 @@
+Shamati 33, tramo central (traducción Bnei Baruch) · Jaguigá 15a · Kidushín 40b · Levítico 16:8 · Jeremías 30:23 · Bavá Batrá 16a · Job 9:17 · Yomá 86b · Sanhedrín 97b · Ester 3:7 · Meguilá 13b · Éxodo 2:2 · Sotá 12a · Éxodo 26:1 · Levítico 24:6 · Génesis 25:26, 27:11, 27:15-16 y 27:22 · Midrash Tanjumá, Pekudéi 3
+Los folios los pone el estudio, no Baal HaSulam: el artículo no cita la mayoría de sus fuentes.

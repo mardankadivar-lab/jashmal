@@ -1,0 +1,2 @@
+Shamati 27 (traducción Bnei Baruch; Shabat Terumá, 4 de Adar 5709 = 5 de marzo de 1949, Tel Aviv) · Éxodo 25:2 · Salmos 138:6 con Malbim, Rashi y Metzudat Tzión · Jueces 8:16 · Sotá 5a con Rashi · Sulam sobre el Zóhar, Introducción 7:2 · Talmud Éser HaSefirot, parte I (respuestas sobre términos, 43) · Pirkei Avot 4:4 · Shabat 88b · Yomá 23a · Guitín 36b · Jueces 5:31 · Séfer HaJinuj 16
+Los folios los pone el estudio, no Baal HaSulam: el artículo no cita fuentes.

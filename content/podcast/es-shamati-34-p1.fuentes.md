@@ -1,0 +1,2 @@
+Shamati 34, primer tramo (traducción Bnei Baruch; «Tevet, 1943»: Tevet de 5703 fue del 9 de diciembre de 1942 al 6 de enero de 1943) · Eclesiastés 2:13 con Metzudat David · Eclesiastés 5:8 · Mishná Berajot 9:5 · Eijá Rabá, Petijtá 2 · Jeremías 16:11 · Deuteronomio 8:3 y 8:16
+Los folios los pone el estudio, no Baal HaSulam: el artículo no cita sus fuentes. La frase «¿Quién es justo? El que justifica a su Hacedor», que el artículo atribuye a los sabios, no se encontró con esas palabras.

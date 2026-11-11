@@ -1,0 +1,2 @@
+Shamati 33, primer tramo (traducción Bnei Baruch; viernes 12 de febrero de 1943 = 7 de Adar I de 5703, semana de Terumá) · Levítico 16:8 · Ester 3:7 · Génesis 25:25 · Bavá Batrá 16a · Job 9:17 y 38:1 · Éxodo 3:6 · Berajot 7a · Números 12:8 · Isaías 42:19 · Salmos 115:5-6 · I Reyes 19:19 · Génesis 44:3 · Shabat 104a · Yomá 38b · Baal HaSulam, «La Paz» · Éxodo 34:6-7 · Génesis 25:23 · Salmos 93:4
+Los folios los pone el estudio, no Baal HaSulam: el artículo no cita la mayoría de sus fuentes.
