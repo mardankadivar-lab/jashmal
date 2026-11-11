@@ -6,7 +6,7 @@ import { checkCitations } from "@/lib/sources/citationCheck";
 import { annotate, type Mark } from "@/lib/sources/proseMarks";
 
 export const runtime = "nodejs";
-export const maxDuration = 30;
+export const maxDuration = 300;
 
 // Sonnet: métodos del Zóhar + gematría con fuentes exactas. Mejor rigor que
 // Haiku para no fabricar folios/cálculos, sin el costo de Opus. Elegir un
@@ -28,6 +28,34 @@ const LANG: Record<string, string> = {
   fa: "persa (فارسی) — NO árabe; usa vocabulario y gramática persas",
   en: "English",
 };
+
+// Aviso de corte, cuando el análisis llegó al techo de texto y hubo que podar
+// el último tramo incompleto.
+const CUT_NOTE: Record<string, string> = {
+  es: "El análisis se cortó aquí por extensión; lo que falta no se ha perdido, solo no cabía.",
+  fa: "تحلیل به دلیل طول در اینجا قطع شد.",
+  en: "The analysis was cut here for length.",
+};
+
+// El modelo llena cualquier techo que se le dé, así que en las palabras más
+// ricas la respuesta llega al límite a media frase. Antes que enseñar una frase
+// partida, se retrocede al último párrafo completo (o, si no hay ninguno, a la
+// última frase cerrada) y se dice que se cortó. Podar es feo; dejar un análisis
+// colgando a mitad de una explicación lo es más.
+function trimToWhole(text: string): { text: string; trimmed: boolean } {
+  const para = text.lastIndexOf("\n\n");
+  if (para > text.length * 0.5) {
+    return { text: text.slice(0, para).trimEnd(), trimmed: true };
+  }
+  const stop = Math.max(
+    text.lastIndexOf(". "), text.lastIndexOf(".\n"),
+    text.lastIndexOf("? "), text.lastIndexOf("! ")
+  );
+  if (stop > text.length * 0.5) {
+    return { text: text.slice(0, stop + 1), trimmed: true };
+  }
+  return { text, trimmed: false };
+}
 
 // POST { word, locale } → { analysis }
 // Aplica los métodos hermenéuticos del Zohar: Notarikon, Tzeruf, lectura alternativa,
@@ -157,20 +185,33 @@ Responde en ${lang}. Usa este formato para cada método que tenga hallazgos real
 [explicación del hallazgo con su significado espiritual y fuente exacta si la hay]
 
 Al inicio, una línea introductoria que contextualice el análisis de ${word}.
-Sé preciso, profundo y fiel a las fuentes. No inventes conexiones que no estén en la tradición.`;
+Sé preciso, profundo y fiel a las fuentes. No inventes conexiones que no estén en la tradición.
+
+**REGLA DURA — el análisis tiene que CERRAR.**
+Dispones de un espacio limitado y una respuesta cortada a media frase no sirve
+de nada al lector. Por eso: entre 2 y 4 párrafos densos por método, y nunca más
+de seis métodos, los que de verdad arrojen algo sobre ${word}. Es preferible
+omitir un método flojo que quedarse sin espacio en el último. Prosa apretada,
+sin repetir lo ya dicho ni resumir al final lo que ya explicaste arriba.
+Termina siempre con el último método completo, no a mitad de una explicación.`;
 
   try {
     const msg = await anthropic.messages.create({
       model: MODEL,
-      max_tokens: 1400,
+      max_tokens: 4000,
       messages: [{ role: "user", content: prompt }],
     });
 
-    const raw = msg.content
+    const full = msg.content
       .filter((b) => b.type === "text")
       .map((b) => (b as { text: string }).text)
       .join("\n")
       .trim();
+
+    // Se poda ANTES de verificar, para que las marcas caigan sobre el texto que
+    // de verdad va a leerse y no sobre un tramo que ya no existe.
+    const cut = msg.stop_reason === "max_tokens";
+    const { text: raw, trimmed } = cut ? trimToWhole(full) : { text: full, trimmed: false };
 
     // ── El juicio ─────────────────────────────────────────────────────────
     // La aritmética se re-suma letra por letra; las citas se cotejan contra el
@@ -194,7 +235,10 @@ Sé preciso, profundo y fiel a las fuentes. No inventes conexiones que no estén
         note: locale === "es" ? `${labels.ref}: ${f.detail}` : labels.ref,
       });
     }
-    const analysis = marks.length > 0 ? annotate(raw, marks) : raw;
+    const marked = marks.length > 0 ? annotate(raw, marks) : raw;
+    const analysis = trimmed
+      ? `${marked}\n\n_${CUT_NOTE[locale] ?? CUT_NOTE.es}_`
+      : marked;
 
     const badSums = arith.findings.filter((f) => f.verdict === "false").length;
     const okSums = arith.findings.filter((f) => f.verdict === "ok").length;
@@ -203,7 +247,10 @@ Sé preciso, profundo y fiel a las fuentes. No inventes conexiones que no estén
         `aritmética verificadas=${arith.findings.length} correctas=${okSums} falladas=${badSums} ` +
         `sin-cifras=${arith.inconclusive} | ` +
         `citas detectadas=${cites.findings.length} existen=${cites.existing} ` +
-        `falsas=${cites.falsified} no-concluyentes=${cites.inconclusive} | ${verifyMs}ms`
+        `falsas=${cites.falsified} no-concluyentes=${cites.inconclusive} | ${verifyMs}ms | ` +
+        // "fin=max_tokens podado=sí" = llegó al techo y se cerró por código.
+        `fin=${msg.stop_reason} podado=${trimmed ? "sí" : "no"} ` +
+        `chars=${raw.length}/${full.length}`
     );
     for (const f of arith.findings) {
       if (f.verdict === "false") console.log(`[zohar-methods] suma falsa: «${f.raw}» → ${f.truth}`);

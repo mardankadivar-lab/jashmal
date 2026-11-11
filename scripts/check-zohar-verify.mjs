@@ -58,6 +58,43 @@ const CANONICOS = [
   "יִצְחָק: lleva la Yud de Sarai incrustada. Zohar Vayera.",
   "בֶּן אוֹנִי → בִּנְיָמִין: Rachel nombra desde el dolor. Zohar Vayishlaj.",
   "צָפְנַת פַּעְנֵחַ: nombre egipcio de Yosef. Zohar Miketz.",
+
+  // ── Frases reales del motor que el verificador llegó a marcar siendo
+  // correctas. Un falso positivo tacha trabajo bueno delante del lector, así
+  // que estas se quedan aquí como memoria de cada fallo ya corregido.
+
+  // El nombre de una letra vale la letra (יוד = 10) O su milui (= 20). Las dos
+  // lecturas son legítimas; antes solo se perdonaba la de los paréntesis.
+  "Corrección obligada: יוד = 10 , עַיִן = 70 , קוף = 100 , בֵּית = 2",
+  "יוד (10) + עַיִן (70) + קוף (100) + בֵּית (2) = **182**",
+  "יוד (10) + הֵא (5) = **15**, y אָלֶף = 1, לָמֶד = 30, וָו = 6",
+
+  // Multiplicación y resta: sin entenderlas, el parser cortaba la expresión y
+  // juzgaba el pedazo ("840 = 40").
+  "El total de תולדת = 400+6+30+4+400 = **840**. Y 840 = 40 × 21.",
+  "Los maestros señalan que 182 = 7 × 26, siendo 26 la guematría del Tetragrama",
+  "La diferencia entre las dos partes es **436 − 404 = 32**, el valor de לֵב",
+  "del valor faltante: 248 − 243 = **5**, el valor de la Hei",
+  "יִשְׂרָאֵל = **541**. יַעֲקֹב = **182**. La diferencia: 541 − 182 = **359**",
+
+  // Deletreo con guiones: las letras se SUMAN, no se restan.
+  "Además, א-ב-ר-ה-מ = 1+2+200+5+40 = **248**",
+
+  // Valor pegado sin paréntesis: no se juzga, pero tampoco se marca.
+  "- **עָקֹב** = lo torcido (172 = עַיִן 70 + קוף 100 + בֵּית 2)",
+
+  // Lista de valores declarados: el "=" rotula cada letra, no encadena una
+  // ecuación. Leída como ecuación corrida no cuadra nunca.
+  "el valor de *עֵקֶב* (ע = 70 + ק = 100 + ב = 2 = **172**)",
+  "el Nombre de cuatro letras (י=10 + ה=5 + ו=6 + ה=5 = **26**)",
+
+  // Paréntesis con una CUENTA dentro: es una operación aparte, no un rótulo
+  // que diga cuánto vale la palabra de delante.
+  "El Ba'al HaTurim señala que יַעֲקֹב = 182 = 7 × יְהוָה (7 × 26 = 182)",
+
+  // Exponente en superíndice: no se sabe leer una potencia, así que se deja
+  // pasar entera en vez de juzgar "3 × 3" y marcar una cuenta correcta.
+  "El número **243** = **3 × 81** = **3 × 3⁴**, el tres multiplicado",
 ];
 
 // ── Banco 2: fabricaciones que hay que cazar. ──────────────────────────────
@@ -67,6 +104,18 @@ const FABRICACIONES = [
   "מִי (50) + אֵלֶּה (40) = 90 = אֱלֹהִים",
   "שָׂרַי = 500",
   "פרץ = 105",
+  // Entender la multiplicación y la resta no es solo evitar falsos positivos:
+  // también deja cazar el producto o la diferencia inventados.
+  "840 = 40 × 22",
+  "248 − 243 = 6",
+  "א-ב-ר-ה-מ = 1+2+200+5+40 = **249**",
+  "יוד = 11",
+  // La lista de valores se juzga, no se perdona: si un rótulo o el total
+  // están mal, se caza igual.
+  "(ע = 71 + ק = 100 + ב = 2 = **173**)",
+  "(ע = 70 + ק = 100 + ב = 2 = **180**)",
+  "יַעֲקֹב = 182 = 7 × יְהוָה (7 × 26 = 180)",
+  "מִי (Quién = 60) = Biná, el mundo oculto",
   "Zohar Pinjás 12b lo explica",
   "Zohar Vayishlaj 40a",
   "Zóhar Lej Lejá 300b",
