@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type Anthropic from "@anthropic-ai/sdk";
 import { anthropic, LIGHT_MODEL } from "@/lib/engine/anthropic";
 import { getClassicLexicon, stripNiqud, LETTER_NAMES } from "@/lib/sources/lexicon";
+import { verifiedEquivalences, type VerifiedMatch } from "@/lib/sources/gematriaBank";
 import { wordToPaleo, depiction, type PaleoLetter } from "@/lib/sources/paleo";
 import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
 
@@ -22,6 +23,9 @@ function buildMysticPrompt(
   word: string,
   consonants: string,
   gem: number,
+  breakdown: string,
+  equivalences: VerifiedMatch[],
+  lemma: string,
   classic: string,
   locale: string
 ): string {
@@ -30,10 +34,38 @@ function buildMysticPrompt(
     .map((ch) => `${ch} (${LETTER_NAMES[ch] ?? "?"})`)
     .join(", ");
 
+  // Bloque de equivalencias: lista CERRADA calculada en código. Si está vacía,
+  // el modelo tiene prohibido rellenarla de memoria.
+  const equivBlock = equivalences.length
+    ? `   Equivalencias VERIFICADAS (calculadas en código, lista CERRADA):
+${equivalences.map((e) => `     · ${e.sum}  — ${e.gloss}`).join("\n")}
+   Usa SOLO estas y escribe su suma tal cual. NO añadas ninguna otra palabra
+   con este valor, por conocida que te parezca.`
+    : `   NO tenemos ninguna equivalencia verificada para ${gem}. Por tanto NO
+   menciones ninguna palabra hebrea que "valga ${gem}": no la cites, no la
+   adivines. Habla solo del sentido del número y de su estructura.`;
+
+  // Si el diccionario lematiza a otra forma, se nombra como lema — nunca se
+  // analiza en lugar de la palabra que el lector pulsó.
+  const lemmaNote = lemma
+    ? `\nEl diccionario lematiza esta palabra como ${lemma} (forma de diccionario).
+Puedes nombrarla como lema, pero el análisis es de ${word}, no del lema, y NO
+le atribuyas al lema ningún valor numérico.`
+    : "";
+
   return `Eres el léxico místico de Jashmal. Analiza la palabra hebrea ${word}
-(consonantes: ${consonants}; letras: ${letters}; gematría: ${gem}).
+(consonantes: ${consonants}; letras: ${letters}).
+Su gematría es ${gem}, y esta es la suma: ${breakdown} = ${gem}.
+Analiza EXACTAMENTE esta forma, la que el lector pulsó: ni su singular, ni su
+plural, ni su raíz en lugar de ella.${lemmaNote}
 
 Sentido clásico de referencia (de los diccionarios): ${classic || "(no disponible)"}
+
+REGLA ABSOLUTA, por encima de todo lo demás: tienes PROHIBIDO afirmar que un
+número es el valor de una palabra sin escribir en el propio texto la suma letra
+por letra (así: «פרץ = 80+200+90 = 370»). Si no puedes escribir la suma, no
+menciones el número. No sumes de memoria: si no está en los datos de arriba, no
+lo digas. Vale más un análisis sin un solo número que un número inventado.
 
 Responde SIEMPRE en ${lang}. Sé conciso y bello, con estos tres apartados breves
 y títulos en hebreo:
@@ -41,13 +73,11 @@ y títulos en hebreo:
 1. אוֹתִיּוֹת — Letra por letra: el sentido espiritual de cada letra de la palabra
    y cómo se combinan en un mensaje. Para CADA letra usa el enlace
    {{letter:NOMBRE|LETRA}} (ej. {{letter:alef|א}}). Usa los nombres en transliteración.
-2. גִּימַטְרִיָּה — El valor ${gem}: su significado, y 1-3 palabras o frases
-   hebreas conocidas con el mismo valor (conexiones numéricas), explicando la
-   resonancia. Solo si son correctas; no inventes equivalencias.
+2. גִּימַטְרִיָּה — El valor ${gem}: su significado espiritual.
+${equivBlock}
 3. שֹׁרֶשׁ — La raíz y el hilo espiritual que une el sentido literal con el místico.
 
-Sé riguroso: no inventes gematrías ni raíces. Si dudas de una equivalencia
-numérica, omítela. Breve pero profundo.`;
+Sé riguroso: no inventes gematrías ni raíces. Breve pero profundo.`;
 }
 
 // Capa paleo-hebrea (pictográfica), estilo Ancient Hebrew Lexicon de Jeff Benner.
@@ -119,6 +149,21 @@ export async function POST(req: Request) {
     .join(" | ")
     .slice(0, 800);
 
+  // Equivalencias numéricas: las suma el código desde el banco verificado.
+  // Al modelo se le entregan ya hechas; no se le pide que las recuerde.
+  const equivalences = verifiedEquivalences(classic.gematria, classic.consonants);
+
+  // Suma letra por letra de la palabra consultada, para que el modelo la cite
+  // en lugar de inventarla.
+  const breakdownText = classic.breakdown
+    .map((b) => `${b.letter}${b.value}`)
+    .join(" + ");
+
+  // Lema del diccionario, solo si difiere de la forma que el lector pulsó.
+  const headword = classic.entries.find(
+    (e) => e.headword && stripNiqud(e.headword) !== classic.consonants
+  )?.headword;
+
   // Generamos en paralelo la capa mística (cabalística) y la paleo (pictográfica).
   function runText(prompt: string, maxTokens: number): Promise<string> {
     return anthropic.messages
@@ -146,6 +191,9 @@ export async function POST(req: Request) {
         classic.word,
         classic.consonants,
         classic.gematria,
+        breakdownText,
+        equivalences,
+        headword ?? "",
         classicSummary,
         locale
       ),
