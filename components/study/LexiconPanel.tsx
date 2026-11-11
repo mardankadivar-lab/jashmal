@@ -7,6 +7,23 @@ import { requestLexicon, type LexiconResponse } from "@/lib/sources/lexiconClien
 import { stripNiqud } from "@/lib/sources/lexicon";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 
+// Conexiones numéricas: lo que llega de la API ya viene verificado letra por
+// letra en el servidor. Aquí no se juzga nada, solo se muestra.
+interface Connection {
+  hebrew: string;
+  translit: string;
+  meaning: string;
+  why: string;
+  sum: string;      // "רז = 200+7 = 207"
+  fromBank: boolean;
+}
+
+interface ConnectionsResult {
+  items: Connection[];
+  atbash: { word: string; value: number } | null;
+  ordinal: number | null;
+}
+
 interface LexiconPanelProps {
   anchor: WordAnchor | null; // palabra + posición, o null = cerrado
   onClose: () => void;
@@ -39,7 +56,7 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
   const [data, setData] = useState<LexiconResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const [connections, setConnections] = useState<string | null>(null);
+  const [connections, setConnections] = useState<ConnectionsResult | null>(null);
   const [connectionsLoading, setConnectionsLoading] = useState(false);
   const [zohar, setZohar] = useState<string | null>(null);
   const [zoharLoading, setZoharLoading] = useState(false);
@@ -53,10 +70,14 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ word: w, gematria: g, locale }),
       });
-      const d = await res.json();
-      setConnections(d.connections || "");
+      const d = (await res.json()) as Partial<ConnectionsResult>;
+      setConnections({
+        items: Array.isArray(d.items) ? d.items : [],
+        atbash: d.atbash ?? null,
+        ordinal: d.ordinal ?? null,
+      });
     } catch {
-      setConnections("");
+      setConnections({ items: [], atbash: null, ordinal: null });
     } finally {
       setConnectionsLoading(false);
     }
@@ -297,20 +318,44 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
               )}
               {connections && !connectionsLoading && (
                 <div className="mt-2 space-y-1 text-[10px] leading-relaxed">
-                  {connections.split(/\n+/).map((line, i) => {
-                    const bold = line.match(/^\*\*(.+?)\*\*\s*(.*)$/);
-                    if (bold) {
-                      return (
-                        <div key={i} className="rounded border border-gold/10 bg-gold/[0.03] px-2 py-1.5">
-                          <span className="hebrew text-sm text-gold">{bold[1]}</span>
-                          {bold[2] && <span className="text-muted/80"> {bold[2]}</span>}
-                        </div>
-                      );
-                    }
-                    return line.trim() ? (
-                      <p key={i} className="text-muted/70 leading-relaxed">{line.replace(/\*\*/g,"")}</p>
-                    ) : null;
-                  })}
+                  {/* Pocas o ninguna: se dice, no se finge. */}
+                  {connections.items.length === 0 ? (
+                    <p className="text-muted/70">{t("connectionsNone")}</p>
+                  ) : (
+                    connections.items.map((c, i) => (
+                      <div key={i} className="rounded border border-gold/10 bg-gold/[0.03] px-2 py-1.5">
+                        <span className="hebrew text-sm text-gold">{c.hebrew}</span>
+                        {c.translit && <span className="text-muted/60 italic"> {c.translit}</span>}
+                        {c.meaning && <span className="text-muted/80"> — {c.meaning}</span>}
+                        {c.fromBank && (
+                          <span className="ms-1 rounded-sm border border-gold/25 px-1 text-[8px] uppercase tracking-wide text-gold/60">
+                            {t("connectionsBank")}
+                          </span>
+                        )}
+                        {/* La suma la escribe el servidor, no el motor. */}
+                        <span className="block text-[9px] text-gold/40">{c.sum}</span>
+                        {c.why && <span className="block text-muted/70">{c.why}</span>}
+                      </div>
+                    ))
+                  )}
+                  {/* Cómo se ganaron el sitio estas palabras. */}
+                  <p className="pt-0.5 text-[9px] italic text-muted/50">
+                    {t("connectionsChecked")}
+                  </p>
+                  {/* At-bash y ordinal: calculados en código, no recordados. */}
+                  {connections.atbash && connections.atbash.word && (
+                    <p className="text-[9px] text-muted/60">
+                      {t("connectionsAtbash")}:{" "}
+                      <span className="hebrew text-parchment/80">{connections.atbash.word}</span>
+                      {" = "}
+                      {connections.atbash.value}
+                    </p>
+                  )}
+                  {connections.ordinal !== null && (
+                    <p className="text-[9px] text-muted/60">
+                      {t("connectionsOrdinal")}: {connections.ordinal}
+                    </p>
+                  )}
                 </div>
               )}
             </section>
