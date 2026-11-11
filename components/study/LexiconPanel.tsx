@@ -249,34 +249,6 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
               </section>
             )}
 
-            {/* Paleo-hebreo */}
-            {data.paleo && (
-              <section>
-                <h3 className="font-cinzel text-xs uppercase tracking-widest text-gold/80">
-                  {t("paleo")}
-                </h3>
-                <div className="study-prose mt-1.5 text-sm">
-                  {data.paleo.split(/\n+/).map((line, i) => {
-                    const trimmed = line.trim();
-                    if (!trimmed) return null;
-                    const h = trimmed.match(/^(#{1,4}|\d+\.)\s*(.*)$/);
-                    if (h) {
-                      return (
-                        <h4 key={i} className="mt-2 font-cinzel text-gold">
-                          <Inline text={h[2].replace(/\*+/g, "")} keyPrefix={`pa${i}`} />
-                        </h4>
-                      );
-                    }
-                    return (
-                      <p key={i} className="mt-1 leading-relaxed">
-                        <Inline text={trimmed} keyPrefix={`pp${i}`} />
-                      </p>
-                    );
-                  })}
-                </div>
-              </section>
-            )}
-
             {/* Sentido interior */}
             {data.mystic && (
               <section>

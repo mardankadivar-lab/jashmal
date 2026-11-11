@@ -3,7 +3,6 @@ import type { ClassicLexicon } from "@/lib/sources/lexicon";
 
 export interface LexiconResponse {
   classic: ClassicLexicon;
-  paleo: string;
   mystic: string;
 }
 
