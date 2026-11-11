@@ -12,7 +12,9 @@
     "misterios:meta": "node scripts/gen-misterio-metadata.mjs",
     "search:check": "node scripts/check-search.mjs",
     "i18n:check": "node scripts/check-i18n.mjs",
-    "export:obsidian": "node scripts/export-obsidian.mts"
+    "export:obsidian": "node scripts/export-obsidian.mts",
+    "zohar:check": "node scripts/check-zohar-verify.mjs",
+    "fuentes:tablas": "node scripts/gen-tablas-fuentes.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.1",

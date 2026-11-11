@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { anthropic, LIGHT_MODEL } from "@/lib/engine/anthropic";
 import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
 import { checkArithmetic } from "@/lib/sources/gematriaClaims";
+import { checkCitations } from "@/lib/sources/citationCheck";
 import { annotate, type Mark } from "@/lib/sources/proseMarks";
 
 export const runtime = "nodejs";
@@ -10,16 +11,16 @@ export const maxDuration = 30;
 // Sonnet: métodos del Zóhar + gematría con fuentes exactas. Mejor rigor que
 // Haiku para no fabricar folios/cálculos, sin el costo de Opus. Elegir un
 // modelo mejor NO es verificación: lo que sale de aquí se comprueba abajo
-// (ver checkArithmetic).
+// (ver checkArithmetic y checkCitations).
 const MODEL = LIGHT_MODEL;
 
 // Textos de las marcas que se insertan en la prosa cuando algo no pasa la
 // verificación. El detalle concreto ("Pinjás va de 213a a 254a") se escribe en
 // español; en fa/en se deja la etiqueta sola, para no mezclar idiomas.
-const MARK_TEXT: Record<string, { sum: string }> = {
-  es: { sum: "la suma no cuadra" },
-  fa: { sum: "جمع درست نیست" },
-  en: { sum: "the sum does not add up" },
+const MARK_TEXT: Record<string, { sum: string; ref: string }> = {
+  es: { sum: "la suma no cuadra", ref: "folio sin confirmar" },
+  fa: { sum: "جمع درست نیست", ref: "ارجاع تأییدنشده" },
+  en: { sum: "the sum does not add up", ref: "unconfirmed reference" },
 };
 
 const LANG: Record<string, string> = {
@@ -144,6 +145,12 @@ No escribas ni una cifra de guematría sin su desglose. Si no puedes desglosarla
 no la afirmes: cada cifra de esta respuesta se vuelve a sumar letra por letra
 antes de mostrarse al lector, y la que no cuadre se marca como errónea.
 
+**REGLA DURA — folios.**
+Cita solo el folio que conozcas con certeza. Si dudas del número, nombra la
+parashá sin folio ("Zóhar Lej Lejá") en vez de inventar uno. Un folio falso es
+peor que ninguno: el lector lo va a buscar al Zóhar y no lo va a encontrar.
+Los folios citados se comprueban contra el índice real del Zóhar y del Talmud.
+
 Responde en ${lang}. Usa este formato para cada método que tenga hallazgos reales:
 
 ## [nombre del método en hebreo] — [nombre en ${lang}]
@@ -166,10 +173,12 @@ Sé preciso, profundo y fiel a las fuentes. No inventes conexiones que no estén
       .trim();
 
     // ── El juicio ─────────────────────────────────────────────────────────
-    // La aritmética se re-suma letra por letra. Esto no puede tumbar la
-    // respuesta: si algo falla, se devuelve el análisis sin marcar.
+    // La aritmética se re-suma letra por letra; las citas se cotejan contra el
+    // índice real del Zóhar, el catálogo del Talmud y Sefaria. Nada de esto
+    // puede tumbar la respuesta: si falla, se devuelve el análisis sin marcar.
     const t0 = Date.now();
     const arith = checkArithmetic(raw);
+    const cites = checkCitations(raw);
     const verifyMs = Date.now() - t0;
 
     const labels = MARK_TEXT[locale] ?? MARK_TEXT.es;
@@ -178,6 +187,13 @@ Sé preciso, profundo y fiel a las fuentes. No inventes conexiones que no estén
       if (f.verdict !== "false") continue;
       marks.push({ end: f.end, note: f.truth ? `${labels.sum}: ${f.truth}` : labels.sum });
     }
+    for (const f of cites.findings) {
+      if (f.verdict !== "false") continue;
+      marks.push({
+        end: f.end,
+        note: locale === "es" ? `${labels.ref}: ${f.detail}` : labels.ref,
+      });
+    }
     const analysis = marks.length > 0 ? annotate(raw, marks) : raw;
 
     const badSums = arith.findings.filter((f) => f.verdict === "false").length;
@@ -185,10 +201,15 @@ Sé preciso, profundo y fiel a las fuentes. No inventes conexiones que no estén
     console.log(
       `[zohar-methods] ${word} (${locale}): ` +
         `aritmética verificadas=${arith.findings.length} correctas=${okSums} falladas=${badSums} ` +
-        `sin-cifras=${arith.inconclusive} | ${verifyMs}ms`
+        `sin-cifras=${arith.inconclusive} | ` +
+        `citas detectadas=${cites.findings.length} existen=${cites.existing} ` +
+        `falsas=${cites.falsified} no-concluyentes=${cites.inconclusive} | ${verifyMs}ms`
     );
     for (const f of arith.findings) {
       if (f.verdict === "false") console.log(`[zohar-methods] suma falsa: «${f.raw}» → ${f.truth}`);
+    }
+    for (const f of cites.findings) {
+      if (f.verdict === "false") console.log(`[zohar-methods] cita falsa: «${f.raw}» → ${f.detail}`);
     }
 
     return NextResponse.json({ analysis, word });
