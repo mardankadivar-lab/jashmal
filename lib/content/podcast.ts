@@ -694,6 +694,22 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     spotifyEpisodeUrl: ep("5tlXI1JdXOj9qfXANxBcwq"),
   },
 
+  {
+    // Grabado el 11-nov-2026 (voz de Martin, eleven_v4, una toma por pieza).
+    // Aún NO subido a Spotify: por eso no lleva `spotifyEpisodeUrl`. En cuanto
+    // Mardan lo suba, se añade esa línea y nada más. El estudio ya se lee.
+    slug: "es-shamati-36",
+    locale: "es",
+    serie: "shamati",
+    season: 1,
+    episode: 36,
+    title: "Lo que alimentas a las dos de la mañana — Shamatí, Baal HaSulam",
+    description:
+      "Son las dos de la mañana y estás ganando una discusión que ya terminó. Baal HaSulam dice que hay partes de ti que comen, y que no se combaten: se dejan de alimentar.",
+    durationSec: 1053,
+    spotifyShowUrl: SPOTIFY_SHOW_ES,
+  },
+
   // ── Tanya ───────────────────────────────────────────────────────────────
   {
     slug: "es-tanya-01",

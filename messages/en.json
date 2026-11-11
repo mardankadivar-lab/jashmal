@@ -44,6 +44,8 @@
     "enNotice": "Episodes are currently available in Spanish and Farsi.",
     "episodeLabel": "Episode {episode}",
     "soloSpotify": "This episode is not self-hosted yet: listen on Spotify.",
+    "audioEnCamino": "The audio for this episode is not published yet. The study can already be read here.",
+    "verElShow": "See the show on Spotify",
     "estudioLabel": "The study",
     "estudioSoloEs": "The written study is available in Spanish only.",
     "fuentesLabel": "Sources",

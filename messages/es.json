@@ -44,6 +44,8 @@
     "enNotice": "Episodes are currently available in Spanish and Farsi.",
     "episodeLabel": "Episodio {episode}",
     "soloSpotify": "Este episodio todavía no está auto-hospedado: se oye en Spotify.",
+    "audioEnCamino": "El audio de este episodio aún no se ha publicado. El estudio ya se puede leer aquí.",
+    "verElShow": "Ver el programa en Spotify",
     "estudioLabel": "El estudio",
     "estudioSoloEs": "El estudio escrito está en español.",
     "fuentesLabel": "Fuentes",

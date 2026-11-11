@@ -97,7 +97,11 @@ export default function EpisodioView({
             />
           ) : (
             <p className="mb-3 text-center text-xs leading-relaxed text-muted">
-              {t("soloSpotify")}
+              {/* Sin mp3 propio hay dos casos distintos y no se pueden decir
+                  igual: o el episodio ya está en Spotify, o todavía no se ha
+                  subido. Invitar a "escucharlo en Spotify" cuando aún no está
+                  manda al oyente a un sitio donde no lo va a encontrar. */}
+              {episodio.spotifyEpisodeUrl ? t("soloSpotify") : t("audioEnCamino")}
             </p>
           )}
           <div className={episodio.audioSrc ? "mt-4 text-center" : "text-center"}>
@@ -110,7 +114,7 @@ export default function EpisodioView({
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0Zm5.5 17.31a.75.75 0 0 1-1.03.25c-2.82-1.72-6.37-2.11-10.55-1.16a.75.75 0 1 1-.33-1.46c4.57-1.05 8.5-.6 11.66 1.34.35.22.47.68.25 1.03Zm1.47-3.27a.94.94 0 0 1-1.29.31c-3.23-1.98-8.15-2.56-11.97-1.4a.94.94 0 1 1-.54-1.79c4.36-1.32 9.78-.68 13.49 1.6.44.27.58.85.31 1.28Zm.13-3.4C15.24 8.34 8.87 8.13 5.17 9.25a1.12 1.12 0 1 1-.65-2.15c4.25-1.29 11.3-1.04 15.76 1.6a1.12 1.12 0 0 1-1.18 1.94Z" />
               </svg>
-              {t("spotify")}
+              {episodio.spotifyEpisodeUrl ? t("spotify") : t("verElShow")}
             </a>
           </div>
         </section>

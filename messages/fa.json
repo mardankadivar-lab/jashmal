@@ -44,6 +44,8 @@
     "enNotice": "Episodes are currently available in Spanish and Farsi.",
     "episodeLabel": "قسمت {episode}",
     "soloSpotify": "صدای این قسمت هنوز روی سایت نیست: در اسپاتیفای بشنوید.",
+    "audioEnCamino": "صدای این قسمت هنوز منتشر نشده است. متن درس را همین‌جا می‌توانید بخوانید.",
+    "verElShow": "دیدن برنامه در اسپاتیفای",
     "estudioLabel": "متنِ درس",
     "estudioSoloEs": "متنِ نوشتاریِ درس فقط به اسپانیولی است.",
     "fuentesLabel": "منابع",
