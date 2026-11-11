@@ -13,23 +13,36 @@ const GEMATRIA_ORDINAL: Record<string, number> = {
   ק: 19, ר: 20, ש: 21, ת: 22,
 };
 
-// Valor reducido de una palabra (suma de los digitos hasta obtener 1 digito)
+// Raíz digital: suma los dígitos de un número hasta dejar uno solo (840 → 12 → 3).
 function reduceDigits(n: number): number {
   while (n > 9) { n = String(n).split("").reduce((s, d) => s + Number(d), 0); }
   return n;
 }
 
+/**
+ * Los cuatro valores de una palabra, según los cuatro mundos (marco de Ginsburgh).
+ * Son CUATRO cálculos distintos; no hay que confundir los dos últimos:
+ *
+ *  · absolute (mispar hejrají · Atzilut) — suma de los valores plenos.
+ *  · ordinal  (mispar siduri   · Beriá)  — suma de las posiciones en el alefbet.
+ *  · reduced  (mispar katán    · Yetzirá)— se reduce CADA LETRA a un dígito
+ *      (ת400→4, ל30→3) y se suman esos dígitos. Ej. תולדת = 4+6+3+4+4 = 21.
+ *  · integral (mispar katán mispari · Asiá) — se reduce el TOTAL a un dígito.
+ *      Ej. תולדת = 840 → 8+4+0 = 12 → 1+2 = 3.
+ */
 export function gematriaFull(word: string): GematriaValues {
   const consonants = stripNiqud(word);
-  let abs = 0; let ord = 0;
+  let abs = 0; let ord = 0; let small = 0;
   for (const ch of consonants) {
-    abs += GEMATRIA[ch] ?? 0;
+    const v = GEMATRIA[ch] ?? 0;
+    abs += v;
     ord += GEMATRIA_ORDINAL[ch] ?? 0;
+    if (v) small += reduceDigits(v);
   }
   return {
     absolute: abs,
     ordinal: ord,
-    reduced: reduceDigits(abs),
+    reduced: small,
     integral: reduceDigits(abs),
   };
 }
@@ -144,6 +157,9 @@ export interface ClassicLexicon {
   consonants: string;
   transliteration: string; // pronunciación en letras latinas, p.ej. "bereshit"
   gematria: number;
+  /** Los cuatro valores (cuatro mundos). Se calculan AQUÍ y solo aquí: la
+   *  interfaz los muestra tal cual, nunca los vuelve a calcular por su cuenta. */
+  values: GematriaValues;
   breakdown: { letter: string; value: number }[];
   entries: LexiconEntry[];
 }
@@ -155,6 +171,7 @@ export async function getClassicLexicon(word: string): Promise<ClassicLexicon> {
     consonants,
     transliteration: "",
     gematria: gematria(word),
+    values: gematriaFull(word),
     breakdown: gematriaBreakdown(word),
     entries: [],
   };

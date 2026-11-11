@@ -178,12 +178,15 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
               {/* Valor absoluto principal */}
               <p className="mt-1 text-2xl text-gold-soft">{data.classic.gematria}</p>
               {/* Los 4 sistemas */}
+              {/* Los cuatro valores vienen YA CALCULADOS del servidor
+                  (lib/sources/lexicon.ts · gematriaFull). Aquí no se calcula
+                  nada: una sola fuente de verdad para los cuatro mundos. */}
               <div className="mt-2 grid grid-cols-2 gap-1">
                 {[
-                  { label: "Absoluto · Atzilut", val: data.classic.gematria },
-                  { label: "Ordinal · Beriá", val: (() => { let s=0; for(const c of data.classic.consonants) { const ord: Record<string,number>={א:1,ב:2,ג:3,ד:4,ה:5,ו:6,ז:7,ח:8,ט:9,י:10,כ:11,ך:23,ל:12,מ:13,ם:24,נ:14,ן:25,ס:15,ע:16,פ:17,ף:26,צ:18,ץ:27,ק:19,ר:20,ש:21,ת:22}; s+=ord[c]??0; } return s; })() },
-                  { label: "Reducido · Yetzirá", val: (() => { let n=data.classic.gematria; while(n>9){n=String(n).split("").reduce((s,d)=>s+Number(d),0);} return n; })() },
-                  { label: "Integral · Asiá", val: (() => { let n=data.classic.gematria; while(n>9){n=String(n).split("").reduce((s,d)=>s+Number(d),0);} return n; })() },
+                  { label: "Absoluto · Atzilut", val: data.classic.values.absolute },
+                  { label: "Ordinal · Beriá", val: data.classic.values.ordinal },
+                  { label: "Reducido · Yetzirá", val: data.classic.values.reduced },
+                  { label: "Integral · Asiá", val: data.classic.values.integral },
                 ].map((sys, i) => (
                   <div key={i} className="rounded border border-gold/10 bg-gold/[0.03] px-2 py-1">
                     <p className="text-[9px] uppercase tracking-wide text-gold/40 font-cinzel">{sys.label}</p>
