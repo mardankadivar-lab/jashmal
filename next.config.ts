@@ -1,33 +1,25 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { atajosDeMisterioRewrites } from "./lib/content/misterio-atajos";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
   async rewrites() {
-    // Atajos TikTok: la URL en el navegador QUEDA como /26 o /358
-    // (rewrite interno, no redirect). El middleware los ignora para que
-    // next-intl no añada /es antes de que lleguen aquí.
-    return [
-      { source: "/358", destination: "/es/misterio/358" },
-      { source: "/26",  destination: "/es/misterio/26"  },
-      { source: "/linaje", destination: "/es/misterio/linaje" },
-      { source: "/tamar", destination: "/es/misterio/tamar" },
-      { source: "/betsabe", destination: "/es/misterio/betsabe" },
-      { source: "/habakuk", destination: "/es/misterio/habakuk" },
-      { source: "/bilaam", destination: "/es/misterio/bilaam" },
-      { source: "/137", destination: "/es/misterio/137" },
-      { source: "/entrelazamiento", destination: "/es/misterio/entrelazamiento" },
-      { source: "/sanador", destination: "/es/misterio/sanador" },
-      { source: "/refael", destination: "/es/misterio/refael" },
-      { source: "/serpiente-de-cobre", destination: "/es/misterio/serpiente-de-cobre" },
-      { source: "/refua", destination: "/es/misterio/refua" },
-      { source: "/21-pactos", destination: "/es/misterio/21-pactos" },
-      { source: "/enoch", destination: "/es/misterio/enoch" },
-      { source: "/lot", destination: "/es/misterio/lot" },
-      { source: "/yehuda", destination: "/es/misterio/yehuda" },
-      { source: "/ropas-de-luz", destination: "/es/misterio/ropas-de-luz" },
-    ];
+    // ATAJOS CORTOS DE LOS MISTERIOS — jashmal.org/{slug}
+    //
+    // Se generan SOLOS a partir del catálogo (lib/content/misterios.ts): cada
+    // misterio nuevo recibe su atajo por existir, sin tocar este archivo.
+    // Antes esta lista estaba escrita a mano y los misterios nuevos nacían
+    // sin atajo (daban 404 en la raíz).
+    //
+    // Es un rewrite INTERNO, no un redirect: la URL en el navegador se queda
+    // corta (/137). El middleware deja pasar estas rutas para que next-intl
+    // no les ponga /es delante antes de llegar aquí.
+    //
+    // La validación de colisiones (que ningún slug tape una ruta real) vive en
+    // lib/content/misterio-atajos.ts y revienta el build si algo choca.
+    return atajosDeMisterioRewrites();
   },
   async redirects() {
     // Rutas viejas de la "Mente Cósmica": "/grafo" y "/cerebro" fueron nombres

@@ -53,6 +53,57 @@ const huerfanas = paginas.filter((s) => !setCatalogo.has(s));
 const linksMuertos = catSlugs.filter((s) => !setPaginas.has(s));
 const seriesNoMostradas = [...catSeries].filter((s) => !seriesMostradas.has(s));
 
+// 4. COLISIONES DE ATAJOS.
+//    Cada misterio tiene un atajo corto en la RAÍZ del sitio (jashmal.org/137),
+//    generado del catálogo por lib/content/misterio-atajos.ts. Un slug que se
+//    llame igual que una ruta real la TAPARÍA. Aquí la comprobación es VIVA:
+//    leemos las carpetas que existen de verdad, así que también avisa cuando
+//    alguien crea una ruta nueva que choca con un atajo que ya estaba.
+const LOCALE_DIR = join(ROOT, "app", "[locale]");
+const esCarpeta = (base) => (name) => {
+  try {
+    return statSync(join(base, name)).isDirectory();
+  } catch {
+    return false;
+  }
+};
+
+const rutasReales = new Set([
+  // Rutas de primer nivel dentro de app/[locale]
+  ...readdirSync(LOCALE_DIR).filter(esCarpeta(LOCALE_DIR)),
+  // Rutas y archivos de primer nivel fuera de [locale] (api, sitemap, robots…)
+  ...readdirSync(join(ROOT, "app"))
+    .filter((n) => n !== "[locale]")
+    .map((n) => n.replace(/\.(tsx|ts|json|png|ico)$/, "")),
+  // Todo lo que se sirve desde public/ ocupa también la raíz
+  ...readdirSync(join(ROOT, "public")).map((n) => n.replace(/\.[a-z0-9]+$/i, "")),
+  // Prefijos de idioma e infraestructura de Next / Vercel
+  "es",
+  "fa",
+  "en",
+  "api",
+  "_next",
+  "_vercel",
+  "static",
+  ".well-known",
+  "well-known",
+]);
+
+// Slugs localizados y atajos/redirecciones ya declarados en la config.
+const configTxt = readFileSync(join(ROOT, "next.config.ts"), "utf8");
+for (const m of configTxt.matchAll(/source:\s*"\/([a-z0-9-]+)"/gi)) {
+  rutasReales.add(m[1]);
+}
+const routingTxt = readFileSync(join(ROOT, "i18n", "routing.ts"), "utf8");
+for (const m of routingTxt.matchAll(/"\/([a-z0-9-]+)":/g)) {
+  rutasReales.add(m[1]);
+}
+for (const m of routingTxt.matchAll(/[a-z]{2}:\s*"\/([a-z0-9-]+)"/g)) {
+  rutasReales.add(m[1]);
+}
+
+const colisiones = catSlugs.filter((s) => rutasReales.has(s));
+
 let fallas = 0;
 
 console.log(`\n🔎 Misterios — páginas: ${paginas.length} · catálogo: ${catSlugs.length}\n`);
@@ -71,6 +122,15 @@ if (linksMuertos.length) {
   console.log("");
 }
 
+if (colisiones.length) {
+  fallas += colisiones.length;
+  console.log("❌ COLISIONES DE ATAJO (el atajo /{slug} taparía una ruta real del sitio):");
+  colisiones.forEach((s) =>
+    console.log(`     /${s}  →  choca con una ruta que ya existe. Cambia el slug en lib/content/misterios.ts`)
+  );
+  console.log("     (la página seguiría viva en /misterio/{slug}; lo que se rompería es la ruta real)\n");
+}
+
 if (seriesNoMostradas.length) {
   fallas += seriesNoMostradas.length;
   console.log("❌ SERIES NO MOSTRADAS (en el catálogo, pero el índice no pinta esa categoría):");
@@ -80,7 +140,8 @@ if (seriesNoMostradas.length) {
 }
 
 if (fallas === 0) {
-  console.log("✅ Todo enlazado: cada misterio aparece en el menú y cada link tiene su página.\n");
+  console.log("✅ Todo enlazado: cada misterio aparece en el menú y cada link tiene su página.");
+  console.log(`✅ Atajos cortos: ${catSlugs.length} generados del catálogo · 0 colisiones con rutas reales.\n`);
   process.exit(0);
 }
 
