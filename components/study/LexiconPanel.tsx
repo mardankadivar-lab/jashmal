@@ -5,7 +5,33 @@ import { useLocale, useTranslations } from "next-intl";
 import Inline from "./InteractiveText";
 import { requestLexicon, type LexiconResponse } from "@/lib/sources/lexiconClient";
 import { stripNiqud } from "@/lib/sources/lexicon";
+import { splitMarks } from "@/lib/sources/proseMarks";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
+
+// Texto del análisis zohárico con las marcas del verificador pintadas aparte.
+// Una suma o un folio que no pasaron la comprobación NO pueden lucir con el
+// mismo peso que lo verificado: van en gris, en cursiva y entre corchetes,
+// nunca en dorado.
+function MarkedText({ text }: { text: string }) {
+  const parts = splitMarks(text);
+  if (parts.length === 1 && !parts[0].mark) return <>{parts[0].text}</>;
+  return (
+    <>
+      {parts.map((p, i) =>
+        p.mark ? (
+          <span
+            key={i}
+            className="mx-0.5 rounded border border-muted/30 bg-muted/10 px-1 py-px align-baseline text-[9px] text-muted/90"
+          >
+            {p.text}
+          </span>
+        ) : (
+          <span key={i}>{p.text}</span>
+        )
+      )}
+    </>
+  );
+}
 
 // Conexiones numéricas: lo que llega de la API ya viene verificado letra por
 // letra en el servidor. Aquí no se juzga nada, solo se muestra.
@@ -396,12 +422,19 @@ export default function LexiconPanel({ anchor, onClose }: LexiconPanelProps) {
                       return (
                         <div key={i} className="rounded border border-gold/10 bg-gold/[0.03] px-2 py-1.5">
                           <span className="hebrew text-sm text-gold">{bold[1]}</span>
-                          {bold[2] && <span className="text-muted/80"> {bold[2]}</span>}
+                          {bold[2] && (
+                            <span className="text-muted/80">
+                              {" "}
+                              <MarkedText text={bold[2]} />
+                            </span>
+                          )}
                         </div>
                       );
                     }
                     return line.trim() ? (
-                      <p key={i} className="text-muted/70 leading-relaxed">{line.replace(/\*\*/g, "")}</p>
+                      <p key={i} className="text-muted/70 leading-relaxed">
+                        <MarkedText text={line.replace(/\*\*/g, "")} />
+                      </p>
                     ) : null;
                   })}
                 </div>

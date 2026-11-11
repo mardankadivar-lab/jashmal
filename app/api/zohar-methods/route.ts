@@ -1,13 +1,26 @@
 import { NextResponse } from "next/server";
 import { anthropic, LIGHT_MODEL } from "@/lib/engine/anthropic";
 import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
+import { checkArithmetic } from "@/lib/sources/gematriaClaims";
+import { annotate, type Mark } from "@/lib/sources/proseMarks";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
 
 // Sonnet: métodos del Zóhar + gematría con fuentes exactas. Mejor rigor que
-// Haiku para no fabricar folios/cálculos, sin el costo de Opus.
+// Haiku para no fabricar folios/cálculos, sin el costo de Opus. Elegir un
+// modelo mejor NO es verificación: lo que sale de aquí se comprueba abajo
+// (ver checkArithmetic).
 const MODEL = LIGHT_MODEL;
+
+// Textos de las marcas que se insertan en la prosa cuando algo no pasa la
+// verificación. El detalle concreto ("Pinjás va de 213a a 254a") se escribe en
+// español; en fa/en se deja la etiqueta sola, para no mezclar idiomas.
+const MARK_TEXT: Record<string, { sum: string }> = {
+  es: { sum: "la suma no cuadra" },
+  fa: { sum: "جمع درست نیست" },
+  en: { sum: "the sum does not add up" },
+};
 
 const LANG: Record<string, string> = {
   es: "español",
@@ -122,6 +135,15 @@ Aplica los métodos clásicos que el Zóhar usa para desvelar capas ocultas de s
    — ¿Hay algún versículo bíblico donde este nombre aparezca en un contexto que ilumine esa tensión?
    Solo incluye si encuentras una dialéctica real documentada en el Zóhar o la tradición cabalística.
 
+**REGLA DURA — toda cifra lleva su suma escrita.**
+Si afirmas que una palabra o una parte vale un número, escribe la suma letra por
+letra ahí mismo, en el propio texto. Así:
+  אֱלֹהִים = 1+30+5+10+40 = 86
+  מִי (50) + אֵלֶּה (36) = 86
+No escribas ni una cifra de guematría sin su desglose. Si no puedes desglosarla,
+no la afirmes: cada cifra de esta respuesta se vuelve a sumar letra por letra
+antes de mostrarse al lector, y la que no cuadre se marca como errónea.
+
 Responde en ${lang}. Usa este formato para cada método que tenga hallazgos reales:
 
 ## [nombre del método en hebreo] — [nombre en ${lang}]
@@ -137,11 +159,37 @@ Sé preciso, profundo y fiel a las fuentes. No inventes conexiones que no estén
       messages: [{ role: "user", content: prompt }],
     });
 
-    const analysis = msg.content
+    const raw = msg.content
       .filter((b) => b.type === "text")
       .map((b) => (b as { text: string }).text)
       .join("\n")
       .trim();
+
+    // ── El juicio ─────────────────────────────────────────────────────────
+    // La aritmética se re-suma letra por letra. Esto no puede tumbar la
+    // respuesta: si algo falla, se devuelve el análisis sin marcar.
+    const t0 = Date.now();
+    const arith = checkArithmetic(raw);
+    const verifyMs = Date.now() - t0;
+
+    const labels = MARK_TEXT[locale] ?? MARK_TEXT.es;
+    const marks: Mark[] = [];
+    for (const f of arith.findings) {
+      if (f.verdict !== "false") continue;
+      marks.push({ end: f.end, note: f.truth ? `${labels.sum}: ${f.truth}` : labels.sum });
+    }
+    const analysis = marks.length > 0 ? annotate(raw, marks) : raw;
+
+    const badSums = arith.findings.filter((f) => f.verdict === "false").length;
+    const okSums = arith.findings.filter((f) => f.verdict === "ok").length;
+    console.log(
+      `[zohar-methods] ${word} (${locale}): ` +
+        `aritmética verificadas=${arith.findings.length} correctas=${okSums} falladas=${badSums} ` +
+        `sin-cifras=${arith.inconclusive} | ${verifyMs}ms`
+    );
+    for (const f of arith.findings) {
+      if (f.verdict === "false") console.log(`[zohar-methods] suma falsa: «${f.raw}» → ${f.truth}`);
+    }
 
     return NextResponse.json({ analysis, word });
   } catch (err) {
