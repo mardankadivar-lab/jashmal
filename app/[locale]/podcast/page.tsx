@@ -1,8 +1,13 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import SiteHeader from "@/components/SiteHeader";
-import { seriesForLocale } from "@/lib/content/podcast";
+import {
+  etiquetaEpisodio,
+  seriesForLocale,
+  tieneEstudio,
+} from "@/lib/content/podcast";
 import PodcastPlayer from "@/components/podcast/PodcastPlayer";
 
 /**
@@ -70,7 +75,7 @@ export default function PodcastPage() {
             {/* Rótulo del episodio. Sin temporada: la obra ya encabeza el
                 grupo, y la temporada solo existe para Spotify. */}
             <p className="font-cinzel text-[11px] uppercase tracking-widest text-gold/70">
-              {t("episodeLabel", { episode: ep.episode })}
+              {t("episodeLabel", { episode: etiquetaEpisodio(ep) })}
             </p>
 
             {/* Título (+ subtítulo latino en los episodios farsi) */}
@@ -91,13 +96,35 @@ export default function PodcastPage() {
             {/* Descripción */}
             <p className="mt-3 text-sm leading-relaxed text-muted">{ep.description}</p>
 
-            {/* Reproductor nativo */}
-            <PodcastPlayer
-              src={ep.audioSrc}
-              durationSec={ep.durationSec}
-              playLabel={t("play")}
-              pauseLabel={t("pause")}
-            />
+            {/* Reproductor nativo — solo si el mp3 está auto-hospedado.
+                Los episodios nuevos todavía no lo están (ver la nota de
+                lib/content/podcast.ts), así que ahí Spotify es la única
+                forma de OÍRLO… pero el estudio sí se lee aquí. */}
+            {ep.audioSrc && (
+              <PodcastPlayer
+                src={ep.audioSrc}
+                durationSec={ep.durationSec}
+                playLabel={t("play")}
+                pauseLabel={t("pause")}
+              />
+            )}
+
+            {/* Leer el estudio — lo que Mardan daba por hecho desde el inicio.
+                Si el Sofer aún no lo escribió, se dice, no se esconde. */}
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              {tieneEstudio(ep.slug) ? (
+                <Link
+                  href={`/podcast/${ep.slug}`}
+                  className="inline-flex items-center gap-2 rounded-lg border border-gold/40 bg-gold/10 px-3.5 py-2 font-cinzel text-xs uppercase tracking-widest text-gold transition-colors hover:border-gold/70 hover:bg-gold/20"
+                >
+                  {t("leerEstudio")} →
+                </Link>
+              ) : (
+                <span className="font-cinzel text-[11px] uppercase tracking-widest text-muted/60">
+                  {t("sinEstudio")}
+                </span>
+              )}
+            </div>
 
             {/* Spotify — opción secundaria */}
             <div className="mt-4">

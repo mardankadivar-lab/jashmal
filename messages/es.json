@@ -42,7 +42,14 @@
     "pause": "Pausar",
     "spotify": "Escuchar en Spotify",
     "enNotice": "Episodes are currently available in Spanish and Farsi.",
-    "episodeLabel": "Episodio {episode}"
+    "episodeLabel": "Episodio {episode}",
+    "soloSpotify": "Este episodio todavía no está auto-hospedado: se oye en Spotify.",
+    "estudioLabel": "El estudio",
+    "estudioSoloEs": "El estudio escrito está en español.",
+    "fuentesLabel": "Fuentes",
+    "volverAlPodcast": "Todos los episodios",
+    "leerEstudio": "Leer el estudio",
+    "sinEstudio": "Estudio en preparación"
   },
   "hero": {
     "kicker": "Cabalá y filosofía judía",

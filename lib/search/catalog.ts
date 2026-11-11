@@ -26,7 +26,7 @@ import { MISTERIOS } from "@/lib/content/misterios";
 import { LETTERS } from "@/lib/letters";
 import { GEMATRIAS } from "@/lib/nodes/gematrias";
 import { ESTACIONES } from "@/lib/content/estaciones";
-import { PODCAST_EPISODES } from "@/lib/content/podcast";
+import { PODCAST_EPISODES, tieneEstudio } from "@/lib/content/podcast";
 import { LESSONS } from "@/lib/academia/modulo1";
 import { LESSONS2 } from "@/lib/academia/modulo2";
 import { LESSONS3 } from "@/lib/academia/modulo3";
@@ -195,11 +195,15 @@ export function buildSearchIndex(): SearchDoc[] {
   }
 
   // ── Podcast — un episodio existe en el idioma en que se grabó ───────────
+  //  El resultado lleva a su PÁGINA DE ESTUDIO cuando el estudio existe; si
+  //  no, al índice del podcast (donde está su botón de Spotify). Antes todos
+  //  apuntaban a /podcast, así que encontrar un episodio por la lupa no te
+  //  dejaba en el episodio: te dejaba en la lista entera.
   for (const ep of PODCAST_EPISODES) {
     docs.push({
       id: `podcast:${ep.slug}`,
       kind: "podcast",
-      href: "/podcast",
+      href: tieneEstudio(ep.slug) ? `/podcast/${ep.slug}` : "/podcast",
       t: { es: ep.title, fa: ep.locale === "fa" ? ep.title : undefined },
       d: { es: short(ep.description) },
       serie: ep.serie,

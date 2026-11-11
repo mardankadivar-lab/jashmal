@@ -42,7 +42,14 @@
     "pause": "Pause",
     "spotify": "Listen on Spotify",
     "enNotice": "Episodes are currently available in Spanish and Farsi.",
-    "episodeLabel": "Episode {episode}"
+    "episodeLabel": "Episode {episode}",
+    "soloSpotify": "This episode is not self-hosted yet: listen on Spotify.",
+    "estudioLabel": "The study",
+    "estudioSoloEs": "The written study is available in Spanish only.",
+    "fuentesLabel": "Sources",
+    "volverAlPodcast": "All episodes",
+    "leerEstudio": "Read the study",
+    "sinEstudio": "Study in preparation"
   },
   "hero": {
     "kicker": "Kabbalah and Jewish philosophy",
