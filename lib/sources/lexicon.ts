@@ -75,6 +75,24 @@ export function gematria(word: string): number {
   return sum;
 }
 
+// At-bash: la primera letra se cambia por la última, la segunda por la
+// penúltima (א↔ת, ב↔ש, ג↔ר...). Las finales se tratan como su forma normal.
+const ALEFBET = "אבגדהוזחטיכלמנסעפצקרשת";
+const ATBASH: Record<string, string> = Object.fromEntries(
+  [...ALEFBET].map((ch, i) => [ch, ALEFBET[ALEFBET.length - 1 - i]])
+);
+const FINAL_TO_REGULAR: Record<string, string> = { ך: "כ", ם: "מ", ן: "נ", ף: "פ", ץ: "צ" };
+
+/** Transforma una palabra por at-bash. Se calcula aquí: nunca se le pide a un modelo. */
+export function atbash(word: string): string {
+  let out = "";
+  for (const raw of stripNiqud(word)) {
+    const ch = FINAL_TO_REGULAR[raw] ?? raw;
+    out += ATBASH[ch] ?? "";
+  }
+  return out;
+}
+
 /** Lista [letra, valor] de cada consonante, para mostrar el desglose. */
 export function gematriaBreakdown(word: string): { letter: string; value: number }[] {
   const letters = stripNiqud(word);
