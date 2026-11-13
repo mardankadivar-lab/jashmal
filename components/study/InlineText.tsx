@@ -4,7 +4,9 @@
 // Extiende InteractiveText añadiendo detección de refs bíblicas/talmúdicas.
 
 import React from "react";
+import { useLocale } from "next-intl";
 import { parseHyperlinks } from "@/lib/relations/hyperlinks";
+import { localizedRef } from "@/lib/sources/bookNames";
 import { segmentText } from "@/lib/relations/refDetector";
 import { renderRich } from "@/components/study/inlineRender";
 
@@ -28,6 +30,7 @@ export default function InlineText({
   onRef,
   keyPrefix = "it",
 }: InlineTextProps) {
+  const locale = useLocale();
   // Primero parseamos hyperlinks {{letter:..}} y {{study:..}}
   const tokens = parseHyperlinks(text);
 
@@ -75,7 +78,7 @@ export default function InlineText({
                     type="button"
                     className="ref-link"
                     onClick={() => onRef?.(seg.ref)}
-                    title={`Abrir ${seg.ref}`}
+                    title={`Abrir ${localizedRef(seg.ref, locale)}`}
                   >
                     {seg.value}
                   </button>

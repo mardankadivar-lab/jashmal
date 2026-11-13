@@ -1,5 +1,6 @@
 import React from "react";
 import { MARK_CLOSE, MARK_OPEN } from "@/lib/sources/proseMarks";
+import { splitEmphasis } from "@/lib/study/emphasis";
 
 // Render compartido de texto del Sofer con hebreo en línea + formato Markdown
 // ligero. Usado por InlineText, InteractiveText y RichText para evitar tres
@@ -40,8 +41,9 @@ export function withHebrew(text: string, key: string): React.ReactNode[] {
 
 /**
  * Resalta **negrita** y *cursiva* dentro de un fragmento de texto plano,
- * aislando además el hebreo en línea. Soporta ambos formatos: el texto que solo
- * usa **negrita** se renderiza igual que antes; *cursiva* añade <em>.
+ * aislando además el hebreo en línea, y pinta aparte las marcas del
+ * verificador. Tolera los asteriscos desparejados que escribe el motor y nunca
+ * deja uno a la vista (ver lib/study/emphasis.ts).
  */
 // Marcas del verificador: ⟪referencia sin confirmar: …⟫. Las inserta el
 // servidor cuando una cita o una suma NO pasan la comprobación en código.
@@ -72,16 +74,16 @@ export function renderRich(text: string, keyPrefix: string): React.ReactNode[] {
       return out;
     }
   }
-  // Tokeniza por **negrita** y *cursiva* conservando los delimitadores.
-  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).filter(Boolean);
-  return parts.map((part, idx) => {
+  // El análisis de la negrita y la cursiva vive en lib/study/emphasis.ts, para
+  // poder probarlo solo. Aquí solo se dibuja lo que devuelve.
+  return splitEmphasis(text).map((part, idx) => {
     const k = `${keyPrefix}-${idx}`;
-    if (/^\*\*[^*]+\*\*$/.test(part)) {
-      return <strong key={k}>{withHebrew(part.slice(2, -2), k)}</strong>;
+    if (part.kind === "bold") {
+      return <strong key={k}>{withHebrew(part.text, k)}</strong>;
     }
-    if (/^\*[^*]+\*$/.test(part)) {
-      return <em key={k}>{withHebrew(part.slice(1, -1), k)}</em>;
+    if (part.kind === "italic") {
+      return <em key={k}>{withHebrew(part.text, k)}</em>;
     }
-    return <React.Fragment key={k}>{withHebrew(part, k)}</React.Fragment>;
+    return <React.Fragment key={k}>{withHebrew(part.text, k)}</React.Fragment>;
   });
 }

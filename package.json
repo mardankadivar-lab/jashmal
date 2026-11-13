@@ -16,6 +16,7 @@
     "zohar:check": "node scripts/check-zohar-verify.mjs",
     "midrash:check": "node scripts/check-midrash-verify.mjs",
     "marcas:check": "node scripts/check-study-marks.mjs",
+    "formato:check": "node scripts/check-formato.mjs",
     "fuentes:tablas": "node scripts/gen-tablas-fuentes.mjs"
   },
   "dependencies": {

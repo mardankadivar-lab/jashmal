@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { localizedRef } from "@/lib/sources/bookNames";
 import { getText, type SefariaTextResult } from "@/lib/sources/sefaria";
 import { segmentText } from "@/lib/relations/refDetector";
 
@@ -23,6 +24,7 @@ interface RefPanelProps {
 // bloquear el estudio principal. Se apila encima del análisis, encadenable.
 export default function RefPanel({ refs, onClose, onOpenRef, onNavigate }: RefPanelProps) {
   const t = useTranslations("refPanel");
+  const locale = useLocale();
   const [entries, setEntries] = useState<Record<string, RefPanelEntry>>({});
   // Tab activo cuando hay varias refs abiertas
   const [activeRef, setActiveRef] = useState<string>(refs[refs.length - 1] ?? "");
@@ -71,7 +73,7 @@ export default function RefPanel({ refs, onClose, onOpenRef, onNavigate }: RefPa
                   : "text-muted hover:text-parchment")
               }
             >
-              {ref}
+              {localizedRef(ref, locale)}
               <span
                 onClick={(e) => { e.stopPropagation(); onClose(ref); }}
                 className="ms-1.5 text-muted/60 hover:text-red-400"
@@ -134,7 +136,7 @@ export default function RefPanel({ refs, onClose, onOpenRef, onNavigate }: RefPa
                             type="button"
                             className="ref-link"
                             onClick={() => onOpenRef(seg.ref)}
-                            title={`Abrir ${seg.ref}`}
+                            title={`Abrir ${localizedRef(seg.ref, locale)}`}
                           >
                             {seg.value}
                           </button>
