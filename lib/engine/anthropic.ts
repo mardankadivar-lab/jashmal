@@ -693,6 +693,16 @@ enseña.
 **Lo que queda abierto.** Lo que el midrash deja al lector, o lo que no lograste
 resolver. Dicho sin disimulo.
 
+QUÉ MIDRASH ELEGIR: el que de verdad responde a la grieta. Esa es la única
+regla que manda, y no se tuerce por comodidad. Ahora bien, cuando DOS midrashim
+sirven igual de bien, prefiere el de la obra que el lector puede abrir y que el
+sitio comprueba: las cinco Rabot del Pentateuco, las cinco Megilot Rabot,
+Tanjumá, Pirkei de Rabí Eliezer, Pesikta de Rav Kahaná, Sifrí. Nunca elijas una
+obra rara para lucir erudición; y si la mejor fuente para esta grieta es una que
+no comprobamos —el Yalkut Shimoní, la Sifrá—, úsala igual: cítala con exactitud
+y, cuando la conozcas, nombra al lado la fuente clásica de donde viene (muchos
+pasajes del Yalkut son Talmud o Midrash Rabá recogidos).
+
 DÓNDE VA: si el midrash RESUELVE la grieta del versículo, va en מְפָרְשִׁים, como
 una voz más junto a Rashi y el Ramban — Jazal son el primer comentarista. Si usa
 la grieta de trampolín para predicar algo que no sale del texto, va en el DRASH

@@ -83,6 +83,13 @@ const ENLACES = [
   ["Midrash Tehilim 90:3 pregunta por el hombre.", "Midrash Tehilim 90:3", "Midrash Tehillim 90:3"],
   ["Mishlei 3:5 dice confía en Hashem.", "Mishlei 3:5", "Proverbs 3:5"],
   ["Midrash Mishlei 10:1: hijo sabio alegra al padre.", "Midrash Mishlei 10:1", "Midrash Mishlei 10:1"],
+
+  // El Yalkut Shimoní: el verificador no lo juzga (tres notaciones
+  // incompatibles), pero el motor lo cita de verdad — lo eligió él solo en el
+  // primer estudio con el método nuevo — y el lector merece poder abrirlo.
+  // Solo sobre la Torá, que es lo único que Sefaria tiene.
+  ["el Yalkut Shimoní (Bereshit 93:3): los burladores de la generación", "Yalkut Shimoní (Bereshit 93:3)", "Yalkut Shimoni on Torah 93:3"],
+  ["Y el Yalkut Shimoní, Bereshit 93 cuenta la escena", "Yalkut Shimoní, Bereshit 93", "Yalkut Shimoni on Torah 93"],
 ];
 
 // ── Banco 2: lo que NO se debe enlazar ────────────────────────────────────
@@ -96,6 +103,13 @@ const NO_ENLAZAR = [
   "Avraham tenía 99 años",
   "a las 3:16 de la tarde",
   "el midrash de la hoja 12 no existe",
+  // El Yalkut de Nevi'im y Ketuvim numera desde 1 otra vez y Sefaria no lo
+  // tiene: enlazarlo llevaría al remez de la Torá, que es OTRO texto.
+  "Yalkut Shimoní, Shmuel 93 lo cuenta de otro modo",
+  "Yalkut Shimoní, Bereshit 999 no existe",
+  // Un capítulo que el libro no tiene: enlace muerto, misma promesa rota.
+  "Génesis 93:3 no existe",
+  "Isaías 400:26 tampoco",
 ];
 
 /** Lo que el lector ve enlazado, con su destino. */

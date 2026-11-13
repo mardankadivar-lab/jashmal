@@ -163,6 +163,25 @@ const PART_MAP: Record<string, string> = (() => {
 //    "Eijá Rabá, Petijtá 24".
 const PETICHTA_WORDS = "petijtá|petijta|petichta|petihta|proemio";
 
+// 4. El Yalkut Shimoní, caso aparte. El verificador no lo juzga a propósito
+// (se cita por "remez" y hay tres notaciones incompatibles), pero el motor lo
+// cita de verdad y el lector merece poder abrirlo. Se enlaza SOLO cuando la
+// cita nombra un libro de la Torá, porque Sefaria únicamente tiene el Yalkut
+// sobre la Torá: el de Nevi'im y Ketuvim empieza a numerar otra vez desde 1, y
+// enlazar "Yalkut, Shmuel 93" llevaría al remez 93 de la Torá — otro texto.
+// Y se corta en 966, que es donde termina ("ends at Remez 966", comprobado).
+const YALKUT_OBRA = String.raw`\b(?:yalkut\s+shimon[íi]|yalkut\s+shimoni|yalkut)`;
+const YALKUT_LIBRO = String.raw`(?:bereshit|génesis|genesis|shemot|éxodo|exodo|vayikrá|vayikra|levítico|levitico|bamidbar|números|numeros|devarim|deuteronomio)`;
+const YALKUT_NUM = String.raw`\d{1,3}(?::\d{1,3})?`;
+// Dos formas, para que el enlace no se quede con un paréntesis sin cerrar:
+// "Yalkut Shimoní (Bereshit 93:3)" y "Yalkut Shimoní, Bereshit 93".
+const YALKUT_TORAH = new RegExp(
+  `${YALKUT_OBRA}(?:\\s*\\(\\s*${YALKUT_LIBRO}[\\s,]+(${YALKUT_NUM})\\s*\\)` +
+    `|[\\s,]+${YALKUT_LIBRO}[\\s,]+(${YALKUT_NUM}))`,
+  "gi"
+);
+const YALKUT_ULTIMO_REMEZ = 966;
+
 // Regexes para capturar referencias con capítulo:versículo o daf+amud.
 // Formato 1: "Libro X:Y" (bíblico — capítulo:versículo)
 // Formato 2: "Libro Xb" (talmúdico — daf + amud)
@@ -227,6 +246,21 @@ const sinAcentos = (x: string) =>
   x.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
 const ES_TALMUD = new Set(TALMUD_IDS);
+
+// Cuántos capítulos tiene cada libro del Tanaj, del mismo catálogo. Sin esto
+// se enlazaba "Génesis 93:3" —que aparece cuando el motor escribe "el Yalkut
+// Shimoní (Bereshit 93:3)" y el detector se queda con el pedazo de dentro— y
+// el lector pulsaba para llegar a un capítulo que no existe. Un enlace muerto
+// es la misma promesa rota que una cita inventada.
+const CAPITULOS: Record<string, number> = Object.fromEntries(
+  CATALOG.flatMap((g) =>
+    g.subs.flatMap((sub) =>
+      sub.books
+        .filter((b) => b.type === "chapters" && b.units > 0)
+        .map((b) => [b.id, b.units] as const)
+    )
+  )
+);
 
 const TALMUD_LOOKUP: Record<string, string> = (() => {
   const out: Record<string, string> = {};
@@ -326,6 +360,12 @@ function allMatches(text: string): RawMatch[] {
       const part = PART_MAP[m[2].toLowerCase()];
       return work && part ? { ref: `${work}, ${part} ${m[3]}` } : null;
     }),
+    ...scan(text, YALKUT_TORAH, (m) => {
+      const num = m[1] ?? m[2];
+      const remez = Number(String(num).split(":")[0]);
+      if (!remez || remez > YALKUT_ULTIMO_REMEZ) return null;
+      return { ref: `Yalkut Shimoni on Torah ${num}` };
+    }),
     ...scan(text, MIDRASH_REGEX, (m) => {
       const work = MIDRASH_MAP[m[1].toLowerCase()];
       return work ? { ref: `${work} ${m[2]}` } : null;
@@ -337,6 +377,10 @@ function allMatches(text: string): RawMatch[] {
       // Tanaj se cita por capítulo:versículo. "Génesis 14a" no es una
       // referencia: no se enlaza a ninguna parte.
       if (/[ab]$/i.test(m[2]) && !ES_TALMUD.has(book)) return null;
+      // Ni un capítulo que el libro no tiene.
+      const cap = Number(m[2].split(":")[0]);
+      const tiene = CAPITULOS[book];
+      if (tiene && cap > tiene) return null;
       return { ref: `${book} ${m[2]}` };
     }),
     ...scan(text, TALMUD_REGEX, (m) => {
