@@ -1061,6 +1061,27 @@ export const MISTERIOS: Misterio[] = [
     color: "#8b6a3a",
     orden: 16.99,
   },
+  {
+    // Estudio que vive ENTRE dos parashiot: la bendición es de Toldot (Gn 27) y
+    // la huida es de Vayetzé (Gn 28:10 en adelante). El corazón es un jidush
+    // original de Mardan Kadivar (el grano de trigo que debe enterrarse);
+    // la cadena de letras jet–nun–tav es de Likutei Moharán, Torá 1.
+    // tituloFa/ganchoFa van VACÍOS a propósito —igual que toldot-palabra—: el
+    // estudio está solo en español y el Sofer aún no lo tradujo, así que tri()
+    // muestra el español marcado como traducción pendiente. NO se generó farsi
+    // automático. Inglés: omitido por la misma razón.
+    slug: "grano-de-trigo",
+    numero: "58",
+    he: "חֵן",
+    titulo: "La bendición que tuvo que enterrarse",
+    tituloFa: "",
+    gancho:
+      "Yaakov recibió la bendición más grande de la Torá. Esa misma noche salió huyendo de su casa, y no volvió en veintidós años.",
+    ganchoFa: "",
+    serie: "parasha",
+    color: "#8b6a3a",
+    orden: 16.995,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".
