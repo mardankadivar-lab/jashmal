@@ -103,8 +103,13 @@ const DEGRADADOS = [
     /falta la línea «contrafactual»/,
   ],
   [
+    // El relleno va DENTRO del bloque: un bloque que se desmanda se alarga por
+    // dentro, no añadiendo párrafos detrás (eso ya es otra parte del estudio).
     "se pasa del techo de palabras",
-    ZARZA + "\n\n" + "Y además conviene recordar que esto es muy importante. ".repeat(60),
+    ZARZA.replace(
+      "**Dónde no encaja.**",
+      "**Dónde no encaja.** " + "Y conviene recordar aquí que esto es muy importante. ".repeat(50)
+    ),
     /se pasa del techo/,
   ],
 ];

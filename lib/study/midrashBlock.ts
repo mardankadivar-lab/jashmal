@@ -54,12 +54,22 @@ export function checkMidrashBlock(text: string): MidrashBlockReport {
     return { found: false, lineas: 0, palabras: 0, problemas: [] };
   }
 
-  // El bloque termina donde empieza el siguiente título de sección, o 2.500
-  // caracteres más allá: de sobra para 300 palabras y poco para tragarse medio
-  // estudio si el motor se olvidó de cerrar.
+  // Dónde termina el bloque. Medido en producción: el motor no siempre pone un
+  // título ni un separador detrás, así que cortar por el siguiente encabezado
+  // se tragaba el párrafo de después y la cuenta de palabras salía un 50% más
+  // alta de la real (394 contadas, 251 verdaderas). El bloque termina donde
+  // termina su ÚLTIMA línea rotulada, que sí sabemos cuál es.
   const resto = text.slice(inicio);
-  const corte = resto.slice(1).search(/\n#{1,4}\s|\n\s*---\s*\n/);
-  const bloque = corte === -1 ? resto.slice(0, 2500) : resto.slice(0, corte + 1);
+  const titulo = resto.slice(1).search(/\n#{1,4}\s|\n\s*---\s*\n/);
+  const porTitulo = titulo === -1 ? resto.slice(0, 2500) : resto.slice(0, titulo + 1);
+
+  const ultima = LINEAS[LINEAS.length - 1].etiqueta.exec(porTitulo);
+  let bloque = porTitulo;
+  if (ultima) {
+    // Hasta el final del párrafo donde vive la última etiqueta.
+    const finParrafo = porTitulo.indexOf("\n\n", ultima.index);
+    bloque = finParrafo === -1 ? porTitulo : porTitulo.slice(0, finParrafo);
+  }
 
   const problemas: string[] = [];
   let lineas = 0;
@@ -76,13 +86,13 @@ export function checkMidrashBlock(text: string): MidrashBlockReport {
     problemas.push("la grieta no cita la palabra hebrea del versículo");
   }
 
-  // El presupuesto del prompt son 180–260 palabras de prosa, techo 300. Esta
-  // cuenta incluye además los seis rótulos y las marcas de negrita, así que el
-  // patrón bien hecho mide ~290 midiendo 227 de prosa. La alarma se pone en
-  // 400 para cazar al que se desmanda sin molestar al que cumple: el que mide
-  // 420 no es un bloque largo, es un bloque que se comió el estudio.
+  // El presupuesto del prompt son 180–260 palabras, techo duro 300. La cuenta
+  // incluye los rótulos, que suman unas sesenta: el patrón del Sofer mide 290
+  // y el primer bloque real del motor, 251. La alarma se pone en 360 — el
+  // techo de 300 más los rótulos — para cazar al que se desmanda sin molestar
+  // al que cumple.
   const palabras = bloque.trim().split(/\s+/).filter(Boolean).length;
-  if (palabras > 400) problemas.push(`el bloque se pasa del techo: ${palabras} palabras`);
+  if (palabras > 360) problemas.push(`el bloque se pasa del techo: ${palabras} palabras`);
   if (palabras < 120) problemas.push(`el bloque se queda corto: ${palabras} palabras`);
 
   return { found: true, lineas, palabras, problemas };
