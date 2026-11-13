@@ -1,4 +1,5 @@
 import React from "react";
+import { MARK_CLOSE, MARK_OPEN } from "@/lib/sources/proseMarks";
 
 // Render compartido de texto del Sofer con hebreo en línea + formato Markdown
 // ligero. Usado por InlineText, InteractiveText y RichText para evitar tres
@@ -42,7 +43,35 @@ export function withHebrew(text: string, key: string): React.ReactNode[] {
  * aislando además el hebreo en línea. Soporta ambos formatos: el texto que solo
  * usa **negrita** se renderiza igual que antes; *cursiva* añade <em>.
  */
+// Marcas del verificador: ⟪referencia sin confirmar: …⟫. Las inserta el
+// servidor cuando una cita o una suma NO pasan la comprobación en código.
+const MARK_RE = new RegExp(`(${MARK_OPEN}[^${MARK_CLOSE}]*${MARK_CLOSE})`, "g");
+
 export function renderRich(text: string, keyPrefix: string): React.ReactNode[] {
+  // Primero las marcas del verificador. Una cita que no pasó la comprobación
+  // NO puede lucir con el mismo peso que lo verificado: va pequeña y en gris,
+  // nunca en dorado. (Mismo criterio que MarkedText en LexiconPanel.)
+  if (text.includes(MARK_OPEN)) {
+    const chunks = text.split(MARK_RE).filter(Boolean);
+    if (chunks.length > 1) {
+      const out: React.ReactNode[] = [];
+      chunks.forEach((chunk, ci) => {
+        if (chunk.startsWith(MARK_OPEN) && chunk.endsWith(MARK_CLOSE)) {
+          out.push(
+            <span
+              key={`${keyPrefix}-mk${ci}`}
+              className="mx-0.5 rounded border border-muted/30 bg-muted/10 px-1 py-px align-baseline text-[9px] text-muted/90"
+            >
+              {chunk.slice(MARK_OPEN.length, -MARK_CLOSE.length)}
+            </span>
+          );
+        } else {
+          out.push(...renderRich(chunk, `${keyPrefix}-m${ci}`));
+        }
+      });
+      return out;
+    }
+  }
   // Tokeniza por **negrita** y *cursiva* conservando los delimitadores.
   const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).filter(Boolean);
   return parts.map((part, idx) => {

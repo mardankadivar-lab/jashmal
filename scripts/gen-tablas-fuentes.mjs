@@ -168,3 +168,209 @@ console.log(
   `✓ ${books.length} libros / ${totalChapters} capítulos del Tanaj → ` +
     path.relative(process.cwd(), OUT_TANAKH)
 );
+
+// ── Midrash: cuántas secciones tiene cada capítulo de cada obra ────────────
+// Mismo motivo que arriba: a Sefaria no se le puede PREGUNTAR si una cita de
+// Midrash existe (/api/texts devuelve 200 con otro pasaje), así que se baja la
+// FORMA de cada obra una vez y se congela. /api/shape/<Obra> da, por obra,
+// cuántos capítulos tiene y cuántas secciones (simanim) tiene cada capítulo.
+//
+// Tres formas, y cada una se juzga distinto:
+//  · "flat"   — capítulo:sección, lista plana. Bereshit Rabá 12:6.
+//  · "nested" — capítulo:versículo:sección (Kohelet y Shir HaShirim Rabá);
+//               solo se juzgan los dos primeros números.
+//  · "parts"  — la obra se divide por parashá/masejta y el número es el simán
+//               dentro de ella. Tanjumá Bereshit 7, Mejilta Pisja 1.
+//
+// Un conteo 0 significa "Sefaria no tiene texto en ese tramo", NO "no existe":
+// el verificador lo trata como no concluyente y CALLA (ver citationCheck).
+const OUT_MIDRASH = path.join(process.cwd(), "lib/sources/midrashShape.generated.ts");
+
+// Qué obras entran. La lista sale del dictamen del Sofer (2026-11-13), que
+// está escrito completo en la cabecera de lib/sources/citationCheck.ts:
+// quedan fuera a propósito el Yalkut Shimoní (se cita por "remez", tres
+// notaciones incompatibles), la Sifrá (278 nodos con dos numeraciones
+// intercaladas) y Avot de Rabí Natán (dos versiones con numeración distinta),
+// porque juzgarlas produciría falsos positivos.
+const MIDRASH_WORKS = [
+  "Bereshit Rabbah",
+  "Shemot Rabbah",
+  "Vayikra Rabbah",
+  "Bamidbar Rabbah",
+  "Devarim Rabbah",
+  "Shir HaShirim Rabbah",
+  "Ruth Rabbah",
+  "Eichah Rabbah",
+  "Kohelet Rabbah",
+  "Esther Rabbah",
+  "Midrash Tanchuma",
+  "Midrash Tanchuma Buber",
+  "Mekhilta d'Rabbi Yishmael",
+  "Sifrei Bamidbar",
+  "Sifrei Devarim",
+  "Pirkei DeRabbi Eliezer",
+  "Pesikta DeRav Kahana",
+  "Pesikta Rabbati",
+  "Midrash Tehillim",
+  "Midrash Mishlei",
+  "Tanna Debei Eliyahu Rabbah",
+];
+
+// Obras con PETIJTÁ (proemios), que se citan por su propio número —
+// "Eikhá Rabá, Petijtá 24" es la cita más conocida de la obra. /api/shape de la
+// obra NO las ve (devuelve isComplex:null y solo los capítulos): hay que pedir
+// el shape del nodo. Sin esto, el verificador tacharía la Petijtá 24 por creer
+// que Eikhá Rabá solo llega al capítulo 5.
+const MIDRASH_PETICHTA = ["Eichah Rabbah", "Esther Rabbah", "Ruth Rabbah"];
+
+/**
+ * ¿Se puede juzgar el SEGUNDO número (la sección) de esta obra?
+ * Medido, no supuesto: hay obras que Sefaria no segmenta de verdad — Pesikta
+ * Rabbati trae 1 sola sección en 45 de sus 47 piskaot, Tanna DeBei Eliyahu en
+ * 17 de 31. En ellas, la sección que cita la tradición no es la que Sefaria
+ * cuenta, y juzgarla produciría falsos positivos a mansalva: el error más caro
+ * del proyecto. Así que solo se juzga la sección donde la segmentación es
+ * consistente (85% de los capítulos con más de una).
+ */
+function subReliable(sections) {
+  const nz = sections.filter((n) => n > 0);
+  if (nz.length === 0) return false;
+  return nz.filter((n) => n >= 2).length / nz.length >= 0.85;
+}
+
+/** Nombre de la parte sin el título de la obra: "Midrash Tanchuma, Noach" → "Noach". */
+function partName(title, book) {
+  const s = String(title);
+  const i = s.indexOf(",");
+  const tail = i === -1 ? s : s.slice(i + 1);
+  return tail.replace(new RegExp(`^\\s*${book}\\s*,?\\s*`), "").trim();
+}
+
+const midrash = [];
+for (const work of MIDRASH_WORKS) {
+  const r = await fetch(`https://www.sefaria.org/api/shape/${encodeURIComponent(work)}`);
+  if (!r.ok) throw new Error(`shape ${work}: ${r.status}`);
+  const j = await r.json();
+  const node = Array.isArray(j) ? j[0] : null;
+  if (!node || typeof node.book !== "string") throw new Error(`shape ${work}: sin nodo`);
+  const name = node.book;
+  const he = node.heBook ?? "";
+  const chapters = node.chapters;
+
+  if (node.isComplex && Array.isArray(chapters) && chapters.every((c) => c && typeof c === "object")) {
+    const parts = [];
+    for (const c of chapters) {
+      const pn = partName(c.title, name);
+      const phe = partName(c.heTitle, he);
+      if (!pn || !Number.isInteger(c.length) || c.length < 1) continue;
+      parts.push({ name: pn, he: phe, len: c.length });
+    }
+    if (parts.length < 2) throw new Error(`${work}: solo ${parts.length} partes`);
+    midrash.push({ name, he, shape: "parts", parts });
+    continue;
+  }
+  if (Array.isArray(chapters) && chapters.every((n) => Number.isInteger(n) && n >= 0)) {
+    midrash.push({ name, he, shape: "flat", sections: chapters, sub: subReliable(chapters) });
+    continue;
+  }
+  if (Array.isArray(chapters) && chapters.every((c) => Array.isArray(c))) {
+    // Tres niveles: guardamos cuántas entradas tiene cada capítulo (los
+    // versículos); el tercer número no se juzga.
+    // Aquí el segundo número es el VERSÍCULO del libro bíblico, que sí es
+    // estructura firme: se juzga siempre.
+    midrash.push({ name, he, shape: "nested", sections: chapters.map((c) => c.length), sub: true });
+    continue;
+  }
+  throw new Error(`${work}: forma no reconocida`);
+}
+
+for (const work of MIDRASH_PETICHTA) {
+  const r = await fetch(`https://www.sefaria.org/api/shape/${encodeURIComponent(`${work}, Petichta`)}`);
+  if (!r.ok) throw new Error(`shape ${work} Petichta: ${r.status}`);
+  const node = (await r.json())?.[0];
+  const n = node?.chapters;
+  if (!Number.isInteger(n) || n < 1) throw new Error(`${work}: Petijtá sin conteo`);
+  const row = midrash.find((w) => w.name === node.book);
+  if (!row) throw new Error(`${work}: la obra de la Petijtá no está en la tabla`);
+  row.petichta = n;
+}
+
+if (midrash.length !== MIDRASH_WORKS.length) {
+  throw new Error(`Faltan obras: ${midrash.length}/${MIDRASH_WORKS.length}`);
+}
+
+const midrashBody = midrash
+  .map((w) => {
+    const head = `  { name: ${JSON.stringify(w.name)}, he: ${JSON.stringify(w.he)}, shape: ${JSON.stringify(w.shape)},`;
+    if (w.shape === "parts") {
+      const parts = w.parts
+        .map((p) => `      { name: ${JSON.stringify(p.name)}, he: ${JSON.stringify(p.he)}, len: ${p.len} },`)
+        .join("\n");
+      return `${head}\n    parts: [\n${parts}\n    ] },`;
+    }
+    const pet = w.petichta ? ` petichta: ${w.petichta},` : "";
+    return `${head}${pet} sub: ${w.sub}, sections: [${w.sections.join(",")}] },`;
+  })
+  .join("\n");
+
+const midrashOut = `// AUTO-GENERADO por scripts/gen-tablas-fuentes.mjs. No editar a mano.
+// Fuente: /api/shape/<Obra> de Sefaria, ${new Date().toISOString().slice(0, 10)}.
+//
+// Para cada obra midráshica: cuántos capítulos tiene y cuántas secciones
+// (simanim) tiene cada capítulo. El índice 0 es el capítulo 1.
+//
+// Un 0 significa "Sefaria no tiene texto en ese tramo", NO "no existe": el
+// verificador lo trata como no concluyente y calla (ver citationCheck.ts).
+//
+// shape:
+//  · "flat"   — capítulo:sección. "Bereshit Rabá 12:6".
+//  · "nested" — capítulo:versículo:sección; \`sections\` dice cuántos versículos
+//               tiene cada capítulo y el tercer número no se juzga.
+//  · "parts"  — dividida por parashá/masejta; el número es el simán dentro de
+//               ella. "Tanjumá Bereshit 7".
+//
+// \`sub: false\` marca las obras donde la sección NO se juzga: Sefaria no las
+// segmenta de verdad (Pesikta Rabbati trae una sola sección en 45 de sus 47
+// piskaot) y juzgarla sería inventar falsos positivos.
+
+export interface MidrashPart {
+  /** Nombre inglés de Sefaria, ej. "Lech Lecha". */
+  name: string;
+  /** Nombre hebreo, ej. "לך לך". */
+  he: string;
+  /** Cuántos simanim tiene esta parte. */
+  len: number;
+}
+
+export interface MidrashWork {
+  /** Título inglés de Sefaria, ej. "Bereshit Rabbah". */
+  name: string;
+  /** Título hebreo, ej. "בראשית רבה". */
+  he: string;
+  shape: "flat" | "nested" | "parts";
+  /**
+   * flat/nested: ¿es fiable el SEGUNDO número (la sección)? \`false\` en las
+   * obras que Sefaria no segmenta de verdad (casi todo capítulo con una sola
+   * sección): ahí se juzga el capítulo y se calla sobre la sección.
+   */
+  sub?: boolean;
+  /** flat/nested: secciones (o versículos) de cada capítulo. */
+  sections?: number[];
+  /**
+   * Cuántos proemios tiene la Petijtá, en las obras que la tienen (Eikhá 34,
+   * Ester 12, Rut 7). Se cita por su propio número: "Eikhá Rabá, Petijtá 24".
+   */
+  petichta?: number;
+  /** parts: las parashiot/masajtot de la obra. */
+  parts?: MidrashPart[];
+}
+
+export const MIDRASH_WORKS: MidrashWork[] = [
+${midrashBody}
+];
+`;
+
+fs.writeFileSync(OUT_MIDRASH, midrashOut, "utf8");
+console.log(
+  `✓ ${midrash.length} obras de Midrash → ${path.relative(process.cwd(), OUT_MIDRASH)}`
+);

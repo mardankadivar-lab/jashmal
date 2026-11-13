@@ -2,6 +2,7 @@
 // texto aparezca progresivamente (evita timeouts en Farsi y textos largos).
 import type { StudyMode } from "@/lib/engine/anthropic";
 import { saveStudyHistory } from "@/lib/study/myStudies";
+import { annotate, type Mark } from "@/lib/sources/proseMarks";
 
 export type StudyDepth = "quick" | "deep";
 
@@ -69,6 +70,12 @@ export async function requestStudy(
   let study = "";
   let metaParsed = false;
   let buffer = "";
+  // Tráiler de verificación: al cerrar el stream, el servidor manda tras \x02
+  // las marcas de las citas que NO pasaron la comprobación, con la posición
+  // exacta donde van. Se insertan al final (el texto ya se mostró entero),
+  // así que el lector ve aparecer la marca cuando el estudio se cierra.
+  let marksJson = "";
+  let inTrailer = false;
 
   while (true) {
     const { done, value } = await reader.read();
@@ -95,6 +102,22 @@ export async function requestStudy(
       if (buffer.includes("\x01error")) {
         throw new StudyError("study_failed");
       }
+      const trailer = inTrailer ? 0 : buffer.indexOf("\x02");
+      if (inTrailer) {
+        // Ya estamos en el tráiler: todo lo que llegue es del JSON, aunque
+        // venga partido en varios chunks.
+        marksJson += buffer;
+        buffer = "";
+        continue;
+      }
+      if (trailer !== -1) {
+        study += buffer.slice(0, trailer);
+        marksJson += buffer.slice(trailer + 1);
+        inTrailer = true;
+        buffer = "";
+        onChunk?.(study);
+        continue;
+      }
       study += buffer;
       buffer = "";
       onChunk?.(study);
@@ -104,11 +127,28 @@ export async function requestStudy(
   // Flush del decoder
   const tail = decoder.decode();
   if (tail) {
-    study += tail;
-    onChunk?.(study);
+    if (inTrailer) marksJson += tail;
+    else {
+      study += tail;
+      onChunk?.(study);
+    }
   }
 
   if (!study.trim()) throw new StudyError("study_failed");
+
+  // Marcas de verificación: si el servidor mandó alguna, se insertan en la
+  // prosa. Nunca puede romper el estudio: si el tráiler viene mal, se ignora.
+  if (marksJson) {
+    try {
+      const parsed = JSON.parse(marksJson) as { marks?: Mark[] };
+      if (Array.isArray(parsed.marks) && parsed.marks.length > 0) {
+        study = annotate(study, parsed.marks);
+        onChunk?.(study);
+      }
+    } catch {
+      /* tráiler ilegible: el estudio se queda tal cual */
+    }
+  }
 
   // Alimentar el cerebro: cosecha en segundo plano (no bloquea ni rompe el estudio).
   // Cada estudio con cross-links {{...}} se convierte en sinapsis/conexiones 'pending'.

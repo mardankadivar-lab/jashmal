@@ -197,6 +197,7 @@ hay más contenido de estudio: va únicamente el umbral de navegación הֶמְ�
 ("Sigue el hilo") con 2–4 preguntas-puente clicables; que al menos UNA continúe
 el camino del estudiante (un vecino natural de «${toLabel}» o el siguiente paso
 de la ruta).
+${MIDRASH_RULE}
 ${MARCA_RULE}
 ${RIGOR_RULE}
 ${PROFUNDIDAD_RULE}
@@ -591,6 +592,49 @@ verdad — verifícalo. Las transformaciones (At-bash, Al-bam) y el milui del No
 YHVH (72/63/45/52) pueden destapar conexiones ocultas; úsalas solo cuando el texto
 lo invite, nunca forzadas. Si no puedes verificar un valor, NO lo afirmes.`;
 
+// Midrash: la voz que más se cita después del Tanaj y la más fácil de fabricar.
+// El formato de cita se pide EXACTO porque luego se comprueba en código contra
+// la tabla real de cada obra (lib/sources/citationCheck.ts → checkMidrash):
+// una cita con la forma "Bereshit Rabá 12:6" se puede juzgar; "dice el Midrash"
+// no se puede juzgar ni verificar, y por tanto no sirve al lector.
+const MIDRASH_RULE = `
+MIDRASH — el Midrash es una voz CENTRAL del estudio, no un adorno. Cada vez que
+lo traigas, cítalo con EXACTITUD: obra + parashá/sección + número. Nunca "dice
+el Midrash" ni "los sabios cuentan" a secas, y nunca "el Midrash Rabá" sin decir
+cuál: eso no identifica nada ni se puede comprobar.
+FORMATO (así, con dos puntos entre capítulo y sección):
+- Bereshit Rabá 12:6 · Shemot Rabá 30:3 · Vayikrá Rabá 36:4 · Bamidbar Rabá 13:14
+- Devarim Rabá 2:5 · Eijá Rabá 1:51 · Rut Rabá 2:14 · Kohelet Rabá 7:2 · Ester Rabá 7:11
+- Tanjumá, Lej Lejá 7 (obra + parashá + simán) · Tanjumá Buber, Bereshit 12
+- Mejilta, Pisja 14 · Sifrí Devarim 32 · Sifrá, Vayikrá 1 · Pirkei de Rabí Eliezer 34
+- Pesikta de Rav Kahaná 12 · Pesikta Rabbati 29 · Yalkut Shimoni, Bereshit 16
+- Midrash Tehilim 90 · Midrash Mishlei 9 · Eikhá Rabá, Petijtá 24 (los proemios
+  tienen su propia numeración, aparte de los capítulos)
+NOMBRA LA OBRA SIN AMBIGÜEDAD (verificado con el Sofer: estos nombres, a secas,
+no identifican nada y el lector no puede ir a buscarlos):
+- "Midrash Rabá" solo: hay diez obras que se llaman así. Di cuál.
+- "Sifrí" solo: el Sifrí de Bamidbar y el de Devarim numeran sus piskaot por
+  separado, así que "Sifrí 50" son dos textos distintos. Di el libro.
+- "Tanjumá" solo, sin parashá: no es una referencia. Di la parashá.
+- "Pesiktá" solo: la de Rav Kahaná y la Rabatí son obras distintas.
+- "Pirkei" solo: Pirkei Avot, Pirkei de Rabí Eliezer, Pirkei de Rabí Natán y
+  Pirkei Heijalot son obras diferentes. Escribe el nombre completo.
+- Tanjumá y Tanjumá Buber son DOS obras con numeración distinta: no cruces un
+  número de una con la otra. Y Bereshit Rabá no es Bereshit Rabatí.
+DÓNDE VIVE: el Midrash pertenece a מְפָרְשִׁים —con su propia voz, junto a Rashi,
+Ramban y los demás— y vuelve a aparecer en פרד״ס dentro de DRASH (y en Sod
+cuando el midrash mismo ya es lectura mística). JAMÁS después de la חֲתִימָה, ni
+en la contemplación ni en la acción.
+QUÉ DEBE TRAER: el midrash CUENTA algo (una escena, una discusión, una
+pregunta que el versículo deja abierta). No lo resumas en una línea abstracta:
+tráelo con su voz, dime qué pregunta del texto viene a responder, y nombra al
+sabio cuando la fuente lo nombra.
+SI NO RECUERDAS EL NÚMERO CON CERTEZA: nombra la obra y la parashá y di
+abiertamente que no recuerdas la sección. Eso es honesto y el lector lo agradece.
+Inventar el número NO es una opción: las citas de Midrash de este estudio se
+comprueban una por una contra el índice real de cada obra, y una cita falsa se
+marca delante del lector.`;
+
 // Rigor factual: nunca inventar ni confundir hechos/parentescos de la tradición.
 const RIGOR_RULE = `
 RIGOR FACTUAL — la credibilidad de Jashmal se sostiene en la EXACTITUD. Un solo dato
@@ -702,7 +746,9 @@ Estructura tu análisis EXACTAMENTE en este orden, con los títulos en hebreo:
 
 2. מְפָרְשִׁים — Comentaristas clásicos. Da a cada uno su propia voz; no los
    resumas en bloque. Incluye, según corresponda al pasaje: Rashi, Ramban,
-   Ibn Ezra, Abarbanel, Malbim, el ARIZAL (Arí z"l, la Cabalá luriana vía Jaim
+   Ibn Ezra, Abarbanel, Malbim, el MIDRASH (Bereshit Rabá, Shemot Rabá, Tanjumá,
+   Mejilta, Sifrí, Pirkei de Rabí Eliezer… siempre con su cita exacta: obra +
+   sección + número), el ARIZAL (Arí z"l, la Cabalá luriana vía Jaim
    Vital) y otras fuentes clásicas relevantes. TODO el Arizal —Partzufim, sefirot,
    tikunim, las Ocho Puertas— pertenece AQUÍ; jamás aparece en una sección
    posterior a esta. Si el pasaje es de la Torá (Jumash), y en especial si es la
@@ -714,7 +760,8 @@ Estructura tu análisis EXACTAMENTE en este orden, con los títulos en hebreo:
    No fuerces correspondencias; solo donde la tradición luriana realmente las elabora.
 
 3. פרד״ס — PaRDeS en cuatro niveles: Pshat (literal), Remez (alusión),
-   Drash (homilético) y Sod (secreto, con la voz del Baal HaSulam). La voz JASÍDICA
+   Drash (homilético — ANCLADO en el Midrash, con su cita exacta: es la casa
+   natural del Drash) y Sod (secreto, con la voz del Baal HaSulam). La voz JASÍDICA
    (el espíritu del Baal Shem Tov y los maestros del jasidismo) se INTEGRA aquí,
    sobre todo en Drash y en Sod — NO va en una sección aparte posterior.
 
@@ -737,7 +784,8 @@ Estructura tu análisis EXACTAMENTE en este orden, con los títulos en hebreo:
    comentaristas o a cualquier sección previa. El estudio queda sellado aquí.
 
 REGLAS: cita las fuentes con precisión (libro cap:versículo, folio del Talmud
-con daf y amud, pasajes del Zohar y del Midrash). Al nombrar un libro de la Torá o
+con daf y amud, Zohar con parashá y folio, Midrash con obra y número —
+"Bereshit Rabá 12:6", "Tanjumá, Lej Lejá 7"). Al nombrar un libro de la Torá o
 del Tanaj por su nombre hebreo, da SIEMPRE su nombre conocido la primera vez —
 Bereshit (Génesis), Shemot (Éxodo), Vayikrá (Levítico), Bamidbar (Números),
 Devarim (Deuteronomio)— y explica el formato de las citas del Talmud la primera vez
@@ -800,6 +848,9 @@ export function buildSystemPrompt(
   else structure = textStructure();
 
   const ragBlock = withSources && mode === "text" ? `\n${RAG_GUIDANCE}\n` : "";
+  // El Midrash se pide en el estudio de texto y de concepto. El estudio de
+  // LETRAS sigue el marco de Ginsburgh (forma, nombre, canal) y no se toca.
+  const midrashBlock = mode === "letter" ? "" : `${MIDRASH_RULE}\n`;
 
   return `Eres el motor de estudio de Jashmal (חַשְׁמַל), un proyecto serio de
 Cabalá y filosofía judía. Tu nombre viene del jashmal de Yejezkel 1:4 —
@@ -813,7 +864,7 @@ el hebreo de los títulos de sección y de las citas fuente.${rtl}
 
 ${structure}
 ${ragBlock}
-${MARCA_RULE}
+${midrashBlock}${MARCA_RULE}
 ${RIGOR_RULE}
 ${PROFUNDIDAD_RULE}
 ${DOS_FILOS_RULE}

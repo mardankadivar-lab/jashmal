@@ -9,6 +9,8 @@ import {
   type ConnectionInfo,
 } from "@/lib/engine/anthropic";
 import { getEdgeData } from "@/lib/relations/edgeData";
+import { checkCitations } from "@/lib/sources/citationCheck";
+import type { Mark } from "@/lib/sources/proseMarks";
 import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
 import { gatherSources, formatSourcesForPrompt } from "@/lib/relations/related";
 
@@ -18,6 +20,15 @@ export const runtime = "nodejs";
 export const maxDuration = 300;
 
 type StudyDepth = "quick" | "deep";
+
+// Texto de la marca que se inserta en la prosa cuando una cita NO pasa la
+// verificación. El detalle concreto ("Bereshit Rabbah tiene 100 capítulos") se
+// escribe en español; en fa/en se deja la etiqueta sola para no mezclar idiomas.
+const REF_MARK: Record<string, string> = {
+  es: "referencia sin confirmar",
+  fa: "ارجاع تأییدنشده",
+  en: "unconfirmed reference",
+};
 
 interface StudyRequest {
   mode: StudyMode;
@@ -182,14 +193,51 @@ export async function POST(req: Request) {
       async start(controller) {
         // Primer chunk: metadatos
         controller.enqueue(encoder.encode(meta + "\x00"));
+        // Se guarda EXACTAMENTE lo que se envía: así las posiciones que calcula
+        // el verificador siguen valiendo en el texto que tiene el cliente.
+        let full = "";
         try {
           for await (const event of stream) {
             if (
               event.type === "content_block_delta" &&
               event.delta.type === "text_delta"
             ) {
+              full += event.delta.text;
               controller.enqueue(encoder.encode(event.delta.text));
             }
+          }
+          // ── El juicio ────────────────────────────────────────────────────
+          // El motor propone, el código juzga. Las citas del estudio (Zóhar,
+          // Talmud, Tanaj y Midrash) se cotejan contra las tablas locales del
+          // repo; el estudio ya se envió entero, así que las marcas viajan en
+          // un TRÁILER y el cliente las inserta al cerrar. Solo se marca lo
+          // que se COMPRUEBA que falla: ante la duda no se marca nada.
+          // Nada de esto puede tumbar el estudio: si falla, no hay tráiler.
+          try {
+            const t0 = Date.now();
+            const cites = checkCitations(full);
+            const label = REF_MARK[locale] ?? REF_MARK.es;
+            const marks: Mark[] = cites.findings
+              .filter((f) => f.verdict === "false")
+              .map((f) => ({
+                end: f.end,
+                note: locale === "es" ? `${label}: ${f.detail}` : label,
+              }));
+            console.log(
+              `[study] ${mode}/${locale} citas detectadas=${cites.findings.length} ` +
+                `existen=${cites.existing} falsas=${cites.falsified} ` +
+                `no-concluyentes=${cites.inconclusive} | ${Date.now() - t0}ms`
+            );
+            for (const f of cites.findings) {
+              if (f.verdict === "false") {
+                console.log(`[study] cita falsa (${f.kind}): «${f.raw}» → ${f.detail}`);
+              }
+            }
+            if (marks.length > 0) {
+              controller.enqueue(encoder.encode("\x02" + JSON.stringify({ marks })));
+            }
+          } catch (err) {
+            console.error("study verify error", err);
           }
         } catch (err) {
           console.error("study stream error", err);
