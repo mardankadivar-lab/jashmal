@@ -24,9 +24,15 @@ export interface EmphasisPart {
 // de línea, y uno o dos asteriscos al cerrar. Los lados NO tienen que coincidir:
 // `**X*` y `*X**` son errores del motor, no del lector.
 //
-// El contenido empieza por algo que no sea espacio, como en markdown, para que
-// una multiplicación suelta ("3 * 4 * 5") no se vuelva cursiva por accidente.
-const EMPHASIS = /(\*{1,2}[^*\s\n][^*\n]*\*{1,2})/g;
+// El contenido no empieza por espacio (como en markdown), para que una
+// multiplicación suelta ("3 * 4 * 5") no se vuelva cursiva; y TAMPOCO por un
+// signo de cierre o de pausa. Esa segunda condición resuelve un caso real: el
+// detector de referencias saca la cita del texto para convertirla en enlace, y
+// si la cita iba en negrita —"En **Sukká 14a**, Rabí Elazar…"— los asteriscos
+// quedan huérfanos a los lados. Sin esta regla, el `**` que sobra se emparejaba
+// con el siguiente asterisco de la frase y ponía en negrita media línea que no
+// lo era. Una negrita no empieza nunca por coma.
+const EMPHASIS = /(\*{1,2}[^*\s\n,.;:!?)\]}»…–—-][^*\n]*\*{1,2})/g;
 
 /** Asteriscos que quedaron sin pareja. */
 const ORPHAN = /\*{1,2}/g;

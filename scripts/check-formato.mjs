@@ -91,6 +91,21 @@ const CASOS = [
   // Hebreo dentro de la negrita: no se puede perder ni una letra.
   ["**בְּרֵאשִׁית** contiene בְּרִית", "בְּרֵאשִׁית contiene בְּרִית", "N:בְּרֵאשִׁית"],
   ["**Zohar Toldot 137a*, vol. 1", "Zohar Toldot 137a, vol. 1", "N:Zohar Toldot 137a"],
+
+  // ── Los asteriscos que deja el detector de referencias ──────────────────
+  // Caso real, visto en producción: el motor escribió "En **Sukká 14a**, Rabí
+  // Elazar…". El detector saca la cita para hacerla enlace, y los asteriscos
+  // de la negrita quedan huérfanos a los lados. Estos son los dos pedazos que
+  // le llegan al formateador. El `**` suelto se tira; la cursiva legítima que
+  // viene después NO se toca.
+  ["En **", "En ", ""],
+  [
+    "**, Rabí Elazar pregunta por qué la plegaria de los justos se compara con un *éter* (horca de labranza).",
+    ", Rabí Elazar pregunta por qué la plegaria de los justos se compara con un éter (horca de labranza).",
+    "C:éter",
+  ],
+  // Y al revés: una negrita de verdad sigue empezando donde debe.
+  ["**¿Qué me enseña este texto?** —pregunta el estudio", "¿Qué me enseña este texto? —pregunta el estudio", "N:¿Qué me enseña este texto?"],
 ];
 
 // ── Banco 2: prosa que NO se debe tocar ───────────────────────────────────
