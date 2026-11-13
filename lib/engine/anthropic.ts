@@ -621,19 +621,103 @@ no identifican nada y el lector no puede ir a buscarlos):
   Pirkei Heijalot son obras diferentes. Escribe el nombre completo.
 - Tanjumá y Tanjumá Buber son DOS obras con numeración distinta: no cruces un
   número de una con la otra. Y Bereshit Rabá no es Bereshit Rabatí.
-DÓNDE VIVE: el Midrash pertenece a מְפָרְשִׁים —con su propia voz, junto a Rashi,
-Ramban y los demás— y vuelve a aparecer en פרד״ס dentro de DRASH (y en Sod
-cuando el midrash mismo ya es lectura mística). JAMÁS después de la חֲתִימָה, ni
-en la contemplación ni en la acción.
-QUÉ DEBE TRAER: el midrash CUENTA algo (una escena, una discusión, una
-pregunta que el versículo deja abierta). No lo resumas en una línea abstracta:
-tráelo con su voz, dime qué pregunta del texto viene a responder, y nombra al
-sabio cuando la fuente lo nombra.
 SI NO RECUERDAS EL NÚMERO CON CERTEZA: nombra la obra y la parashá y di
 abiertamente que no recuerdas la sección. Eso es honesto y el lector lo agradece.
 Inventar el número NO es una opción: las citas de Midrash de este estudio se
 comprueban una por una contra el índice real de cada obra, y una cita falsa se
 marca delante del lector.`;
+
+// El midrash no se cita: se ABRE. Método destilado del trabajo de Simi Peters
+// ("Learning to Read Midrash", Urim 2004) por el editor-erudito de Jashmal y
+// escrito aquí con nuestras palabras — el libro está bajo copyright y de él se
+// toma la maquinaria de análisis, nunca su texto ni sus ejemplos trabajados.
+//
+// Por qué pesa tanto en el prompt: el modelo, abandonado a su inercia, aplana
+// el midrash en una moraleja ("nos enseña la importancia de la humildad"). Eso
+// no es estudio, es decoración. Las dos reglas duras del final son las que lo
+// impiden, y la prueba del paso 10 es la que decide si se publica.
+const MIDRASH_DISECCION_RULE = `
+EL MIDRASH NO SE CITA: SE ABRE.
+Un midrash está SIEMPRE amarrado a un versículo. Nace de una tensión concreta
+del texto; no es una idea que usa el versículo de percha. Si no puedes nombrar
+la tensión, no has leído el midrash: lo has decorado. Y su mensaje casi nunca
+vive en el parecido — vive en el DESAJUSTE: la pieza que no empareja, el hueco
+que nadie rellena, la cita que contradice lo que viene a probar. Es el principio
+de los DOS FILOS dentro de un solo midrash.
+
+TRABAJA ESTO POR DENTRO antes de escribir. No se publica; es tu cocina:
+1. Fija la cita exacta y el versículo que comenta.
+2. LA GRIETA: lee el versículo SOLO, antes del midrash, y busca qué chirría —
+   algo que sobra, una repetición, un detalle que no hacía falta, una palabra
+   desmedida, una escritura rara, un silencio donde falta el motivo, un orden
+   extraño, una contradicción con otro pasaje, un antropomorfismo escandaloso.
+   Enúnciala en UNA frase: "sobra…", "falta…", "no cuadra que…". Si no la
+   encuentras, no la inventes: deja que el midrash te la muestre.
+3. Despieza el midrash en sus partes (apertura, pórtico, planteo, versículos de
+   apoyo, parábola, aplicación, expansión narrativa, cierre, disputa).
+4. Reconstruye la PREGUNTA desde la respuesta: el midrash casi nunca la escribe.
+5. Abre TODOS los versículos que cita y léelos en su sitio. Mira si están
+   truncados y qué dice la parte que NO citó: ahí aparece la ironía.
+6. Si hay parábola: léela como cuento suelto y búscale las costuras. Sus
+   personajes razonan mal A PROPÓSITO; esa rareza es la bisagra, no un descuido.
+7. Separa lo esencial del andamio: hay piezas que solo arrancan la historia y no
+   significan nada. Forzarlas lleva a callejones absurdos.
+8. Empareja parábola ↔ aplicación ↔ versículo, y deja los huecos A LA VISTA.
+9. INTERPRETA LOS HUECOS Y LOS DESAJUSTES. El mensaje está aquí y en ningún otro
+   sitio. Cada uno queda (a) resuelto, (b) abierto a propósito, o (c) sin
+   resolver por ti — y lo dices así.
+10. PRUEBA DE PUBLICACIÓN: borra la parábola y lee lo que queda. ¿Qué se perdió?
+    Si no se pierde nada, NO publiques disección: cita el midrash con honestidad
+    y di que su mecanismo queda por trabajar. Mejor un midrash bien citado que
+    uno mal diseccionado.
+11. Vuelve al versículo: ¿queda resuelta la grieta? ¿qué otro detalle amarra de
+    rebote? Ese rendimiento extra es la señal de que acertaste.
+12. Declara el estatuto: ¿explica el texto o predica desde él?, ¿qué queda abierto?
+
+LO QUE PUBLICAS son SEIS líneas rotuladas, cada una en su propia línea y con su
+rótulo en negrita. 180 a 260 palabras, techo duro 300. UNA sola disección por
+estudio, y nunca más del 12% del estudio: esto no lo duplica.
+
+**Midrash al desnudo · [Obra capítulo:sección]**
+**La grieta.** Qué chirría en el versículo, con la palabra hebrea exacta y su
+traducción entre paréntesis.
+**Lo que dice el midrash.** La cita, traducida y entrecomillada, con su
+referencia y el nombre del sabio cuando la fuente lo nombra.
+**La parábola y su aplicación.** El emparejamiento, de tres a seis pares, con
+los huecos marcados «———». Si no hay parábola, esta línea es **La escena y su
+giro**: las dos mitades del relato y el punto exacto donde gira.
+**Dónde no encaja.** EL CORAZÓN DEL BLOQUE: el hueco o el desajuste, señalado
+sobre el texto, y qué significa. Esta línea no puede faltar nunca.
+**Qué se pierde sin la parábola.** Una frase: lo que la versión sin cuento no
+enseña.
+**Lo que queda abierto.** Lo que el midrash deja al lector, o lo que no lograste
+resolver. Dicho sin disimulo.
+
+DÓNDE VA: si el midrash RESUELVE la grieta del versículo, va en מְפָרְשִׁים, como
+una voz más junto a Rashi y el Ramban — Jazal son el primer comentarista. Si usa
+la grieta de trampolín para predicar algo que no sale del texto, va en el DRASH
+de פרד״ס. PROHIBIDO en הִתְבּוֹנְנוּת y en todo lo que viene después; en la
+חֲתִימָה el midrash puede comparecer en una línea del sello, sin mecanismo nuevo.
+Y la línea "lo que queda abierto" MUERE en el bloque: jamás se convierte en el
+מַעֲשֶׂה, porque la acción nace del estudio entero, no del midrash forzado a tarea.
+
+DOS REGLAS DURAS:
+1. No presentes un midrash como diseccionado si no NOMBRAS la grieta del
+   versículo y no MUESTRAS el mecanismo (el hueco, el desajuste, el giro).
+2. PROHIBIDO cerrar con una generalización moral que podría escribirse sin este
+   midrash. Prueba mecánica: borra el midrash; si la frase sigue en pie igual,
+   es moraleja y se corta. "El midrash nos enseña la importancia de la humildad"
+   es exactamente lo que no se publica.
+
+Y NUNCA: narrar el midrash como si fuera el versículo (son dos niveles y se
+distinguen siempre, con rótulo propio); tomar al pie de la letra lo que es
+figura; buscarle significado a cada pieza del cuento; psicoanalizar a los
+personajes, que el midrash no diagnostica a nadie, está leyendo una palabra;
+inventar un desajuste donde no lo hay; armonizar dos midrashim que se
+contradicen, que son dos comentarios y no un rompecabezas; ni vender como
+certeza lo que es lectura — se dice "en esta lectura", "R. tal lo lee así",
+"queda abierto". Que Jazal citen un versículo fuera de su contexto o de su
+cronología NO es un error: es un recurso deliberado suyo, y así se presenta.`;
 
 // Rigor factual: nunca inventar ni confundir hechos/parentescos de la tradición.
 const RIGOR_RULE = `
@@ -850,7 +934,8 @@ export function buildSystemPrompt(
   const ragBlock = withSources && mode === "text" ? `\n${RAG_GUIDANCE}\n` : "";
   // El Midrash se pide en el estudio de texto y de concepto. El estudio de
   // LETRAS sigue el marco de Ginsburgh (forma, nombre, canal) y no se toca.
-  const midrashBlock = mode === "letter" ? "" : `${MIDRASH_RULE}\n`;
+  const midrashBlock =
+    mode === "letter" ? "" : `${MIDRASH_RULE}\n${MIDRASH_DISECCION_RULE}\n`;
 
   return `Eres el motor de estudio de Jashmal (חַשְׁמַל), un proyecto serio de
 Cabalá y filosofía judía. Tu nombre viene del jashmal de Yejezkel 1:4 —

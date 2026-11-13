@@ -10,6 +10,7 @@ import {
 } from "@/lib/engine/anthropic";
 import { getEdgeData } from "@/lib/relations/edgeData";
 import { checkCitations } from "@/lib/sources/citationCheck";
+import { checkMidrashBlock } from "@/lib/study/midrashBlock";
 import type { Mark } from "@/lib/sources/proseMarks";
 import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
 import { gatherSources, formatSourcesForPrompt } from "@/lib/relations/related";
@@ -233,6 +234,17 @@ export async function POST(req: Request) {
                 console.log(`[study] cita falsa (${f.kind}): «${f.raw}» → ${f.detail}`);
               }
             }
+            // ¿Abrió el midrash o solo lo citó? Esto NO marca nada en la prosa:
+            // solo mide, para saber cuántas veces el motor cumple de verdad el
+            // método antes de decidir si hay que apretarle la mano.
+            const bloque = checkMidrashBlock(full);
+            console.log(
+              `[study] midrash diseccionado=${bloque.found ? "sí" : "no"}` +
+                (bloque.found
+                  ? ` líneas=${bloque.lineas}/7 palabras=${bloque.palabras}` +
+                    (bloque.problemas.length > 0 ? ` · ${bloque.problemas.join(" · ")}` : " · completo")
+                  : "")
+            );
             if (marks.length > 0) {
               controller.enqueue(encoder.encode("\x02" + JSON.stringify({ marks })));
             }

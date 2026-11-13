@@ -18,6 +18,7 @@
     "marcas:check": "node scripts/check-study-marks.mjs",
     "formato:check": "node scripts/check-formato.mjs",
     "enlaces:check": "node scripts/check-enlaces.mjs",
+    "bloque:check": "node scripts/check-midrash-bloque.mjs",
     "fuentes:tablas": "node scripts/gen-tablas-fuentes.mjs"
   },
   "dependencies": {
