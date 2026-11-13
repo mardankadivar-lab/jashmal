@@ -15,6 +15,7 @@
     "export:obsidian": "node scripts/export-obsidian.mts",
     "zohar:check": "node scripts/check-zohar-verify.mjs",
     "midrash:check": "node scripts/check-midrash-verify.mjs",
+    "marcas:check": "node scripts/check-study-marks.mjs",
     "fuentes:tablas": "node scripts/gen-tablas-fuentes.mjs"
   },
   "dependencies": {
