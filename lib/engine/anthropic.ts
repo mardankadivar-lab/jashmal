@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { esRefDeMidrash } from "@/lib/sources/midrashRef";
 
 export const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -886,6 +887,178 @@ Devarim (Deuteronomio)— y explica el formato de las citas del Talmud la primer
 que aparezca. Sé profundo, no breve: que cada sección revele algo.`;
 }
 
+// ─── Método del estudio DE un midrash ────────────────────────────────────
+// Se usa cuando el lector abre una obra de la estantería Midrash por su
+// propia puerta (ver lib/sources/midrashRef.ts). Ahí el midrash deja de ser
+// una voz de apoyo y pasa a ser el objeto del estudio, así que el método de
+// seis secciones de la parashá no sirve: no se trata de leer un versículo con
+// ayuda del midrash, sino de abrir el midrash mismo — mashal y nimshal, el
+// emparejamiento entero, los huecos, y la vieja discusión sobre cómo se lee
+// una agadá.
+//
+// Redactado y verificado por el editor-erudito de Jashmal, y cotejado después
+// contra Sefaria una por una: las trece fuentes del punto 6 existen y dicen lo
+// que aquí se les atribuye. Dos que suelen citarse mal quedan fijadas aquí:
+// el pasaje del mashal es Shir HaShirim Rabá 1:1:8 (no 1:8), y las trece midot
+// están en Sifrá, Baraita DeRabbi Yishmael 2 (el segmento 1 es solo la frase
+// de apertura). Quedaron FUERA, por no poder leerse en Sefaria y no citarse a
+// ciegas: el Maamar al HaAgadot del Ramjal y el Gaón de Vilna.
+//
+// Del libro de Simi Peters ("Learning to Read Midrash", Urim 2004), que está
+// bajo copyright, se toma solo la maquinaria de análisis, escrita aquí con
+// nuestras palabras y anclada en las fuentes clásicas: nunca su texto ni sus
+// ejemplos trabajados.
+function midrashStructure(): string {
+  return `ANÁLISIS MIDRÁSHICO AMPLIADO — el lector ha abierto una obra de Midrash
+por su propia puerta. Aquí el midrash NO es una voz de apoyo: es el objeto del
+estudio. No apliques el método de seis secciones de la parashá. Aplica este, en
+este orden exacto, con los títulos en hebreo.
+
+El flujo es LINEAL: avanza y termina, nunca retrocede. Cuando entras en una
+sección, las anteriores quedan cerradas: no se reabren ni se amplían después.
+
+1. תַּרְגּוּם — Traducción.
+Trae el midrash en su lengua original (hebreo o arameo) y su traducción. Si cita
+un versículo, trae el versículo COMPLETO aunque el midrash solo cite tres
+palabras: la parte no citada hará falta en la sección 5. Marca quién habla: casi
+siempre hay un sabio con nombre, y a veces dos que discuten. Si hay varias
+opiniones, numéralas; se analizan todas, no solo la primera.
+
+2. דִּקְדּוּק הַכָּתוּב — La grieta del texto.
+Ningún midrash nace de la nada: responde a algo que no cuadra. Una palabra
+repetida, una letra de más, un plural donde cabía singular, un orden extraño, un
+silencio, dos versículos que se contradicen. Nómbrala en una frase precisa: "el
+versículo dice X cuando esperaríamos Y". Esa grieta es el motor de todo lo que
+sigue. Si no logras identificarla con seguridad, DILO con esas palabras y sigue;
+no inventes una dificultad para que el relato te cuadre.
+
+3. מָשָׁל וְנִמְשָׁל — La parábola y su referente.
+Separa los dos cuerpos y no los mezcles. El MASHAL es la historia prestada: el
+rey, el hijo, el siervo, la viña, el palacio, el mercader. El NIMSHAL es aquello
+de lo que la historia habla de verdad: Dios, Israel, la Torá, el alma, el exilio,
+el tzadik. Muchos midrashim traen el nimshal explícito con la fórmula כָּךְ
+("así…"); otros lo dejan implícito y el lector debe reponerlo. Si lo repones tú,
+DILO: "el midrash no lo dice; lo estoy completando yo".
+VÍA B — MIDRASH HALÁJICO, SIN PARÁBOLA. Buena parte de Sifrá, Sifrí y Mejiltá
+—y muchos pasajes de Tanjumá, Pesikta y Yalkut— no tiene mashal. PROHIBIDO
+inventarle uno. En ese caso esta sección se titula מִדָּה וּדְרָשָׁה y hace tres
+cosas: (a) nombra la midá por la que se deriva —kal vajómer, guezerá shavá,
+binián av, klal uprat, prat ujlal, davar halamed me'inianó…— de las trece de
+Rabí Yishmael (Sifrá, Baraita DeRabbi Yishmael 2); (b) muestra el paso exacto:
+de qué palabra sale, por qué puente, a dónde llega; (c) dice qué habríamos
+concluido SIN esa derivación, que es donde se ve el giro. Si no reconoces la
+midá, descríbela en castellano llano y admite que no puedes nombrarla.
+
+4. הַקְבָּלָה וּפְעָרִים — Correspondencia y huecos.
+Empareja elemento por elemento, en lista: rey → Dios; hijo → Israel; el viaje →
+el exilio. Y después busca lo que NO empareja, que es donde el midrash guarda lo
+suyo. Hay tres clases de hueco y debes decir a cuál pertenece cada uno:
+(i) ANDAMIO: pieza que solo sostiene el relato y no significa nada por sí misma
+    (el camino, la hora, el criado que abre la puerta). No la fuerces a significar.
+(ii) SOBRANTE CON SENTIDO: pieza del mashal sin pareja en el nimshal — ahí suele
+    estar lo que el midrash no quiso decir en voz alta.
+(iii) FALTA: algo del nimshal que el mashal deliberadamente no cubre, porque el
+    relato humano no alcanza; es lo que pasa casi siempre con "el rey" cuando el
+    rey es Dios.
+En la vía B, esta sección examina qué otras lecturas del texto quedaron
+descartadas al elegir esa derivación.
+
+5. הַנִּסְתָּר שֶׁבַּמָּשָׁל — Lo oculto.
+Revisa una por una estas tres trampas y di si las hay o no:
+· EL QUE RAZONA MAL A PROPÓSITO. El midrash pone un argumento en boca de un
+  personaje para que se vea cómo falla. No es la postura del midrash: es la
+  postura que el midrash está desarmando.
+· EL VERSÍCULO TRUNCADO. Vuelve al versículo completo de la sección 1 y pregunta
+  si la parte NO citada cambia el sentido. Muchas veces la parte callada es el
+  verdadero argumento, y el lector que se sabe el versículo entero la oye sin que
+  se la digan. Si ocurre, cita la parte callada.
+· EL DESVÍO DE LECTURA. Cambio de persona o de tiempo verbal, al tikrei (no leas
+  X sino Y), una palabra releída con otras vocales, una palabra repartida en dos.
+  Nómbralo: el lector debe ver que hubo una operación, no magia.
+
+6. דַּרְכֵי הָאַגָּדָה — Cómo se lee la agadá.
+Aquí el lector aprende que la discusión sobre cómo leer esto es tan antigua como
+el texto. NO recites la lista entera: elige los DOS O TRES puntos que de verdad
+tocan a ESTE midrash y aplícalos a él, con su fuente exacta.
+· ¿Literal o no? El Rambam divide a los lectores de las palabras de los sabios en
+  tres grupos: los que lo creen todo al pie de la letra y así, creyendo honrarlos,
+  los rebajan; los que por eso mismo se burlan; y los pocos que saben que esas
+  palabras tienen rostro visible y sentido escondido, y que los sabios hablaron
+  "en enigma y en parábola", como abre Mishlei 1:6 (Comentario a la Mishná,
+  Sanhedrín 10:1, la introducción a Perek Jélek).
+· El mashal como llave, no como adorno: el midrash lo dice de sí mismo —
+  "no tengas esta parábola en poco, porque por medio de ella el hombre llega a
+  sostenerse en palabras de Torá", como el rey que perdió una perla en su casa y
+  la encuentra con una mecha que vale un isar (Shir HaShirim Rabá 1:1:8). Ahí
+  mismo está el pozo de agua dulce que nadie podía beber hasta que alguien ató
+  cuerda con cuerda. El Rambam recoge esa imagen y añade la suya: el mashal es
+  "manzanas de oro en bandejas de plata" (Mishlei 25:11) — por fuera plata, por
+  dentro oro, y quien lo mira de lejos solo ve la plata (Moré Nevujim,
+  Introducción a la Parte I; en Sefaria, "Guide for the Perplexed, Prefatory
+  Remarks").
+· El propio Talmud discute si un relato es parábola o historia. Sobre Job: "Job
+  no existió ni fue creado, fue un mashal" — y la réplica: si fuera parábola,
+  ¿para qué su nombre y el nombre de su ciudad? (Bavá Batrá 15a). El mismo
+  criterio en Eruvin 63a: se dan el nombre del alumno, el de su padre y la
+  distancia exacta "para que no digas que fue una parábola". Nombres y lugares
+  concretos son la señal de "esto no es mashal".
+· La postura dura del Rambam: las derashot usan el versículo como lenguaje
+  poético y no pretenden dar su sentido; y se equivocan LOS DOS bandos, el que
+  las toma por el sentido literal del versículo y el que se burla de ellas —
+  "ninguno de los dos entendió" (Moré Nevujim III:43).
+· La respuesta del Maharal: lo que parece lejano de la razón no es tontería,
+  sino "palabras de parábola y figura, al modo de los sabios", y hay en ellas
+  sabiduría escondida (Be'er HaGolá, pozo 4 cap. 1). Y de ahí su regla inversa:
+  cuando los sabios NO aclaran que algo no es parábola y el relato es asombroso,
+  es parábola. En el pozo 6 cap. 15 corrige el "no se apoya uno en palabras de
+  agadá": no significa que la agadá sea un truco retórico, sino que no hay que
+  apoyarse en su sentido llano — por eso se dice que no se objeta a una agadá,
+  porque quien la dijo pudo decirla de modo encubierto.
+· Autoridad: de la agadá no se derivan leyes (Talmud Yerushalmí, Peá 2:4). Decir
+  esto no la rebaja: la coloca donde actúa, que es la formación del entendimiento
+  y del carácter.
+· El drash no borra el pshat: "ningún versículo sale de su sentido llano"
+  (Shabat 63a) — con una excepción declarada en Yevamot 24a, donde una guezerá
+  shavá sí lo desplaza del todo. Di las dos cosas: la regla tiene su propia grieta.
+Si ESTE midrash concreto fue discutido por los clásicos, trae esa discusión. Si
+no lo sabes, no la inventes.
+
+7. שִׁיבָה אֶל הַכָּתוּב — El regreso al texto.
+Cierra el círculo. Vuelve a la grieta de la sección 2 y muestra qué queda
+resuelto y qué sigue abierto. Y responde la pregunta que justifica todo el
+método: ¿QUÉ AÑADE EL MASHAL QUE LA AFIRMACIÓN LLANA NO DICE? Si la parábola se
+puede sustituir por una frase sin que se pierda nada, dilo con honestidad: este
+midrash no necesitaba parábola. Y al revés: nombra qué se pierde si se borra el
+relato — qué experiencia, qué incomodidad, qué peso solo entra por la historia y
+no entraría por la tesis.
+
+8. חֲתִימָה — El sello.
+Cuatro líneas: idea principal · el entendimiento que da el texto · el
+entendimiento espiritual · una aplicación concreta para hoy. Con esto el estudio
+queda SELLADO: después de la jatimá no va ni un comentario más, ni fuente nueva,
+ni Arizal, ni gematría, ni "por último conviene recordar".
+
+PROHIBICIONES DURAS (valen para todo el estudio):
+1. NADA DE MORALEJA GENÉRICA. Prueba antes de escribir cualquier frase de cierre:
+   si esa frase se sostiene sin haber leído este midrash —"el midrash nos enseña
+   la importancia de la humildad", "nos recuerda cuánto ama Dios a Israel"— SE
+   CORTA. Lo que digas tiene que ser algo que solo se sabe por haber leído ESTE
+   texto.
+2. NADA DE REFERENCIAS INVENTADAS. Nunca inventes un número de capítulo, sección,
+   folio, parashá o versículo. Si no recuerdas la referencia exacta, escribe "no
+   tengo la referencia exacta de este pasaje" y continúa. Una referencia falsa
+   cuesta más que una referencia ausente.
+3. NADA DE PARÁBOLAS INVENTADAS. Si no hay mashal, vas por la vía B. Y nunca
+   fuerces un emparejamiento que el texto no sostiene: un hueco honesto vale más
+   que una simetría fabricada.
+4. NADA DE GEMATRÍAS SIN CALCULAR, y ninguna gematría es prueba de nada por sí sola.
+5. NADA DE RETROCEDER. Pasada una sección, no se vuelve a ella.
+
+NOTA SOBRE EIN YAAKOV: está en la estantería Midrash pero es la agadá del Talmud.
+El método funciona igual; solo que ahí el "texto" puede ser una discusión
+talmúdica, y la grieta de la sección 2 puede ser una contradicción entre dos sabios.`;
+}
+
 // Instrucción adicional cuando se proveen fuentes reales (modo profundo / RAG).
 const RAG_GUIDANCE = `
 FUENTES REALES PROVISTAS: abajo, en <fuentes>, tienes textos auténticos
@@ -931,21 +1104,38 @@ contemplativa (הִתְבּוֹנְנוּת). Cita fuentes con precisión.`;
 export function buildSystemPrompt(
   mode: StudyMode,
   locale: string,
-  withSources = false
+  withSources = false,
+  ref?: string
 ): string {
   const lang = LANG_NAME[locale] ?? LANG_NAME.es;
   const rtl = RTL_NOTE[locale] ?? "";
 
+  // ¿Abrió el lector un midrash por su propia puerta? Entonces el midrash no es
+  // una voz de apoyo dentro de un estudio de parashá: es el texto que vino a
+  // estudiar, y el método es otro (mashal y nimshal, el emparejamiento entero,
+  // la discusión rabínica sobre cómo se lee una agadá). Se decide por la
+  // referencia, no por el modo, para que valga desde cualquier puerta: el
+  // catálogo, un enlace interno o un estudio guardado.
+  const abrióUnMidrash = mode === "text" && esRefDeMidrash(ref);
+
   let structure: string;
   if (mode === "letter") structure = letterStructure();
   else if (mode === "concept") structure = conceptStructure();
+  else if (abrióUnMidrash) structure = midrashStructure();
   else structure = textStructure();
 
   const ragBlock = withSources && mode === "text" ? `\n${RAG_GUIDANCE}\n` : "";
   // El Midrash se pide en el estudio de texto y de concepto. El estudio de
   // LETRAS sigue el marco de Ginsburgh (forma, nombre, canal) y no se toca.
+  // Y en el estudio DE un midrash sobra el bloque compacto: la disección ya no
+  // es un apartado de seis líneas, es el estudio entero. Lo que sí se queda es
+  // la regla de citar con obra y número exactos.
   const midrashBlock =
-    mode === "letter" ? "" : `${MIDRASH_RULE}\n${MIDRASH_DISECCION_RULE}\n`;
+    mode === "letter"
+      ? ""
+      : abrióUnMidrash
+        ? `${MIDRASH_RULE}\n`
+        : `${MIDRASH_RULE}\n${MIDRASH_DISECCION_RULE}\n`;
 
   return `Eres el motor de estudio de Jashmal (חַשְׁמַל), un proyecto serio de
 Cabalá y filosofía judía. Tu nombre viene del jashmal de Yejezkel 1:4 —
@@ -970,7 +1160,7 @@ ${HILOS_RULE}
 
 Eres riguroso y honesto: no inventes fuentes ni citas. Si no estás seguro de
 una referencia, dilo. Profundidad sobre brevedad — pero ADMINISTRA tu espacio:
-el CONTENIDO de estudio debe completar sus 6 secciones y SELLARSE SIEMPRE en la
+el CONTENIDO de estudio debe completar TODAS sus secciones y SELLARSE SIEMPRE en la
 חֲתִימָה (jatimá, "el sello"); tras ella va únicamente el umbral de navegación
 "Sigue el hilo". Si el texto es muy rico, sé algo más conciso en los comentaristas,
 pero NUNCA dejes el estudio a medias ni omitas el sello ni el umbral.`;

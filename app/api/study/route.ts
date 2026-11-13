@@ -11,6 +11,7 @@ import {
 import { getEdgeData } from "@/lib/relations/edgeData";
 import { checkCitations } from "@/lib/sources/citationCheck";
 import { checkMidrashBlock } from "@/lib/study/midrashBlock";
+import { esRefDeMidrash } from "@/lib/sources/midrashRef";
 import type { Mark } from "@/lib/sources/proseMarks";
 import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
 import { gatherSources, formatSourcesForPrompt } from "@/lib/relations/related";
@@ -131,8 +132,10 @@ export async function POST(req: Request) {
   }
 
   const withSources = sourcesBlock.length > 0;
-  // Margen amplio para que la sección final "Sigue el hilo" no se trunque.
-  const maxTokens = withSources ? 8000 : 7500;
+  // Margen amplio para que la sección final "Sigue el hilo" no se trunque. El
+  // estudio DE un midrash lleva también el margen ancho aunque esa vez no
+  // traiga fuentes: el método ampliado tiene más secciones que desplegar.
+  const maxTokens = withSources || esRefDeMidrash(body.ref) ? 8000 : 7500;
 
   // Modo cabalístico (viene del Árbol de la Vida) o modo estándar PaRDeS
   const isKabbalah = body.context === "kabbalah" && !!body.sefiraId && mode === "text";
@@ -166,7 +169,7 @@ export async function POST(req: Request) {
     ? buildKabbalahStudyPrompt(locale, sefira.he, sefira.es)
     : isConnection && connInfo
       ? buildConnectionStudyPrompt(locale, connInfo, curatedEdge)
-      : buildSystemPrompt(mode, locale, withSources);
+      : buildSystemPrompt(mode, locale, withSources, body.ref);
   const userPrompt = buildUserPrompt(body, sourcesBlock);
 
   // --- STREAMING: el texto aparece progresivamente mientras Claude genera. ---
@@ -236,15 +239,22 @@ export async function POST(req: Request) {
             }
             // ¿Abrió el midrash o solo lo citó? Esto NO marca nada en la prosa:
             // solo mide, para saber cuántas veces el motor cumple de verdad el
-            // método antes de decidir si hay que apretarle la mano.
-            const bloque = checkMidrashBlock(full);
-            console.log(
-              `[study] midrash diseccionado=${bloque.found ? "sí" : "no"}` +
-                (bloque.found
-                  ? ` líneas=${bloque.lineas}/7 palabras=${bloque.palabras}` +
-                    (bloque.problemas.length > 0 ? ` · ${bloque.problemas.join(" · ")}` : " · completo")
-                  : "")
-            );
+            // método antes de decidir si hay que apretarle la mano. En el
+            // estudio DE un midrash no se mide: ahí no hay bloque compacto que
+            // medir porque el estudio entero es el análisis, y registrar un
+            // "diseccionado=no" haría pasar por fallo lo que es el diseño.
+            if (esRefDeMidrash(body.ref)) {
+              console.log(`[study] método=midrash ampliado · ${locale} · sin bloque compacto (por diseño)`);
+            } else {
+              const bloque = checkMidrashBlock(full);
+              console.log(
+                `[study] método=normal midrash diseccionado=${bloque.found ? "sí" : "no"}` +
+                  (bloque.found
+                    ? ` líneas=${bloque.lineas}/7 palabras=${bloque.palabras}` +
+                      (bloque.problemas.length > 0 ? ` · ${bloque.problemas.join(" · ")}` : " · completo")
+                    : "")
+              );
+            }
             if (marks.length > 0) {
               controller.enqueue(encoder.encode("\x02" + JSON.stringify({ marks })));
             }

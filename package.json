@@ -19,7 +19,10 @@
     "formato:check": "node scripts/check-formato.mjs",
     "enlaces:check": "node scripts/check-enlaces.mjs",
     "bloque:check": "node scripts/check-midrash-bloque.mjs",
-    "fuentes:tablas": "node scripts/gen-tablas-fuentes.mjs"
+    "fuentes:tablas": "node scripts/gen-tablas-fuentes.mjs",
+    "midrashref:check": "node scripts/check-midrash-ref.mjs",
+    "fuentes:check": "node scripts/check-fuentes.mjs",
+    "metodo:check": "node scripts/check-metodo.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.1",

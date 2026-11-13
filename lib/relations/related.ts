@@ -166,12 +166,29 @@ async function fetchSourceText(link: SefariaLink): Promise<CuratedSource | null>
   }
 }
 
+/**
+ * La URL de /api/related para una referencia. Vive aparte para poder
+ * comprobarla sin red (`npm run fuentes:check`): el fallo que escondía era
+ * mudo —cero fuentes, ningún error— y solo se ve mirando la URL.
+ */
+export function urlRelacionados(ref: string): string {
+  return `${BASE}/related/${encodeURIComponent(ref)}`;
+}
+
 /** Trae /api/related y devuelve las fuentes curadas con su texto real. */
 export async function gatherSources(ref: string): Promise<CuratedSource[]> {
-  const apiRef = ref.replace(/ /g, ".").replace(/:/g, ".");
+  // La referencia va TAL CUAL, solo escapada para la URL. Antes se cambiaban
+  // los espacios y los dos puntos por puntos («Bereshit Rabbah 39:1» →
+  // «Bereshit.Rabbah.39.1») y eso rompía en silencio todo libro cuyo título
+  // tenga más de una palabra: medido contra Sefaria, la forma con puntos
+  // devuelve 0 enlaces donde la escapada devuelve 99 (Bereshit Rabá 39:1),
+  // 205 (Shir HaShirim 1:1), 475 (Pirkei Avot 1:1) y 57 (Zohar, Bereshit 1:1).
+  // Cero enlaces no da error: el estudio simplemente salía sin una sola fuente
+  // y nadie se enteraba. Para los títulos de una palabra no cambia nada
+  // (Génesis 28:11 devuelve 526 de las dos formas).
   let links: SefariaLink[] = [];
   try {
-    const res = await fetch(`${BASE}/related/${encodeURIComponent(apiRef)}`, {
+    const res = await fetch(urlRelacionados(ref), {
       next: { revalidate: 60 * 60 * 24 },
     });
     if (res.ok) {
