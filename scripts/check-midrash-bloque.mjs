@@ -40,7 +40,7 @@ registerHooks({
 const { checkMidrashBlock } = await import("@/lib/study/midrashBlock");
 
 // ── El patrón: la zarza, diseccionada por el Sofer con el método entero. ───
-const ZARZA = `**Midrash al desnudo · Shemot Rabá 2:5**
+const ZARZA = `**Análisis del Midrash · Shemot Rabá 2:5**
 
 **La grieta.** La revelación ya estaba descrita: un ángel, una llama. La especie
 del arbusto no hacía falta. Y sin embargo el versículo dice "desde dentro de la
@@ -114,6 +114,32 @@ const DEGRADADOS = [
   ],
 ];
 
+// ── El bloque PEGADO al estudio que sigue: no puede contar lo ajeno. ──────
+//
+// Medido en vivo: un bloque de 7/7 líneas al que el medidor le contó 508
+// palabras. El bloque no las tenía; lo que pasaba es que el motor no siempre
+// deja una línea en blanco entre sus líneas ni antes del párrafo siguiente, y
+// el corte viejo (el primer «\n\n») se llevaba por delante ese párrafo ajeno y
+// disparaba una alarma de techo falsa. Marcar como excedido un bloque que
+// cumple es peor que no verlo: desacredita la medida entera.
+const SIGUE = `Y el mismo hilo sigue más abajo, cuando el texto vuelve sobre el
+nombre del lugar. ${"Rashi lo explica con una palabra que el Targum traduce de otro modo, y el Ramban discute el matiz. ".repeat(14)}`;
+
+const PEGADOS = [
+  [
+    "con una línea en blanco detrás (lo normal)",
+    `${ZARZA}\n\n${SIGUE}`,
+  ],
+  [
+    "sin línea en blanco: todo el bloque y lo que sigue, a un solo salto",
+    `${ZARZA.replace(/\n\n/g, "\n")}\n${SIGUE}`,
+  ],
+  [
+    "el rótulo de la última línea en su propio renglón",
+    `${ZARZA.replace("**Lo que queda abierto.** ", "**Lo que queda abierto.**\n")}\n${SIGUE}`,
+  ],
+];
+
 // ── Prosa de estudio sin disección: el medidor debe callar. ────────────────
 const SIN_BLOQUE = [
   "**El Midrash** aquí es decisivo. Shemot Rabá 1:1 trae, a propósito de «el que ahorra la vara odia a su hijo», el contraste entre Yishmael y la línea de Itzjak.",
@@ -150,6 +176,20 @@ for (const [nombre, bloque, esperado] of DEGRADADOS) {
   }
 }
 
+console.log("\n── BLOQUE PEGADO AL ESTUDIO (no debe contar lo ajeno) ──");
+const BASE = checkMidrashBlock(ZARZA).palabras;
+for (const [nombre, texto] of PEGADOS) {
+  const r = checkMidrashBlock(texto);
+  const sobra = r.palabras - BASE;
+  if (!r.found || r.problemas.length > 0 || sobra > 15) {
+    errores++;
+    console.log(`  ✗ ${nombre}`);
+    console.log(`      ${r.palabras} palabras (el bloque solo tiene ${BASE}) · ${r.problemas.join(" · ") || "sin quejas"}`);
+  } else {
+    console.log(`  ✓ ${nombre.padEnd(60)} ${r.palabras} palabras (bloque solo: ${BASE})`);
+  }
+}
+
 console.log("\n── ESTUDIO SIN DISECCIÓN (debe callar) ──");
 for (const prosa of SIN_BLOQUE) {
   const r = checkMidrashBlock(prosa);
@@ -166,6 +206,6 @@ if (errores > 0) {
   process.exit(1);
 }
 console.log(
-  `\n✓ ${BIEN.length} bloques bien hechos sin una queja · ${DEGRADADOS.length} degradados cazados · ` +
+  `\n✓ ${BIEN.length} bloques bien hechos sin una queja · ${DEGRADADOS.length} degradados cazados · ${PEGADOS.length} pegados sin contar lo ajeno · ` +
     `${SIN_BLOQUE.length} textos sin disección respetados.`
 );

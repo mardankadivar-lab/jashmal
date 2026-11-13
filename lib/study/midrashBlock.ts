@@ -1,6 +1,6 @@
 // ¿El motor diseccionó el midrash, o solo lo citó bonito?
 //
-// El prompt le pide seis líneas rotuladas ("Midrash al desnudo"). Un modelo
+// El prompt le pide seis líneas rotuladas ("Análisis del Midrash"). Un modelo
 // abandonado a su inercia hace lo contrario: resume el midrash y lo cierra con
 // una moraleja que podría escribirse sin él. Eso no es estudio, es decoración,
 // y por fuera se parece bastante a lo bueno.
@@ -15,9 +15,15 @@
 // Esto NO marca nada en la prosa: solo mide, para saber cuántas veces el motor
 // cumple de verdad. Primero medir, y con datos decidir si hay que apretar.
 
-/** Las seis líneas del bloque, en orden. `alt` admite la variante sin parábola. */
+/**
+ * Las seis líneas del bloque, en orden. `alt` admite la variante sin parábola.
+ *
+ * La cabecera acepta también el rótulo viejo ("Midrash al desnudo") porque un
+ * estudio guardado antes del cambio de nombre sigue siendo un bloque válido y
+ * el medidor no debe darlo por inexistente.
+ */
 const LINEAS: { id: string; etiqueta: RegExp; alt?: RegExp }[] = [
-  { id: "cabecera", etiqueta: /midrash al desnudo/i },
+  { id: "cabecera", etiqueta: /an[áa]lisis del midrash|midrash al desnudo/i },
   { id: "grieta", etiqueta: /la grieta/i },
   { id: "cita", etiqueta: /lo que dice el midrash/i },
   {
@@ -49,7 +55,7 @@ export interface MidrashBlockReport {
  * no todos los estudios traen un midrash que merezca disección.
  */
 export function checkMidrashBlock(text: string): MidrashBlockReport {
-  const inicio = text.search(/midrash al desnudo/i);
+  const inicio = text.search(/an[áa]lisis del midrash|midrash al desnudo/i);
   if (inicio === -1) {
     return { found: false, lineas: 0, palabras: 0, problemas: [] };
   }
@@ -63,12 +69,42 @@ export function checkMidrashBlock(text: string): MidrashBlockReport {
   const titulo = resto.slice(1).search(/\n#{1,4}\s|\n\s*---\s*\n/);
   const porTitulo = titulo === -1 ? resto.slice(0, 2500) : resto.slice(0, titulo + 1);
 
-  const ultima = LINEAS[LINEAS.length - 1].etiqueta.exec(porTitulo);
+  // Cuál de las etiquetas aparece más tarde. No se da por sentado que sea la de
+  // «lo que queda abierto»: si el motor altera el orden, el ancla es la última
+  // que haya, y así ninguna línea rotulada queda fuera de la cuenta.
+  let fin = -1;
+  for (const l of LINEAS) {
+    for (const re of [l.etiqueta, l.alt]) {
+      if (!re) continue;
+      const m = re.exec(porTitulo);
+      if (m && m.index > fin) fin = m.index;
+    }
+  }
+
+  // Dónde CORTA. Antes se cortaba en el primer «\n\n» después de esa etiqueta, y
+  // ahí estaba el fallo medido en vivo (508 palabras contadas por un bloque que
+  // no las tenía): cuando el motor separa las líneas con un solo salto y pega el
+  // párrafo siguiente sin dejar una línea en blanco, el primer «\n\n» no está al
+  // final del bloque sino al final de ese párrafo ajeno, que entra entero en la
+  // cuenta y dispara una alarma de techo falsa. El bloque termina donde termina
+  // SU línea, con uno o con dos saltos: se corta en el primer salto de línea
+  // posterior a la etiqueta. Se saltan los saltos que caen pegados a la etiqueta
+  // (menos de 40 caracteres), porque ahí el rótulo va en su propio renglón y el
+  // texto de la línea viene en el siguiente.
   let bloque = porTitulo;
-  if (ultima) {
-    // Hasta el final del párrafo donde vive la última etiqueta.
-    const finParrafo = porTitulo.indexOf("\n\n", ultima.index);
-    bloque = finParrafo === -1 ? porTitulo : porTitulo.slice(0, finParrafo);
+  if (fin !== -1) {
+    let corte = -1;
+    let desde = fin;
+    for (;;) {
+      const salto = porTitulo.indexOf("\n", desde);
+      if (salto === -1) break;
+      if (salto - fin >= 40) {
+        corte = salto;
+        break;
+      }
+      desde = salto + 1;
+    }
+    if (corte !== -1) bloque = porTitulo.slice(0, corte);
   }
 
   const problemas: string[] = [];

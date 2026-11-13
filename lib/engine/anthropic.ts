@@ -678,7 +678,7 @@ LO QUE PUBLICAS son SEIS líneas rotuladas, cada una en su propia línea y con s
 rótulo en negrita. 180 a 260 palabras, techo duro 300. UNA sola disección por
 estudio, y nunca más del 12% del estudio: esto no lo duplica.
 
-**Midrash al desnudo · [Obra capítulo:sección]**
+**Análisis del Midrash · [Obra capítulo:sección]**
 **La grieta.** Qué chirría en el versículo, con la palabra hebrea exacta y su
 traducción entre paréntesis.
 **Lo que dice el midrash.** La cita, traducida y entrecomillada, con su
