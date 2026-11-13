@@ -343,13 +343,38 @@ function scan(
 }
 
 /**
+ * El texto sin los asteriscos de la negrita, con el mapa para volver a las
+ * posiciones reales.
+ *
+ * Por qué hace falta: el motor escribe "el **Yalkut Shimoní** (Bereshit 93:3)"
+ * y los marcadores se meten EN MEDIO de la cita, entre la obra y el número.
+ * Buscando sobre el texto crudo, esa cita no se reconoce y el lector se queda
+ * sin poder abrirla — mientras que la misma cita, dos líneas más arriba y sin
+ * negrita, sí se abre. Se busca sobre el texto limpio y luego se traduce la
+ * posición; el enlace muestra el nombre limpio y los asteriscos que quedan
+ * fuera los recoge el formateador (lib/study/emphasis.ts).
+ */
+function sinMarcadores(text: string): { limpio: string; mapa: number[] } {
+  let limpio = "";
+  const mapa: number[] = [];
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] === "*") continue;
+    mapa.push(i);
+    limpio += text[i];
+  }
+  return { limpio, mapa };
+}
+
+/**
  * Todas las referencias del texto, ya sin solapes. El orden de las capas
  * importa: "Midrash Tehilim 90:3" tiene DENTRO lo que parece el salmo 90:3, y
  * "Eijá Rabá, Petijtá 24" tiene dentro "Eijá Rabá" a secas. Gana siempre el
  * acierto que empieza antes y, a igualdad, el más largo — es decir, la cita
  * completa, nunca el pedazo.
  */
-function allMatches(text: string): RawMatch[] {
+function allMatches(original: string): RawMatch[] {
+  const { limpio, mapa } = sinMarcadores(original);
+  const text = limpio;
   const raw = [
     ...scan(text, PETICHTA_REGEX, (m) => {
       const work = MIDRASH_MAP[m[1].toLowerCase()];
@@ -393,7 +418,13 @@ function allMatches(text: string): RawMatch[] {
   const out: RawMatch[] = [];
   for (const m of raw) {
     if (out.length > 0 && m.start < out[out.length - 1].end) continue; // solapa
-    out.push(m);
+    // De vuelta a las posiciones del texto real. `match` se queda con el
+    // nombre limpio: es lo que ve el lector dentro del enlace.
+    out.push({
+      ...m,
+      start: mapa[m.start] ?? m.start,
+      end: (mapa[m.end - 1] ?? m.end - 1) + 1,
+    });
   }
   return out;
 }

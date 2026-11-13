@@ -90,6 +90,22 @@ const ENLACES = [
   // Solo sobre la Torá, que es lo único que Sefaria tiene.
   ["el Yalkut Shimoní (Bereshit 93:3): los burladores de la generación", "Yalkut Shimoní (Bereshit 93:3)", "Yalkut Shimoni on Torah 93:3"],
   ["Y el Yalkut Shimoní, Bereshit 93 cuenta la escena", "Yalkut Shimoní, Bereshit 93", "Yalkut Shimoni on Torah 93"],
+
+  // ── La cita en negrita ──────────────────────────────────────────────────
+  // El motor resalta el nombre de la obra, y los asteriscos caen EN MEDIO de
+  // la cita: "el **Yalkut Shimoní** (Bereshit 93:3)". Buscando sobre el texto
+  // crudo no se reconocía, y pasaba lo peor: la misma cita se abría dos líneas
+  // más arriba (donde iba sin negrita) y aquí no. El enlace muestra el nombre
+  // limpio, sin los marcadores.
+  [
+    "La respuesta la conserva el **Yalkut Shimoní** (Bereshit 93:3): los burladores decían",
+    "Yalkut Shimoní (Bereshit 93:3)",
+    "Yalkut Shimoni on Torah 93:3",
+  ],
+  ["**Shemot Rabá 1:1** trae el contraste.", "Shemot Rabá 1:1", "Shemot Rabbah 1:1"],
+  ["En **Sukká 14a**, Rabí Elazar pregunta.", "Sukká 14a", "Sukkah 14a"],
+  ["lo discute en **Bereshit Rabá** 39:1, la parábola", "Bereshit Rabá 39:1", "Bereshit Rabbah 39:1"],
+  ["*Tanjumá, Lej Lejá 7* lo lee de otro modo.", "Tanjumá, Lej Lejá 7", "Midrash Tanchuma, Lech Lecha 7"],
 ];
 
 // ── Banco 2: lo que NO se debe enlazar ────────────────────────────────────
