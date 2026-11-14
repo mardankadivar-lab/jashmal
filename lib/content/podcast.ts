@@ -709,6 +709,90 @@ export const PODCAST_EPISODES: PodcastEpisode[] = [
     durationSec: 1053,
     spotifyShowUrl: SPOTIFY_SHOW_ES,
   },
+  // Apuntes 37 a 40, grabados el 14-nov-2026 (voz de Martin, eleven_v4, una
+  // toma por pieza). Todavía NO están en Spotify: por eso ninguno lleva
+  // `spotifyEpisodeUrl`. El estudio ya se lee en el sitio, que es la regla.
+  // El 37 («Un artículo para Purim») es el apunte más largo del libro y va en
+  // tres partes, igual que se hizo con el 33; cada parte se entiende sola.
+  {
+    slug: "es-shamati-37-p1",
+    locale: "es",
+    serie: "shamati",
+    season: 1,
+    episode: 37.1,
+    etiqueta: "37 · 1 de 3",
+    title: "Nadie te obligó a entender (1 de 3) — Shamatí, Baal HaSulam",
+    description:
+      "Antes de hacer algo que llevas años haciendo, esperas la parte que te hace clic. «Nadie obligó», dice el libro de Ester, y Baal HaSulam convierte esa frase en la línea que separa dos vidas enteras. Parte 1 de 3.",
+    durationSec: 1336,
+    spotifyShowUrl: SPOTIFY_SHOW_ES,
+  },
+  {
+    slug: "es-shamati-37-p2",
+    locale: "es",
+    serie: "shamati",
+    season: 1,
+    episode: 37.2,
+    etiqueta: "37 · 2 de 3",
+    title:
+      "Rezabas porque no te quedaba otra. ¿Y ahora? (2 de 3) — Shamatí, Baal HaSulam",
+    description:
+      "Rezaste seis semanas seguidas, y la noche en que el resultado llega limpio no rezas. Baal HaSulam dice que la alternativa te la dieron a propósito. Parte 2 de 3.",
+    durationSec: 1348,
+    spotifyShowUrl: SPOTIFY_SHOW_ES,
+  },
+  {
+    slug: "es-shamati-37-p3",
+    locale: "es",
+    serie: "shamati",
+    season: 1,
+    episode: 37.3,
+    etiqueta: "37 · 3 de 3",
+    title:
+      "Tienes la captura sin abrir. Las dos salidas cuestan (3 de 3) — Shamatí, Baal HaSulam",
+    description:
+      "«Mira lo que dijo de ti.» Abrirla cuesta y no abrirla también, y ésa es la encrucijada de Ester cuando Mardoqueo la manda ante el rey. Parte 3 de 3.",
+    durationSec: 1219,
+    spotifyShowUrl: SPOTIFY_SHOW_ES,
+  },
+  {
+    slug: "es-shamati-38",
+    locale: "es",
+    serie: "shamati",
+    season: 1,
+    episode: 38,
+    title:
+      "Te llegó algo bueno y no había dónde ponerlo — Shamatí, Baal HaSulam",
+    description:
+      "Te pasó algo bueno hoy y a las nueve de la noche estabas más vacío que ayer. Baal HaSulam dice que un tesoro no es lo que se guarda, sino el lugar donde se guarda, y pregunta cuál es la vasija.",
+    durationSec: 1347,
+    spotifyShowUrl: SPOTIFY_SHOW_ES,
+  },
+  {
+    slug: "es-shamati-39",
+    locale: "es",
+    serie: "shamati",
+    season: 1,
+    episode: 39,
+    title: "Dos oscuridades que se parecen por fuera — Shamatí, Baal HaSulam",
+    description:
+      "Hace tres semanas que estás apagado y no sabes si fue por algo que hiciste o es cansancio. Baal HaSulam distingue dos sombras que por fuera son el mismo gesto.",
+    durationSec: 1087,
+    spotifyShowUrl: SPOTIFY_SHOW_ES,
+  },
+  {
+    slug: "es-shamati-40",
+    locale: "es",
+    serie: "shamati",
+    season: 1,
+    episode: 40,
+    title:
+      "No puedes saber si estás subiendo o bajando — Shamatí, Baal HaSulam",
+    description:
+      "Sentirte mal puede ser estar viendo la verdad por primera vez, y sentirte pleno puede ser estar recibiendo para ti. El apunte más delicado del libro, leído sin suavizar y encuadrado después.",
+    durationSec: 1259,
+    spotifyShowUrl: SPOTIFY_SHOW_ES,
+  },
 
   // ── Tanya ───────────────────────────────────────────────────────────────
   {
