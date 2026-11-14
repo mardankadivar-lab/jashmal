@@ -215,7 +215,9 @@
     "s4He": "מַעֲשֶׂה",
     "s4Title": "The purpose",
     "s4Body": "Knowledge is only complete when it descends into the world of action. Contemplation alone is not enough: the light of wisdom (Chochmah) must descend to Malchut, to daily life, to an act of kindness. Jashmal seeks that each study bring you closer to God, to yourself and to your neighbor — that silence learn to speak, and that the word become deed.",
-    "principle": "First authority and honest study."
+    "principle": "First authority and honest study.",
+    "creditsTitle": "Sources and credits",
+    "creditsBody": "Hebrew texts and the links between sources come from Sefaria. The morphological analysis of the Tanakh — the lemma of each word, which lets us count a word in all its forms — comes from the Open Scriptures Hebrew Bible, original work available at https://github.com/openscriptures/morphhb, used under the CC BY 4.0 licence and based on the Westminster Leningrad Codex, which is in the public domain."
   },
   "footer": {
     "principle": "First authority and honest study."

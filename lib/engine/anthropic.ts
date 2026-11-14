@@ -843,6 +843,11 @@ function textStructure(conRepetidas = false): string {
    - Copia los números TAL CUAL. No los recalcules, no los redondees, no
      añadas palabras que no estén en esa lista y no cuentes de memoria: lo que
      el lector ve en esta sección lo contó el código, no tú.
+   - LA CUENTA ES POR PALABRA, NO POR GRAFÍA: las formas de una misma palabra
+     van juntas, y las que se sumaron aparecen al lado («contando…»). Así que
+     di «la raíz» o «el verbo decir, en sus formas» y no «la palabra וַיֹּאמֶר
+     aparece nueve veces», que sería falso: nueve son sus formas sumadas. Si
+     una forma concreta es la que domina, se ve porque es la que encabeza.
    - De cada palabra di qué significa en una o dos palabras, con su
      transliteración: la mayoría de nuestros lectores no lee hebreo.
    - Y después DI QUÉ ENSEÑA ESA INSISTENCIA en dos o tres frases: dónde está

@@ -218,7 +218,9 @@
     "s4He": "מַעֲשֶׂה",
     "s4Title": "El propósito",
     "s4Body": "El conocimiento solo se completa cuando desciende al mundo de la acción. No basta con contemplar: la luz de la sabiduría (Jojmá) debe bajar hasta Maljut, hasta la vida cotidiana, hasta un acto de bondad. Jashmal busca que cada estudio te acerque más a Dios, a ti mismo y al prójimo — que el silencio aprenda a hablar, y que la palabra se vuelva acto.",
-    "principle": "Primero la autoridad y el estudio honesto."
+    "principle": "Primero la autoridad y el estudio honesto.",
+    "creditsTitle": "Fuentes y créditos",
+    "creditsBody": "Los textos en hebreo y los enlaces entre fuentes vienen de Sefaria. El análisis morfológico del Tanaj —el lema de cada palabra, que permite contar una palabra en todas sus formas— viene de la Open Scriptures Hebrew Bible, obra original disponible en https://github.com/openscriptures/morphhb, usada bajo licencia CC BY 4.0 y basada en el Códice de Leningrado, que es de dominio público."
   },
   "chat": {
     "title": "Tutor de estudio",

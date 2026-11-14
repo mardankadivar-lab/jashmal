@@ -81,6 +81,14 @@ exacto, con títulos en hebreo:
    versículo abierto— y el motor la copia TAL CUAL: tiene prohibido recalcular,
    redondear o añadir palabras que el código no contó. Si el tramo no repite
    nada, se dice; es un dato, no un fallo.
+   Se cuenta POR PALABRA y no por grafía: וַיֹּאמֶר, לֵאמֹר y אָמַר suman juntas.
+   Eso NO lo adivina un analizador — se lee de una tabla congelada en el repo
+   (lib/sources/morfologia.generated.ts) destilada de la Open Scriptures Hebrew
+   Bible (CC BY 4.0, sobre el Códice de Leningrado), que trae el lema de cada
+   forma del Tanaj. Donde la edición da dos lemas a una misma forma, NO se
+   agrupa: preferimos no agrupar a agrupar mal. Se regenera con
+   `node scripts/gen-tabla-morfologia.mjs <carpeta-de-los-xml>` y hay que
+   acreditar a Open Scriptures en el sitio.
 1. תַּרְגּוּם — Traducción (texto original en hebreo + traducción)
 2. מְפָרְשִׁים — Comentaristas clásicos: Rashi, Ramban, Ibn Ezra, Abarbanel,
    Malbim, **Arizal** y otras fuentes relevantes (cada uno con su voz). TODO el

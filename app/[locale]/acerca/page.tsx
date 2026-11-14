@@ -37,6 +37,15 @@ export default async function AboutPage() {
         <p className="mt-12 border-t border-gold/15 pt-6 text-center text-sm text-muted">
           {t("principle")}
         </p>
+
+        {/* Fuentes y créditos. No es cortesía: la edición etiquetada del Tanaj
+            que usamos para contar las palabras por su lema se distribuye bajo
+            CC BY 4.0, y esa licencia pide nombrar la obra original. Va aquí,
+            en la página de «Acerca», que es donde un lector la busca. */}
+        <section className="mt-10 border-t border-gold/15 pt-6">
+          <h2 className="font-cinzel text-base text-gold-soft">{t("creditsTitle")}</h2>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{t("creditsBody")}</p>
+        </section>
       </main>
     </>
   );

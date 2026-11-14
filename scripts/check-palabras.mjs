@@ -44,24 +44,36 @@ const fallo = (msg) => {
 };
 
 // ── Pasajes congelados, con el HTML que manda Sefaria ─────────────────────
+//
+// Van escapados en \uXXXX a propósito, tal como los devuelve la API. El hebreo
+// se escribe con marcas combinantes y un copiar-y-pegar desde la terminal puede
+// reordenarlas sin que se note: la forma se ve idéntica y ya no coincide con la
+// de la edición etiquetada. Pasó: la oscuridad de Bereshit 1 dejaba de
+// agruparse porque el texto pegado a mano no era byte a byte el del texto real.
+//
+// Bereshit 1:1-5 · Devarim 6:4 (el Shemá, con la ayin y la dalet grandes
+// dentro de una etiqueta) · Bereshit 1:6-8 (donde conviven מים y שמים).
+
 const BERESHIT = [
-  "<big>בְּ</big>רֵאשִׁ֖ית בָּרָ֣א אֱלֹהִ֑ים אֵ֥ת הַשָּׁמַ֖יִם וְאֵ֥ת הָאָֽרֶץ׃",
-  "וְהָאָ֗רֶץ הָיְתָ֥ה תֹ֙הוּ֙ וָבֹ֔הוּ וְחֹ֖שֶׁךְ עַל־פְּנֵ֣י תְה֑וֹם וְר֣וּחַ אֱלֹהִ֔ים מְרַחֶ֖פֶת עַל־פְּנֵ֥י הַמָּֽיִם׃",
-  "וַיֹּ֥אמֶר אֱלֹהִ֖ים יְהִ֣י א֑וֹר וַֽיְהִי־אֽוֹר׃",
-  "וַיַּ֧רְא אֱלֹהִ֛ים אֶת־הָא֖וֹר כִּי־ט֑וֹב וַיַּבְדֵּ֣ל אֱלֹהִ֔ים בֵּ֥ין הָא֖וֹר וּבֵ֥ין הַחֹֽשֶׁךְ׃",
-  'וַיִּקְרָ֨א אֱלֹהִ֤ים&thinsp;<small>׀</small>&thinsp;לָאוֹר֙ י֔וֹם וְלַחֹ֖שֶׁךְ קָ֣רָא לָ֑יְלָה וַֽיְהִי־עֶ֥רֶב וַֽיְהִי־בֹ֖קֶר י֥וֹם אֶחָֽד׃&nbsp;<span class="mam-spi-pe">{פ}</span><br>',
+  "<big>\u05d1\u05bc\u05b0</big>\u05e8\u05b5\u05d0\u05e9\u05c1\u05b4\u0596\u05d9\u05ea \u05d1\u05bc\u05b8\u05e8\u05b8\u05a3\u05d0 \u05d0\u05b1\u05dc\u05b9\u05d4\u05b4\u0591\u05d9\u05dd \u05d0\u05b5\u05a5\u05ea \u05d4\u05b7\u05e9\u05c1\u05bc\u05b8\u05de\u05b7\u0596\u05d9\u05b4\u05dd \u05d5\u05b0\u05d0\u05b5\u05a5\u05ea \u05d4\u05b8\u05d0\u05b8\u05bd\u05e8\u05b6\u05e5\u05c3",
+  "\u05d5\u05b0\u05d4\u05b8\u05d0\u05b8\u0597\u05e8\u05b6\u05e5 \u05d4\u05b8\u05d9\u05b0\u05ea\u05b8\u05a5\u05d4 \u05ea\u05b9\u0599\u05d4\u05d5\u05bc\u0599 \u05d5\u05b8\u05d1\u05b9\u0594\u05d4\u05d5\u05bc \u05d5\u05b0\u05d7\u05b9\u0596\u05e9\u05c1\u05b6\u05da\u05b0 \u05e2\u05b7\u05dc\u05be\u05e4\u05bc\u05b0\u05e0\u05b5\u05a3\u05d9 \u05ea\u05b0\u05d4\u0591\u05d5\u05b9\u05dd \u05d5\u05b0\u05e8\u05a3\u05d5\u05bc\u05d7\u05b7 \u05d0\u05b1\u05dc\u05b9\u05d4\u05b4\u0594\u05d9\u05dd \u05de\u05b0\u05e8\u05b7\u05d7\u05b6\u0596\u05e4\u05b6\u05ea \u05e2\u05b7\u05dc\u05be\u05e4\u05bc\u05b0\u05e0\u05b5\u05a5\u05d9 \u05d4\u05b7\u05de\u05bc\u05b8\u05bd\u05d9\u05b4\u05dd\u05c3",
+  "\u05d5\u05b7\u05d9\u05bc\u05b9\u05a5\u05d0\u05de\u05b6\u05e8 \u05d0\u05b1\u05dc\u05b9\u05d4\u05b4\u0596\u05d9\u05dd \u05d9\u05b0\u05d4\u05b4\u05a3\u05d9 \u05d0\u0591\u05d5\u05b9\u05e8 \u05d5\u05b7\u05bd\u05d9\u05b0\u05d4\u05b4\u05d9\u05be\u05d0\u05bd\u05d5\u05b9\u05e8\u05c3",
+  "\u05d5\u05b7\u05d9\u05bc\u05b7\u05a7\u05e8\u05b0\u05d0 \u05d0\u05b1\u05dc\u05b9\u05d4\u05b4\u059b\u05d9\u05dd \u05d0\u05b6\u05ea\u05be\u05d4\u05b8\u05d0\u0596\u05d5\u05b9\u05e8 \u05db\u05bc\u05b4\u05d9\u05be\u05d8\u0591\u05d5\u05b9\u05d1 \u05d5\u05b7\u05d9\u05bc\u05b7\u05d1\u05b0\u05d3\u05bc\u05b5\u05a3\u05dc \u05d0\u05b1\u05dc\u05b9\u05d4\u05b4\u0594\u05d9\u05dd \u05d1\u05bc\u05b5\u05a5\u05d9\u05df \u05d4\u05b8\u05d0\u0596\u05d5\u05b9\u05e8 \u05d5\u05bc\u05d1\u05b5\u05a5\u05d9\u05df \u05d4\u05b7\u05d7\u05b9\u05bd\u05e9\u05c1\u05b6\u05da\u05b0\u05c3",
+  "\u05d5\u05b7\u05d9\u05bc\u05b4\u05e7\u05b0\u05e8\u05b8\u05a8\u05d0 \u05d0\u05b1\u05dc\u05b9\u05d4\u05b4\u05a4\u05d9\u05dd&thinsp;<small>\u05c0</small>&thinsp;\u05dc\u05b8\u05d0\u05d5\u05b9\u05e8\u0599 \u05d9\u0594\u05d5\u05b9\u05dd \u05d5\u05b0\u05dc\u05b7\u05d7\u05b9\u0596\u05e9\u05c1\u05b6\u05da\u05b0 \u05e7\u05b8\u05a3\u05e8\u05b8\u05d0 \u05dc\u05b8\u0591\u05d9\u05b0\u05dc\u05b8\u05d4 \u05d5\u05b7\u05bd\u05d9\u05b0\u05d4\u05b4\u05d9\u05be\u05e2\u05b6\u05a5\u05e8\u05b6\u05d1 \u05d5\u05b7\u05bd\u05d9\u05b0\u05d4\u05b4\u05d9\u05be\u05d1\u05b9\u0596\u05e7\u05b6\u05e8 \u05d9\u05a5\u05d5\u05b9\u05dd \u05d0\u05b6\u05d7\u05b8\u05bd\u05d3\u05c3&nbsp;<span class=\"mam-spi-pe\">{\u05e4}</span><br>",
 ].join(" ");
 
-// Devarim 6:4. Seis palabras, y dos de ellas llevan una letra dentro de una
-// etiqueta: la ayin de שְׁמַע y la dalet de אֶחָד (las letras grandes del Shemá).
-const SHEMA =
-  'שְׁמַ֖<big>ע</big> יִשְׂרָאֵ֑ל יְהֹוָ֥ה אֱלֹהֵ֖ינוּ יְהֹוָ֥ה&thinsp;<small>׀</small>&thinsp;אֶחָֽ<big>ד</big>׃';
+const SHEMA = [
+  "\u05e9\u05c1\u05b0\u05de\u05b7\u0596<big>\u05e2</big> \u05d9\u05b4\u05e9\u05c2\u05b0\u05e8\u05b8\u05d0\u05b5\u0591\u05dc \u05d9\u05b0\u05d4\u05b9\u05d5\u05b8\u05a5\u05d4 \u05d0\u05b1\u05dc\u05b9\u05d4\u05b5\u0596\u05d9\u05e0\u05d5\u05bc \u05d9\u05b0\u05d4\u05b9\u05d5\u05b8\u05a5\u05d4&thinsp;<small>\u05c0</small>&thinsp;\u05d0\u05b6\u05d7\u05b8\u05bd<big>\u05d3</big>\u05c3",
+].join(" ");
 
-// Bereshit 1:6-8, abreviado: aquí conviven מַיִם, לָמַיִם, הַמַּיִם y שָׁמַיִם.
-const RAKIA =
-  "וַיֹּ֣אמֶר אֱלֹהִ֔ים יְהִ֥י רָקִ֖יעַ בְּת֣וֹךְ הַמָּ֑יִם וִיהִ֣י מַבְדִּ֔יל בֵּ֥ין מַ֖יִם לָמָֽיִם׃ וַיִּקְרָ֧א אֱלֹהִ֛ים לָֽרָקִ֖יעַ שָׁמָ֑יִם";
+const RAKIA = [
+  "\u05d5\u05b7\u05d9\u05bc\u05b9\u05a3\u05d0\u05de\u05b6\u05e8 \u05d0\u05b1\u05dc\u05b9\u05d4\u05b4\u0594\u05d9\u05dd \u05d9\u05b0\u05d4\u05b4\u05a5\u05d9 \u05e8\u05b8\u05e7\u05b4\u0596\u05d9\u05e2\u05b7 \u05d1\u05bc\u05b0\u05ea\u05a3\u05d5\u05b9\u05da\u05b0 \u05d4\u05b7\u05de\u05bc\u05b8\u0591\u05d9\u05b4\u05dd \u05d5\u05b4\u05d9\u05d4\u05b4\u05a3\u05d9 \u05de\u05b7\u05d1\u05b0\u05d3\u05bc\u05b4\u0594\u05d9\u05dc \u05d1\u05bc\u05b5\u05a5\u05d9\u05df \u05de\u05b7\u0596\u05d9\u05b4\u05dd \u05dc\u05b8\u05de\u05b8\u05bd\u05d9\u05b4\u05dd\u05c3",
+  "\u05d5\u05b7\u05d9\u05bc\u05b7\u05a3\u05e2\u05b7\u05e9\u05c2 \u05d0\u05b1\u05dc\u05b9\u05d4\u05b4\u05d9\u05dd\u05ae \u05d0\u05b6\u05ea\u05be\u05d4\u05b8\u05e8\u05b8\u05e7\u05b4\u0592\u05d9\u05e2\u05b7\u0592 \u05d5\u05b7\u05d9\u05bc\u05b7\u05d1\u05b0\u05d3\u05bc\u05b5\u0597\u05dc \u05d1\u05bc\u05b5\u05a4\u05d9\u05df \u05d4\u05b7\u05de\u05bc\u05b7\u0599\u05d9\u05b4\u05dd\u0599 \u05d0\u05b2\u05e9\u05c1\u05b6\u05e8\u0599 \u05de\u05b4\u05ea\u05bc\u05b7\u05a3\u05d7\u05b7\u05ea \u05dc\u05b8\u05e8\u05b8\u05e7\u05b4\u0594\u05d9\u05e2\u05b7 \u05d5\u05bc\u05d1\u05b5\u05a3\u05d9\u05df \u05d4\u05b7\u05de\u05bc\u05b7\u0594\u05d9\u05b4\u05dd \u05d0\u05b2\u05e9\u05c1\u05b6\u0596\u05e8 \u05de\u05b5\u05e2\u05b7\u05a3\u05dc \u05dc\u05b8\u05e8\u05b8\u05e7\u05b4\u0591\u05d9\u05e2\u05b7 \u05d5\u05b7\u05bd\u05d9\u05b0\u05d4\u05b4\u05d9\u05be\u05db\u05b5\u05bd\u05df\u05c3",
+  "\u05d5\u05b7\u05d9\u05bc\u05b4\u05e7\u05b0\u05e8\u05b8\u05a7\u05d0 \u05d0\u05b1\u05dc\u05b9\u05d4\u05b4\u059b\u05d9\u05dd \u05dc\u05b8\u05bd\u05e8\u05b8\u05e7\u05b4\u0596\u05d9\u05e2\u05b7 \u05e9\u05c1\u05b8\u05de\u05b8\u0591\u05d9\u05b4\u05dd \u05d5\u05b7\u05bd\u05d9\u05b0\u05d4\u05b4\u05d9\u05be\u05e2\u05b6\u05a5\u05e8\u05b6\u05d1 \u05d5\u05b7\u05bd\u05d9\u05b0\u05d4\u05b4\u05d9\u05be\u05d1\u05b9\u0596\u05e7\u05b6\u05e8 \u05d9\u05a5\u05d5\u05b9\u05dd \u05e9\u05c1\u05b5\u05e0\u05b4\u05bd\u05d9\u05c3&nbsp;<span class=\"mam-spi-pe\">{\u05e4}</span><br>",
+].join(" ");
 
-const cons = (c, x) => c.palabras.find((p) => p.consonantes === x);
+const cons = (c, x) =>
+  c.palabras.find((p) => p.consonantes === x || p.variantes.includes(x));
 
 // ── 1. Las cuentas, contadas a mano ──────────────────────────────────────
 console.log("── LAS CUENTAS (contadas a mano sobre Bereshit 1:1-5) ──");
@@ -71,29 +83,42 @@ console.log("── LAS CUENTAS (contadas a mano sobre Bereshit 1:1-5) ──");
   if (c.total !== 52) fallo(`el total debería ser 52 palabras y da ${c.total}`);
   else console.log("  ✓ 52 palabras en los cinco versículos");
 
+  // Contados a mano sobre los cinco versículos, agrupando por lema como hace
+  // la edición etiquetada:
+  //   אלהים  v1, v2, v3, v4 (dos veces), v5                        → 6
+  //   אור    v3 «אור» dos veces, v4 «האור» dos veces, v5 «לאור»    → 5
+  //   היה    v2 «היתה», v3 «יהי» y «ויהי», v5 «ויהי» dos veces     → 5
+  //   חשך    v2 «וחשך», v4 «החשך», v5 «ולחשך»                      → 3
   const esperado = [
     ["אלהים", 6, []],
     ["אור", 5, ["האור", "לאור"]],
-    ["יהי", 4, ["ויהי"]],
+    ["היתה", 5, ["יהי", "ויהי"]],
   ];
   for (const [base, veces, variantes] of esperado) {
-    const p = cons(c, base);
-    if (!p) fallo(`no encontró «${base}»`);
+    const p = c.palabras.find((x) => x.consonantes === base || x.variantes.includes(base));
+    if (!p) fallo(`no encontró el grupo de «${base}»`);
     else if (p.veces !== veces) fallo(`«${base}» debería salir ${veces} veces y da ${p.veces}`);
     else {
-      const faltan = variantes.filter((v) => !p.variantes.includes(v));
+      const todas = [p.consonantes, ...p.variantes];
+      const faltan = variantes.filter((v) => !todas.includes(v));
       if (faltan.length > 0) fallo(`«${base}» no agrupó ${faltan.join(", ")}`);
       else console.log(`  ✓ ${base.padEnd(8)} ${veces} veces${variantes.length ? ` (con ${variantes.join(", ")})` : ""}`);
     }
   }
 
-  // חֹשֶׁךְ aparece tres veces pero SIEMPRE con prefijo: וְחֹשֶׁךְ, הַחֹשֶׁךְ,
-  // וְלַחֹשֶׁךְ. Como el tramo nunca trae la forma desnuda, no se agrupan — y eso
-  // es deliberado: pelar prefijos sin prueba es lo que destroza palabras.
-  if (cons(c, "חשך")) {
-    fallo("agrupó חשך sin que la forma desnuda aparezca en el texto");
-  } else {
-    console.log("  ✓ חשך       no se agrupa: el tramo nunca trae la forma desnuda");
+  // חֹשֶׁךְ aparece tres veces y SIEMPRE con prefijo distinto: וְחֹשֶׁךְ, הַחֹשֶׁךְ,
+  // וְלַחֹשֶׁךְ. La forma desnuda no está en el tramo, así que la regla de
+  // prefijos no podía juntarlas y antes se contaban como tres palabras de una
+  // vez cada una. Con la edición etiquetada las tres llevan el mismo lema y la
+  // oscuridad aparece como lo que es: una palabra que el capítulo repite.
+  {
+    const osc = c.palabras.find((p) =>
+      [p.consonantes, ...p.variantes].some((f) => f.includes("חשך"))
+    );
+    if (!osc) fallo("la oscuridad no aparece agrupada");
+    else if (osc.veces !== 3) fallo(`חשך debería salir 3 veces y da ${osc.veces}`);
+    else if (!osc.lema) fallo("חשך se agrupó sin lema: no vino de la edición etiquetada");
+    else console.log(`  ✓ ${"חשך".padEnd(8)} 3 veces por su lema (${osc.lema}), sin forma desnuda en el tramo`);
   }
 }
 
@@ -129,11 +154,19 @@ console.log("\n── LAS ETIQUETAS NO PARTEN LA PALABRA (el Shemá) ──");
 console.log("\n── שָׁמַיִם NO ES מַיִם ──");
 {
   const c = palabrasRepetidas(RAKIA, 12);
+  // Contados a mano en Bereshit 1:6-8: v6 trae הַמָּיִם, מַיִם y לָמָיִם; v7 trae
+  // הַמַּיִם dos veces. Cinco aguas. Y el שָׁמָיִם del v8 son los cielos, que es
+  // otra palabra: en consonantes se parecen, pero no se cuentan juntas.
   const agua = cons(c, "מים");
   if (!agua) fallo("no encontró מים");
-  else if (agua.veces !== 3) fallo(`מים debería salir 3 veces (מים, המים, למים) y da ${agua.veces}`);
-  else if (agua.variantes.includes("שמים")) fallo("metió שמים dentro de מים");
-  else console.log("  ✓ מים 3 veces (מים, המים, למים) y los cielos aparte");
+  else if (agua.veces !== 5) fallo(`מים debería salir 5 veces y da ${agua.veces}`);
+  else if ([agua.consonantes, ...agua.variantes].includes("שמים")) {
+    fallo("metió שמים dentro de מים");
+  } else {
+    const cielos = cons(c, "שמים");
+    console.log(`  ✓ מים 5 veces (${[agua.consonantes, ...agua.variantes].join(", ")})`);
+    console.log(`  ✓ los cielos, aparte${cielos ? ` (${cielos.veces})` : " y sin llegar al umbral"}`);
+  }
 }
 
 // ── 5. La puerta: dónde se cuenta y sobre qué ────────────────────────────
