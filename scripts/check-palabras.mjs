@@ -205,6 +205,38 @@ console.log("\n── UN TRAMO SIN REPETICIONES (debe salir vacío, no inventado
   }
 }
 
+// ── 8. El sobre no llega al lector ───────────────────────────────────────
+//
+// Esto pasó de verdad y se publicó: al pedirle una sección hecha con los datos
+// de <palabras_repetidas>, el modelo imitó la etiqueta y el estudio de Shemot 3
+// salió en jashmal.org empezando por «<palabras_repetidas>». El prompt ya lo
+// prohíbe, pero una regla no es una garantía: el filtro tiene que cazarla
+// incluso partida entre dos trozos del stream, que es como llega el texto.
+console.log("\n── EL SOBRE NO SE PUBLICA ──");
+{
+  const { filtroSobres } = await import("@/lib/study/sinSobres");
+
+  const casos = [
+    ["de una pieza", ["<palabras_repetidas>\nHola\n</palabras_repetidas>"], "\nHola\n"],
+    ["partida en dos", ["texto <palabras_", "repetidas> y sigue"], "texto  y sigue"],
+    ["partida letra a letra", "a<fuentes>b".split(""), "ab"],
+    ["sin etiquetas, intacto", ["Bereshit 1 habla de ", "la luz y las aguas."], "Bereshit 1 habla de la luz y las aguas."],
+    ["un menor que suelto no se come", ["3 < 7 y 8 > 2"], "3 < 7 y 8 > 2"],
+  ];
+
+  for (const [nombre, trozos, esperado] of casos) {
+    const f = filtroSobres();
+    let salida = "";
+    for (const t of trozos) salida += f.trozo(t);
+    salida += f.cierra();
+    if (salida !== esperado) {
+      fallo(`${nombre}: esperaba «${esperado}» y dio «${salida}»`);
+    } else {
+      console.log(`  ✓ ${nombre}`);
+    }
+  }
+}
+
 if (errores > 0) {
   console.error(`\n✗ ${errores} fallo(s) en la cuenta de palabras repetidas.`);
   process.exit(1);

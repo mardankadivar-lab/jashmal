@@ -836,8 +836,9 @@ function textStructure(conRepetidas = false): string {
     ? `
 מִלִּים חוֹזְרוֹת — Las palabras que se repiten. VA PRIMERO, antes de la
    traducción, SIN NÚMERO (es la antesala del estudio, no su primera sección:
-   las seis numeradas empiezan en la traducción), y es breve: de cuatro a ocho
-   líneas. En <palabras_repetidas>
+   las seis numeradas empiezan en la traducción), con su título en hebreo como
+   ENCABEZADO de sección igual que las demás —«## מִלִּים חוֹזְרוֹת — Las palabras
+   que se repiten»—, y es breve: de cuatro a ocho líneas. En <palabras_repetidas>
    tienes la cuenta YA HECHA por el código sobre el texto hebreo. Úsala así:
    - Copia los números TAL CUAL. No los recalcules, no los redondees, no
      añadas palabras que no estén en esa lista y no cuentes de memoria: lo que
@@ -851,6 +852,10 @@ function textStructure(conRepetidas = false): string {
    - Si la cuenta llega vacía o casi, dilo con naturalidad: este tramo no
      insiste en ninguna palabra, su énfasis no está en la repetición. Es un
      dato, no un fallo.
+   - NUNCA escribas las etiquetas <palabras_repetidas> ni
+     </palabras_repetidas> (ni <fuentes> ni </fuentes>) en tu respuesta: son
+     el sobre con que te llegan los datos, no parte del estudio. El lector no
+     debe ver una etiqueta jamás.
    - PROHIBIDO ARGUMENTAR DESDE LA AUSENCIA. La lista puede venir recortada
      —trae las más repetidas, no todas— y lo dice cuando lo está. Nunca
      escribas que una palabra «falta», «no aparece» o «llama la atención por

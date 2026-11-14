@@ -11,6 +11,7 @@ import {
 import { getEdgeData } from "@/lib/relations/edgeData";
 import { checkCitations } from "@/lib/sources/citationCheck";
 import { checkMidrashBlock } from "@/lib/study/midrashBlock";
+import { filtroSobres } from "@/lib/study/sinSobres";
 import { esRefDeMidrash } from "@/lib/sources/midrashRef";
 import { tramoDeConteo } from "@/lib/sources/tanajRef";
 import { palabrasRepetidas, formateaRepetidas } from "@/lib/study/palabrasRepetidas";
@@ -238,15 +239,28 @@ export async function POST(req: Request) {
         // Se guarda EXACTAMENTE lo que se envía: así las posiciones que calcula
         // el verificador siguen valiendo en el texto que tiene el cliente.
         let full = "";
+        // El sobre de los datos no se publica: si el modelo imita las etiquetas
+        // <palabras_repetidas> o <fuentes>, se quedan aquí y no llegan al
+        // lector. Se filtra en el servidor para que `full` —sobre el que se
+        // calculan las posiciones de las marcas— sea EXACTAMENTE lo enviado.
+        const sobres = filtroSobres();
         try {
           for await (const event of stream) {
             if (
               event.type === "content_block_delta" &&
               event.delta.type === "text_delta"
             ) {
-              full += event.delta.text;
-              controller.enqueue(encoder.encode(event.delta.text));
+              const limpio = sobres.trozo(event.delta.text);
+              if (limpio) {
+                full += limpio;
+                controller.enqueue(encoder.encode(limpio));
+              }
             }
+          }
+          const cola = sobres.cierra();
+          if (cola) {
+            full += cola;
+            controller.enqueue(encoder.encode(cola));
           }
           // ── El juicio ────────────────────────────────────────────────────
           // El motor propone, el código juzga. Las citas del estudio (Zóhar,
