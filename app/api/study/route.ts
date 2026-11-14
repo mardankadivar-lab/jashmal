@@ -12,6 +12,9 @@ import { getEdgeData } from "@/lib/relations/edgeData";
 import { checkCitations } from "@/lib/sources/citationCheck";
 import { checkMidrashBlock } from "@/lib/study/midrashBlock";
 import { esRefDeMidrash } from "@/lib/sources/midrashRef";
+import { tramoDeConteo } from "@/lib/sources/tanajRef";
+import { palabrasRepetidas, formateaRepetidas } from "@/lib/study/palabrasRepetidas";
+import { getText } from "@/lib/sources/sefaria";
 import type { Mark } from "@/lib/sources/proseMarks";
 import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
 import { gatherSources, formatSourcesForPrompt } from "@/lib/relations/related";
@@ -65,7 +68,11 @@ function originAllowed(req: Request): boolean {
   return allowed.includes(origin);
 }
 
-function buildUserPrompt(body: StudyRequest, sourcesBlock: string): string {
+function buildUserPrompt(
+  body: StudyRequest,
+  sourcesBlock: string,
+  repetidasBlock: string
+): string {
   if (body.mode === "letter") {
     return `Estudia la letra hebrea: ${body.letter ?? body.term ?? ""}.`;
   }
@@ -83,12 +90,17 @@ El estudiante llegó a «${c.toLabel}» viajando desde «${c.fromLabel}» en la 
     return `Estudia en profundidad el concepto: ${body.term ?? ""}.`;
   }
   const sources = sourcesBlock ? `\n\n<fuentes>${sourcesBlock}\n</fuentes>` : "";
+  // La cuenta de palabras repetidas va aparte y marcada: son DATOS, ya contados
+  // por el código, y el motor los copia sin recalcularlos.
+  const repetidas = repetidasBlock
+    ? `\n\n<palabras_repetidas>\n${repetidasBlock}\n</palabras_repetidas>`
+    : "";
   return `Referencia: ${body.ref ?? "(sin referencia)"}
 
 Texto fuente (hebreo):
 ${body.hebrewText ?? ""}
 
-Analiza este pasaje según la estructura indicada.${sources}`;
+Analiza este pasaje según la estructura indicada.${repetidas}${sources}`;
 }
 
 export async function POST(req: Request) {
@@ -131,6 +143,32 @@ export async function POST(req: Request) {
     }
   }
 
+  // Las palabras que repite el capítulo, contadas por el código antes de que
+  // el motor escriba una línea. Solo en el Tanaj: en el Talmud la unidad no es
+  // el capítulo, y un midrash abierto por su puerta ya lleva su propio método.
+  //
+  // Se cuenta sobre el TRAMO, no sobre el versículo que el lector pulsó: un
+  // versículo no repite nada y lo que enseña el énfasis es el capítulo entero.
+  // Por eso se trae el texto del capítulo aparte, aunque el estudio sea de un
+  // solo verso. Si Sefaria no responde, el estudio sale sin esta sección: es
+  // un extra, nunca un motivo para que no haya estudio.
+  let repetidasBlock = "";
+  const tramo = mode === "text" && !esRefDeMidrash(body.ref) ? tramoDeConteo(body.ref) : null;
+  if (tramo) {
+    try {
+      const capítulo = await getText(tramo);
+      const hebreo = capítulo.segments.join(" ");
+      const conteo = palabrasRepetidas(hebreo);
+      repetidasBlock = formateaRepetidas(conteo, tramo);
+      console.log(
+        `[study] palabras repetidas en ${tramo}: ${conteo.palabras.length} ` +
+          `(de ${conteo.total} palabras, umbral ${conteo.desde})`
+      );
+    } catch (err) {
+      console.error("palabras repetidas error", err);
+    }
+  }
+
   const withSources = sourcesBlock.length > 0;
   // Margen amplio para que la sección final "Sigue el hilo" no se trunque. El
   // estudio DE un midrash lleva también el margen ancho aunque esa vez no
@@ -169,8 +207,8 @@ export async function POST(req: Request) {
     ? buildKabbalahStudyPrompt(locale, sefira.he, sefira.es)
     : isConnection && connInfo
       ? buildConnectionStudyPrompt(locale, connInfo, curatedEdge)
-      : buildSystemPrompt(mode, locale, withSources, body.ref);
-  const userPrompt = buildUserPrompt(body, sourcesBlock);
+      : buildSystemPrompt(mode, locale, withSources, body.ref, repetidasBlock.length > 0);
+  const userPrompt = buildUserPrompt(body, sourcesBlock, repetidasBlock);
 
   // --- STREAMING: el texto aparece progresivamente mientras Claude genera. ---
   // Esto evita el timeout en Farsi/textos largos (el modelo puede tardar 90-120s).

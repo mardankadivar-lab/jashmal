@@ -113,7 +113,37 @@ for (const modo of ["letter", "concept"]) {
   }
 }
 
-// ── 4. El sello y el umbral, en los dos métodos ───────────────────────────
+// ── 4. La sección de palabras repetidas solo si hay cuenta ────────────────
+//
+// Es una sección de DATOS: existe cuando el código ya contó. Si apareciera sin
+// cuenta, el motor la rellenaría de memoria, que es exactamente lo que esta
+// sección viene a evitar.
+console.log("\n── מִלִּים חוֹזְרוֹת SOLO CUANDO HAY CUENTA ──");
+{
+  const REPETIDAS = "מִלִּים חוֹזְרוֹת";
+  const con = buildSystemPrompt("text", "es", false, "Genesis 1:3", true);
+  const sin = buildSystemPrompt("text", "es", false, "Genesis 1:3", false);
+  if (!con.includes(REPETIDAS)) fallo("con cuenta: falta la sección de palabras repetidas");
+  else console.log("  ✓ con cuenta    la sección está, y antes de la traducción");
+  if (sin.includes(REPETIDAS)) fallo("sin cuenta: la sección aparece y el motor contaría de memoria");
+  else console.log("  ✓ sin cuenta    la sección no existe");
+
+  // Va DELANTE de la traducción: su sitio es antes de desarrollar el capítulo.
+  const iRep = con.indexOf(REPETIDAS);
+  const iTar = con.indexOf("תַּרְגּוּם");
+  if (iRep === -1 || iTar === -1 || iRep > iTar) {
+    fallo("la sección de palabras repetidas no va delante de la traducción");
+  } else {
+    console.log("  ✓ el orden      palabras repetidas → traducción");
+  }
+
+  // Y en el estudio DE un midrash no entra: ahí el método es otro.
+  const midrash = buildSystemPrompt("text", "es", false, "Bereshit Rabbah 39:1", true);
+  if (midrash.includes(REPETIDAS)) fallo("se coló la sección en el método ampliado del midrash");
+  else console.log("  ✓ midrash       sin sección de palabras repetidas");
+}
+
+// ── 5. El sello y el umbral, en los dos métodos ───────────────────────────
 console.log("\n── EL ESTUDIO SE SELLA EN LA JATIMÁ ──");
 for (const [nombre, ref] of [["midrash", "Bereshit Rabbah 39:1"], ["parashá", "Genesis 28:11"]]) {
   const p = buildSystemPrompt("text", "es", false, ref);

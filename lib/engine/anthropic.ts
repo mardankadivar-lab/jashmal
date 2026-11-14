@@ -826,7 +826,41 @@ Que cada pregunta encienda curiosidad real — el objetivo es que el estudiante
 NUNCA deje de estudiar. No hagas preguntas genéricas; que cada una prometa una
 revelación concreta.`;
 
-function textStructure(): string {
+// La sección de palabras repetidas se añade DELANTE de la traducción, y solo
+// cuando el código ya contó de verdad: es idea de Mardan y es de método —ver qué
+// palabra insiste el capítulo antes de desarrollarlo, porque ahí se ve su
+// énfasis. Si no hay conteo (Talmud, Zóhar, un midrash abierto), la sección no
+// existe y la estructura es la de siempre.
+function textStructure(conRepetidas = false): string {
+  const repetidas = conRepetidas
+    ? `
+מִלִּים חוֹזְרוֹת — Las palabras que se repiten. VA PRIMERO, antes de la
+   traducción, SIN NÚMERO (es la antesala del estudio, no su primera sección:
+   las seis numeradas empiezan en la traducción), y es breve: de cuatro a ocho
+   líneas. En <palabras_repetidas>
+   tienes la cuenta YA HECHA por el código sobre el texto hebreo. Úsala así:
+   - Copia los números TAL CUAL. No los recalcules, no los redondees, no
+     añadas palabras que no estén en esa lista y no cuentes de memoria: lo que
+     el lector ve en esta sección lo contó el código, no tú.
+   - De cada palabra di qué significa en una o dos palabras, con su
+     transliteración: la mayoría de nuestros lectores no lee hebreo.
+   - Y después DI QUÉ ENSEÑA ESA INSISTENCIA en dos o tres frases: dónde está
+     puesto el peso del capítulo, qué palabra lo gobierna, si hay una pareja
+     de palabras que se turnan, si falta la que uno esperaría. Eso es lo que
+     esta sección viene a dar.
+   - Si la cuenta llega vacía o casi, dilo con naturalidad: este tramo no
+     insiste en ninguna palabra, su énfasis no está en la repetición. Es un
+     dato, no un fallo.
+   - PROHIBIDO ARGUMENTAR DESDE LA AUSENCIA. La lista puede venir recortada
+     —trae las más repetidas, no todas— y lo dice cuando lo está. Nunca
+     escribas que una palabra «falta», «no aparece» o «llama la atención por
+     su ausencia» porque no la veas en la lista: lo único que sabes es lo que
+     la lista afirma. Si quieres hablar de lo que el texto NO dice, hazlo
+     sobre el texto hebreo que tienes delante, no sobre el recorte.
+   - PROHIBIDO sacar de aquí gematrías, raíces que no estén en la lista o
+     conclusiones sobre palabras que el código no contó.
+`
+    : "";
   return `FLUJO PEDAGÓGICO ESTRICTAMENTE LINEAL — entendimiento → integración → acción.
 El estudio AVANZA y TERMINA; NUNCA retrocede. Una vez que pasas a הִתְבּוֹנְנוּת
 (contemplación), está TERMINANTEMENTE PROHIBIDO volver a introducir comentario
@@ -835,7 +869,7 @@ el material del Arizal / Cabalá luriana vive DENTRO de מְפָרְשִׁים y
 secreto, dentro del Sod de פרד״ס — NUNCA después de la contemplación.
 
 Estructura tu análisis EXACTAMENTE en este orden, con los títulos en hebreo:
-
+${repetidas}
 1. תַּרְגּוּם — Traducción fiel del pasaje al idioma del usuario (texto original
    en hebreo + su traducción).
 
@@ -1105,7 +1139,8 @@ export function buildSystemPrompt(
   mode: StudyMode,
   locale: string,
   withSources = false,
-  ref?: string
+  ref?: string,
+  conRepetidas = false
 ): string {
   const lang = LANG_NAME[locale] ?? LANG_NAME.es;
   const rtl = RTL_NOTE[locale] ?? "";
@@ -1122,7 +1157,7 @@ export function buildSystemPrompt(
   if (mode === "letter") structure = letterStructure();
   else if (mode === "concept") structure = conceptStructure();
   else if (abrióUnMidrash) structure = midrashStructure();
-  else structure = textStructure();
+  else structure = textStructure(conRepetidas);
 
   const ragBlock = withSources && mode === "text" ? `\n${RAG_GUIDANCE}\n` : "";
   // El Midrash se pide en el estudio de texto y de concepto. El estudio de

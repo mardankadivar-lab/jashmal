@@ -22,7 +22,8 @@
     "fuentes:tablas": "node scripts/gen-tablas-fuentes.mjs",
     "midrashref:check": "node scripts/check-midrash-ref.mjs",
     "fuentes:check": "node scripts/check-fuentes.mjs",
-    "metodo:check": "node scripts/check-metodo.mjs"
+    "metodo:check": "node scripts/check-metodo.mjs",
+    "palabras:check": "node scripts/check-palabras.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.1",

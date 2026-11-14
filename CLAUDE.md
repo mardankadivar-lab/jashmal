@@ -74,6 +74,13 @@ FLUJO ESTRICTAMENTE LINEAL (entendimiento → integración → acción): el estu
 avanza y TERMINA; nunca retrocede. Una vez en la contemplación (Hitbonenut) está
 PROHIBIDO reintroducir comentario nuevo, Arizal o secciones previas. En este orden
 exacto, con títulos en hebreo:
+0. מִלִּים חוֹזְרוֹת — Las palabras que se repiten. SOLO en textos del Tanaj
+   (Torá, Profetas, Escritos) y antes de la traducción: ver qué palabra insiste
+   el capítulo para ver dónde está su énfasis. La cuenta la hace el CÓDIGO
+   (lib/study/palabrasRepetidas.ts) sobre el capítulo entero —no sobre el
+   versículo abierto— y el motor la copia TAL CUAL: tiene prohibido recalcular,
+   redondear o añadir palabras que el código no contó. Si el tramo no repite
+   nada, se dice; es un dato, no un fallo.
 1. תַּרְגּוּם — Traducción (texto original en hebreo + traducción)
 2. מְפָרְשִׁים — Comentaristas clásicos: Rashi, Ramban, Ibn Ezra, Abarbanel,
    Malbim, **Arizal** y otras fuentes relevantes (cada uno con su voz). TODO el
@@ -96,6 +103,19 @@ comentario, Arizal, gematría ni análisis nuevo. El frontend lo renderiza como 
 umbral (separador + micro-rótulo + chips dorados), no como otra sección de estudio.
 REGLAS: citar fuentes exactas (libro cap:versículo, folio del Talmud,
 Zohar, Midrash). Ser profundo, no breve.
+
+## Estudio DE un midrash (método ampliado)
+Cuando el lector abre una obra de la estantería **Midrash** por su propia puerta
+(las 25 obras en lib/sources/midrashRef.ts), el midrash no es una voz de apoyo:
+es el objeto del estudio, y el método es otro — ocho secciones:
+תַּרְגּוּם · דִּקְדּוּק הַכָּתוּב (la grieta) · מָשָׁל וְנִמְשָׁל · הַקְבָּלָה וּפְעָרִים
+(correspondencia y huecos: andamio / sobrante con sentido / falta) ·
+הַנִּסְתָּר שֶׁבַּמָּשָׁל (el que razona mal a propósito, el versículo truncado, el
+desvío de lectura) · דַּרְכֵי הָאַגָּדָה (las discusiones rabínicas sobre cómo se lee
+una agadá, aplicadas a ESE midrash) · שִׁיבָה אֶל הַכָּתוּב · חֲתִימָה.
+Hay una **vía B** para el midrash halájico (Sifrá, Sifrí, Mejiltá), que casi
+nunca trae parábola: se nombra la midá por la que se deriva en vez de inventar
+un mashal. Aquí NO va el bloque compacto ni la sección de palabras repetidas.
 
 ## Estudio de letras hebreas
 Marco de Rav Yitzchak Ginsburgh ("The Hebrew Letters: Channels of
