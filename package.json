@@ -23,7 +23,8 @@
     "midrashref:check": "node scripts/check-midrash-ref.mjs",
     "fuentes:check": "node scripts/check-fuentes.mjs",
     "metodo:check": "node scripts/check-metodo.mjs",
-    "palabras:check": "node scripts/check-palabras.mjs"
+    "palabras:check": "node scripts/check-palabras.mjs",
+    "rastro:check": "node scripts/check-rastro.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.1",

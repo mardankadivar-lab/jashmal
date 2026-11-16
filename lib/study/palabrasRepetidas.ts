@@ -380,3 +380,40 @@ suman, y las que se sumaron van entre paréntesis. La forma que encabeza cada
 línea es la que el tramo usa más veces:
 ${filas}${recorte}`;
 }
+
+// ─── El normalizador, compartido ─────────────────────────────────────────
+//
+// Partir el hebreo en palabras y encontrarle el lema a cada una es lo mismo
+// aquí y en el rastro de palabras (lib/study/rastroPalabra.ts). Hay UN solo
+// normalizador y se comparte, en vez de imitarlo: dos normalizadores que
+// empiezan iguales se separan en la primera corrección y entonces una misma
+// palabra del mismo versículo se cuenta de una manera y se rastrea de otra.
+// Cada arreglo de los que están documentados arriba —el maqaf antes del
+// niqud, las etiquetas sin espacio, el qamatz qatán— vale para los dos.
+
+/** Una palabra del texto, en sus dos formas. */
+export interface FormaDoble {
+  /** Con vocales, sin cantilación: la clave fina para buscar el lema. */
+  voc: string;
+  /** Solo consonantes. */
+  cons: string;
+}
+
+/** Parte un texto hebreo de Sefaria en palabras. Ver `tokeniza`. */
+export function tokenizaHebreo(texto: string): FormaDoble[] {
+  return tokeniza(texto);
+}
+
+/**
+ * El lema de una forma según la edición etiquetada, o null si la edición le da
+ * dos lemas y no se puede saber cuál es el de este pasaje. Ver `lemaDe`.
+ */
+export function lemaDeForma(
+  voc: string,
+  cons: string
+): { pos: string; lema: string } | null {
+  return lemaDe(voc, cons);
+}
+
+/** Partes de la oración con contenido, tal como las aparta esta cuenta. */
+export const POS_CONTENIDO: ReadonlySet<string> = CONTENIDO;

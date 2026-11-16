@@ -24,6 +24,8 @@
 const SOBRES = [
   "<palabras_repetidas>",
   "</palabras_repetidas>",
+  "<rastro_palabras>",
+  "</rastro_palabras>",
   "<fuentes>",
   "</fuentes>",
 ];

@@ -15,6 +15,7 @@ import { filtroSobres } from "@/lib/study/sinSobres";
 import { esRefDeMidrash } from "@/lib/sources/midrashRef";
 import { tramoDeConteo } from "@/lib/sources/tanajRef";
 import { palabrasRepetidas, formateaRepetidas } from "@/lib/study/palabrasRepetidas";
+import { rastrosDelPasaje, formateaRastros } from "@/lib/study/rastroPalabra";
 import { getText } from "@/lib/sources/sefaria";
 import type { Mark } from "@/lib/sources/proseMarks";
 import { checkRateLimit, clientIp } from "@/lib/infra/rateLimit";
@@ -72,7 +73,8 @@ function originAllowed(req: Request): boolean {
 function buildUserPrompt(
   body: StudyRequest,
   sourcesBlock: string,
-  repetidasBlock: string
+  repetidasBlock: string,
+  rastroBlock: string
 ): string {
   if (body.mode === "letter") {
     return `Estudia la letra hebrea: ${body.letter ?? body.term ?? ""}.`;
@@ -96,12 +98,15 @@ El estudiante llegó a «${c.toLabel}» viajando desde «${c.fromLabel}» en la 
   const repetidas = repetidasBlock
     ? `\n\n<palabras_repetidas>\n${repetidasBlock}\n</palabras_repetidas>`
     : "";
+  // Y el rastro de una palabra por el Tanaj, también en su sobre: son
+  // direcciones ya buscadas por el código, y el motor no puede añadir ninguna.
+  const rastro = rastroBlock ? `\n\n<rastro_palabras>\n${rastroBlock}\n</rastro_palabras>` : "";
   return `Referencia: ${body.ref ?? "(sin referencia)"}
 
 Texto fuente (hebreo):
 ${body.hebrewText ?? ""}
 
-Analiza este pasaje según la estructura indicada.${repetidas}${sources}`;
+Analiza este pasaje según la estructura indicada.${repetidas}${rastro}${sources}`;
 }
 
 export async function POST(req: Request) {
@@ -170,6 +175,33 @@ export async function POST(req: Request) {
     }
   }
 
+  // El rastro de una palabra por el Tanaj: «en todo lugar donde se dice».
+  //
+  // Se busca sobre el PASAJE ABIERTO —no sobre el capítulo entero como las
+  // palabras repetidas— porque lo que el lector quiere ver iluminado son las
+  // palabras que tiene delante. La puerta es la misma que la del conteo: solo
+  // Tanaj, y nunca cuando el lector abrió un midrash por su propia puerta,
+  // que lleva su propio método.
+  //
+  // Y es un extra: si la tabla de concordancia está vacía —lo está hasta que
+  // se corra scripts/gen-concordancia.mjs— esto devuelve una lista vacía y el
+  // estudio sale sin rastro, sin un solo error.
+  let rastroBlock = "";
+  if (tramo && body.ref) {
+    try {
+      const rastros = rastrosDelPasaje(body.hebrewText ?? "", body.ref, 2);
+      rastroBlock = formateaRastros(rastros, body.ref);
+      if (rastros.length > 0) {
+        console.log(
+          `[study] rastro de palabras en ${body.ref}: ` +
+            rastros.map((r) => `${r.consonantes} (${r.total})`).join(", ")
+        );
+      }
+    } catch (err) {
+      console.error("rastro de palabras error", err);
+    }
+  }
+
   const withSources = sourcesBlock.length > 0;
   // Margen amplio para que la sección final "Sigue el hilo" no se trunque. El
   // estudio DE un midrash lleva también el margen ancho aunque esa vez no
@@ -208,8 +240,15 @@ export async function POST(req: Request) {
     ? buildKabbalahStudyPrompt(locale, sefira.he, sefira.es)
     : isConnection && connInfo
       ? buildConnectionStudyPrompt(locale, connInfo, curatedEdge)
-      : buildSystemPrompt(mode, locale, withSources, body.ref, repetidasBlock.length > 0);
-  const userPrompt = buildUserPrompt(body, sourcesBlock, repetidasBlock);
+      : buildSystemPrompt(
+          mode,
+          locale,
+          withSources,
+          body.ref,
+          repetidasBlock.length > 0,
+          rastroBlock.length > 0
+        );
+  const userPrompt = buildUserPrompt(body, sourcesBlock, repetidasBlock, rastroBlock);
 
   // --- STREAMING: el texto aparece progresivamente mientras Claude genera. ---
   // Esto evita el timeout en Farsi/textos largos (el modelo puede tardar 90-120s).

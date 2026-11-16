@@ -831,7 +831,7 @@ revelación concreta.`;
 // palabra insiste el capítulo antes de desarrollarlo, porque ahí se ve su
 // énfasis. Si no hay conteo (Talmud, Zóhar, un midrash abierto), la sección no
 // existe y la estructura es la de siempre.
-function textStructure(conRepetidas = false): string {
+function textStructure(conRepetidas = false, conRastro = false): string {
   const repetidas = conRepetidas
     ? `
 מִלִּים חוֹזְרוֹת — Las palabras que se repiten. VA PRIMERO, antes de la
@@ -871,6 +871,64 @@ function textStructure(conRepetidas = false): string {
      conclusiones sobre palabras que el código no contó.
 `
     : "";
+  // El rastro de una palabra por el Tanaj va DENTRO de רֶמֶז, en la sección 3.
+  // No es una sección nueva y no puede serlo: el método es lineal y queda
+  // sellado en la jatimá, así que una séptima sección rompería la arquitectura
+  // entera. Remez es su casa natural —es el nivel de la alusión, de lo que una
+  // palabra insinúa al aparecer en otro sitio— y es donde el Midrash y Rashi
+  // lo hacen.
+  const rastro = conRastro
+    ? `
+   DENTRO DE רֶמֶז, Y SOLO SI ILUMINA ALGO: el rastro de la palabra por el
+   Tanaj — «en todo lugar donde se dice» (כָּל מָקוֹם שֶׁנֶּאֱמַר), que es como
+   iluminan un concepto el Midrash, Rashi y el Zóhar. En
+   <rastro_palabras> tienes, para una o dos palabras poco frecuentes de este
+   pasaje, TODAS sus apariciones en el Tanaj, ya buscadas por el código.
+   NO es una sección aparte: es un párrafo o dos dentro del nivel Remez.
+   Llámala por su nombre: «en todo lugar donde se dice», o simplemente el
+   rastro de la palabra. Y NO la presentes como una regla de derivación ni le
+   pongas el nombre de ninguna: las reglas de derivación legal exigen tradición
+   recibida y aquí no se deriva nada, se ilumina un matiz.
+   - LAS DIRECCIONES LAS PONE EL CÓDIGO. Te está PROHIBIDO añadir una
+     aparición que la lista no traiga, inventar un versículo, «recordar» otro
+     lugar o corregir una referencia. Es la regla de la casa: tú propones el
+     sentido, el código comprueba los datos. Si quieres hablar de un pasaje
+     que no está en la lista, cítalo como lo que es —un pasaje que traes tú—
+     y no lo presentes como parte del rastro.
+   - LA LISTA ESTÁ COMPLETA y por eso tienes una obligación: si alguna de esas
+     apariciones NO ENCAJA con el matiz que estás proponiendo, NÓMBRALA y dale
+     cuenta. No la saltes. Es el método de Meguilá 10b, donde Rabí Leví rastrea
+     «vayhí» como palabra de aflicción y él mismo trae el día octavo del
+     Mishkán, que es de alegría, y lo resuelve. Un rastreo que esconde el caso
+     incómodo no es estudio, es propaganda. Si no sabes resolverlo, DILO: «esta
+     aparición no encaja y no sé reducirla al mismo matiz» es una frase honesta
+     y vale más que un silencio.
+   - NO CAMBIES LA UNIDAD SIN DECIRLO. Cada lista es de UNA PALABRA. Si lo
+     que ilumina es una expresión fija que la contiene —dos palabras que en el
+     Tanaj van siempre juntas—, puedes hablar de la expresión, pero DILO, y no
+     le pases a la palabra el recuento de la expresión: «la expresión X
+     aparece tres veces» NO es «la palabra X aparece tres veces». Y si al
+     hacerlo dejas sin usar la lista de otra palabra que el código te dio,
+     dilo en una frase: «de la palabra Y, que aparece en otros N lugares, no
+     hablo aquí». Reencuadrar la unidad en silencio es la manera elegante de
+     escaparse de la lista completa, y la lista completa es la razón de ser
+     de este rastro.
+   - DI EN VOZ ALTA CUÁNDO EL PARECIDO ES SOLO VERBAL. En hebreo las raíces se
+     reparten mucho: dos pasajes que comparten una palabra NO están conectados
+     por eso solo. Si las apariciones no comparten un sentido real, escríbelo
+     —«aquí la coincidencia es solo de palabra, no de sentido»— y no fuerces la
+     conexión. Es una conclusión legítima y a veces es la única honesta.
+   - El rastro es POR PALABRA y no por grafía: una aparición puede estar
+     escrita con otro prefijo o en otra conjugación. Así que di «la misma
+     palabra» o «la misma raíz», no «la misma forma».
+   - Da el significado y la transliteración de la palabra: la mayoría de
+     nuestros lectores no lee hebreo. Y cita cada lugar con su nombre en
+     español como viene en la lista.
+   - Si el rastro no te enseña nada de este pasaje, NO LO USES. Vale más un
+     Remez sin rastro que un rastro traído a la fuerza.
+   - NUNCA escribas las etiquetas <rastro_palabras> ni </rastro_palabras> en tu
+     respuesta: son el sobre con que te llegan los datos, no parte del estudio.`
+    : "";
   return `FLUJO PEDAGÓGICO ESTRICTAMENTE LINEAL — entendimiento → integración → acción.
 El estudio AVANZA y TERMINA; NUNCA retrocede. Una vez que pasas a הִתְבּוֹנְנוּת
 (contemplación), está TERMINANTEMENTE PROHIBIDO volver a introducir comentario
@@ -902,7 +960,7 @@ ${repetidas}
    Drash (homilético — ANCLADO en el Midrash, con su cita exacta: es la casa
    natural del Drash) y Sod (secreto, con la voz del Baal HaSulam). La voz JASÍDICA
    (el espíritu del Baal Shem Tov y los maestros del jasidismo) se INTEGRA aquí,
-   sobre todo en Drash y en Sod — NO va en una sección aparte posterior.
+   sobre todo en Drash y en Sod — NO va en una sección aparte posterior.${rastro}
 
 4. הִתְבּוֹנְנוּת — Contemplación / internalización, y NADA MÁS. Aquí SOLO se
    contempla e interioriza lo ya estudiado. PROHIBIDO: comentario nuevo, citas del
@@ -1150,7 +1208,8 @@ export function buildSystemPrompt(
   locale: string,
   withSources = false,
   ref?: string,
-  conRepetidas = false
+  conRepetidas = false,
+  conRastro = false
 ): string {
   const lang = LANG_NAME[locale] ?? LANG_NAME.es;
   const rtl = RTL_NOTE[locale] ?? "";
@@ -1167,7 +1226,7 @@ export function buildSystemPrompt(
   if (mode === "letter") structure = letterStructure();
   else if (mode === "concept") structure = conceptStructure();
   else if (abrióUnMidrash) structure = midrashStructure();
-  else structure = textStructure(conRepetidas);
+  else structure = textStructure(conRepetidas, conRastro);
 
   const ragBlock = withSources && mode === "text" ? `\n${RAG_GUIDANCE}\n` : "";
   // El Midrash se pide en el estudio de texto y de concepto. El estudio de
