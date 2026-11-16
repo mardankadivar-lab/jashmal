@@ -24,11 +24,9 @@ export default function CategoryNav({ selected, onSelect }: CategoryNavProps) {
               : "border-gold/25 text-muted hover:border-gold/60 hover:text-parchment")
           }
         >
-          {locale === "fa" ? (
-            <span>{g.fa}</span>
-          ) : (
-            <span>{g.es}</span>
-          )}
+          {/* Tres idiomas, no dos: el inglés SE QUEDA en el selector de
+              Jashmal, y antes /en mostraba la estantería en español. */}
+          <span>{locale === "fa" ? g.fa : locale === "en" ? g.en : g.es}</span>
         </button>
       ))}
     </div>

@@ -50,8 +50,93 @@ function toSegments(value: string[] | string): string[] {
   return flattenDeep(value);
 }
 
+// ─── Versiones hebreas FIJADAS por obra ────────────────────────────────────
+// Sefaria elige por su cuenta qué versión hebrea sirve por defecto, y para una
+// obra puede ser la equivocada. El caso que obligó a esto es el Moré Nevujim:
+// por defecto devuelve la traducción MAKBILI de 2024 (licencia "unknown"),
+// mientras que los comentaristas clásicos del Moré que Sefaria tiene cargados
+// —Efodi, Shem Tov, Narboni, Crescas, Abarbanel— glosan palabra por palabra
+// la traducción de IBN TIBÓN. Con la versión de 2024 en pantalla, Shem Tov
+// explicaría palabras que el lector no tiene delante: un error que nadie
+// notaría, porque todo "funciona".
+//
+// Ibn Tibón además es DOMINIO PÚBLICO (verificado contra
+// /api/texts/versions/Guide for the Perplexed, 2026-11-16).
+//
+// La clave es el id del libro tal como empieza cualquier ref de la obra.
+const HE_VERSION_PIN: Record<string, string> = {
+  "Guide for the Perplexed": "Moreh Nevuchim, translated by Ibn Tibon",
+};
+
+// Excepción por REF EXACTO, que gana sobre la de la obra entera.
+// El prólogo del propio Ibn Tibón no está dentro de su traducción del Moré
+// —es un texto suyo, no del Rambam— y Sefaria lo guarda en una versión aparte.
+// Sin esta línea el pin de la obra fallaba ahí y el nodo no se podía abrir.
+// Aquí no hay riesgo de servir «la versión equivocada»: no existe una
+// traducción rival de este prólogo, solo el hebreo de Ibn Tibón.
+const HE_VERSION_PIN_REF: Record<string, string> = {
+  "Guide for the Perplexed, Introduction of Ibn Tibon": "Moreh Nevuchim, Ibn Tibon Introduction",
+};
+
+function pinnedHeVersion(ref: string): string | null {
+  const exacto = HE_VERSION_PIN_REF[ref];
+  if (exacto) return exacto;
+  for (const [id, version] of Object.entries(HE_VERSION_PIN)) {
+    if (ref === id || ref.startsWith(`${id} `) || ref.startsWith(`${id},`)) return version;
+  }
+  return null;
+}
+
+interface V3Version {
+  versionTitle?: string;
+  language?: string;
+  actualLanguage?: string;
+  text?: unknown;
+}
+interface V3Result {
+  versions?: V3Version[];
+  ref?: string;
+  heRef?: string;
+  next?: string | null;
+  prev?: string | null;
+}
+
+/**
+ * Trae un texto PIDIENDO una versión hebrea concreta. La v2 de la API ignora
+ * el parámetro de versión (comprobado: devuelve igual la Makbili), así que esto
+ * va por la v3, que sí acepta `version=hebrew|<título>`.
+ *
+ * NO cae a la versión por defecto si la fijada no está: publicar el Moré con la
+ * versión equivocada es peor que no publicarlo, y un fallo mudo aquí es
+ * exactamente lo que vinimos a evitar. Si falta, lanza.
+ */
+async function getTextPinned(ref: string, heVersion: string): Promise<SefariaTextResult> {
+  const q = `version=${encodeURIComponent(`hebrew|${heVersion}`)}&version=translation`;
+  const res = await fetch(`${BASE}/v3/texts/${encodeURIComponent(ref)}?${q}`);
+  if (!res.ok) throw new Error(`Sefaria v3 texts error: ${res.status}`);
+  const data: V3Result = await res.json();
+  const versions = data.versions ?? [];
+  const he = versions.find((v) => v.versionTitle === heVersion);
+  if (!he) {
+    throw new Error(
+      `Sefaria no tiene la versión fijada «${heVersion}» para ${ref}: no se sirve el texto`
+    );
+  }
+  const en = versions.find((v) => v !== he && (v.actualLanguage ?? v.language) === "en");
+  return {
+    ref: data.ref ?? ref,
+    heRef: data.heRef ?? "",
+    segments: toSegments(he.text as string[] | string),
+    translations: en ? toSegments(en.text as string[] | string) : [],
+    next: data.next ?? null,
+    prev: data.prev ?? null,
+  };
+}
+
 /** Obtiene un texto. `ref` ej.: "Genesis 1", "Shabbat 2a", "Tanya, Chapter 1". */
 export async function getText(ref: string): Promise<SefariaTextResult> {
+  const pin = pinnedHeVersion(ref);
+  if (pin) return getTextPinned(ref, pin);
   const res = await fetch(`${BASE}/texts/${encodeURIComponent(ref)}?context=0`);
   if (!res.ok) throw new Error(`Sefaria texts error: ${res.status}`);
   const data: SefariaText = await res.json();

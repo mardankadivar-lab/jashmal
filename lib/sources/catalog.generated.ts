@@ -1,4 +1,12 @@
-// AUTO-GENERADO desde el índice de Sefaria. No editar a mano.
+// Catálogo de las SIETE estanterías: Tanaj, Mishná, Talmud, Midrash, Cabalá,
+// Jasidut y Filosofía judía (Jewish Thought).
+//
+// El nombre del archivo miente y hay que decirlo: NO hay generador. El volcado
+// original se sacó una vez del índice de Sefaria, pero no quedó ningún script
+// que lo reproduzca, así que este archivo SE MANTIENE A MANO. Si añades una
+// obra, mide su forma contra /api/shape/<obra> antes de escribir sus `units`:
+// inventarlos produce refs rotos que nadie nota hasta que un lector los abre.
+//
 // Solo textos primarios; los comentarios los trae el motor RAG.
 export interface CatBook { id: string; label: string; he: string; type: "chapters" | "talmud"; units: number; firstDaf?: number; }
 export interface CatSub { sub: string | null; subHe: string; books: CatBook[]; }
@@ -240,6 +248,47 @@ export const CATALOG: CatGroup[] = [
       { id: "Keter Shem Tov", label: "Keter Shem Tov", he: "כתר שם טוב", type: "chapters", units: 2 },
       { id: "Sefat Emet", label: "Sefat Emet", he: "שפת אמת", type: "chapters", units: 68 },
       { id: "Shem MiShmuel", label: "Shem MiShmuel", he: "שם משמואל", type: "chapters", units: 68 },
+    ] },
+  ] },
+  // ── Filosofía judía · מַחְשֶׁבֶת יִשְׂרָאֵל (la séptima estantería) ──────────
+  // Once obras montadas, de las doce que el Sofer entregó. La doceava
+  // (Or Hashem, de Crescas) queda FUERA: 58 nodos en TRES niveles
+  // (Tratado → Principio → Capítulo, con introducciones intercaladas); no hay
+  // navegador para eso y no se inventó uno en esta tanda. Sus nombres ya están
+  // escritos y esperan: §3.8 de la entrega del Sofer.
+  //
+  // DOS MANOS, SEPARADAS: la FORMA está medida contra /api/shape y /api/texts
+  // de Sefaria (2026-11-16); los NOMBRES y el nikud son del Departamento de
+  // Erudición. El nikud es SUYO — Sefaria entrega los títulos sin vocalizar.
+  //
+  // Las OCHO complejas quedan como UN chip y las intercepta ParshaWorkNavigator
+  // con su estructura (PARSHA_WORKS en catalogOverrides.ts). Sus `units` aquí
+  // son el nº de nodos del TOC, informativos.
+  // El Kuzari se APLANA en sus cinco ensayos (COMPLEX_OVERRIDES): un ensayo
+  // entero son 74.000 caracteres.
+  // Dos obras planas (Derashot haRan, Igrot Tzafón) usan la rejilla de
+  // capítulos normal con el ref "{Libro} {n}".
+  { id: "Jewish Thought", he: "מַחְשֶׁבֶת יִשְׂרָאֵל", es: "Filosofía judía", subs: [
+    { sub: "Los cimientos (siglos X–XII)", subHe: "הַיְסוֹדוֹת", books: [
+      { id: "Duties of the Heart", label: "Los deberes del corazón (Jovot HaLevavot)", he: "חוֹבוֹת הַלְּבָבוֹת", type: "chapters", units: 25 },
+      { id: "HaEmunot veHaDeot", label: "Las creencias y las opiniones (HaEmunot veHaDeot)", he: "הָאֱמוּנוֹת וְהַדֵּעוֹת", type: "chapters", units: 16 },
+    ] },
+    { sub: "El Rambam y la cumbre de la razón", subHe: "הָרַמְבַּ״ם — פְּסָגַת הַתְּבוּנָה", books: [
+      { id: "Eight Chapters", label: "Los ocho capítulos (Shemoná Perakim)", he: "שְׁמוֹנָה פְּרָקִים", type: "chapters", units: 8 },
+      { id: "Guide for the Perplexed", label: "Guía de los perplejos (Moré Nevujim)", he: "מוֹרֵה נְבוּכִים", type: "chapters", units: 9 },
+    ] },
+    { sub: "Los que le responden (siglos XII–XV)", subHe: "הַמְּשִׁיבִים", books: [
+      { id: "Kuzari", label: "El Kuzari (Séfer HaKuzarí)", he: "סֵפֶר הַכּוּזָרִי", type: "chapters", units: 5 },
+      { id: "Sefer HaIkkarim", label: "El libro de los principios (Séfer HaIkarim)", he: "סֵפֶר הָעִקָּרִים", type: "chapters", units: 12 },
+      { id: "Derashot HaRan", label: "Los discursos del Ran (Derashot HaRan)", he: "דְּרָשׁוֹת הָרַ״ן", type: "chapters", units: 12 },
+    ] },
+    { sub: "Después de la expulsión (siglos XVI–XVIII)", subHe: "אַחֲרֵי הַגֵּרוּשׁ", books: [
+      { id: "Derekh Hashem", label: "El camino del Eterno (Dérej Hashem)", he: "דֶּרֶךְ ה׳", type: "chapters", units: 32 },
+      { id: "Netivot Olam", label: "Los senderos eternos (Netivot Olam)", he: "נְתִיבוֹת עוֹלָם", type: "chapters", units: 34 },
+    ] },
+    { sub: "Los modernos (siglos XVIII–XIX)", subHe: "הָעֵת הַחֲדָשָׁה", books: [
+      { id: "Nefesh HaChayim", label: "El alma de la vida (Néfesh HaJaim)", he: "נֶפֶשׁ הַחַיִּים", type: "chapters", units: 7 },
+      { id: "Nineteen Letters", label: "Las diecinueve cartas (Igrot Tzafón)", he: "אִגְּרוֹת צָפוֹן", type: "chapters", units: 19 },
     ] },
   ] },
 ];

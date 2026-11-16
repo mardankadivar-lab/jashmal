@@ -57,7 +57,7 @@
     "kicker": "Kabbalah and Jewish philosophy",
     "title": "Jashmal",
     "tagline": "The voice of silence",
-    "description": "A living tool for the study of the Torah, Talmud, Midrash, Kabbalah and Chasidut. You choose a text; the analysis descends through the four worlds of PaRDeS.",
+    "description": "A living tool for the study of the Torah, Talmud, Midrash, Kabbalah, Chasidut and Jewish philosophy. You choose a text; the analysis descends through the four worlds of PaRDeS.",
     "etymology": "From the chashmal of Ezekiel 1:4 — chash (silence) and mal (speech).",
     "cta": "Begin to study",
     "guided": "I've never studied this. Take me by the hand",
@@ -83,7 +83,7 @@
     "studyPassage": "Quick study",
     "studyPassageDeep": "Deep study",
     "quickHint": "Immediate analysis (~30s)",
-    "deepHint": "Brings the real connected sources from Sefaria (Targum, commentators, Midrash, Kabbalah, Chasidut). Deeper, ~1-2 min.",
+    "deepHint": "Brings the real connected sources from Sefaria (Targum, commentators, Midrash, Jewish philosophy, Kabbalah, Chasidut). Deeper, ~1-2 min.",
     "depthNote": "The deep study gathers the real sources connected to this passage before analyzing it. It takes longer, but is more faithful.",
     "wordHint": "Tap a Hebrew word to open the lexicon.",
     "analysis": "Analysis",
@@ -120,7 +120,7 @@
   },
   "search": {
     "title": "Search the texts",
-    "subtitle": "Results from a search across the whole Sefaria library: Torah, Talmud, Midrash, Kabbalah, Chasidut and more. Check several categories at once to narrow it down.",
+    "subtitle": "Results from a search across the whole Sefaria library: Torah, Talmud, Midrash, Kabbalah, Chasidut, Jewish philosophy and more. Check several categories at once to narrow it down.",
     "searching": "Searching...",
     "resultsFor": "{n} results for “{q}”",
     "noResults": "No passages found for this search. Try another word or remove a filter.",
@@ -216,7 +216,7 @@
     "s2Body": "The Talmud (Chagigah 13b) reads the name as two joined words: \"chash\" (חַשׁ, silence) and \"mal\" (מַל, speech). The angels called chashmalim are sometimes silent and sometimes speak: silent when the divine Word emanates, speaking when they transmit it. That is why Jashmal is \"the voice of silence\": first the text is heard in silence, and only then does one speak. That is the method of this place.",
     "s3He": "לִמּוּד",
     "s3Title": "What this place is",
-    "s3Body": "Jashmal is a living tool of study. You choose a text from the Torah, Talmud, Midrash, Kabbalah or Chasidut, and the analysis descends through the four worlds of PaRDeS: Pshat (literal), Remez (allusion), Drash (interpretation) and Sod (secret). The engine gathers the real sources connected to each passage — the Targumim, the commentators, the Zohar, the Arizal — as a student would who opens many books at once.",
+    "s3Body": "Jashmal is a living tool of study. You choose a text from the Torah, Talmud, Midrash, Kabbalah, Chasidut or Jewish philosophy, and the analysis descends through the four worlds of PaRDeS: Pshat (literal), Remez (allusion), Drash (interpretation) and Sod (secret). The engine gathers the real sources connected to each passage — the Targumim, the commentators, the Zohar, the Arizal — as a student would who opens many books at once.",
     "s4He": "מַעֲשֶׂה",
     "s4Title": "The purpose",
     "s4Body": "Knowledge is only complete when it descends into the world of action. Contemplation alone is not enough: the light of wisdom (Chochmah) must descend to Malchut, to daily life, to an act of kindness. Jashmal seeks that each study bring you closer to God, to yourself and to your neighbor — that silence learn to speak, and that the word become deed.",
@@ -330,7 +330,7 @@
     },
     "step3": {
       "title": "Browse by category",
-      "desc": "Choose from Torah, Talmud, Midrash, Kabbalah or Chassidut. Then select the book, chapter and verse you want to study."
+      "desc": "Choose from Torah, Talmud, Midrash, Kabbalah, Chassidut or Jewish philosophy. Then select the book, chapter and verse you want to study."
     },
     "step4": {
       "title": "Analysis appears here",
@@ -434,7 +434,7 @@
     "hint": "Type what you are looking for: a figure, a Hebrew letter, a number, a parashah. I will take you to the study.",
     "loading": "Opening the index…",
     "noneTitle": "There is no Jashmal study about “{q}” yet.",
-    "noneHelp": "But you can search that word in the texts: Torah, Talmud, Midrash, Kabbalah and Chasidut.",
+    "noneHelp": "But you can search that word in the texts: Torah, Talmud, Midrash, Kabbalah, Chasidut and Jewish philosophy.",
     "searchTexts": "Search the texts",
     "alsoTexts": "Search “{q}” in the Sefaria texts too →",
     "onlySpanish": "Spanish only",

@@ -45,6 +45,7 @@ export type SourceLevel =
   | "commentary"
   | "talmud"
   | "midrash"
+  | "filosofia"
   | "kabbalah"
   | "chasidut";
 
@@ -78,6 +79,17 @@ function categoryToLevel(cat?: string): SourceLevel | null {
       return "talmud";
     case "Midrash":
       return "midrash";
+    // Sin este caso, toda fuente filosófica conectada a un pasaje (el Moré
+    // Nevujim sobre un versículo, el Kuzari, el Séfer haIkarim) se DESCARTABA
+    // en silencio: `null` y fuera, sin un solo error.
+    //
+    // Y va en un nivel PROPIO, no mapeada a "commentary": el Moré no es un
+    // comentario al versículo como Rashi, es un tratado independiente que lo
+    // cita. Meterlo entre los mefarshim lo presentaría como lo que no es.
+    // Su sitio en el orden es después del Midrash y antes de la Cabalá: es la
+    // capa racional, y en el método de la casa el Rambam se lee antes del Arí.
+    case "Jewish Thought":
+      return "filosofia";
     case "Kabbalah":
       return "kabbalah";
     case "Chasidut":
@@ -216,6 +228,7 @@ const LEVEL_ORDER: SourceLevel[] = [
   "commentary",
   "talmud",
   "midrash",
+  "filosofia",
   "kabbalah",
   "chasidut",
 ];
@@ -225,6 +238,7 @@ const LEVEL_LABEL: Record<SourceLevel, string> = {
   commentary: "COMENTARISTAS",
   talmud: "TALMUD",
   midrash: "MIDRASH",
+  filosofia: "FILOSOFÍA JUDÍA (Majshévet Israel)",
   kabbalah: "CABALÁ (Sod)",
   chasidut: "JASIDUT",
 };

@@ -1,4 +1,4 @@
-import { BEN_PORAT_GROUPS, MEOR_EINAYIM_GROUPS } from "@/lib/sources/catalogOverrides";
+import { PARSHA_WORKS } from "@/lib/sources/catalogOverrides";
 
 // Nombres transliterados ES/FA para los libros (sobre el id inglés de Sefaria).
 // Si un libro no está aquí, se muestra su título inglés (fallback honesto).
@@ -9,7 +9,15 @@ import { BEN_PORAT_GROUPS, MEOR_EINAYIM_GROUPS } from "@/lib/sources/catalogOver
 // `fa` es opcional a propósito: la lista persa es la de la Biblia persa
 // estándar que dio Mardan, y para las obras midráshicas no tenemos un nombre
 // persa autorizado. Antes que inventarlo, se deja el título de Sefaria.
-interface Name { es: string; fa?: string; }
+interface Name {
+  es: string;
+  fa?: string;
+  /** inglés. HOY NADIE LO LEE: `localizedBookLabel` devuelve el español cuando
+   * el idioma es inglés, para todos los libros del sitio. Ese hueco se arregla
+   * aparte y por decisión de la gerencia; el campo existe para que, cuando se
+   * decida, sea una línea y no haya que volver a pedirle los nombres al Sofer. */
+  en?: string;
+}
 
 // ── Mishné Torá — los tratados (hiljot) ───────────────────────────────────
 // La obra no es un libro: son catorce "sefarim" con casi noventa tratados.
@@ -256,17 +264,59 @@ export const BOOK_NAMES: Record<string, Name> = {
   // (ver `getWorkBooks`), así que sus tratados necesitan nombre en español.
   "Mishneh Torah": { es: "Mishné Torá", fa: "میشنه تورا" },
   ...MISHNEH_TORAH_NAMES,
+
+  // ── Filosofía judía · מַחְשֶׁבֶת יִשְׂרָאֵל ────────────────────────────────
+  // Rótulos del Departamento de Erudición (el Sofer), 16-nov-2026. Formato fijo
+  // de la casa: «Traducción al español (Transliteración hebrea)». El farsi NO
+  // es transliteración mecánica: donde la obra tiene nombre propio conocido en
+  // el mundo islámico medieval, se usa ese (الامانات و الاعتقادات، دلالة الحائرین).
+  //
+  // El `en` está GUARDADO PERO NO SE USA: `localizedBookLabel` devuelve el
+  // español cuando el idioma es inglés, para TODOS los libros del sitio. Es el
+  // hueco de inglés general y se arregla aparte, por decisión de la gerencia.
+  // Se guarda para no perder la entrega del Sofer ni tener que volver a pedirla.
+  "HaEmunot veHaDeot": { es: "Las creencias y las opiniones (HaEmunot veHaDeot)", fa: "باورها و اندیشه‌ها (الامانات و الاعتقادات)", en: "Beliefs and Opinions" },
+  "Duties of the Heart": { es: "Los deberes del corazón (Jovot HaLevavot)", fa: "وظایف دل‌ها (فرائض القلوب)", en: "Duties of the Heart" },
+  "Guide for the Perplexed": { es: "Guía de los perplejos (Moré Nevujim)", fa: "راهنمای سرگشتگان (دلالة الحائرین)", en: "Guide for the Perplexed" },
+  "Eight Chapters": { es: "Los ocho capítulos (Shemoná Perakim)", fa: "هشت فصل (شْمونا پراکیم)", en: "The Eight Chapters" },
+  Kuzari: { es: "El Kuzari (Séfer HaKuzarí)", fa: "کوزاری (کتاب الخزری)", en: "The Kuzari" },
+  "Sefer HaIkkarim": { es: "El libro de los principios (Séfer HaIkarim)", fa: "کتاب اصول ایمان (سفر هعیقاریم)", en: "The Book of Principles" },
+  "Derashot HaRan": { es: "Los discursos del Ran (Derashot HaRan)", fa: "خطابه‌های هَران (دِرَشوت هَران)", en: "The Discourses of the Ran" },
+  "Derekh Hashem": { es: "El camino del Eterno (Dérej Hashem)", fa: "راه خداوند (دِرِخ هَشِم)", en: "The Way of God" },
+  "Netivot Olam": { es: "Los senderos eternos (Netivot Olam)", fa: "راه‌های دیرین (نِتیووت عولام)", en: "Eternal Paths" },
+  "Nefesh HaChayim": { es: "El alma de la vida (Néfesh HaJaim)", fa: "جانِ زندگی (نِفِش هَحَییم)", en: "The Soul of Life" },
+  "Nineteen Letters": { es: "Las diecinueve cartas (Igrot Tzafón)", fa: "نوزده نامه (ایگروت صافون)", en: "The Nineteen Letters" },
+
+  // Los cinco ensayos del Kuzari. El Sofer entrega el Kuzari como obra PLANA
+  // y no nombra los maamarim —Sefaria solo los numera—, así que estos rótulos
+  // son NUESTROS.
+  //
+  // Llevan el nombre de la obra delante a propósito. Al aplanarse, el Kuzari
+  // NO deja un chip propio en el anaquel: deja estos cinco. Sin el prefijo, el
+  // lector veía «Ensayo primero» suelto entre el Séfer haIkarim y los
+  // Discursos del Ran, sin forma de saber de qué libro era. (El Tania se
+  // aplana igual y no lo necesita: «Igéret HaKódesh» se reconoce sola.)
+  "Kuzari-1": { es: "El Kuzari · Ensayo primero", fa: "کوزاری · جستار یکم", en: "The Kuzari · First Essay" },
+  "Kuzari-2": { es: "El Kuzari · Ensayo segundo", fa: "کوزاری · جستار دوم", en: "The Kuzari · Second Essay" },
+  "Kuzari-3": { es: "El Kuzari · Ensayo tercero", fa: "کوزاری · جستار سوم", en: "The Kuzari · Third Essay" },
+  "Kuzari-4": { es: "El Kuzari · Ensayo cuarto", fa: "کوزاری · جستار چهارم", en: "The Kuzari · Fourth Essay" },
+  "Kuzari-5": { es: "El Kuzari · Ensayo quinto", fa: "کوزاری · جستار پنجم", en: "The Kuzari · Fifth Essay" },
 };
 
 // ── Nombre de la SECCIÓN dentro del ref ───────────────────────────────────
-// Un ref de Midrash o de Zohar no termina en números: "Midrash Tanchuma,
-// Lech Lecha 7", "Eikhah Rabbah, Petichta 24". Traducir solo el libro dejaba
-// media referencia en inglés delante del lector. Las parashiot ya están
-// traducidas y verificadas en el repo (BEN_PORAT_GROUPS y MEOR_EINAYIM_GROUPS,
-// que entre los dos cubren las 54): se reutilizan en vez de escribirlas otra vez.
+// Un ref de Midrash, de Zohar o de una obra de filosofía no termina en
+// números: "Midrash Tanchuma, Lech Lecha 7", "Eikhah Rabbah, Petichta 24",
+// "Derekh Hashem, Part One, On the Creator". Traducir solo el libro dejaba
+// media referencia en INGLÉS delante de un lector que no lee inglés.
+//
+// Los nombres ya están traducidos y verificados en el repo: se leen del
+// registro PARSHA_WORKS (las dos obras por parashá, que entre ambas cubren las
+// 54, más las siete obras de filosofía judía) en vez de escribirlos otra vez.
 const PARASHA_NAMES: Record<string, Name> = Object.fromEntries(
-  [...BEN_PORAT_GROUPS, ...MEOR_EINAYIM_GROUPS].flatMap((g) =>
-    g.sections.map((sec) => [sec.refTitle, { es: sec.label, fa: sec.labelFa }] as const)
+  PARSHA_WORKS.flatMap((w) =>
+    w.groups.flatMap((g) =>
+      g.sections.map((sec) => [sec.refTitle, { es: sec.label, fa: sec.labelFa }] as const)
+    )
   )
 );
 
@@ -277,6 +327,32 @@ const SECTION_WORDS: Record<string, Name> = {
   Introduction: { es: "Introducción" },
   Foreword: { es: "Apertura" },
 };
+
+// Los nombres de sección del registro, de más largo a más corto. Hace falta
+// el orden porque unos son prefijo de otros ("Maamar 2" / "Maamar 2,
+// Observation" / "Maamar 2, Introduction"): gana el más largo, o traduciríamos
+// media sección y dejaríamos la otra mitad en inglés.
+const SECTION_KEYS_SORTED = Object.keys(PARASHA_NAMES).sort((a, b) => b.length - a.length);
+
+/**
+ * El nombre de sección MÁS LARGO del registro que calza al principio de la
+ * cola del ref, o null.
+ *
+ * Esto es lo que la expresión regular de abajo no puede hacer: un nombre de
+ * sección de una obra compleja lleva comas y dígitos DENTRO ("Part One, On the
+ * Creator", "Maamar 2, Observation", "Part 1"), y cualquier patrón que corte
+ * por la primera coma o por el primer dígito parte el nombre en dos y deja la
+ * referencia a medio traducir. Aquí no se adivina nada: se compara contra los
+ * nombres declarados y verificados en PARSHA_WORKS.
+ */
+function longestSectionKey(cola: string): string | null {
+  for (const key of SECTION_KEYS_SORTED) {
+    if (cola === key) return key;
+    // Detrás del nombre solo puede venir la numeración, nunca otra letra.
+    if (cola.startsWith(key) && /^[\s,:.]*\d/.test(cola.slice(key.length))) return key;
+  }
+  return null;
+}
 
 /** Traduce el nombre de sección que va tras la coma del ref. */
 function localizedSection(name: string, locale: string): string {
@@ -321,8 +397,19 @@ export function localizedRef(ref: string, locale: string): string {
       const label = locale === "fa" ? n.fa : n.es;
       if (!label) return ref; // sin nombre en ese idioma: el ref tal cual
       // La cola puede traer el nombre de la sección en inglés ("Midrash
-      // Tanchuma, Lech Lecha 7"): se traduce lo que esté entre la coma y el
-      // número, y los números quedan intactos.
+      // Tanchuma, Lech Lecha 7", "Derekh Hashem, Part One, On the Creator"):
+      // primero se busca el nombre completo en el registro de obras, que es la
+      // única forma de respetar los nombres con comas y dígitos dentro.
+      const cola = rest.replace(/^,\s*/, "");
+      const key = longestSectionKey(cola);
+      if (key) {
+        const n2 = PARASHA_NAMES[key];
+        const name = (locale === "fa" ? n2.fa : n2.es) ?? key;
+        const tail = cola.slice(key.length).trim();
+        return `${label}, ${name}${tail ? ` ${tail}` : ""}`;
+      }
+      // Si no es una sección declarada, se traduce la palabra de estructura que
+      // Sefaria escribe en inglés ("Petichta 24", "Tractate Shirah").
       const sec = /^,\s*([^,\d]+?)\s*(\d.*)?$/.exec(rest);
       if (sec) {
         const name = localizedSection(sec[1], locale);
@@ -334,7 +421,10 @@ export function localizedRef(ref: string, locale: string): string {
   return ref; // fallback honesto: libro no catalogado, se muestra tal cual
 }
 
-// Nombres de las 6 categorías principales en FA
+// Nombres de las 7 categorías principales en FA
+// NOMBRES: pendiente del Sofer — el farsi de «Filosofía judía» es el que ya
+// usaba el chip del buscador (lib/sources/searchCategories.ts); se deja tal
+// cual hasta que llegue el definitivo.
 export const CATEGORY_FA: Record<string, string> = {
   Tanakh:   "تنخ — کتاب مقدس",
   Mishnah:  "میشنا",
@@ -342,6 +432,21 @@ export const CATEGORY_FA: Record<string, string> = {
   Midrash:  "میدراش",
   Kabbalah: "قبالا",
   Chasidut: "حسیدوت",
+  "Jewish Thought": "فلسفهٔ یهودی",
+};
+
+// Nombres de las 7 categorías principales en EN. Antes no existían y /en
+// mostraba la estantería entera en español (CategoryNav solo distinguía fa/es).
+// No son los ids de Sefaria: el rótulo de la séptima dice lo mismo que el chip
+// del buscador y que la estantería en los tres idiomas.
+export const CATEGORY_EN: Record<string, string> = {
+  Tanakh:   "Tanakh",
+  Mishnah:  "Mishnah",
+  Talmud:   "Babylonian Talmud",
+  Midrash:  "Midrash",
+  Kabbalah: "Kabbalah",
+  Chasidut: "Chasidut",
+  "Jewish Thought": "Jewish Philosophy",
 };
 
 // Etiquetas de subcategoría en FA (las ES ya vienen en el catálogo).
@@ -355,4 +460,22 @@ export const SUB_FA: Record<string, string> = {
   "Séder Nezikin": "سدر نزیقین",
   "Séder Kodashim": "سدر قداشیم",
   "Séder Tahorot": "سدر طهروت",
+  // Los cinco anaqueles de filosofía judía (rótulos del Sofer, 16-nov-2026).
+  "Los cimientos (siglos X–XII)": "بنیادها (سده‌های دهم تا دوازدهم)",
+  "El Rambam y la cumbre de la razón": "ابن میمون و اوج خردگرایی",
+  "Los que le responden (siglos XII–XV)": "پاسخ‌دهندگان (سده‌های دوازدهم تا پانزدهم)",
+  "Después de la expulsión (siglos XVI–XVIII)": "پس از اخراج (سده‌های شانزدهم تا هجدهم)",
+  "Los modernos (siglos XVIII–XIX)": "دوران نو (سده‌های هجدهم و نوزدهم)",
+};
+
+// Anaqueles en INGLÉS. Antes no existían y /en mostraba los acordeones de la
+// estantería en español. Solo están los de filosofía judía: los sedarim y las
+// tres partes del Tanaj siguen cayendo al español, como el resto del hueco de
+// inglés del sitio, que se arregla aparte.
+export const SUB_EN: Record<string, string> = {
+  "Los cimientos (siglos X–XII)": "The Foundations (10th–12th c.)",
+  "El Rambam y la cumbre de la razón": "Maimonides and the Summit of Reason",
+  "Los que le responden (siglos XII–XV)": "The Respondents (12th–15th c.)",
+  "Después de la expulsión (siglos XVI–XVIII)": "After the Expulsion (16th–18th c.)",
+  "Los modernos (siglos XVIII–XIX)": "The Modern Era (18th–19th c.)",
 };

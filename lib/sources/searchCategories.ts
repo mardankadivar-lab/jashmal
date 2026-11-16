@@ -1,10 +1,14 @@
 // Las 18 categorías TOP-LEVEL reales del catálogo de Sefaria, tal como
 // aparecen en `aggregations.path.buckets` de /api/search-wrapper (ver
-// searchTextFull() en lib/sources/sefaria.ts). Son más que las 6 categorías
+// searchTextFull() en lib/sources/sefaria.ts). Son más que las 7 estanterías
 // curadas de lib/sources/categories.ts (Tanakh, Mishnah, Talmud, Midrash,
-// Kabbalah, Chasidut) — esas son para la NAVEGACIÓN por libro; estas son
-// para el panel de checkboxes de /buscar, replicando "Texts" de
+// Kabbalah, Chasidut, Jewish Thought) — esas son para la NAVEGACIÓN por libro;
+// estas son para el panel de checkboxes de /buscar, replicando "Texts" de
 // sefaria.org/search (ej. "Kabbalah (702)").
+//
+// El rótulo de "Jewish Thought" tiene que decir LO MISMO aquí y en la
+// estantería: decía «Pensamiento judío» en el chip y «Filosofía judía» en el
+// menú, y eran la misma cosa. Unificado a «Filosofía judía».
 export interface SearchCategory {
   id: string;
   es: string;
@@ -20,7 +24,7 @@ export const SEARCH_CATEGORIES: SearchCategory[] = [
   { id: "Halakhah", es: "Halajá", fa: "هلاخا", en: "Halakhah" },
   { id: "Kabbalah", es: "Cabalá", fa: "قبالا", en: "Kabbalah" },
   { id: "Liturgy", es: "Liturgia", fa: "نیایش", en: "Liturgy" },
-  { id: "Jewish Thought", es: "Pensamiento judío", fa: "اندیشه یهودی", en: "Jewish Thought" },
+  { id: "Jewish Thought", es: "Filosofía judía", fa: "فلسفهٔ یهودی", en: "Jewish Philosophy" },
   { id: "Tosefta", es: "Tosefta", fa: "توسفتا", en: "Tosefta" },
   { id: "Chasidut", es: "Jasidut", fa: "حسیدوت", en: "Chasidut" },
   { id: "Musar", es: "Musar", fa: "موسار", en: "Musar" },
@@ -73,7 +77,12 @@ export const CATEGORY_COLORS: Record<string, string> = {
   Halakhah: "#4a9c9c",            // teal — ley práctica
   Kabbalah: "#c9a43e",            // dorado — Cabalá (el acento de marca)
   Liturgy: "#8a8fd6",             // lavanda — oración
-  "Jewish Thought": "#d68f5b",    // ámbar — filosofía
+  // Oliva. El ámbar que tenía (#d68f5b, tono 24°) caía en la MISMA banda
+  // naranja que Talmud (#c97b4a, 24°), Comentarios al Talmud (#d69a70, 23°) y
+  // Segundo Templo (#a67a5b, 25°): cuatro naranjas que no se distinguían. El
+  // tono 74° es el único hueco ancho de esta paleta — 27° del dorado de Cabalá
+  // y 30° del verde de Tosefta — y la hoja de olivo le va al oficio.
+  "Jewish Thought": "#9fb84f",    // oliva — filosofía judía
   Tosefta: "#7aa66f",             // verde oliva — cercano a Mishná
   Chasidut: "#d65b8d",            // magenta — Jasidut
   Musar: "#5bb0a3",               // verde agua — ética

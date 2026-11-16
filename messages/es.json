@@ -57,7 +57,7 @@
     "kicker": "Cabalá y filosofía judía",
     "title": "Jashmal",
     "tagline": "La voz del silencio",
-    "description": "Una herramienta viva para el estudio de la Torá, el Talmud, el Midrash, la Cabalá y la Jasidut. Eliges un texto; el análisis desciende por los cuatro mundos del PaRDeS.",
+    "description": "Una herramienta viva para el estudio de la Torá, el Talmud, el Midrash, la Cabalá, la Jasidut y la filosofía judía. Eliges un texto; el análisis desciende por los cuatro mundos del PaRDeS.",
     "etymology": "Del jashmal de Yejezkel 1:4 — jash (silencio) y mal (habla).",
     "cta": "Comenzar a estudiar",
     "guided": "Nunca he estudiado esto. Llévame de la mano",
@@ -83,7 +83,7 @@
     "studyPassage": "Estudio rápido",
     "studyPassageDeep": "Estudio profundo",
     "quickHint": "Análisis inmediato (~30s)",
-    "deepHint": "Trae las fuentes reales conectadas de Sefaria (Targum, comentaristas, Midrash, Cabalá, Jasidut). Más profundo, ~1-2 min.",
+    "deepHint": "Trae las fuentes reales conectadas de Sefaria (Targum, comentaristas, Midrash, filosofía judía, Cabalá, Jasidut). Más profundo, ~1-2 min.",
     "depthNote": "El estudio profundo reúne las fuentes reales conectadas a este pasaje antes de analizarlo. Tarda más, pero es más fiel.",
     "wordHint": "Toca una palabra hebrea para abrir el léxico.",
     "analysis": "Análisis",
@@ -120,7 +120,7 @@
   },
   "search": {
     "title": "Buscar en los textos",
-    "subtitle": "Resultados de la búsqueda en toda la biblioteca de Sefaria: Torá, Talmud, Midrash, Cabalá, Jasidut y más. Marca varias categorías a la vez para acotar.",
+    "subtitle": "Resultados de la búsqueda en toda la biblioteca de Sefaria: Torá, Talmud, Midrash, Cabalá, Jasidut, filosofía judía y más. Marca varias categorías a la vez para acotar.",
     "searching": "Buscando...",
     "resultsFor": "{n} resultados para “{q}”",
     "noResults": "No se encontraron pasajes para esta búsqueda. Prueba con otra palabra o quita algún filtro.",
@@ -219,7 +219,7 @@
     "s2Body": "El Talmud (Jaguigá 13b) lee el nombre como dos palabras unidas: «jash» (חַשׁ, silencio) y «mal» (מַל, habla). Los ángeles llamados jashmalim a veces callan y a veces hablan: callan cuando la Palabra divina emana, y hablan cuando la transmiten. Por eso Jashmal es «la voz del silencio»: primero se escucha el texto en silencio, y solo después se habla. Ese es el método de este lugar.",
     "s3He": "לִמּוּד",
     "s3Title": "Qué es este lugar",
-    "s3Body": "Jashmal es una herramienta viva de estudio. Eliges un texto de la Torá, el Talmud, el Midrash, la Cabalá o la Jasidut, y el análisis desciende por los cuatro mundos del PaRDeS: Pshat (sentido literal), Remez (alusión), Drash (interpretación) y Sod (secreto). El motor reúne las fuentes reales conectadas a cada pasaje — los Targumim, los comentaristas, el Zohar, el Arí — como lo haría un estudiante que abre muchos libros a la vez.",
+    "s3Body": "Jashmal es una herramienta viva de estudio. Eliges un texto de la Torá, el Talmud, el Midrash, la Cabalá, la Jasidut o la filosofía judía, y el análisis desciende por los cuatro mundos del PaRDeS: Pshat (sentido literal), Remez (alusión), Drash (interpretación) y Sod (secreto). El motor reúne las fuentes reales conectadas a cada pasaje — los Targumim, los comentaristas, el Zohar, el Arí — como lo haría un estudiante que abre muchos libros a la vez.",
     "s4He": "מַעֲשֶׂה",
     "s4Title": "El propósito",
     "s4Body": "El conocimiento solo se completa cuando desciende al mundo de la acción. No basta con contemplar: la luz de la sabiduría (Jojmá) debe bajar hasta Maljut, hasta la vida cotidiana, hasta un acto de bondad. Jashmal busca que cada estudio te acerque más a Dios, a ti mismo y al prójimo — que el silencio aprenda a hablar, y que la palabra se vuelva acto.",
@@ -330,7 +330,7 @@
     },
     "step3": {
       "title": "Navega por categoría",
-      "desc": "Elige entre Torá, Talmud, Midrash, Cabalá o Jasidut. Después seleccionas el libro, el capítulo y el versículo que quieras estudiar."
+      "desc": "Elige entre Torá, Talmud, Midrash, Cabalá, Jasidut o filosofía judía. Después seleccionas el libro, el capítulo y el versículo que quieras estudiar."
     },
     "step4": {
       "title": "El análisis aparece aquí",
@@ -434,7 +434,7 @@
     "hint": "Escribe lo que buscas: un personaje, una letra hebrea, un número, una parashá. Te llevo al estudio.",
     "loading": "Abriendo el índice…",
     "noneTitle": "Todavía no hay ningún estudio de Jashmal sobre «{q}».",
-    "noneHelp": "Pero puedes buscar esa palabra en los textos: Torá, Talmud, Midrash, Cabalá y Jasidut.",
+    "noneHelp": "Pero puedes buscar esa palabra en los textos: Torá, Talmud, Midrash, Cabalá, Jasidut y filosofía judía.",
     "searchTexts": "Buscar en los textos",
     "alsoTexts": "Buscar «{q}» también en los textos de Sefaria →",
     "onlySpanish": "solo en español",

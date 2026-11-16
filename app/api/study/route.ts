@@ -13,6 +13,12 @@ import { checkCitations } from "@/lib/sources/citationCheck";
 import { checkMidrashBlock } from "@/lib/study/midrashBlock";
 import { filtroSobres } from "@/lib/study/sinSobres";
 import { esRefDeMidrash } from "@/lib/sources/midrashRef";
+import { esRefDeFilosofia, obraDeFilosofia } from "@/lib/sources/filosofiaRef";
+import {
+  revisaFilosofia,
+  COMPUERTAS_QUE_MARCAN,
+  ROTULO_COMPUERTA,
+} from "@/lib/study/compuertasFilosofia";
 import { tramoDeConteo } from "@/lib/sources/tanajRef";
 import { palabrasRepetidas, formateaRepetidas } from "@/lib/study/palabrasRepetidas";
 import { rastrosDelPasaje, formateaRastros } from "@/lib/study/rastroPalabra";
@@ -159,7 +165,14 @@ export async function POST(req: Request) {
   // solo verso. Si Sefaria no responde, el estudio sale sin esta sección: es
   // un extra, nunca un motivo para que no haya estudio.
   let repetidasBlock = "";
-  const tramo = mode === "text" && !esRefDeMidrash(body.ref) ? tramoDeConteo(body.ref) : null;
+  // Y nunca en filosofía judía: un epígrafe que cita a Yeshayahu NO convierte
+  // el Moré Nevujim en un capítulo del Tanaj. La lista blanca de los 39 libros
+  // ya lo impide, pero el cerrojo se escribe igual, porque el fallo que
+  // arreglamos fue exactamente ese: tratar la obra por el versículo que cita.
+  const tramo =
+    mode === "text" && !esRefDeMidrash(body.ref) && !esRefDeFilosofia(body.ref)
+      ? tramoDeConteo(body.ref)
+      : null;
   if (tramo) {
     try {
       const capítulo = await getText(tramo);
@@ -206,7 +219,8 @@ export async function POST(req: Request) {
   // Margen amplio para que la sección final "Sigue el hilo" no se trunque. El
   // estudio DE un midrash lleva también el margen ancho aunque esa vez no
   // traiga fuentes: el método ampliado tiene más secciones que desplegar.
-  const maxTokens = withSources || esRefDeMidrash(body.ref) ? 8000 : 7500;
+  const maxTokens =
+    withSources || esRefDeMidrash(body.ref) || esRefDeFilosofia(body.ref) ? 8000 : 7500;
 
   // Modo cabalístico (viene del Árbol de la Vida) o modo estándar PaRDeS
   const isKabbalah = body.context === "kabbalah" && !!body.sefiraId && mode === "text";
@@ -336,6 +350,43 @@ export async function POST(req: Request) {
             // "diseccionado=no" haría pasar por fallo lo que es el diseño.
             if (esRefDeMidrash(body.ref)) {
               console.log(`[study] método=midrash ampliado · ${locale} · sin bloque compacto (por diseño)`);
+            } else if (esRefDeFilosofia(body.ref)) {
+              // ── LAS CUATRO COMPUERTAS DE LA SÉPTIMA ESTANTERÍA ──────────
+              // Corren SOBRE LA SALIDA REAL, que es donde tienen que correr:
+              // C-1 (pertenencia de la palabra), C-2 (gematría cerrada),
+              // C-3 (nadie fuera de la lista) y C-4 (títulos fuera de lugar).
+              // Lo que detectan se marca en la prosa como una cita que no pasa
+              // la verificación; P-3 solo se mide y se escribe aquí.
+              //
+              // El corpus contra el que se comprueba es EL QUE SE LE DIO AL
+              // MOTOR: el hebreo del pasaje y el hebreo de las fuentes
+              // adjuntas. Si no hubo pasaje, C-1 no juzga nada — un corpus
+              // vacío que marcara todo sería la peor versión de la compuerta.
+              const obra = obraDeFilosofia(body.ref) ?? "(obra no identificada)";
+              const comp = revisaFilosofia({
+                estudio: full,
+                obra,
+                pasaje: body.hebrewText ?? "",
+                fuentes: sourcesBlock,
+              });
+              const rotulo = ROTULO_COMPUERTA[locale] ?? ROTULO_COMPUERTA.es;
+              for (const h of comp.hallazgos) {
+                if (!COMPUERTAS_QUE_MARCAN.includes(h.compuerta)) continue;
+                marks.push({
+                  end: h.end,
+                  note: locale === "es" ? `${h.compuerta} · ${h.detalle}` : rotulo,
+                });
+              }
+              console.log(
+                `[study] método=filosofía · ${locale} · obra=${obra} · ` +
+                  `compuertas C-1=${comp.resumen["C-1"]} C-2=${comp.resumen["C-2"]} ` +
+                  `C-3=${comp.resumen["C-3"]} C-4=${comp.resumen["C-4"]} ` +
+                  `P-3=${comp.resumen["P-3"]} (solo medida) · ` +
+                  `palabras hebreas confirmadas=${comp.palabrasConfirmadas}`
+              );
+              for (const h of comp.hallazgos) {
+                console.log(`[study] ${h.compuerta}: «${h.raw}» → ${h.detalle}`);
+              }
             } else {
               const bloque = checkMidrashBlock(full);
               console.log(

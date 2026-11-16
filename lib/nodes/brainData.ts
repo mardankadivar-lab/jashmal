@@ -30,6 +30,10 @@ export type BNode = {
 };
 
 // ─── Paleta de categorías (color = LUZ; permanente, nunca cambia al tocar) ──
+// Nota de color (2026-11-16): «filosofía» era #7fd488 y «jasidut» es #9ad6a0 —
+// dos verdes pálidos vecinos (tono 131° y 126°), indistinguibles en el cielo de
+// /universo. Filosofía se movió al OLIVA LUMINOSO #a8d94f (tono 82°), que es el
+// único hueco real de esta rueda: 44° de jasidut y 34° de los oros del Tanaj.
 export const BRAIN_CATS: Record<string, { c: string; label: string; labelFa?: string; labelEn?: string }> = {
   torah:      { c: "#e8b923", label: "Torá",      labelFa: "تورات", labelEn: "Torah" },   // oro profundo
   tanakh:     { c: "#f0d878", label: "Tanaj",     labelFa: "تنخ", labelEn: "Tanakh" },     // oro claro
@@ -40,7 +44,7 @@ export const BRAIN_CATS: Record<string, { c: string; label: string; labelFa?: st
   kabbalah:   { c: "#1fd8e0", label: "Cabalá",    labelFa: "کابالا", labelEn: "Kabbalah" },  // cian eléctrico
   chasidut:   { c: "#9ad6a0", label: "Jasidut",   labelFa: "حسیدوت", labelEn: "Chasidut" },  // verde cálido
   halakhah:   { c: "#cfe0ff", label: "Halajá",    labelFa: "هلاخا", labelEn: "Halakhah" },   // blanco-azul
-  philosophy: { c: "#7fd488", label: "Filosofía", labelFa: "فلسفه", labelEn: "Philosophy" },   // verde suave
+  philosophy: { c: "#a8d94f", label: "Filosofía", labelFa: "فلسفه", labelEn: "Philosophy" },   // oliva luminoso — ver nota de color
   science:    { c: "#a8c4e8", label: "Ciencia",   labelFa: "علم", labelEn: "Science" },     // plata-azul
   figure:     { c: "#e0795c", label: "Personajes", labelFa: "شخصیت‌ها", labelEn: "Characters" }, // personajes bíblicos (terracota)
   tema:       { c: "#c98bd6", label: "Temas",     labelFa: "موضوعات", labelEn: "Topics" },   // dominios temáticos (lavanda)

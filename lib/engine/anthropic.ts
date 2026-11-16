@@ -1,5 +1,8 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { esRefDeMidrash } from "@/lib/sources/midrashRef";
+import { obraDeFilosofia } from "@/lib/sources/filosofiaRef";
+import { comentaristasDe } from "@/lib/sources/comentaristas";
+import { filosofiaStructure, FILOSOFIA_OVERRIDE } from "@/lib/engine/filosofiaStructure";
 
 export const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -831,7 +834,15 @@ revelación concreta.`;
 // palabra insiste el capítulo antes de desarrollarlo, porque ahí se ve su
 // énfasis. Si no hay conteo (Talmud, Zóhar, un midrash abierto), la sección no
 // existe y la estructura es la de siempre.
-function textStructure(conRepetidas = false, conRastro = false): string {
+// La lista de comentaristas YA NO ES FIJA: la decide la categoría del texto
+// (lib/sources/comentaristas.ts). Para el Tanaj —y para todo lo que no sea
+// filosofía— llega exactamente la lista clásica que había aquí escrita a
+// mano, así que el estudio de una parashá sale palabra por palabra igual.
+function textStructure(
+  conRepetidas = false,
+  conRastro = false,
+  comentaristas = "Rashi, Ramban, Ibn Ezra, Abarbanel, Malbim"
+): string {
   const repetidas = conRepetidas
     ? `
 מִלִּים חוֹזְרוֹת — Las palabras que se repiten. VA PRIMERO, antes de la
@@ -942,8 +953,7 @@ ${repetidas}
    en hebreo + su traducción).
 
 2. מְפָרְשִׁים — Comentaristas clásicos. Da a cada uno su propia voz; no los
-   resumas en bloque. Incluye, según corresponda al pasaje: Rashi, Ramban,
-   Ibn Ezra, Abarbanel, Malbim, el MIDRASH (Bereshit Rabá, Shemot Rabá, Tanjumá,
+   resumas en bloque. Incluye, según corresponda al pasaje: ${comentaristas}, el MIDRASH (Bereshit Rabá, Shemot Rabá, Tanjumá,
    Mejilta, Sifrí, Pirkei de Rabí Eliezer… siempre con su cita exacta: obra +
    sección + número), el ARIZAL (Arí z"l, la Cabalá luriana vía Jaim
    Vital) y otras fuentes clásicas relevantes. TODO el Arizal —Partzufim, sefirot,
@@ -1184,6 +1194,31 @@ estudiante reúne antes de meditar.
   sefirot): solo si el texto y las fuentes realmente lo invitan; nunca fuerces
   un patrón donde no lo hay.`;
 
+// El mismo bloque, para FILOSOFÍA JUDÍA. Hace falta uno aparte porque el de
+// arriba manda «en el Sod prioriza el Zohar y el Arizal», y en el Moré Nevujim
+// esa instrucción es exactamente el fallo: el Rambam niega las sefirot. Aquí
+// las fuentes se usan al revés — primero los comentaristas de la obra, y la
+// Cabalá solo si de verdad es parte de la discusión, nombrada como discusión.
+const RAG_GUIDANCE_FILOSOFIA = `
+FUENTES REALES PROVISTAS: abajo, en <fuentes>, tienes textos auténticos que
+Sefaria tiene enlazados a este pasaje. Ojo con lo que son y lo que no son:
+
+- Los COMENTARISTAS enlazados a una obra de filosofía son los comentaristas DE
+  ESA OBRA (Efodi, Shem Tov, Narboni, Crescas, Abarbanel sobre el Moré; Pat
+  Lejem, Tov haLevanón, Marpé laNéfesh sobre los Deberes del corazón). Son tu
+  material principal: úsalos para reconstruir el argumento, que es a lo que
+  ellos se dedican.
+- Los enlaces al TANAJ son los versículos que el autor CITA. Están ahí porque
+  él los usa, no porque el estudio sea de ellos. No conviertas el estudio en un
+  comentario del versículo.
+- Los enlaces de MIDRASH, CABALÁ o JASIDUT que aparezcan están enlazados al
+  VERSÍCULO, no al argumento del autor. No valen como lectura del pasaje y está
+  PROHIBIDO usarlos para atribuirle al autor una doctrina cabalística. Si la
+  relación entre esta obra y la Cabalá es parte del asunto, se nombra como
+  discusión entre dos caminos, con las dos posturas dichas.
+- Puedes añadir conocimiento propio bien fundado, pero NO inventes citas ni
+  atribuyas a una obra algo que no dice. Si una fuente provista es escueta, dilo.`;
+
 function letterStructure(): string {
   return `Estudia la letra hebrea siguiendo el marco de Rav Yitzchak Ginsburgh
 ("The Hebrew Letters: Channels of Creative Consciousness"), con títulos en hebreo:
@@ -1222,22 +1257,49 @@ export function buildSystemPrompt(
   // catálogo, un enlace interno o un estudio guardado.
   const abrióUnMidrash = mode === "text" && esRefDeMidrash(ref);
 
+  // ¿Y abrió una obra de FILOSOFÍA judía por su propia puerta? Tercer camino.
+  //
+  // Se decide por el REF DE LA OBRA ABIERTA y GANA SOBRE CUALQUIER DETECCIÓN
+  // POR CONTENIDO. Esa precedencia es la causa raíz que arregla: «Guide for
+  // the Perplexed, Part 1 1» es el epígrafe del Moré, donde el Rambam abre
+  // citando a Yeshayahu 26:2 — y el motor, al ver un versículo, estudió el
+  // versículo. En esta categoría el estudio es del ARGUMENTO; el versículo se
+  // explica solo en la medida en que el autor lo usa.
+  const obraFilosofia = mode === "text" ? obraDeFilosofia(ref) : null;
+  const abrióFilosofia = obraFilosofia !== null;
+  const comentaristas = comentaristasDe(ref);
+
   let structure: string;
   if (mode === "letter") structure = letterStructure();
   else if (mode === "concept") structure = conceptStructure();
   else if (abrióUnMidrash) structure = midrashStructure();
-  else structure = textStructure(conRepetidas, conRastro);
+  // La antesala de las palabras repetidas y el rastro viven DENTRO de
+  // textStructure, así que un estudio de filosofía no puede traerlos ni
+  // queriendo: no pasa por ahí.
+  else if (abrióFilosofia) structure = filosofiaStructure(obraFilosofia!, comentaristas);
+  else structure = textStructure(conRepetidas, conRastro, comentaristas.frase);
 
-  const ragBlock = withSources && mode === "text" ? `\n${RAG_GUIDANCE}\n` : "";
+  const ragBlock =
+    withSources && mode === "text"
+      ? `\n${abrióFilosofia ? RAG_GUIDANCE_FILOSOFIA : RAG_GUIDANCE}\n`
+      : "";
   // El Midrash se pide en el estudio de texto y de concepto. El estudio de
   // LETRAS sigue el marco de Ginsburgh (forma, nombre, canal) y no se toca.
   // Y en el estudio DE un midrash sobra el bloque compacto: la disección ya no
   // es un apartado de seis líneas, es el estudio entero. Lo que sí se queda es
   // la regla de citar con obra y número exactos.
+  //
+  // EN FILOSOFÍA TAMPOCO VA EL BLOQUE COMPACTO, y aquí está la causa real del
+  // fallo que apareció en la prueba del Moré: el bloque «Análisis del Midrash»
+  // (la grieta, el giro, los huecos) NO lo disparaban las fuentes que Sefaria
+  // enlazó — entraba SIEMPRE, en todo estudio de texto o de concepto que no
+  // fuera un midrash abierto. Se pedía en el prompt, así que el modelo lo
+  // entregó. La regla de CITAR el midrash con obra y número se queda, porque
+  // estos autores citan midrashim y hay que poder comprobarlos.
   const midrashBlock =
     mode === "letter"
       ? ""
-      : abrióUnMidrash
+      : abrióUnMidrash || abrióFilosofia
         ? `${MIDRASH_RULE}\n`
         : `${MIDRASH_RULE}\n${MIDRASH_DISECCION_RULE}\n`;
 
@@ -1261,7 +1323,7 @@ ${GEMATRIA_RULE}
 ${GLOSAS_RULE}
 ${HYPERLINK_RULES}
 ${HILOS_RULE}
-
+${abrióFilosofia ? `${FILOSOFIA_OVERRIDE}\n` : ""}
 Eres riguroso y honesto: no inventes fuentes ni citas. Si no estás seguro de
 una referencia, dilo. Profundidad sobre brevedad — pero ADMINISTRA tu espacio:
 el CONTENIDO de estudio debe completar TODAS sus secciones y SELLARSE SIEMPRE en la

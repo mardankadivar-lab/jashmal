@@ -1,6 +1,7 @@
-// Capa de catálogo: usa el catálogo COMPLETO autogenerado desde Sefaria
-// (lib/catalog.generated.ts), aplica overrides para obras complejas (Tania, etc.)
-// y añade nombres localizados ES/FA.
+// Capa de catálogo: toma el catálogo de las SIETE estanterías
+// (lib/sources/catalog.generated.ts — mantenido a mano, pese al nombre),
+// aplica overrides para obras complejas (Tania, Kuzari, etc.) y añade los
+// nombres localizados ES/FA/EN.
 
 import { CATALOG as RAW, type CatSub } from "@/lib/sources/catalog.generated";
 import {
@@ -11,7 +12,7 @@ import {
   bookRef,
   type RichBook,
 } from "@/lib/sources/catalogOverrides";
-import { localizedBookLabel, SUB_FA, CATEGORY_FA } from "@/lib/sources/bookNames";
+import { localizedBookLabel, SUB_FA, SUB_EN, CATEGORY_FA, CATEGORY_EN } from "@/lib/sources/bookNames";
 
 export type CatBook = RichBook;
 export { bookRef };
@@ -28,6 +29,10 @@ export interface RichGroup {
   he: string;
   es: string;
   fa: string;
+  /** inglés. El inglés SE QUEDA en el selector de idioma de Jashmal (decisión
+   * de Mardan), así que la estantería necesita su propio rótulo: antes /en
+   * mostraba las categorías en español. */
+  en: string;
   subs: RichSub[];
 }
 
@@ -59,6 +64,7 @@ export const CATALOG: RichGroup[] = RAW.map((g) => {
     he: g.he,
     es: g.es,
     fa: CATEGORY_FA[g.id] ?? g.es, // fallback a español si no hay FA
+    en: CATEGORY_EN[g.id] ?? g.es, // fallback a español si no hay EN
     // Los EXTRA_BOOKS de la categoría se inyectan solo en la primera subcategoría.
     subs: g.subs.map((s, i) => expandSub(s, i === 0 ? extra : [])),
   };
@@ -75,9 +81,11 @@ export function bookLabel(b: RichBook, locale: string): string {
   return localizedBookLabel(b.id, b.label, locale);
 }
 
-/** Etiqueta de subcategoría (ES viene en el dato; FA del mapa). */
+/** Etiqueta de subcategoría (ES viene en el dato; FA y EN de sus mapas).
+ * Fallback honesto al español: nunca al inglés de Sefaria. */
 export function subLabel(sub: string | null, locale: string): string {
   if (!sub) return "";
   if (locale === "fa") return SUB_FA[sub] ?? sub;
+  if (locale === "en") return SUB_EN[sub] ?? sub;
   return sub;
 }

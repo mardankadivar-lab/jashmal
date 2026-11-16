@@ -24,6 +24,7 @@ import { getText, getWorkBooks, searchSuggestions, searchText, enrichWithTransla
 import { searchCategoryColor } from "@/lib/sources/searchCategories";
 import { requestStudy, StudyError } from "@/lib/study/studyClient";
 import { scanKabbalah, type KabMatch } from "@/lib/nodes/kabbalisticScanner";
+import { muestraTejidoCabalistico } from "@/lib/sources/filosofiaRef";
 import { requestTranslation } from "@/lib/i18n/translateClient";
 import { getParashaHashavua, type ParashaInfo } from "@/lib/infra/calendar";
 
@@ -518,8 +519,13 @@ export default function StudyEngine() {
       setStudyRef(ref);
       // Fase 4: escanear el texto final (no el streaming) para el panel cabalístico.
       // Se hace al terminar (no en cada chunk) para que el scan sea sobre el texto completo.
+      // Y NO se escanea en filosofía judía: ahí el panel no se monta (ver
+      // `muestraTejidoCabalistico`), así que ni se calculan los hallazgos.
+      // Se corta aquí Y en el render: en el render porque es lo que ve el
+      // lector, y aquí porque unos hallazgos que nadie va a usar no tienen por
+      // qué existir.
       try {
-        setKabMatches(scanKabbalah(text));
+        setKabMatches(muestraTejidoCabalistico(ref) ? scanKabbalah(text) : []);
       } catch {
         // el scan nunca debe romper el estudio
       }
@@ -1031,8 +1037,14 @@ export default function StudyEngine() {
                 setOpenRefs((prev) => prev.includes(ref) ? prev : [...prev, ref]);
               }}
             />
-            {/* Fase 4: panel de entidades cabalísticas detectadas en el estudio */}
-            <TejidoCabalistico matches={kabMatches} locale={locale} />
+            {/* Fase 4: panel de entidades cabalísticas detectadas en el estudio.
+                NO se monta en filosofía judía: le colgaba al Rambam un tejido
+                cabalístico justo debajo del sello donde el propio estudio dice
+                que este pasaje no autoriza ninguna estructura en la divinidad.
+                En Cabalá y Jasidut sigue igual. Ver `muestraTejidoCabalistico`. */}
+            {muestraTejidoCabalistico(studyRef) && (
+              <TejidoCabalistico matches={kabMatches} locale={locale} />
+            )}
             {/* Panel de referencias cruzadas — aparece justo debajo del estudio
                 (antes estaba fuera de esta columna y se veía lejos del clic).
                 El scroll automático (useEffect sobre openRefs) lo trae a la vista. */}

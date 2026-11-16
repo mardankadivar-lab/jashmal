@@ -33,7 +33,10 @@ const GROUP_TO_CAT: Record<string, string> = {
   Chasidut: "chasidut",
   Halakhah: "halakhah",
   Liturgy: "tanakh", // sidur/piyut: sin galaxia propia → al núcleo bíblico
-  Philosophy: "philosophy",
+  // La categoría de Sefaria se llama "Jewish Thought". La clave anterior,
+  // "Philosophy", era CÓDIGO MUERTO: ningún texto la traía nunca, así que la
+  // galaxia "Filosofía" de /universo se quedaba vacía por un nombre mal puesto.
+  "Jewish Thought": "philosophy",
 };
 export function groupToCat(group: string | undefined): string | null {
   return group ? GROUP_TO_CAT[group] ?? null : null;
