@@ -194,6 +194,23 @@ export function buildSearchIndex(): SearchDoc[] {
     }
   }
 
+  // ── Academia — páginas sueltas (no son lecciones de la escalera) ────────
+  //  Lectura de referencia abierta: no se desbloquea y no pide sesión. Va en
+  //  la lupa para que se pueda llegar sin saberse la URL. Español solamente,
+  //  como el resto del interior de la Academia; el rótulo del tipo ("página")
+  //  sí sale traducido, porque es de la interfaz.
+  docs.push({
+    id: "pagina:/academia/trece-middot",
+    kind: "pagina",
+    href: "/academia/trece-middot",
+    t: { es: "Las trece reglas de Rabí Ishmael" },
+    d: { es: "Las trece medidas por las que se interpreta la Torá, una por una." },
+    he: "שְׁלֹשׁ עֶשְׂרֵה מִדּוֹת",
+    serie: "academia",
+    extra: ["trece middot", "middot", "hermeneutica", "rabi ishmael", "baraita", "sifra"],
+    langs: ["es"],
+  });
+
   // ── Podcast — un episodio existe en el idioma en que se grabó ───────────
   //  El resultado lleva a su PÁGINA DE ESTUDIO cuando el estudio existe; si
   //  no, al índice del podcast (donde está su botón de Spotify). Antes todos

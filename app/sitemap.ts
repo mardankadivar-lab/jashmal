@@ -96,6 +96,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   items.push(...entry("/academia/shoel-inicio", { priority: 0.7 }));
   items.push(...entry("/academia/shoel-completo", { priority: 0.7 }));
   items.push(...entry("/academia/talmid-completo", { priority: 0.7 }));
+  // Lectura de referencia (página suelta, no es un módulo).
+  items.push(...entry("/academia/trece-middot", { priority: 0.75 }));
 
   // ── Academia — lecciones individuales ──────────────────────────────────
   const lessonModulos: { modulo: number; slugs: string[] }[] = [

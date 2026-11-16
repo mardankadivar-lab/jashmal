@@ -251,6 +251,25 @@ export default function Modulo6Map() {
           </div>
         )}
 
+        {/* Lectura de referencia — página SUELTA de la Academia, no un módulo:
+            no se desbloquea y no pide sesión. Va aquí para que no quede como
+            link perdido (nadie tendría que saberse la URL de memoria). */}
+        <div className="mt-8 rounded-2xl border border-gold/15 bg-gold/[0.03] px-6 py-5">
+          <p className="font-cinzel text-[10px] uppercase tracking-[0.3em] text-gold/45">
+            Lectura de referencia
+          </p>
+          <Link
+            href="/academia/trece-middot"
+            className="mt-1.5 block font-cinzel text-base text-parchment transition hover:text-gold"
+          >
+            Las trece reglas de Rabí Ishmael →
+          </Link>
+          <p className="mt-1.5 text-xs leading-relaxed text-muted/80">
+            Las trece medidas por las que se interpreta la Torá, una por una. Diez derivan ley,
+            dos son modos de leer y dos quedan a caballo. Abierta siempre, sin desbloquear.
+          </p>
+        </div>
+
         {/* puente sereno de vuelta */}
         <div className="mt-10 text-center">
           <Link
