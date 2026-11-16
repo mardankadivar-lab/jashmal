@@ -19,8 +19,8 @@ import RefPanel from "./RefPanel";
 import LamedLoader from "@/components/LamedLoader";
 import type { WordAnchor } from "@/components/sefaria/ClickableHebrew";
 import { bookRef, CATALOG, type CatBook, type CategoryId } from "@/lib/sources/categories";
-import { localizedRef } from "@/lib/sources/bookNames";
-import { getText, searchSuggestions, searchText, enrichWithTranslation, HL_OPEN, HL_CLOSE, type SefariaTextResult, type NameSuggestion, type TextSearchHit } from "@/lib/sources/sefaria";
+import { localizedBookLabel, localizedRef, localizedWorkGroup } from "@/lib/sources/bookNames";
+import { getText, getWorkBooks, searchSuggestions, searchText, enrichWithTranslation, HL_OPEN, HL_CLOSE, type SefariaTextResult, type NameSuggestion, type TextSearchHit, type WorkBook } from "@/lib/sources/sefaria";
 import { searchCategoryColor } from "@/lib/sources/searchCategories";
 import { requestStudy, StudyError } from "@/lib/study/studyClient";
 import { scanKabbalah, type KabMatch } from "@/lib/nodes/kabbalisticScanner";
@@ -37,6 +37,12 @@ export default function StudyEngine() {
 
   const [category, setCategory] = useState<CategoryId | null>(null);
   const [book, setBook] = useState<CatBook | null>(null);
+
+  // Obra de varios libros abierta desde la lupa (ej. Mishné Torá). No es un
+  // tema ni un texto: es una estantería, y lo que se muestra son SUS LIBROS.
+  const [work, setWork] = useState<{ title: string; path: string[] } | null>(null);
+  const [workBooks, setWorkBooks] = useState<WorkBook[]>([]);
+  const [workLoading, setWorkLoading] = useState(false);
 
   const [sourceResult, setSourceResult] = useState<SefariaTextResult | null>(null);
   const [sourceLoading, setSourceLoading] = useState(false);
@@ -272,8 +278,16 @@ export default function StudyEngine() {
     // caso mandamos a la página de resultados completa /buscar, que es donde
     // se puede explorar decenas de pasajes con el panel de categorías — el
     // desplegable de aquí solo alcanza a mostrar 8.
+    // Si lo escrito es el nombre EXACTO de una obra de varios libros
+    // ("Mishneh Torah"), Sefaria no la reconoce como referencia (is_ref=false)
+    // y antes caía a /buscar o a un estudio de concepto. Se abre la obra.
+    const obraExacta = suggestions.find(
+      (s) => s.kind === "obra" && s.title.toLowerCase() === q.toLowerCase()
+    );
     const firstRefSuggestion = suggestions.find((s) => s.kind === "ref");
-    if (isRefQuery && firstRefSuggestion) {
+    if (!isRefQuery && obraExacta) {
+      pickSuggestion(obraExacta);
+    } else if (isRefQuery && firstRefSuggestion) {
       pickSuggestion(firstRefSuggestion);
     } else if (suggestions.length > 0 && suggestions[0].kind === "topic" && textHits.length === 0) {
       pickSuggestion(suggestions[0]);
@@ -387,6 +401,18 @@ export default function StudyEngine() {
     );
   }
 
+  // Los libros de la obra, agrupados por la sección que declara Sefaria (en
+  // Mishné Torá, los catorce "sefarim"), en orden de primera aparición.
+  // Se agrupa con un Map y no por tramos seguidos porque Sefaria puede repetir
+  // una sección más abajo (Mishné Torá cierra con un tratado suelto de Séfer
+  // Nashim): agrupar por tramos lo dejaría como un segundo grupo del mismo
+  // nombre — dos rótulos iguales y una clave de React repetida.
+  const workGroups = [...workBooks.reduce((acc, b) => {
+    const g = b.group ?? "";
+    (acc.get(g) ?? acc.set(g, []).get(g)!).push(b);
+    return acc;
+  }, new Map<string, WorkBook[]>())];
+
   // ¿Hay algún resultado de cualquier fuente? (para mostrar el dropdown)
   const hasAnyHit =
     suggestions.length > 0 || historyHits.length > 0 || nodeHits.length > 0 ||
@@ -416,7 +442,25 @@ export default function StudyEngine() {
     loadRef(h.ref, true);
   }
 
-  // Al elegir una sugerencia: texto → carga la ref; tema/persona/lugar → estudio de concepto.
+  // Abre una OBRA de varios libros: pide su índice a Sefaria y muestra los
+  // libros para que el lector elija cuál estudiar (Obra → Libro → Capítulo).
+  async function openWork(title: string, path: string[]) {
+    setWork({ title, path });
+    setWorkBooks([]);
+    setWorkLoading(true);
+    const books = await getWorkBooks(path);
+    setWorkBooks(books);
+    setWorkLoading(false);
+  }
+
+  function closeWork() {
+    setWork(null);
+    setWorkBooks([]);
+    setWorkLoading(false);
+  }
+
+  // Al elegir una sugerencia: texto → carga la ref; obra → lista sus libros;
+  // tema/persona/lugar → estudio de concepto.
   function pickSuggestion(s: NameSuggestion) {
     setSearch("");
     setSuggestions([]);
@@ -424,6 +468,9 @@ export default function StudyEngine() {
     setShowSug(false);
     if (s.kind === "ref") {
       loadRef(s.title, true);
+    } else if (s.kind === "obra" && s.path && s.path.length > 0) {
+      // Una obra NO se estudia como concepto: se abre para ver sus libros.
+      void openWork(s.title, s.path);
     } else {
       // Tema / persona / lugar: abrir un estudio de concepto en el panel lateral.
       openConcept(s.title);
@@ -645,9 +692,16 @@ export default function StudyEngine() {
                           onMouseDown={(e) => { e.preventDefault(); pickSuggestion(s); }}
                           className="flex w-full items-center justify-between gap-2 px-3 py-2 text-start text-sm text-parchment/90 transition-colors hover:bg-gold/10"
                         >
-                          <span className="truncate">{s.title}</span>
+                          {/* Español primero: el título que manda Sefaria es
+                              inglés ("Mishneh Torah, Vows"). La navegación
+                              sigue usando `s.title`, el ref canónico. */}
+                          <span className="truncate">{localizedRef(s.title, locale)}</span>
                           <span className="shrink-0 font-cinzel text-[9px] uppercase tracking-wider text-gold/45">
-                            {s.kind === "ref" ? t("sugText") : t("sugTopic")}
+                            {s.kind === "ref"
+                              ? t("sugText")
+                              : s.kind === "obra"
+                                ? t("sugWork")
+                                : t("sugTopic")}
                           </span>
                         </button>
                       </li>
@@ -829,6 +883,75 @@ export default function StudyEngine() {
                 ))}
               </div>
             )}
+          </div>
+        )}
+
+        {/* Obra de varios libros abierta desde la lupa: sus libros, en español.
+            Mismo gesto que Categoría → Libro → Capítulo, pero naciendo de la lupa. */}
+        {work && (
+          <div className="mt-4 rounded-md border border-gold/30 bg-gold/[0.03] p-3">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="font-cinzel text-sm uppercase tracking-widest text-gold/90">
+                  {localizedBookLabel(work.title, work.title, locale)}
+                </p>
+                <p className="mt-0.5 text-xs text-muted">{t("workHint")}</p>
+              </div>
+              <button
+                type="button"
+                onClick={closeWork}
+                aria-label={t("workClose")}
+                className="shrink-0 rounded-md border border-gold/20 px-2 py-0.5 text-xs text-muted transition-colors hover:border-gold/50 hover:text-gold"
+              >
+                ✕
+              </button>
+            </div>
+
+            {workLoading && (
+              <p className="mt-3 animate-pulse text-xs text-muted">{t("workLoading")}</p>
+            )}
+            {!workLoading && workBooks.length === 0 && (
+              <p className="mt-3 text-xs text-red-400/80">{t("workError")}</p>
+            )}
+
+            {/* Una obra puede traer casi cien tratados (Mishné Torá trae 86):
+                la lista se acota en alto y se desplaza sola, para que el texto
+                que se abre no quede a una pantalla de distancia. */}
+            <div className="max-h-[38vh] overflow-y-auto">
+              {workGroups.map(([group, books]) => (
+                <div key={group} className="mt-3 border-t border-gold/10 pt-2 first:border-0">
+                  {group && (
+                    <p className="mb-1.5 font-cinzel text-[9px] uppercase tracking-widest text-gold/40">
+                      {localizedWorkGroup(group, locale)}
+                    </p>
+                  )}
+                  <div className="flex flex-wrap gap-1.5">
+                    {books.map((b) => {
+                      // Sin nombre en el idioma activo se cae al título de
+                      // Sefaria, que es inglés. En farsi preferimos el hebreo:
+                      // es el nombre auténtico y no mete inglés en una interfaz
+                      // persa. Ninguno de los dos se inventa.
+                      const respaldo = locale === "fa" && b.heTitle ? b.heTitle : b.title;
+                      const label = localizedBookLabel(b.ref, respaldo, locale);
+                      // El hebreo va en el tooltip DETRÁS del nombre en español:
+                      // puesto solo, se volvía el nombre accesible del botón y
+                      // un lector de pantalla no decía el español.
+                      return (
+                        <button
+                          key={b.ref}
+                          type="button"
+                          onClick={() => loadRef(b.ref, true)}
+                          title={b.heTitle ? `${label} · ${b.heTitle}` : label}
+                          className="rounded-md border border-gold/20 px-2 py-1 text-start text-xs text-parchment/85 transition-all hover:border-gold/60 hover:bg-gold/10 hover:text-gold"
+                        >
+                          {label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

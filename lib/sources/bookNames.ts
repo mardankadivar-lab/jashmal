@@ -11,6 +11,158 @@ import { BEN_PORAT_GROUPS, MEOR_EINAYIM_GROUPS } from "@/lib/sources/catalogOver
 // persa autorizado. Antes que inventarlo, se deja el título de Sefaria.
 interface Name { es: string; fa?: string; }
 
+// ── Mishné Torá — los tratados (hiljot) ───────────────────────────────────
+// La obra no es un libro: son catorce "sefarim" con casi noventa tratados.
+// Sefaria los nombra en inglés ("Mishneh Torah, Vows"), y esta audiencia no
+// lee hebreo ni inglés: español primero, transliteración entre paréntesis
+// como apoyo. Los nombres salen del título HEBREO de cada tratado (que es el
+// autoritativo), no del inglés de Sefaria.
+// Sin `fa`: no tenemos una lista persa autorizada para los tratados y no se
+// inventa — cae al título de Sefaria, igual que las obras midráshicas.
+const MISHNEH_TORAH_NAMES: Record<string, Name> = {
+  // Introducción a la obra
+  "Mishneh Torah, Transmission of the Oral Law": { es: "La transmisión de la Torá oral (Mesirat Torá sheBeal Pe)" },
+  "Mishneh Torah, Positive Mitzvot": { es: "Los mandamientos positivos (Mitzvot Asé)" },
+  "Mishneh Torah, Negative Mitzvot": { es: "Los mandamientos negativos (Mitzvot Lo Taasé)" },
+  "Mishneh Torah, Overview of Mishneh Torah Contents": { es: "Contenido de la obra (Tojen HaJibur)" },
+  // Séfer HaMadá — el Conocimiento
+  "Mishneh Torah, Foundations of the Torah": { es: "Fundamentos de la Torá (Hiljot Yesodei HaTorá)" },
+  "Mishneh Torah, Human Dispositions": { es: "Las disposiciones del alma (Hiljot Deot)" },
+  "Mishneh Torah, Torah Study": { es: "El estudio de la Torá (Hiljot Talmud Torá)" },
+  "Mishneh Torah, Foreign Worship and Customs of the Nations": { es: "Idolatría y costumbres de las naciones (Hiljot Avodá Zará)" },
+  "Mishneh Torah, Repentance": { es: "El arrepentimiento (Hiljot Teshuvá)" },
+  // Séfer Ahavá — el Amor
+  "Mishneh Torah, Reading the Shema": { es: "La lectura del Shemá (Hiljot Kriat Shemá)" },
+  "Mishneh Torah, Prayer and the Priestly Blessing": { es: "La oración y la bendición sacerdotal (Hiljot Tefilá uBirkat Kohanim)" },
+  "Mishneh Torah, Tefillin, Mezuzah and the Torah Scroll": { es: "Tefilín, mezuzá y rollo de la Torá (Hiljot Tefilín, Mezuzá veSéfer Torá)" },
+  "Mishneh Torah, Fringes": { es: "Los flecos del tzitzit (Hiljot Tzitzit)" },
+  "Mishneh Torah, Blessings": { es: "Las bendiciones (Hiljot Berajot)" },
+  "Mishneh Torah, Circumcision": { es: "La circuncisión (Hiljot Milá)" },
+  "Mishneh Torah, The Order of Prayer": { es: "El orden de la oración (Séder HaTefilá)" },
+  // Séfer Zemanim — los Tiempos
+  "Mishneh Torah, Sabbath": { es: "El Shabat (Hiljot Shabat)" },
+  "Mishneh Torah, Eruvin": { es: "Los eruvín (Hiljot Eruvín)" },
+  "Mishneh Torah, Rest on the Tenth of Tishrei": { es: "El reposo del diez de Tishrei (Hiljot Shevitat Asor)" },
+  "Mishneh Torah, Rest on a Holiday": { es: "El reposo en Yom Tov (Hiljot Shevitat Yom Tov)" },
+  "Mishneh Torah, Leavened and Unleavened Bread": { es: "Jametz y matzá (Hiljot Jametz uMatzá)" },
+  "Mishneh Torah, Shofar, Sukkah and Lulav": { es: "Shofar, sucá y lulav (Hiljot Shofar, Sucá veLulav)" },
+  "Mishneh Torah, Sheqel Dues": { es: "El tributo del shékel (Hiljot Shekalim)" },
+  "Mishneh Torah, Sanctification of the New Month": { es: "La santificación del mes nuevo (Hiljot Kidush HaJódesh)" },
+  "Mishneh Torah, Fasts": { es: "Los ayunos (Hiljot Taaniot)" },
+  "Mishneh Torah, Scroll of Esther and Hanukkah": { es: "El rollo de Ester y Janucá (Hiljot Meguilá veJanucá)" },
+  // Séfer Nashim — las Mujeres
+  "Mishneh Torah, Marriage": { es: "El matrimonio (Hiljot Ishut)" },
+  "Mishneh Torah, Divorce": { es: "El divorcio (Hiljot Guerushín)" },
+  "Mishneh Torah, Levirate Marriage and Release": { es: "Levirato y jalitzá (Hiljot Yibum vaJalitzá)" },
+  "Mishneh Torah, Virgin Maiden": { es: "La joven virgen (Hiljot Naará Betulá)" },
+  "Mishneh Torah, Woman Suspected of Infidelity": { es: "La mujer sospechada (Hiljot Sotá)" },
+  "Kuntres Zikah": { es: "Kuntrés Zicá" },
+  // Séfer Kedushá — la Santidad
+  "Mishneh Torah, Forbidden Intercourse": { es: "Las uniones prohibidas (Hiljot Isurei Biá)" },
+  "Mishneh Torah, Forbidden Foods": { es: "Los alimentos prohibidos (Hiljot Maajalot Asurot)" },
+  "Mishneh Torah, Ritual Slaughter": { es: "La faena ritual (Hiljot Shejitá)" },
+  // Séfer Hafla'á — la Separación
+  "Mishneh Torah, Oaths": { es: "Los juramentos (Hiljot Shevuot)" },
+  "Mishneh Torah, Vows": { es: "Los votos (Hiljot Nedarim)" },
+  "Mishneh Torah, Nazariteship": { es: "El nazareato (Hiljot Nezirut)" },
+  "Mishneh Torah, Appraisals and Devoted Property": { es: "Valuaciones y bienes consagrados (Hiljot Arajín vaJaramín)" },
+  // Séfer Zeraim — las Siembras
+  "Mishneh Torah, Diverse Species": { es: "Las mezclas prohibidas (Hiljot Kilaim)" },
+  "Mishneh Torah, Gifts to the Poor": { es: "Los dones para el pobre (Hiljot Matnot Aniím)" },
+  "Mishneh Torah, Heave Offerings": { es: "Las ofrendas de terumá (Hiljot Terumot)" },
+  "Mishneh Torah, Tithes": { es: "Los diezmos (Hiljot Maasrot)" },
+  "Mishneh Torah, Second Tithes and Fourth Year's Fruit": { es: "El segundo diezmo y el fruto del cuarto año (Hiljot Maaser Shení veNeta Revaí)" },
+  "Mishneh Torah, First Fruits and other Gifts to Priests Outside the Sanctuary": { es: "Las primicias y los dones al sacerdote fuera del Templo (Hiljot Bikurim)" },
+  "Mishneh Torah, Sabbatical Year and the Jubilee": { es: "El año sabático y el jubileo (Hiljot Shemitá veYovel)" },
+  // Séfer Avodá — el Servicio del Templo
+  "Mishneh Torah, The Chosen Temple": { es: "La Casa elegida, el Templo (Hiljot Beit HaBejirá)" },
+  "Mishneh Torah, Vessels of the Sanctuary and Those Who Serve Therein": { es: "Los utensilios del Santuario y quienes sirven en él (Hiljot Klei HaMikdash)" },
+  "Mishneh Torah, Admission into the Sanctuary": { es: "La entrada al Santuario (Hiljot Biat Mikdash)" },
+  "Mishneh Torah, Things Forbidden on the Altar": { es: "Lo prohibido sobre el altar (Hiljot Isurei HaMizbéaj)" },
+  "Mishneh Torah, Sacrificial Procedure": { es: "El procedimiento de las ofrendas (Hiljot Maasé HaKorbanot)" },
+  "Mishneh Torah, Daily Offerings and Additional Offerings": { es: "Las ofrendas diarias y las adicionales (Hiljot Temidín uMusafín)" },
+  "Mishneh Torah, Sacrifices Rendered Unfit": { es: "Las ofrendas invalidadas (Hiljot Pesulei HaMukdashín)" },
+  "Mishneh Torah, Service on the Day of Atonement": { es: "El servicio del Día del Perdón (Hiljot Avodat Yom HaKipurim)" },
+  "Mishneh Torah, Trespass": { es: "El uso indebido de lo sagrado (Hiljot Meilá)" },
+  // Séfer Korbanot — las Ofrendas
+  "Mishneh Torah, Paschal Offering": { es: "La ofrenda de Pésaj (Hiljot Korbán Pésaj)" },
+  "Mishneh Torah, Festival Offering": { es: "La ofrenda festiva (Hiljot Jaguigá)" },
+  "Mishneh Torah, Firstlings": { es: "Los primogénitos del ganado (Hiljot Bejorot)" },
+  "Mishneh Torah, Offerings for Unintentional Transgressions": { es: "Las ofrendas por falta involuntaria (Hiljot Shegagot)" },
+  "Mishneh Torah, Offerings for Those with Incomplete Atonement": { es: "Las ofrendas de expiación incompleta (Hiljot Mejusrei Kapará)" },
+  "Mishneh Torah, Substitution": { es: "La sustitución de la ofrenda (Hiljot Temurá)" },
+  // Séfer Taharáh — la Pureza
+  "Mishneh Torah, Defilement by a Corpse": { es: "La impureza del cadáver (Hiljot Tumat Met)" },
+  "Mishneh Torah, Red Heifer": { es: "La vaca bermeja (Hiljot Pará Adumá)" },
+  "Mishneh Torah, Defilement by Leprosy": { es: "La impureza de la tzaraat (Hiljot Tumat Tzaraat)" },
+  "Mishneh Torah, Those Who Defile Bed or Seat": { es: "Quienes contaminan lecho y asiento (Hiljot Metamei Mishkav uMoshav)" },
+  "Mishneh Torah, Other Sources of Defilement": { es: "Las demás fuentes de impureza (Hiljot Shear Avot HaTumot)" },
+  "Mishneh Torah, Defilement of Foods": { es: "La impureza de los alimentos (Hiljot Tumat Ojlín)" },
+  "Mishneh Torah, Vessels": { es: "Los utensilios (Hiljot Kelim)" },
+  "Mishneh Torah, Immersion Pools": { es: "Las mikvaot (Hiljot Mikvaot)" },
+  // Séfer Nezikim — los Daños
+  "Mishneh Torah, Damages to Property": { es: "Los daños a la propiedad (Hiljot Nizkei Mamón)" },
+  "Mishneh Torah, Theft": { es: "El hurto (Hiljot Guenevá)" },
+  "Mishneh Torah, Robbery and Lost Property": { es: "El robo y el objeto perdido (Hiljot Guezelá vaAvedá)" },
+  "Mishneh Torah, One Who Injures a Person or Property": { es: "Quien lesiona o daña (Hiljot Jovel uMazik)" },
+  "Mishneh Torah, Murderer and the Preservation of Life": { es: "El homicida y el cuidado de la vida (Hiljot Rotzéaj uShmirat Néfesh)" },
+  // Séfer Kinyán — las Adquisiciones
+  "Mishneh Torah, Sales": { es: "La compraventa (Hiljot Mejirá)" },
+  "Mishneh Torah, Ownerless Property and Gifts": { es: "Los bienes sin dueño y las donaciones (Hiljot Zejiá uMataná)" },
+  "Mishneh Torah, Neighbors": { es: "Los vecinos (Hiljot Shjenim)" },
+  "Mishneh Torah, Agents and Partners": { es: "Los mandatarios y los socios (Hiljot Sheluchín veShutafín)" },
+  "Mishneh Torah, Slaves": { es: "Los siervos (Hiljot Avadim)" },
+  // Séfer Mishpatim — los Juicios civiles
+  "Mishneh Torah, Hiring": { es: "El arrendamiento y el salario (Hiljot Sejirut)" },
+  "Mishneh Torah, Borrowing and Deposit": { es: "El préstamo de uso y el depósito (Hiljot Sheelá uFikadón)" },
+  "Mishneh Torah, Creditor and Debtor": { es: "El acreedor y el deudor (Hiljot Malvé veLové)" },
+  "Mishneh Torah, Plaintiff and Defendant": { es: "El demandante y el demandado (Hiljot Toén veNitán)" },
+  "Mishneh Torah, Inheritances": { es: "Las herencias (Hiljot Najalot)" },
+  // Séfer Shoftim — los Jueces
+  "Mishneh Torah, The Sanhedrin and the Penalties within Their Jurisdiction": { es: "El Sanedrín y las penas en su jurisdicción (Hiljot Sanhedrín)" },
+  "Mishneh Torah, Testimony": { es: "El testimonio (Hiljot Edut)" },
+  "Mishneh Torah, Rebels": { es: "Los rebeldes contra la tradición (Hiljot Mamrim)" },
+  "Mishneh Torah, Mourning": { es: "El duelo (Hiljot Avel)" },
+  "Mishneh Torah, Kings and Wars": { es: "Los reyes y las guerras (Hiljot Melajim uMiljamot)" },
+};
+
+// ── Agrupaciones DENTRO de una obra ───────────────────────────────────────
+// Sefaria devuelve la sección a la que pertenece cada libro de una obra (ver
+// `WorkBook.group`). En Mishné Torá esas secciones son los catorce "sefarim".
+// Fallback honesto: si no está catalogada, se muestra tal cual.
+// `fa`: transliteración del título hebreo a grafía persa, la misma práctica
+// que el resto del archivo usa para las obras no bíblicas (Tania → تانیا,
+// Zohar → زوهر) y para los sedarim en SUB_FA. No es un nombre inventado: es
+// el mismo título, escrito en el alfabeto que lee esa audiencia. Dejarlos sin
+// `fa` habría puesto rótulos en INGLÉS ("SEFER MADDA") en una interfaz persa.
+const WORK_GROUP_NAMES: Record<string, Name> = {
+  Introduction: { es: "Introducción", fa: "مقدمه" },
+  "Sefer Madda": { es: "Libro del Conocimiento (Séfer HaMadá)", fa: "سفر مَدَع — دانش" },
+  "Sefer Ahavah": { es: "Libro del Amor (Séfer Ahavá)", fa: "سفر اهاوا — عشق" },
+  "Sefer Zemanim": { es: "Libro de los Tiempos (Séfer Zemanim)", fa: "سفر زمانیم — زمان‌ها" },
+  "Sefer Nashim": { es: "Libro de las Mujeres (Séfer Nashim)", fa: "سفر نشیم — زنان" },
+  "Sefer Kedushah": { es: "Libro de la Santidad (Séfer Kedushá)", fa: "سفر قدوشا — قداست" },
+  "Sefer Haflaah": { es: "Libro de la Separación (Séfer Hafla'á)", fa: "سفر هفلاآ — جدایی" },
+  "Sefer Zeraim": { es: "Libro de las Siembras (Séfer Zeraim)", fa: "سفر زرعیم — کشت‌ها" },
+  "Sefer Avodah": { es: "Libro del Servicio del Templo (Séfer Avodá)", fa: "سفر عَوودا — خدمت معبد" },
+  "Sefer Korbanot": { es: "Libro de las Ofrendas (Séfer Korbanot)", fa: "سفر قربانوت — قربانی‌ها" },
+  "Sefer Taharah": { es: "Libro de la Pureza (Séfer Taharáh)", fa: "سفر طهارا — طهارت" },
+  "Sefer Nezikim": { es: "Libro de los Daños (Séfer Nezikim)", fa: "سفر نزیقین — خسارات" },
+  "Sefer Kinyan": { es: "Libro de las Adquisiciones (Séfer Kinyán)", fa: "سفر قنیان — تملک" },
+  "Sefer Mishpatim": { es: "Libro de los Juicios Civiles (Séfer Mishpatim)", fa: "سفر میشپاطیم — احکام مدنی" },
+  "Sefer Shoftim": { es: "Libro de los Jueces (Séfer Shoftim)", fa: "سفر شوفطیم — داوران" },
+};
+
+/** Rótulo de una agrupación interna de una obra, en el idioma de la interfaz.
+ * Sin nombre catalogado devuelve el que trae Sefaria (nunca inventa). */
+export function localizedWorkGroup(name: string, locale: string): string {
+  const n = WORK_GROUP_NAMES[name];
+  if (!n) return name;
+  if (locale === "fa") return n.fa ?? name;
+  if (locale === "en") return name;
+  return n.es;
+}
+
 export const BOOK_NAMES: Record<string, Name> = {
   // Torá
   Genesis: { es: "Génesis (Bereshit)", fa: "پیدایش" },
@@ -100,6 +252,10 @@ export const BOOK_NAMES: Record<string, Name> = {
   "Yalkut Shimoni on Torah": { es: "Yalkut Shimoní sobre la Torá" },
   Zohar: { es: "Zohar", fa: "زوهر" },
   "Sefer Yetzirah": { es: "Séfer Yetzirá", fa: "سفر یصیرا" },
+  // Mishné Torá: obra de catorce libros. Se busca y se abre desde la lupa
+  // (ver `getWorkBooks`), así que sus tratados necesitan nombre en español.
+  "Mishneh Torah": { es: "Mishné Torá", fa: "میشنه تورا" },
+  ...MISHNEH_TORAH_NAMES,
 };
 
 // ── Nombre de la SECCIÓN dentro del ref ───────────────────────────────────

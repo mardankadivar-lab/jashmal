@@ -76,11 +76,81 @@ export interface SefariaNameResult {
   completions: string[];
 }
 
-// Sugerencia de autocompletado, con su naturaleza (texto vs tema/persona/lugar).
+// Sugerencia de autocompletado, con su naturaleza. Sefaria devuelve TRES cosas
+// distintas bajo el mismo nombre y hay que distinguirlas, porque cada una se
+// abre de otra manera:
+//   · "ref"   → un texto concreto ("Mishneh Torah, Vows", "Genesis 1:1").
+//   · "obra"  → una ESTANTERÍA (type "TocCategory" de Sefaria): una obra de
+//               varios libros, como Mishné Torá (catorce libros). No es un tema:
+//               tocarla tiene que mostrar SUS LIBROS, no generar un estudio.
+//   · "topic" → tema, persona o lugar → estudio de concepto.
 export interface NameSuggestion {
   title: string;     // lo que se muestra
   key: string;       // ref (si es texto) o slug del tema
-  kind: "ref" | "topic"; // ref → carga el texto; topic → estudio de concepto
+  kind: "ref" | "obra" | "topic";
+  /** Solo en kind "obra": el camino de categoría de Sefaria, tal como lo
+   * devuelve `completion_objects[].key` (ej. ["Halakhah", "Mishneh Torah"]).
+   * Es lo que `getWorkBooks` necesita para pedir el índice de la obra. */
+  path?: string[];
+}
+
+/** Un libro dentro de una obra de varios libros (ej. "Hiljot Teshuvá" dentro
+ * de Mishné Torá). El `ref` se carga con `getText` igual que cualquier otro. */
+export interface WorkBook {
+  /** ref canónico de Sefaria. ej. "Mishneh Torah, Repentance". */
+  ref: string;
+  /** título inglés de Sefaria: respaldo honesto si no hay nombre en español. */
+  title: string;
+  /** título hebreo, para mostrarlo como apoyo (RTL). */
+  heTitle: string;
+  /** agrupación que declara Sefaria dentro de la obra (ej. "Sefer Madda"). */
+  group?: string;
+}
+
+/**
+ * Índice de una OBRA de varios libros, a partir del camino de categoría que
+ * trae la sugerencia (`NameSuggestion.path`). Sefaria lo expone en
+ * `/api/shape/<camino>`: devuelve un array con un entry por libro, con su
+ * título en inglés y en hebreo y la sección (el "séfer") en que vive.
+ *
+ * Es el endpoint liviano para esto: el índice completo de Sefaria
+ * (`/api/index`) pesa ~4 MB y `/api/name/<obra>?limit=0` ~700 KB, mientras que
+ * la forma de Mishné Torá pesa ~60 KB.
+ *
+ * No lanza nunca: ante error devuelve [] y la interfaz avisa.
+ */
+export async function getWorkBooks(path: string[]): Promise<WorkBook[]> {
+  if (path.length === 0) return [];
+  try {
+    const res = await fetch(`${BASE}/shape/${path.map(encodeURIComponent).join("/")}`);
+    if (!res.ok) return [];
+    const data: unknown = await res.json();
+    if (!Array.isArray(data)) return [];
+    const out: WorkBook[] = [];
+    const seen = new Set<string>();
+    for (const raw of data) {
+      const e = raw as {
+        book?: string; title?: string; heBook?: string; heTitle?: string;
+        section?: string; isComplex?: boolean;
+      };
+      // `isComplex` marca una SUBCATEGORÍA anidada, no un libro de la obra:
+      // son los comentarios que viven bajo su camino (ej. "Steinsaltz
+      // Introductions to Mishneh Torah"). No se listan.
+      if (e.isComplex) continue;
+      const ref = e.book ?? e.title;
+      if (!ref || seen.has(ref)) continue;
+      seen.add(ref);
+      out.push({
+        ref,
+        title: e.title ?? ref,
+        heTitle: e.heBook ?? e.heTitle ?? "",
+        ...(e.section ? { group: e.section } : {}),
+      });
+    }
+    return out;
+  } catch {
+    return [];
+  }
 }
 
 /** Autocompletado de la lupa: refs, libros, temas, personas y lugares. */
@@ -105,30 +175,43 @@ export interface SearchSuggestionsResult {
   isRefQuery: boolean;
 }
 
-/** Sugerencias enriquecidas: distingue textos (ref) de temas/personas/lugares. */
+/** Sugerencias enriquecidas: distingue textos (ref), obras de varios libros
+ * (TocCategory) y temas/personas/lugares. */
 export async function searchSuggestions(q: string): Promise<SearchSuggestionsResult> {
   const empty: SearchSuggestionsResult = { suggestions: [], isRefQuery: false };
   if (!q.trim()) return empty;
   const res = await fetch(`${BASE}/name/${encodeURIComponent(q)}`);
   if (!res.ok) return empty;
   const data = await res.json();
-  const objs: Array<{ title?: string; key?: string; type?: string }> =
+  const objs: Array<{ title?: string; key?: string | string[]; type?: string }> =
     Array.isArray(data.completion_objects) ? data.completion_objects : [];
+  const MAX = 8;
   const out: NameSuggestion[] = [];
+  // Una obra puede venir después del corte de MAX (Sefaria lista primero los
+  // libros sueltos). Si se cae de la lista, se añade al final: perder la obra
+  // es justamente el fallo que llevaba a Mishné Torá al estudio de concepto.
+  const obrasFuera: NameSuggestion[] = [];
   const seen = new Set<string>();
   for (const o of objs) {
     const title = o.title ?? "";
+    // Dedup por título a propósito: para un mismo nombre Sefaria manda primero
+    // la TocCategory y luego el Topic, así que la OBRA le gana al tema.
     if (!title || seen.has(title)) continue;
     seen.add(title);
-    const isRef = o.type === "ref";
-    out.push({
+    const kind: NameSuggestion["kind"] =
+      o.type === "ref" ? "ref" : o.type === "TocCategory" ? "obra" : "topic";
+    // En una TocCategory, `key` es el camino de categoría (array).
+    const path = Array.isArray(o.key) ? o.key.map(String) : undefined;
+    const sug: NameSuggestion = {
       title,
-      key: o.key ?? title,
-      kind: isRef ? "ref" : "topic",
-    });
-    if (out.length >= 8) break;
+      key: Array.isArray(o.key) ? o.key.join("/") : (o.key ?? title),
+      kind,
+      ...(kind === "obra" && path ? { path } : {}),
+    };
+    if (out.length < MAX) out.push(sug);
+    else if (kind === "obra" && sug.path && obrasFuera.length < 2) obrasFuera.push(sug);
   }
-  return { suggestions: out, isRefQuery: Boolean(data.is_ref) };
+  return { suggestions: [...out, ...obrasFuera], isRefQuery: Boolean(data.is_ref) };
 }
 
 // ── Búsqueda DENTRO de los textos (full-text) ────────────────────────────────
