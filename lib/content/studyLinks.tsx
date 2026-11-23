@@ -34,6 +34,50 @@ import { tienePanelMisterio } from "@/lib/content/misteriosPanel";
 // {{tipo:slug|texto}}  — capturamos tipo, slug y texto visible.
 const TOKEN = /\{\{(study|letter):([^|}]+)\|([^}]+)\}\}/g;
 
+// ── Aislamiento del hebreo en línea ─────────────────────────────────────────
+//  Un párrafo en español que lleva una cita en hebreo o arameo dentro tiene dos
+//  direcciones a la vez. Los signos NEUTROS —paréntesis, comas, comillas,
+//  puntos— no tienen dirección propia: la heredan de lo que tienen al lado. Si
+//  una cita hebrea queda pegada a un paréntesis español, el paréntesis se va al
+//  lado equivocado y el lector ve «(,נהי» en vez de la cita limpia. Es el fallo
+//  clásico del hebreo "invertido".
+//
+//  <bdi dir="rtl"> aísla el tramo: el hebreo se lee de derecha a izquierda y la
+//  puntuación española se queda exactamente donde la escribió el Sofer. NO
+//  lleva clase: el aspecto del hebreo en línea de las páginas de misterio no
+//  cambia, solo su dirección.
+//
+//  El tramo incluye los signos que van ENTRE dos palabras hebreas —espacio,
+//  maqaf, coma, dos puntos, geresh y gershayim, rectos o hebreos— porque esos
+//  pertenecen a la cita. Una coma seguida de español NO entra en el tramo.
+const HE_RUN = /[֐-׿יִ-ﭏ](?:[֐-׿יִ-ﭏ  ,:;'"־׳״]*[֐-׿יִ-ﭏ])?/g;
+
+/** Envuelve SOLO los tramos de hebreo/arameo de un texto mixto en <bdi>. */
+export function aislarHebreo(text: string, keyBase: string): ReactNode[] {
+  if (!/[֐-׿יִ-ﭏ]/.test(text)) return [text];
+  const out: ReactNode[] = [];
+  let last = 0;
+  let i = 0;
+  let m: RegExpExecArray | null;
+  const re = new RegExp(HE_RUN.source, "g");
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > last) {
+      out.push(<Fragment key={`${keyBase}-t${i}`}>{text.slice(last, m.index)}</Fragment>);
+    }
+    out.push(
+      <bdi key={`${keyBase}-h${i}`} dir="rtl">
+        {m[0]}
+      </bdi>,
+    );
+    last = m.index + m[0].length;
+    i++;
+  }
+  if (last < text.length) {
+    out.push(<Fragment key={`${keyBase}-t${i}`}>{text.slice(last)}</Fragment>);
+  }
+  return out;
+}
+
 const goldLink =
   "font-semibold text-gold underline decoration-gold/30 underline-offset-2 transition-colors hover:text-gold hover:decoration-gold/70";
 const goldSpan = "font-semibold text-gold/90";
@@ -61,7 +105,9 @@ export function renderStudyText(text: string, onOpenPanel?: (slug: string) => vo
   while ((m = re.exec(text)) !== null) {
     const [full, tipo, rawSlug, label] = m;
     if (m.index > last) {
-      out.push(<Fragment key={`t${key++}`}>{text.slice(last, m.index)}</Fragment>);
+      out.push(
+        <Fragment key={`t${key++}`}>{aislarHebreo(text.slice(last, m.index), `t${key}`)}</Fragment>,
+      );
     }
     const slug = rawSlug.trim();
 
@@ -114,7 +160,7 @@ export function renderStudyText(text: string, onOpenPanel?: (slug: string) => vo
   }
 
   if (last < text.length) {
-    out.push(<Fragment key={`t${key++}`}>{text.slice(last)}</Fragment>);
+    out.push(<Fragment key={`t${key++}`}>{aislarHebreo(text.slice(last), `t${key}`)}</Fragment>);
   }
   return out;
 }

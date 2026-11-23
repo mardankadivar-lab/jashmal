@@ -1082,6 +1082,28 @@ export const MISTERIOS: Misterio[] = [
     color: "#8b6a3a",
     orden: 16.995,
   },
+  {
+    // Vayishlaj (Gn 32:4–36:43), Shabat 18 de Kislev 5787 = 28 nov 2026. El
+    // estudio rastrea las OCHO tomas de Yaakov sobre la porción de Esav y
+    // muestra que el expediente no se cierra tomando: se cierra en Vayishlaj.
+    // Contenido escrito y verificado por el Sofer (23-nov-2026) y cotejado por
+    // la gerencia; montado desde el markdown verificado (líneas 1–1062).
+    // tituloFa/ganchoFa van VACÍOS a propósito —igual que toldot-palabra y
+    // grano-de-trigo—: el estudio está solo en español y el Sofer aún no lo
+    // tradujo, así que tri() muestra el español marcado como traducción
+    // pendiente. NO se generó farsi automático. Inglés: omitido por lo mismo.
+    slug: "porcion-de-esav",
+    numero: "227",
+    he: "בְּכֹרָה · בְּרָכָה",
+    titulo: "El hermano que tomó ocho veces",
+    tituloFa: "",
+    gancho:
+      "Yaakov siempre se queda con lo de su hermano: la primogenitura, la bendición, las ropas, la mujer, la tierra, el nombre, la tumba, la realeza. Una vez es una historia. Ocho veces es un patrón, y un patrón pide explicación.",
+    ganchoFa: "",
+    serie: "parasha",
+    color: "#8b6a3a",
+    orden: 16.996,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".

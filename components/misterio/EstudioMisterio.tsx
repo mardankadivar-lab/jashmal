@@ -5,7 +5,7 @@ import { useLocale } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "@/i18n/navigation";
 import MisterioLangToggle from "@/components/MisterioLangToggle";
-import { renderStudyText } from "@/lib/content/studyLinks";
+import { aislarHebreo, renderStudyText } from "@/lib/content/studyLinks";
 
 // ════════════════════════════════════════════════════════════════════════════
 //  ESTUDIO DE MISTERIO — plantilla compartida de la serie
@@ -29,7 +29,15 @@ function Section({ children, delay = 0 }: { children: React.ReactNode; delay?: n
   const ref = useRef<HTMLDivElement>(null);
   const [v, setV] = useState(false);
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setV(true); }, { threshold: 0.12 });
+    // El umbral NO puede ser una fracción del bloque: un umbral del 12% exige
+    // que se vea el 12% de la sección, y una sección más alta que la pantalla
+    // nunca llega a ese porcentaje — se quedaría invisible para siempre. Por
+    // eso basta con que la sección asome, y el margen negativo de abajo
+    // conserva la aparición escalonada de los bloques cortos.
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setV(true); },
+      { threshold: 0, rootMargin: "0px 0px -80px 0px" },
+    );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
@@ -90,8 +98,16 @@ function PullQuote({ he, es, source }: { he: string; es: string; source: string 
     <div ref={ref}
       className="my-10 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6 transition-all duration-1000"
       style={{ opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(30px)" }}>
-      <p className="hebrew mb-4 text-right text-lg leading-relaxed text-gold/80">{he}</p>
-      <p className="mb-1 text-sm italic leading-relaxed text-parchment/70">{`"${es}"`}</p>
+      {/* dir="rtl" es obligatorio, no decorativo: sin él, los signos neutros
+          —comillas «״», paréntesis, guiones— que abren o cierran una cita en
+          hebreo o arameo toman la dirección del párrafo (ltr) y aparecen del
+          lado equivocado. Es el fallo clásico del hebreo "invertido". */}
+      <p className="hebrew mb-4 text-right text-lg leading-relaxed text-gold/80" dir="rtl">{he}</p>
+      {/* La traducción puede llevar una palabra hebrea dentro (רפ"ח, por
+          ejemplo): se aísla para que las comillas no se crucen de lado. */}
+      <p className="mb-1 text-sm italic leading-relaxed text-parchment/70">
+        {aislarHebreo(`"${es}"`, "cita-es")}
+      </p>
       <p className="font-cinzel text-[10px] uppercase tracking-widest text-gold/40">— {source}</p>
     </div>
   );
@@ -226,6 +242,62 @@ export interface Mapa {
   cierre?: string[];
 }
 
+// ── BLOQUES DE CONTENIDO LIBRE (aditivo) ────────────────────────────────────
+//  Un estudio largo —una parashá con un mapa de doce fuentes y treinta citas en
+//  hebreo y arameo— no cabe en los campos fijos de arriba sin perder el ORDEN
+//  del markdown verificado. Para esos casos, una sección puede traer una lista
+//  de bloques que se pintan tal cual, uno detrás de otro:
+//    { p }        párrafo (con etiqueta dorada opcional); entiende {{study:…}}
+//    { head }     sub-encabezado en Cinzel dorado DENTRO de la sección
+//    { cita }     cita hebrea/aramea con traducción y fuente (PullQuote)
+//    { nota }     nota de honestidad o de precisión (recuadro tenue, itálica)
+//    { filas }    tabla de fuentes apilada en tarjetas (sin <table>: móvil)
+//    { conteos }  listas de palabras repetidas con su cuenta
+//  Los campos fijos de siempre siguen funcionando igual; esto NO los cambia.
+
+// Fila de una tabla de fuentes. Cada hebreo va en su propio elemento con
+// dir="rtl" para que nunca se mezcle con el español de la misma celda.
+export interface FilaFuente {
+  n?: string;        // el "#" de la tabla
+  donde?: string;    // "Gn 25:29-34"
+  titulo?: string;   // qué dice esa fila (encabezado de la tarjeta)
+  he?: string;       // término o frase hebrea de la fila (aislada)
+  texto?: string;    // explicación
+  fuente?: string;   // fuentes de la fila
+  grado?: string;    // "A" / "B" — el grado de cotejo
+}
+
+// Una palabra repetida con su cuenta (sección מִלִּים חוֹזְרוֹת).
+export interface PalabraRepetida {
+  he: string;            // la palabra, vocalizada
+  veces: string;         // "34 veces"
+  variantes?: string;    // formas que se cuentan junto con ella (hebreo solo)
+  destacada?: boolean;   // la que el estudio señala
+}
+
+export interface BloqueConteo {
+  titulo: string;        // "Génesis 27 — el capítulo de la bendición"
+  resumen?: string;      // "640 palabras, 44 pasan el umbral"
+  palabras: PalabraRepetida[];
+}
+
+export type Bloque =
+  | { p: string; etiqueta?: string }
+  | { head: string }
+  | { cita: Cita }
+  | { nota: string }
+  | { filas: FilaFuente[]; filasTitulo?: string }
+  | { conteos: BloqueConteo[] };
+
+// Sección extra con encabezado hebreo propio. NO es una de las seis canónicas:
+// la usan los estudios que traen secciones adicionales ya escritas por el Sofer
+// (p. ej. מִלִּים חוֹזְרוֹת antes de la traducción, o un mapa de fuentes después).
+export interface SeccionExtra {
+  he: string;
+  title: string;
+  bloques: Bloque[];
+}
+
 export interface EstudioData {
   slug: string;
   hero: Hero;
@@ -233,14 +305,27 @@ export interface EstudioData {
   // y mapa del argumento. Se pintan entre el hero y la תַּרְגּוּם.
   aviso?: Aviso;
   mapa?: Mapa;
+  // Apertura en prosa, SIN encabezado hebreo: la entrada del estudio cuando el
+  // contenido verificado abre con una pregunta y no con una sección.
+  preludio?: Bloque[];
+  // Secciones adicionales del contenido verificado, con su encabezado hebreo.
+  // Se pintan ANTES de la תַּרְגּוּם y DESPUÉS de ella, respectivamente, para
+  // respetar el orden exacto del markdown del Sofer. Opcionales: si el estudio
+  // no las trae, no se pinta nada.
+  antesTargum?: SeccionExtra[];
+  trasTargum?: SeccionExtra[];
   // 1. Targum
   targum: {
     citas: Cita[];
     parrafos: string[];
+    // Cuerpo en bloques, cuando la sección intercala citas, notas y párrafos
+    // en un orden que los dos campos de arriba no pueden representar.
+    bloques?: Bloque[];
   };
   // 2. Mefarshim
   mefarshim: {
     parrafos: Parrafo[];
+    bloques?: Bloque[];   // idem: cuerpo en bloques (citas intercaladas)
     glosa?: string;   // texto de la glosa (HTML simple no; texto plano)
   };
   // 2b. הַבְחָנָה — Desambiguación (OPCIONAL). Sección que aclara "qué NO es /
@@ -258,6 +343,7 @@ export interface EstudioData {
   // 3. PaRDeS
   pardes: {
     subbloques: SubBloque[];
+    bloques?: Bloque[];          // cuerpo en bloques (citas intercaladas)
     caja?: CajaDestacada;        // caja dorada de cierre (la fórmula)
     ventana?: VentanaCiencia;    // aside "Ventana a la ciencia" (opcional)
   };
@@ -265,12 +351,14 @@ export interface EstudioData {
   hitbonenut: {
     intro: string;
     parrafos: Parrafo[];   // cada uno con su pregunta en etiqueta
+    bloques?: Bloque[];    // cuerpo en bloques (citas intercaladas)
   };
   // 5. Maasé
   maase: {
     intro: string;
     etiqueta?: string;     // frase en negrita-dorado que abre la acción
     texto: string;
+    bloques?: Bloque[];    // el desglose de la acción, tras la caja dorada
   };
   // 6. Jatimá
   jatima: {
@@ -282,6 +370,211 @@ export interface EstudioData {
   hemshej: string[];
   // CTA — versículo para "Estudiar en Jashmal" (ref de Sefaria URL-encoded)
   ctaRef?: string;         // ej. "Genesis 49:10" -> se encodea
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  RENDER DE BLOQUES DE CONTENIDO LIBRE
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Nota de honestidad / precisión: recuadro tenue en itálica. En el markdown del
+// Sofer estas notas van entre paréntesis y en cursiva; aquí se pintan aparte
+// para que el lector las reconozca como lo que son y no como enseñanza.
+function Nota({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="my-6 rounded-xl border-s-2 border-gold/20 bg-white/[0.02] p-4 text-xs italic leading-relaxed text-parchment/60">
+      {children}
+    </div>
+  );
+}
+
+// Tabla de fuentes. Se apila en tarjetas (sin <table>) para que NUNCA desborde
+// en horizontal en un teléfono, y cada hebreo va en su propio elemento rtl.
+function TablaFuentes({
+  filas,
+  titulo,
+  onOpenPanel,
+}: {
+  filas: FilaFuente[];
+  titulo?: string;
+  onOpenPanel?: (slug: string) => void;
+}) {
+  return (
+    <div className="my-8">
+      {titulo && (
+        <p className="mb-3 font-cinzel text-[11px] uppercase tracking-[0.25em] text-gold/60">
+          {titulo}
+        </p>
+      )}
+      <ul className="space-y-3">
+        {filas.map((f, i) => (
+          <li key={i} className="rounded-2xl border border-gold/15 bg-white/[0.02] p-4">
+            {/* La línea de cabecera solo se pinta si la fila trae algo que
+                poner en ella: una fila sin número, sin lugar y sin grado no
+                deja un renglón vacío. */}
+            {(f.n || f.donde || f.grado) && (
+              <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                <p className="font-cinzel text-[11px] uppercase tracking-widest text-gold/60">
+                  {f.n ? <span className="text-gold/80">{f.n}</span> : null}
+                  {f.n && f.donde ? " · " : null}
+                  {f.donde}
+                </p>
+                {f.grado && (
+                  <span className="rounded-full border border-gold/30 px-2 py-0.5 font-cinzel text-[10px] uppercase tracking-widest text-gold/70">
+                    grado {f.grado}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {f.titulo && (
+              <p className="mb-2 font-cinzel text-sm leading-relaxed text-gold/85">{f.titulo}</p>
+            )}
+
+            {f.he && (
+              <p className="hebrew mb-2 text-right text-base leading-relaxed text-gold/75" dir="rtl">
+                {f.he}
+              </p>
+            )}
+
+            {f.texto && (
+              <p className="text-sm leading-relaxed text-parchment/75">
+                {renderStudyText(f.texto, onOpenPanel)}
+              </p>
+            )}
+
+            {f.fuente && (
+              <p className="mt-2 text-[11px] leading-relaxed text-gold/45">{f.fuente}</p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// Listas de palabras repetidas. Cada palabra y cada lista de variantes van en
+// su propio elemento rtl: así el español y el hebreo nunca comparten renglón
+// de texto y no hay manera de que el bidi los mezcle.
+function Conteos({ grupos }: { grupos: BloqueConteo[] }) {
+  return (
+    <div className="my-8 space-y-4">
+      {grupos.map((g, i) => (
+        <div key={i} className="rounded-2xl border border-gold/15 bg-white/[0.02] p-4">
+          <p className="font-cinzel text-xs uppercase tracking-widest text-gold/70">{g.titulo}</p>
+          {g.resumen && (
+            <p className="mt-1 text-[11px] leading-relaxed text-parchment/55">{g.resumen}</p>
+          )}
+          <ul className="mt-3 space-y-2">
+            {g.palabras.map((w, j) => (
+              <li
+                key={j}
+                className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-t border-gold/10 pt-2 first:border-0 first:pt-0"
+              >
+                <span
+                  className={`hebrew text-base ${w.destacada ? "text-gold" : "text-gold/75"}`}
+                  dir="rtl"
+                >
+                  {w.he}
+                </span>
+                <span
+                  className={`font-cinzel text-[11px] uppercase tracking-widest ${
+                    w.destacada ? "text-gold/90" : "text-parchment/60"
+                  }`}
+                >
+                  {w.veces}
+                </span>
+                {w.variantes && (
+                  <span className="text-[11px] text-parchment/45">
+                    (contando{" "}
+                    <span className="hebrew text-sm text-gold/50" dir="rtl">
+                      {w.variantes}
+                    </span>
+                    )
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Pinta una lista de bloques en el orden exacto en que viene.
+function Bloques({
+  bloques,
+  onOpenPanel,
+}: {
+  bloques: Bloque[];
+  onOpenPanel?: (slug: string) => void;
+}) {
+  return (
+    <>
+      {bloques.map((b, i) => {
+        if ("head" in b) {
+          return (
+            <P key={i} className="mt-8 font-cinzel text-gold/80" onOpenPanel={onOpenPanel}>
+              {b.head}
+            </P>
+          );
+        }
+        if ("cita" in b) {
+          const c = b.cita;
+          return (
+            <div key={i}>
+              {c.label && (
+                <P className="mb-3 mt-8 font-cinzel text-gold/70" onOpenPanel={onOpenPanel}>
+                  {c.label}
+                </P>
+              )}
+              <PullQuote he={c.he} es={c.es} source={c.source} />
+            </div>
+          );
+        }
+        if ("nota" in b) {
+          return (
+            <Nota key={i}>
+              <p>{renderStudyText(b.nota, onOpenPanel)}</p>
+            </Nota>
+          );
+        }
+        if ("filas" in b) {
+          return (
+            <TablaFuentes key={i} filas={b.filas} titulo={b.filasTitulo} onOpenPanel={onOpenPanel} />
+          );
+        }
+        if ("conteos" in b) {
+          return <Conteos key={i} grupos={b.conteos} />;
+        }
+        return (
+          <P key={i} className="mt-5" onOpenPanel={onOpenPanel}>
+            {b.etiqueta ? <span className="font-cinzel text-gold/80">{b.etiqueta}</span> : null}
+            {b.etiqueta ? " " : null}
+            {b.p}
+          </P>
+        );
+      })}
+    </>
+  );
+}
+
+// Sección extra con su encabezado hebreo (no es una de las seis canónicas).
+function SeccionExtraBloque({
+  seccion,
+  onOpenPanel,
+}: {
+  seccion: SeccionExtra;
+  onOpenPanel?: (slug: string) => void;
+}) {
+  return (
+    <Section>
+      <div className="mt-16">
+        <SectionHead he={seccion.he} title={seccion.title} />
+      </div>
+      <Bloques bloques={seccion.bloques} onOpenPanel={onOpenPanel} />
+    </Section>
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -431,6 +724,16 @@ export default function EstudioMisterio({
           )}
         </div>
 
+        {/* ── PRELUDIO (opcional) — apertura en prosa, sin encabezado hebreo.
+            No es una sección de estudio: es la entrada del texto. */}
+        {data.preludio && (
+          <Section>
+            <div className="mb-6">
+              <Bloques bloques={data.preludio} onOpenPanel={onOpenPanel} />
+            </div>
+          </Section>
+        )}
+
         {/* ── ADVERTENCIA DEL SOFER (opcional) ────────────────────────────────
             Abre el estudio diciendo lo que NO afirma. No es una sección de
             estudio: banda ámbar, sin encabezado hebreo. */}
@@ -509,6 +812,12 @@ export default function EstudioMisterio({
           </Section>
         )}
 
+        {/* ── Secciones del contenido verificado que van ANTES de la traducción
+            (p. ej. מִלִּים חוֹזְרוֹת, las palabras que se repiten). ────────── */}
+        {data.antesTargum?.map((s, i) => (
+          <SeccionExtraBloque key={i} seccion={s} onOpenPanel={onOpenPanel} />
+        ))}
+
         {/* ── 1. תַּרְגּוּם — Traducción ──────────────────────────────────────── */}
         <Section>
           <SectionHead he="תַּרְגּוּם" title="Traducción" />
@@ -527,7 +836,18 @@ export default function EstudioMisterio({
               <P key={i} onOpenPanel={onOpenPanel}>{t}</P>
             ))}
           </div>
+
+          {data.targum.bloques && (
+            <Bloques bloques={data.targum.bloques} onOpenPanel={onOpenPanel} />
+          )}
         </Section>
+
+        {/* ── Secciones del contenido verificado que van DESPUÉS de la
+            traducción y antes de los comentaristas (p. ej. un mapa de
+            fuentes, o el rastreo de una palabra). ──────────────────────── */}
+        {data.trasTargum?.map((s, i) => (
+          <SeccionExtraBloque key={i} seccion={s} onOpenPanel={onOpenPanel} />
+        ))}
 
         {/* ── 2. מְפָרְשִׁים — Comentaristas clásicos ────────────────────────── */}
         <Section>
@@ -544,6 +864,10 @@ export default function EstudioMisterio({
               </P>
             ))}
           </div>
+
+          {data.mefarshim.bloques && (
+            <Bloques bloques={data.mefarshim.bloques} onOpenPanel={onOpenPanel} />
+          )}
 
           {data.mefarshim.glosa && (
             <Glosa>
@@ -633,6 +957,10 @@ export default function EstudioMisterio({
             ))}
           </div>
 
+          {data.pardes.bloques && (
+            <Bloques bloques={data.pardes.bloques} onOpenPanel={onOpenPanel} />
+          )}
+
           {data.pardes.caja && (
             <div className="my-8 rounded-2xl border border-gold/30 bg-gold/[0.06] p-6 text-center">
               <p className="font-cinzel text-base font-bold leading-relaxed text-gold">
@@ -689,6 +1017,10 @@ export default function EstudioMisterio({
               </P>
             ))}
           </div>
+
+          {data.hitbonenut.bloques && (
+            <Bloques bloques={data.hitbonenut.bloques} onOpenPanel={onOpenPanel} />
+          )}
         </Section>
 
         {/* ── 5. מַעֲשֶׂה — Maasé (voseo normalizado a neutro) ────────────────── */}
@@ -707,6 +1039,10 @@ export default function EstudioMisterio({
               {data.maase.texto}
             </P>
           </div>
+
+          {data.maase.bloques && (
+            <Bloques bloques={data.maase.bloques} onOpenPanel={onOpenPanel} />
+          )}
         </Section>
 
         {/* ── 6. חֲתִימָה — Jatimá (el sello) ─────────────────────────────────── */}
