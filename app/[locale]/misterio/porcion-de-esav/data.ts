@@ -1228,7 +1228,7 @@ export const data: EstudioData = {
   //  páginas desde infraestructura.
   hemshej: [
     "Si Yaakov nació agarrado de un talón, ¿qué es un talón en la Torá? → {{study:eikev-talon|El talón que agarró el destino}}",
-    "La palabra con la que empieza todo esto se repite trece veces en el Tanaj. ¿Qué cuenta? → {{study:toldot-palabra|El rastro de la palabra toldot}}",
+    "La palabra con la que empieza todo esto deja un rastro por todo el Tanaj. ¿Dónde vuelve a aparecer? → {{study:toldot-palabra|El rastro de la palabra toldot}}",
     "El padre que bendijo a ciegas: ¿por qué la Torá tartamudea al nombrarlo? → {{study:rostro-isaac|El rostro que la burla no pudo borrar}}",
     "La letra que abre «bendición» y «primogenitura», y las separa. → {{letter:kaf|La kaf — la palma que contiene}}",
   ],
