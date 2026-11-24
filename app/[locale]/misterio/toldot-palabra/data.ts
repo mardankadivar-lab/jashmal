@@ -29,7 +29,7 @@ const TITULO = "La vav que se perdió";
 const SERIE =
   "Serie «Parashá» · Toldot — estudio de la palabra, no de la parashá";
 const GANCHO =
-  "Una palabra aparece 39 veces en el Tanaj. En dos de ellas está escrita completa. En una está escrita vacía. En las otras treinta y seis le falta una letra. La tradición no trató eso como un detalle de escribas. Lo trató como una herida.";
+  "Una palabra aparece 39 veces en el Tanaj, y trece de esas veces encabeza una genealogía: «estas son las toldot de…». De esos trece encabezados, dos están escritos completos. Uno está escrito vacío. A los otros diez les falta una letra. La tradición no trató eso como un detalle de escribas. Lo trató como una herida.";
 
 export const data: EstudioData = {
   slug: "toldot-palabra",
@@ -90,7 +90,7 @@ export const data: EstudioData = {
     parrafos: [
       {
         etiqueta: "El dato duro, antes de los comentaristas.",
-        texto: `Antes de citar a nadie conviene poner sobre la mesa lo que dice el texto mismo. Recorrí los 39 libros del Tanaj palabra por palabra buscando toda forma de la raíz con el prefijo tav (texto masorético, edición Miqrá al pi ha-Masorá, basada en el Códice de Alepo, contrastada después contra otras dos ediciones hebreas independientes, que coinciden exactamente). El resultado: la palabra aparece 39 veces en todo el Tanaj. De esas, 13 son encabezados del tipo «estas son las toldot de X».`,
+        texto: `Antes de citar a nadie conviene poner sobre la mesa lo que dice el texto mismo. Recorrimos los veinticuatro libros del Tanaj palabra por palabra buscando toda forma del sustantivo תּוֹלְדוֹת: plena y defectiva, con prefijos (לְ־, כְּ־) y con sufijos posesivos (־ם, ־יו). El resultado: la palabra aparece 39 veces en todo el Tanaj — Génesis 13, Éxodo 3, Números 13, Rut 1, Crónicas I 9. De esas 39, veintiséis llevan prefijo o sufijo, y 13 son encabezados del tipo «estas son las toldot de X». Y esto no depende de la memoria de nadie: la cuenta se rehízo con código sobre el texto masorético de la Open Scriptures Hebrew Bible (CC BY 4.0, sobre el Códice de Leningrado), contando el lema del sustantivo y no la grafía, de modo que תּוֹלְדֹת, תֹּלְדוֹת, לְתֹלְדֹתָם y תּוֹלְדֹתָם cuentan todas juntas. Da 39, una por una, y se contó dos veces por separado, con dos programas distintos, antes de escribirlo aquí.`,
       },
       {
         etiqueta: "Los trece encabezados, uno por uno.",

@@ -330,6 +330,38 @@ export const data: EstudioData = {
       {
         p: `Y el versículo termina con la palabra del delito: וַיִּקָּח — «y tomó». La última vez que ese verbo se dijo entre estos dos hermanos, lo dijo Esav para acusar. Aquí lo dice la Torá para contar que Esav aceptó.`,
       },
+      { head: "Y hay un segundo par, que es el que cierra el gesto" },
+      {
+        p: `El verbo no es lo único que viaja de un versículo al otro. La bendición que Yitzjak le dio a Yaakov creyendo que era Esav dice, en su cláusula central, esto:`,
+      },
+      {
+        cita: {
+          label: "Génesis 27:29 — grado A, cotejado",
+          he: "הֱוֵ֤ה גְבִיר֙ לְאַחֶ֔יךָ וְיִשְׁתַּחֲוּ֥וּ לְךָ֖ בְּנֵ֣י אִמֶּ֑ךָ",
+          es: "Sé señor de tus hermanos, y que se inclinen ante ti los hijos de tu madre.",
+          source: "Génesis 27:29",
+        },
+      },
+      {
+        p: `Dos palabras cargan la cláusula. גְבִיר, «señor». Y וְיִשְׁתַּחֲוּוּ, de la raíz ש־ח־ה, «inclinarse». Eso es lo que la bendición tomada le concede: el señorío sobre el hermano, y el hermano inclinado.`,
+      },
+      {
+        p: `Ahora mira la primera cosa que hace Yaakov cuando por fin se encuentra con el hijo de su madre, en nuestra parashá:`,
+      },
+      {
+        cita: {
+          label: "Génesis 33:3 — grado A, cotejado",
+          he: "וְה֖וּא עָבַ֣ר לִפְנֵיהֶ֑ם וַיִּשְׁתַּ֤חוּ אַ֨רְצָה֙ שֶׁ֣בַע פְּעָמִ֔ים עַד־גִּשְׁתּ֖וֹ עַד־אָחִֽיו׃",
+          es: "Y él pasó delante de ellos y se inclinó a tierra siete veces, hasta acercarse a su hermano.",
+          source: "Génesis 33:3",
+        },
+      },
+      {
+        p: `Es la misma raíz, ש־ח־ה, y está del otro lado. En 27:29 el hermano se inclina ante Yaakov; en 33:3 Yaakov se inclina ante el hermano, siete veces, y la Torá se toma el trabajo de contar las veces. Y las palabras repetidas que el código ya midió en la sección primera dicen el resto: siete «tu siervo» en Génesis 32, cinco «mi señor» en Génesis 33. גְבִיר era lo que la bendición le dio a él; אֲדֹנִי es lo que él le dice al otro.`,
+      },
+      {
+        p: `De modo que los dos versículos de la bendición robada tienen, cada uno, su contraversículo en Vayishlaj. לָקַח de 27:36 vuelve como קַח en 33:11. גְבִיר de 27:29 vuelve como אֲדֹנִי en boca del que había sido hecho señor. No es una inversión: son dos, y las dos caben en una sola parashá.`,
+      },
       { head: "Y esto no depende de la memoria de nadie: lo midió el código" },
       {
         p: `Antes de escribir una sola línea de este estudio, la sesión principal midió la palabra con código, por separado y a ciegas: descargó los cinco libros de la Torá, retiró la cantilación dejando intactas las vocales y el daguesh, y buscó la forma vocalizada exacta בִּרְכָתִי, letra por letra y punto por punto, distinguiéndola del verbo בֵּרַכְתִּי, que lleva otro puntuado.`,
@@ -948,6 +980,31 @@ export const data: EstudioData = {
         p: `el yugo de Esav no se rompe por fuerza de Esav. Se rompe por falla de Israel. Lo que Yaakov tomó, lo tiene a condición de merecerlo.`,
       },
 
+      { head: "Rashi: la tierra que Esav dejó venía con un pagaré" },
+      {
+        p: `En el pshat, Esav sale de Canaán porque no hay pasto para dos. Pero Rashi, sobre ese mismo versículo, trae además el midrash agadá — y el midrash le pone al asunto un vocabulario jurídico que cambia la cuenta entera de este estudio.`,
+      },
+      {
+        cita: {
+          label: "Rashi a Génesis 36:7, midrash agadá — grado A, cotejado",
+          he: 'מִפְּנֵי שְׁטַר חוֹב שֶׁל גְּזֵרַת "כִּי גֵר יִהְיֶה זַרְעֲךָ" הַמֻּטָּל עַל זַרְעוֹ שֶׁל יִצְחָק. אָמַר: אֵלֵךְ לִי מִכָּאן, אֵין לִי חֵלֶק לֹא בַּמַּתָּנָה שֶׁנִּתְּנָה לוֹ הָאָרֶץ הַזֹּאת, וְלֹא בְּפִרְעוֹן הַשְּׁטָר; וּמִפְּנֵי הַבּוּשָׁה שֶׁמָּכַר בְּכוֹרָתוֹ.',
+          es: "A causa del pagaré del decreto «ciertamente extranjero será tu descendencia», que pesa sobre la descendencia de Yitzjak. Dijo: me iré de aquí, no tengo parte ni en el regalo —que le fue dada esta tierra— ni en el pago del pagaré; y también a causa de la vergüenza de haber vendido su primogenitura.",
+          source: "Rashi a Génesis 36:7",
+        },
+      },
+      {
+        nota: `De quién es cada voz, porque conviene no mezclarlas. Rashi lo introduce como מִדְרַשׁ אַגָּדָה —abreviado ומ״א en la edición impresa— y la fuente es Bereshit Rabá 82:13, donde las dos razones están repartidas entre dos sabios con nombre: «Rabí Eliezer dijo: a causa del pagaré, ‹ciertamente extranjero será tu descendencia›; Rabí Yehoshúa ben Leví dijo: a causa de la vergüenza» (grado A, cotejado). Rashi junta las dos en una sola glosa. Y el שְׁטַר חוֹב, el «pagaré», es el decreto de Génesis 15:13: «ciertamente extranjero será tu descendencia en tierra ajena... cuatrocientos años».`,
+      },
+      {
+        p: `Hay que pesar lo que acaba de decir esa fuente. La tierra, en el midrash, no es solamente un premio: es un lote con dos partes, מַתָּנָה y שְׁטָר, un regalo y un pagaré. Y Esav renuncia a las dos a la vez, con esas palabras: no tengo parte ni en el regalo ni en el pago del pagaré.`,
+      },
+      {
+        etiqueta: "El corolario, y va marcado como corolario, no como cita:",
+        p: `si una de las dos partes renuncia al lote completo, el lote completo queda en la otra. La fuente formula la renuncia desde el lado de Esav — «no quiero ni una ni la otra». Que entonces Yaakov cargó con las dos es un paso nuestro, de un solo paso, sobre una fuente explícita, y así va dicho.`,
+      },
+      {
+        p: `Y hay un segundo filo en la misma glosa, que ata el final del expediente con su primera página: la otra razón que da Rashi para la partida de Esav es la vergüenza de haber vendido su primogenitura. La toma número 1 de nuestro mapa, el guisado de lentejas, reaparece aquí como el motivo por el que Esav se va de la tierra en la toma número 7. El expediente se cierra citándose a sí mismo por el principio.`,
+      },
       { head: "El Arizal: por qué los reyes de Edom están en esta parashá" },
       {
         p: `El capítulo 36 de Génesis es, en apariencia, el más aburrido de la parashá: una lista de reyes edomitas. En la Cabalá luriana es uno de los textos más cargados de toda la Torá. Y lo notable, para un estudio anclado en Vayishlaj, es que el Arizal lo dice nombrando nuestra parashá:`,
@@ -1108,55 +1165,34 @@ export const data: EstudioData = {
         p: `Lo que ves primero es un hombre que toma ocho veces. Y lo que ves después, si sigues mirando, es un hombre que paga por cada una.`,
       },
       {
-        p: `Mira el precio, pieza por pieza, porque está todo en el texto. Toma la bendición con ropas ajenas, y pasa veinte años huyendo. Toma a la hermana mayor que no era para él, y vive una casa partida en dos y a sus mujeres disputándose la primogenitura que él le había quitado a su hermano. Toma la tierra, y con la tierra toma la deuda — eso está dicho con esas palabras:`,
-      },
-      {
-        cita: {
-          label:
-            "Rashi a Génesis 36:7, siguiendo Bereshit Rabá 82:13 — grado A, cotejado",
-          he: "אָמַר: אֵלֵךְ לִי מִכָּאן, אֵין לִי חֵלֶק לֹא בַּמַּתָּנָה שֶׁנִּתְּנָה לוֹ הָאָרֶץ הַזֹּאת, וְלֹא בְּפִרְעוֹן הַשְּׁטָר.",
-          es: "Dijo: me iré de aquí, no tengo parte ni en el regalo — que le fue dada esta tierra — ni en el pago del pagaré.",
-          source: "Rashi a Génesis 36:7 · Bereshit Rabá 82:13",
-        },
-      },
-      {
-        p: `El שְׁטַר חוֹב, el «pagaré», es el decreto de Génesis 15:13: «ciertamente extranjero será tu descendencia en tierra ajena... cuatrocientos años». Esav se va renunciando a las dos cosas a la vez: al regalo y a la deuda. No quiere el lote. Y si una de las dos partes renuncia al lote completo, el lote completo queda en la otra.`,
+        p: `Mira el precio, pieza por pieza, porque ya quedó todo dicho atrás. Toma la bendición con ropas ajenas, y pasa veinte años huyendo. Toma a la hermana mayor que no era para él, y vive una casa partida en dos y a sus mujeres disputándose la primogenitura que él le había quitado a su hermano. Toma la tierra, y con la tierra toma la deuda: el regalo y el pagaré venían en el mismo lote, y Esav se fue renunciando a los dos.`,
       },
       {
         p: `Entonces el patrón se da vuelta delante de ti. Yaakov no se quedó con las ventajas de su hermano. Se quedó con el expediente entero: la tierra y los cuatrocientos años, la bendición y los veinte años de servidumbre en casa de Laván, la primogenitura y el servicio que la primogenitura obliga a hacer. Esav eligió la parte sin factura. Yaakov se quedó con la parte que viene con factura.`,
       },
       {
-        nota: `Aquí hay que ser preciso, porque es el punto donde un estudio se pasa de listo: la fuente formula la renuncia desde el lado de Esav — «no quiero ni una ni la otra». La conclusión «entonces Yaakov cargó con las dos» es un corolario de un solo paso sobre una fuente explícita. Va marcada como corolario, no como cita.`,
+        p: `Siéntate un momento en eso, porque es incómodo y es tuyo también. Lo que pediste y se te dio nunca vino solo. Vino con su carga, y la carga no se negocia aparte. Casi nadie mira la factura antes de pedir; y casi nadie, cuando le llega, se acuerda de que la pidió.`,
       },
       {
-        p: `Y entonces entiendes por qué Vayishlaj es el lugar del cierre, y por qué el cierre tiene esa forma tan extraña. Mira lo que hace Yaakov en el encuentro:`,
+        p: `Y entonces entiendes por qué Vayishlaj es el lugar del cierre, y por qué el cierre tiene esa forma tan extraña. Porque lo que Yaakov hace en el encuentro es exactamente lo contrario de lo que la bendición le concedía. La bendición decía: sé señor de tus hermanos, y que se inclinen ante ti los hijos de tu madre. Y lo primero que hace Yaakov con el hijo de su madre es inclinarse siete veces, llamarse siervo y llamarlo «mi señor». Las dos palabras que la bendición le había puesto en la mano, se las devuelve dichas al otro.`,
       },
       {
-        p: `Se inclina siete veces. וַיִּשְׁתַּ֤חוּ אַ֙רְצָה֙ שֶׁ֣בַע פְּעָמִ֔ים (33:3). Se llama siervo. עַבְדֶּךָ, siete veces en Génesis 32 según el conteo del código. Lo llama mi señor. אֲדֹנִי, cinco veces en Génesis 33.`,
-      },
-      { p: `Y ahora vuelve a leer la bendición que le robó:` },
-      {
-        cita: {
-          label: "Génesis 27:29 — grado A",
-          he: "הֱוֵ֤ה גְבִיר֙ לְאַחֶ֔יךָ וְיִשְׁתַּחֲו֥וּ לְךָ֖ בְּנֵ֣י אִמֶּ֑ךָ",
-          es: "Sé señor de tus hermanos, y que se inclinen ante ti los hijos de tu madre.",
-          source: "Génesis 27:29",
-        },
+        p: `Eso es lo que hay que entender de esta parashá, y es lo que ninguna tabla de tomas puede decir. Yaakov no cierra el expediente cobrando. Lo cierra devolviendo el gesto. No devuelve la bendición — no puede, y ya vimos que ni lo intentó. Devuelve la postura. Se pone, voluntariamente y de frente, en el lugar que la bendición le había quitado a su hermano.`,
       },
       {
-        p: `La bendición dice que los hijos de su madre se inclinarán ante él. Y lo primero que hace Yaakov con el hijo de su madre es inclinarse siete veces y llamarlo «mi señor». Hace, exactamente, lo contrario de lo que la bendición robada le concede.`,
-      },
-      {
-        p: `Eso es lo que hay que entender de esta parashá, y es lo que ninguna tabla de tomas puede decir. Yaakov no cierra el expediente cobrando. Lo cierra devolviendo el gesto. No devuelve la bendición — no puede, y el Alshij nos dice que ni lo intentó. Devuelve la postura. Se pone, voluntariamente y de frente, en el lugar que la bendición le había quitado a su hermano.`,
+        p: `Mídete con eso un momento, porque aquí se separa lo barato de lo caro. Es más fácil devolver una cosa que devolver una postura. La cosa se entrega y se acaba. La postura hay que sostenerla delante de alguien que puede no aceptarla. Yaakov se inclina siete veces sin saber todavía si su hermano viene a abrazarlo o a matarlo.`,
       },
       {
         p: `Y solo después de eso — después de inclinarse siete veces, después de llamarlo señor, después de decirle «toma mi bendición» — la Torá dice וַיִּקָּח, «y tomó». El verbo del delito aparece por última vez entre estos dos hermanos, y esta vez el que toma es el que había sido despojado, y toma porque se lo pidieron.`,
       },
       {
-        p: `Hay una pregunta que este estudio deja en tus manos y no va a contestar por ti. Las ocho tomas se pueden leer de dos maneras, y las dos son defendibles con fuentes. Se pueden leer como un hombre que supo siempre lo que era suyo y fue a buscarlo. Y se pueden leer como un hombre que pasó toda su vida pagando por haber tenido razón demasiado pronto.`,
+        p: `Hay una pregunta que este estudio deja en tus manos y no va a contestar por ti. Las ocho tomas se pueden leer de dos maneras, y las dos son defendibles con las fuentes que ya leíste. Se pueden leer como un hombre que supo siempre lo que era suyo y fue a buscarlo. Y se pueden leer como un hombre que pasó toda su vida pagando por haber tenido razón demasiado pronto.`,
       },
       {
-        p: `El único que zanja la pregunta es el Cielo, y lo hace en Peniel, cuando le cambia el nombre y le dice que de ahora en adelante las bendiciones no se dirán con astucia sino a rostro descubierto. Lo que estaba mal no era el contenido. Era el modo. Y el modo se puede cambiar — esa es la noticia entera de la parashá.`,
+        p: `Pregúntatelo de ti, que es para lo que sirve esta sección: ¿cuál de las dos lecturas usas contigo mismo, y cuál usas con el que tienes enfrente? Porque casi todos nos leemos con la primera y leemos al otro con la segunda, y a esa asimetría se le va la vida entera de una familia.`,
+      },
+      {
+        p: `El único que zanja la pregunta es el Cielo, y lo hace en Peniel, cuando le cambia el nombre y le dice que de ahora en adelante las bendiciones no se dirán con astucia sino a rostro descubierto. Lo que estaba mal no era el contenido. Era el modo. Y el modo se puede cambiar — esa es la noticia entera de la parashá, y es la única parte de todo esto que depende de ti.`,
       },
     ],
   },
@@ -1228,7 +1264,7 @@ export const data: EstudioData = {
   //  páginas desde infraestructura.
   hemshej: [
     "Si Yaakov nació agarrado de un talón, ¿qué es un talón en la Torá? → {{study:eikev-talon|El talón que agarró el destino}}",
-    "La palabra con la que empieza todo esto deja un rastro por todo el Tanaj. ¿Dónde vuelve a aparecer? → {{study:toldot-palabra|El rastro de la palabra toldot}}",
+    "La palabra con la que empieza todo esto encabeza trece genealogías del Tanaj, y solo dos están escritas completas. ¿Por qué? → {{study:toldot-palabra|El rastro de la palabra toldot}}",
     "El padre que bendijo a ciegas: ¿por qué la Torá tartamudea al nombrarlo? → {{study:rostro-isaac|El rostro que la burla no pudo borrar}}",
     "La letra que abre «bendición» y «primogenitura», y las separa. → {{letter:kaf|La kaf — la palma que contiene}}",
   ],
