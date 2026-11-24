@@ -1223,10 +1223,13 @@ export const data: EstudioData = {
   //  El markdown del Sofer trae SEIS puentes. Dos se retiraron al montar porque
   //  apuntan a estudios que todavía NO existen y no hay contenido escrito ni
   //  verificado detrás: {{study:reyes-edom|Los reyes que no se sostuvieron}} y
-  //  {{study:katonti|Katonti — la cuenta vacía}}. Quedan apuntados como
+  //  {{study:katonti|Katonti — la cuenta vacía}}. El de katonti YA EXISTE
+  //  desde el 24-nov-2026 (/misterio/katonti) y el puente está puesto arriba;
+  //  el de los reyes de Edom queda apuntado como
   //  pendientes: preferimos un chip menos a un enlace muerto. No se crean esas
   //  páginas desde infraestructura.
   hemshej: [
+    "La palabra que Yaakov dice en la orilla, ¿cuántas veces la conjuga la Biblia hebrea? → {{study:katonti|Me he vuelto pequeño}}",
     "Si Yaakov nació agarrado de un talón, ¿qué es un talón en la Torá? → {{study:eikev-talon|El talón que agarró el destino}}",
     "La palabra con la que empieza todo esto encabeza trece genealogías del Tanaj, y solo dos están escritas completas. ¿Por qué? → {{study:toldot-palabra|El rastro de la palabra toldot}}",
     "El padre que bendijo a ciegas: ¿por qué la Torá tartamudea al nombrarlo? → {{study:rostro-isaac|El rostro que la burla no pudo borrar}}",

@@ -1104,6 +1104,27 @@ export const MISTERIOS: Misterio[] = [
     color: "#8b6a3a",
     orden: 16.996,
   },
+  {
+    // Estudio propio de קָטֹנְתִּי, nacido del de Vayishlaj y encargado por
+    // Mardan el 24-nov-2026: la pequeñez leída como MEDICIÓN de una conciencia
+    // contra lo Infinito. Cierra el enlace {{study:katonti}} que el estudio
+    // padre publicaba sin página detrás. Escrito y verificado por el Sofer;
+    // las cuatro conjugaciones del verbo y las citas nuevas, recontadas por la
+    // gerencia antes de montar. Primer estudio escrito ya con la regla de voz
+    // del 24-nov-2026 (ver CLAUDE.md): sin rótulos de grado y con todo el
+    // hebreo glosado. tituloFa/ganchoFa vacíos a propósito: solo español.
+    slug: "katonti",
+    numero: "4",
+    he: "קָטֹנְתִּי",
+    titulo: "Me he vuelto pequeño",
+    tituloFa: "",
+    gancho:
+      "En toda la Biblia hebrea el verbo «hacerse pequeño» se conjuga cuatro veces. Una sola vez lo dice un hombre de sí mismo, y es Yaakov en la orilla del río. Las otras tres no hablan de ningún hombre: dos dicen que lo que Dios regaló era poca cosa a los ojos de Dios, y la cuarta describe a un comerciante que achica la medida para robar.",
+    ganchoFa: "",
+    serie: "dos-filos",
+    color: "#c9a43e",
+    orden: 6.7,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".
