@@ -1055,7 +1055,7 @@ export const MISTERIOS: Misterio[] = [
     titulo: "La vav que se perdió",
     tituloFa: "",
     gancho:
-      "Una palabra aparece 39 veces en el Tanaj. En dos de ellas está escrita completa. En una está escrita vacía. En las otras treinta y seis le falta una letra. La tradición no trató eso como un detalle de escribas. Lo trató como una herida.",
+      "Una palabra aparece 39 veces en el Tanaj, y trece de esas veces encabeza una genealogía: «estas son las toldot de…». De esos trece encabezados, dos están escritos completos. Uno está escrito vacío. A los otros diez les falta una letra. La tradición no trató eso como un detalle de escribas. Lo trató como una herida.",
     ganchoFa: "",
     serie: "parasha",
     color: "#8b6a3a",
