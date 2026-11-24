@@ -112,6 +112,27 @@ umbral (separador + micro-rótulo + chips dorados), no como otra sección de est
 REGLAS: citar fuentes exactas (libro cap:versículo, folio del Talmud,
 Zohar, Midrash). Ser profundo, no breve.
 
+## Voz de los estudios (regla de Mardan, 24-nov-2026)
+Cuatro reglas duras sobre CÓMO se escribe lo que el lector ve. No cambian el
+rigor: cambian la superficie.
+1. **El nombre de Mardan no aparece en el texto publicado.** Ni «la pregunta de
+   Mardan», ni «Mardan recordaba», ni «jidush de Mardan Kadivar». Cuando la
+   lectura es nuestra y no de una fuente, se firma como **lectura de Jashmal** o
+   **meditación de Jashmal**: la honestidad se mantiene, el nombre propio sale.
+   Tampoco «la gerencia», «el Sofer» ni «el motor de estudio».
+2. **Los rótulos de grado NO se publican.** A/B/C siguen siendo obligatorios en
+   el expediente de trabajo —y nada entra al cuerpo si no es A o B—, pero en la
+   página la fuente se dice con naturalidad: «lo dice el Talmud en Bavá Batrá
+   123a». El chip «grado X» de las tablas ya no se pinta.
+3. **Todo el hebreo lleva su traducción pegada**, también dentro de los párrafos
+   y no solo en los bloques de cita. La audiencia no lee hebreo.
+4. **Fluidez de sermón, no piezas sueltas.** Menos listas y menos «primero…
+   segundo… y tercero». Y sobre todo, nada de meta: no se explica qué método se
+   siguió, qué se buscó y no se encontró, qué circula por ahí y es media verdad,
+   ni qué no se va a desarrollar aquí. Dos opiniones clásicas que discrepan se
+   cuentan como una conversación entre dos maestros, no como un cuadro
+   comparativo. Las salvedades necesarias caben en una frase dentro del hilo.
+
 ## Estudio DE un midrash (método ampliado)
 Cuando el lector abre una obra de la estantería **Midrash** por su propia puerta
 (las 25 obras en lib/sources/midrashRef.ts), el midrash no es una voz de apoyo:

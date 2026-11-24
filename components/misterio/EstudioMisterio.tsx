@@ -409,20 +409,21 @@ function TablaFuentes({
         {filas.map((f, i) => (
           <li key={i} className="rounded-2xl border border-gold/15 bg-white/[0.02] p-4">
             {/* La línea de cabecera solo se pinta si la fila trae algo que
-                poner en ella: una fila sin número, sin lugar y sin grado no
-                deja un renglón vacío. */}
-            {(f.n || f.donde || f.grado) && (
+                poner en ella: una fila sin número y sin lugar no deja un
+                renglón vacío.
+
+                El GRADO DE COTEJO NO SE PINTA. El campo sigue existiendo en
+                los datos porque el cotejo es obligatorio y queda escrito en el
+                expediente de cada estudio, pero «grado A» no significa nada
+                para quien lee y ensuciaba la página (corrección de Mardan,
+                24-nov-2026). La fuente se dice con naturalidad en el texto. */}
+            {(f.n || f.donde) && (
               <div className="mb-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
                 <p className="font-cinzel text-[11px] uppercase tracking-widest text-gold/60">
                   {f.n ? <span className="text-gold/80">{f.n}</span> : null}
                   {f.n && f.donde ? " · " : null}
                   {f.donde}
                 </p>
-                {f.grado && (
-                  <span className="rounded-full border border-gold/30 px-2 py-0.5 font-cinzel text-[10px] uppercase tracking-widest text-gold/70">
-                    grado {f.grado}
-                  </span>
-                )}
               </div>
             )}
 
