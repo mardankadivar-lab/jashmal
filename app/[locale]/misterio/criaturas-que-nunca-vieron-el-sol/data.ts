@@ -374,7 +374,7 @@ export const data: EstudioData = {
 
   // ── Nota de autor: el jidush y lo que no tiene fuente ──────────────────────
   jidush: {
-    titulo: "Lectura propia — el jidush de Mardan, y dos cosas sin fuente",
+    titulo: "Lectura propia — la lectura de Jashmal, y dos cosas sin fuente",
     rotulo:
       "No es una cita ni una fuente clásica. El estudio quedó sellado arriba, en la חֲתִימָה. Lo que sigue es lectura propia, marcada como tal: lo primero sobrevivió a la verificación con un cambio de nivel, y los otros dos se ofrecen como sugerencia, no como enseñanza recibida.",
     parrafos: [

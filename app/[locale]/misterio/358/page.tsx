@@ -425,10 +425,10 @@ export default function MisterioPage() {
             </p>
           </div>
 
-          {/* Drash — jidush de Mardan, marcado visualmente distinto */}
+          {/* Drash — lectura de Jashmal, marcado visualmente distinto */}
           <div className="my-8 space-y-3 border-s-2 border-gold/30 ps-4">
             <p className="text-xs italic text-gold/50">
-              Jidush de Mardan — lectura propia, no cita clásica
+              Lectura de Jashmal — propia, no cita clásica
             </p>
             <p className="text-sm leading-relaxed text-parchment/80">
               <span className="font-cinzel text-gold/80">Drash:</span> la serpiente y el Mesías son la misma estructura

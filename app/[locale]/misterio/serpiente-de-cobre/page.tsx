@@ -371,10 +371,10 @@ export default function PageSerpienteDeCobre() {
             </p>
           </div>
 
-          {/* ── EL JIDUSH DE MARDAN: el zigzag y la línea recta ── */}
+          {/* ── LECTURA DE JASHMAL: el zigzag y la línea recta ── */}
           <div className="mt-9 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6">
             <p className="mb-3 text-center font-cinzel text-[10px] uppercase tracking-[0.3em] text-gold/50">
-              {fa ? "تأمّلی از مَردان" : "Una contemplación de Mardan"}
+              {fa ? "تأمّلی از خشمل" : "Una contemplación de Jashmal"}
             </p>
             <div className="space-y-4 text-sm leading-relaxed text-parchment/85" dir={fa ? "rtl" : "ltr"}>
               <p>
