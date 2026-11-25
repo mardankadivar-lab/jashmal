@@ -1125,6 +1125,28 @@ export const MISTERIOS: Misterio[] = [
     color: "#c9a43e",
     orden: 6.7,
   },
+  {
+    // בְּדִיקַת הַסַּכִּין — el tratado Julín, «lo común», y la melladura del
+    // cuchillo de un carnicero medida con la vara del altar. Misma veta que
+    // porcion-de-esav y katonti (los tres se cruzan en la noche del Yabok), y
+    // va en la serie «Dos Filos» porque es exactamente su hilo: el mismo filo
+    // corta o rasga, y la misma palabra verdadera cura o desgarra. No va en
+    // "parasha" porque no es una parashá: es un tratado del Talmud, sin fecha
+    // de Shabat. Escrito y verificado por el Sofer; montado desde el markdown
+    // verificado (líneas 1–1164), sin tocar la sección de trabajo.
+    // tituloFa/ganchoFa vacíos a propósito: solo español.
+    slug: "inspeccion-del-cuchillo",
+    numero: "12",
+    he: "בְּדִיקַת הַסַּכִּין",
+    titulo: "El filo que se prueba contra la carne",
+    tituloFa: "",
+    gancho:
+      "Hay un tratado entero del Talmud —doce capítulos, del folio 2 al 142— dedicado a la carne que nunca va a subir a ningún altar. En su primer capítulo la ley dice que la melladura que invalida el cuchillo de un carnicero se mide exactamente igual que la melladura que invalida el altar del Templo: por lo que alcance a engancharse una uña. Y entonces hace la pregunta que nadie espera de un libro sobre comida, la hace dos veces y las dos veces se queda sin respuesta: ¿quién revisa a quien revisa?",
+    ganchoFa: "",
+    serie: "dos-filos",
+    color: "#c9a43e",
+    orden: 6.8,
+  },
   // ── HUB de la serie "SHABAT" — índice de enseñanzas de Likutei Moharan ───────
   // La página /misterio/shabat es el índice; las enseñanzas viven en
   // /misterio/{slug} (p. ej. likutei-moharan-i-1) con serie "shabat".
